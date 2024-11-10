@@ -13,7 +13,6 @@
       <el-scrollbar>
         <SidebarMenu :menu-list="permissionStore.routes" base-path="" />
       </el-scrollbar>
-
       <!-- 顶部布局导航 -->
       <NavbarRight v-if="isTopLayout" />
     </template>

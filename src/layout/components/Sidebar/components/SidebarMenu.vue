@@ -32,7 +32,6 @@ import { useSettingsStore, useAppStore } from "@/store";
 import { isExternal } from "@/utils/index";
 
 import variables from "@/styles/variables.module.scss";
-import { c } from "vite/dist/node/types.d-aGj9QkWt";
 
 const props = defineProps({
   menuList: {
