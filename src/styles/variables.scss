@@ -46,7 +46,7 @@
   --menu-background: #fff;
   --menu-text: #0f1a2f;
   --menu-active-text: #f5f7fa;
-  --menu-active-background: rgb(59 130 246);
+  --menu-active-background: rgb(59, 130, 246);
   --menu-hover: #c6d4f0;
   --sidebar-logo-background: #fff;
   --sidebar-logo-text-color: #000;
@@ -72,8 +72,10 @@ $menu-active-background: var(--menu-active-background); // 菜单激活背景色
 $menu-active-text: var(--menu-active-text); // 菜单激活文字颜色
 $menu-hover: var(--menu-hover); // 菜单悬停背景色
 $sidebar-logo-background: var(--sidebar-logo-background); // 侧边栏 Logo 背景色
+$custom-table-header-background: #cacbcc; // 自定义表格头部背景色
+$custom-table-header-color: #585858; // 自定义表格头部文字颜色
 
-$sidebar-width: 246px; // 侧边栏宽度
+$sidebar-width: 236px; // 侧边栏宽度
 $sidebar-width-collapsed: 54px; // 侧边栏收缩宽度
 $navbar-height: 50px; // 导航栏高度
 $tags-view-height: 34px; // TagsView 高度
