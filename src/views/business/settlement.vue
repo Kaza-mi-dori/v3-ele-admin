@@ -28,6 +28,7 @@
       v-loading="loading"
       stripe
       border
+      class="w-full"
       :data="exampleData"
       element-loading-text="拼命加载中"
       :header-cell-style="{
@@ -77,11 +78,12 @@
     </el-table>
     <!-- 分页 -->
     <el-pagination
+      v-model:current-page="pagination.currentPage"
+      v-model:page-size="pagination.pageSize"
+      class="mt-2 flex justify-end"
       background
-      layout="total, sizes, prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper"
       :total="pagination.total"
-      :page-size="pagination.pageSize"
-      :current-page="pagination.currentPage"
       @current-change="handleCurrentChange"
     />
     <!-- 底部操作区 -->

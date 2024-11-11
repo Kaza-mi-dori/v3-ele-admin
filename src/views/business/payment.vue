@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">合同台账</div>
+      <div class="__title">款项台账</div>
       <div class="__stat">
         <span class="__item">你有</span>
         <span class="__item">统计指标一</span>
@@ -42,24 +42,39 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column>
-      <el-table-column prop="date" label="来源" width="150" sortable>
-        <template v-slot="scope">
-          <span>{{ scope.row.from }}</span>
-        </template>
-      </el-table-column>
       <el-table-column prop="name" label="名称" width="150" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="number" label="合同单号" width="150" sortable>
+      <el-table-column prop="dataFrom" label="款项来源" width="150" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.number }}</span>
+          <span>{{ scope.row.dataFrom }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="合同类型" width="150" sortable>
+      <el-table-column prop="orderNo" label="款项订单" width="150" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.orderNo }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="no" label="款项编号" width="150" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.no }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="type" label="款项类别" width="150" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.category }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="type" label="款项类型" width="150" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.type }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="description" label="款项说明" width="150" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.description }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" width="150" sortable>
@@ -98,36 +113,41 @@ import sassvariables from "@/styles/variables.module.scss";
 import { ref } from "vue";
 import type { Ref } from "vue";
 
-type IExampleData = Partial<business.IContract>;
+type IExampleData = business.IAuditableEntity<Partial<business.IPayment>>;
 
 const loading: Ref<boolean> = ref(false);
 const exampleData: Ref<IExampleData[]> = ref([
   {
-    name: "合同一",
-    number: "123456789",
-    date: "2022-01-01",
-    type: "采购",
-    status: "待审核",
-    from: "泛微系统",
-    audited: false,
-  },
-  {
-    name: "合同二",
-    number: "987654321",
-    date: "2022-01-02",
-    type: "销售",
-    status: "已审核",
-    from: "泛微系统",
+    name: "款项1",
+    from: "供应商1",
+    no: "123456",
+    orderNo: "654321",
+    category: "款项类别1",
+    type: "付款",
+    status: "已结款",
+    description: "订单654321第2次回款",
     audited: true,
+    dataFrom: "数据来源1",
+    createdAt: "2021-09-01",
+    updatedAt: "2021-09-02",
+    createdBy: "管理员",
+    updatedBy: "管理员",
   },
   {
-    name: "合同三",
-    number: "123456789",
-    date: "2022-01-03",
-    type: "采购",
-    status: "待审核",
-    from: "钉钉",
+    name: "款项2",
+    from: "供应商2",
+    no: "654321",
+    orderNo: "123456",
+    type: "回款",
+    category: "款项类别2",
+    status: "已结款",
+    description: "订单123456第1次回款",
     audited: false,
+    dataFrom: "数据来源2",
+    createdAt: "2021-09-03",
+    updatedAt: "2021-09-04",
+    createdBy: "管理员",
+    updatedBy: "管理员",
   },
 ]);
 const pagination: Ref<any> = ref({
@@ -144,7 +164,7 @@ const handleViewDetail = (row: IExampleData) => {
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
-    label: "合同类型",
+    label: "款项类型",
     prop: "type",
     value: null,
     options: ["全部", "采购", "销售"],
@@ -168,7 +188,7 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
     order: 3,
   },
   {
-    label: "合同单号",
+    label: "订单编号",
     prop: "number",
     value: null,
     selected: null,

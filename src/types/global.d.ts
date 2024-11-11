@@ -91,5 +91,23 @@ declare global {
     /** 子列表  */
     children?: OptionType[];
   }
+
+  /**
+   * 数据字典项
+   */
+  interface DictItem {
+    /** 字典值 */
+    value: string | number;
+    /** 字典标签 */
+    label: string;
+    /** 字典类型 */
+    type: string;
+    /** 字典描述 */
+    description: string;
+    /** 排序 */
+    sort: number;
+    /** 状态 */
+    status: boolean;
+  }
 }
 export {};
