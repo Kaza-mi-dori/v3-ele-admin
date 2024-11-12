@@ -3,8 +3,9 @@
     <!-- <div class="g-title-block">
       <div class="__title">体系概览</div>
     </div> -->
-    <div>
-      <el-button type="primary" icon="Plus">新增展示指标</el-button>
+    <div class="mb-4 bg-white p-10px shadow-coolGray-100">
+      <el-button v-model:disabled="notAllowedToAddPeer">同级新增</el-button>
+      <el-button v-model:disabled="notAllowedToAddSub">下级新增</el-button>
     </div>
     <div class="flex">
       <div class="bg-white p-10px shadow-coolGray-100 max-w-250px">
@@ -273,6 +274,19 @@ const latestData = ref([
     createdBy: "管理员",
   },
 ]);
+
+// 当前选中的节点
+const selectedNode = ref<any>();
+
+// 是否允许新增同级节点
+const notAllowedToAddPeer: ComputedRef<boolean> = computed(() => {
+  return !selectedNode.value || !selectedNode.value.parent;
+});
+
+// 是否允许新增下级节点
+const notAllowedToAddSub: ComputedRef<boolean> = computed(() => {
+  return !selectedNode.value || !selectedNode.value.children;
+});
 
 const handleClear = () => {
   searchValue.value = "";

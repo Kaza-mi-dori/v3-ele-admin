@@ -1,7 +1,20 @@
 <template>
-  <div>
-    <h1>指标体系的增删查改</h1>
+  <div class="main-wrapper bg-white p-4">
+    <!-- <h1>指标体系的增删查改</h1> -->
+    <!-- <div class="g-title-block-3">
+      <span class="__title">指标体系的增删查改</span>
+    </div> -->
     <div>
+      <div class="flex justify-between mb-4">
+        <div>
+          <el-input v-model="searchText" placeholder="请输入名称" />
+        </div>
+        <div>
+          <el-button type="primary" icon="Plus" @click="handleAdd">
+            新增
+          </el-button>
+        </div>
+      </div>
       <el-table
         v-loading="loading"
         stripe
@@ -79,6 +92,25 @@ const exampleData = ref([
 ]);
 
 const loading = ref(false);
+
+const searchText = ref("");
+
+const handleAdd = () => {
+  console.log("新增");
+};
+
+onMounted(() => {
+  setTimeout(() => {
+    loading.value = false;
+  }, 1000);
+});
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.g-title-block-3 {
+  @apply flex justify-between items-center mb-4 h-8;
+  .__title {
+    @apply font-bold ml-1 mr-1 text-lg;
+  }
+}
+</style>
