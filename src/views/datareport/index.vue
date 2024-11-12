@@ -3,6 +3,9 @@
     <!-- <div class="g-title-block">
       <div class="__title">体系概览</div>
     </div> -->
+    <div>
+      <el-button type="primary" icon="Plus">新增展示指标</el-button>
+    </div>
     <div class="flex">
       <div class="bg-white p-10px shadow-coolGray-100 max-w-250px">
         <el-input
@@ -89,6 +92,31 @@
         <div class="info-card-level1 ml-20px">
           <div class="__title">
             <span>最近数据</span>
+          </div>
+          <div class="__content">
+            <el-table
+              :data="latestData"
+              stripe
+              border
+              class="w-full"
+              element-loading-text="拼命加载中"
+            >
+              <el-table-column prop="no" label="编号">
+                <template v-slot="{ row }">
+                  <a>{{ row.no }}</a>
+                </template>
+              </el-table-column>
+              <el-table-column
+                v-for="prop in infoForm.props"
+                :key="prop.prop"
+                :prop="prop.prop"
+                :label="prop.label + (prop.unit ? `(${prop.unit})` : '')"
+              >
+                <template v-slot="{ row }">
+                  <span>{{ row[prop.prop] }}</span>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
         </div>
       </div>
@@ -182,7 +210,69 @@ const infoForm = ref({
   updatedAt: "2021-09-02",
   relatedDatasource: "数据来源1",
   isHandy: true,
+  props: [
+    {
+      label: "属性1",
+      prop: "prop1",
+      unit: "单位1",
+    },
+    {
+      label: "属性2",
+      prop: "prop2",
+      unit: "单位2",
+    },
+    {
+      label: "创建人",
+      prop: "createdBy",
+    },
+    {
+      label: "创建时间",
+      prop: "createdAt",
+    },
+    {
+      label: "更新人",
+      prop: "updatedBy",
+    },
+    {
+      label: "更新时间",
+      prop: "updatedAt",
+    },
+  ],
 });
+
+const latestData = ref([
+  {
+    name: "数据1",
+    value: "100",
+    unit: "单位1",
+    no: "123456",
+    createdAt: "2021-09-01",
+    createdBy: "管理员",
+  },
+  {
+    name: "数据2",
+    no: "123457",
+    value: "200",
+    unit: "单位2",
+    createdAt: "2021-09-02",
+    createdBy: "管理员",
+  },
+  {
+    name: "数据3",
+    no: "123458",
+    value: "300",
+    unit: "单位3",
+    createdAt: "2021-09-03",
+    createdBy: "管理员",
+  },
+  {
+    name: "数据4",
+    value: "400",
+    unit: "单位4",
+    createdAt: "2021-09-04",
+    createdBy: "管理员",
+  },
+]);
 
 const handleClear = () => {
   searchValue.value = "";

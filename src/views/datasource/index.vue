@@ -1,11 +1,84 @@
 <template>
   <div>
-    <h1>DataSource</h1>
+    <h1>指标体系的增删查改</h1>
+    <div>
+      <el-table
+        v-loading="loading"
+        stripe
+        border
+        class="w-full"
+        :data="exampleData"
+        element-loading-text="拼命加载中"
+        :header-cell-style="{
+          'background-color': sassvariables['custom-table-header-background'],
+          color: sassvariables['custom-table-header-color'],
+          'text-align': 'center',
+        }"
+      >
+        <el-table-column type="selection" align="center" width="55">
+          <template v-slot="scope">
+            <el-checkbox v-model="scope.row.checked" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="名称" width="150" sortable>
+          <template v-slot="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="number" label="产品来源" width="150" sortable>
+          <template v-slot="scope">
+            <span>{{ scope.row.dataFrom }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="number" label="产品编号" width="150" sortable>
+          <template v-slot="scope">
+            <span>{{ scope.row.number }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="type" label="产品类型" width="150" sortable>
+          <template v-slot="scope">
+            <span>{{ scope.row.type }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="状态" width="150" sortable>
+          <template v-slot="scope">
+            <span>{{ scope.row.status }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import sassvariables from "@/styles/variables.module.scss";
+
+const exampleData = ref([
+  {
+    name: "指标体系1",
+    dataFrom: "数据来源1",
+    number: "编号1",
+    type: "类型1",
+    status: "状态1",
+  },
+  {
+    name: "指标体系2",
+    dataFrom: "数据来源2",
+    number: "编号2",
+    type: "类型2",
+    status: "状态2",
+  },
+  {
+    name: "指标体系3",
+    dataFrom: "数据来源3",
+    number: "编号3",
+    type: "类型3",
+    status: "状态3",
+  },
+]);
+
+const loading = ref(false);
 </script>
 
 <style lang="scss" scoped></style>
