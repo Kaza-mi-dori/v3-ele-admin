@@ -27,7 +27,7 @@
       </div>
     </div>
     <!-- 条件区 -->
-    <div>
+    <div class="flex flex-wrap">
       <div
         v-for="item in itemList as any"
         :key="item.label"
@@ -373,11 +373,16 @@ const handleReset = () => {
   @apply inline-block font-bold color-black p-1 m-1;
 }
 .condition-block {
-  @apply lh-8 h-10 bg-white border-t-1 border-dashed flex justify-between items-center;
-  border-color: rgba(5, 5, 5, 0.06);
-  // 第一个元素的上边框不显示
-  &:first-child {
-    @apply border-t-0;
+  @apply lh-8 h-10 pl-10px pr-10px bg-white flex justify-between items-center relative;
+  // width: 50%;
+  // 根据屏幕宽度自适应宽度, 大于768px时，每行显示两个条件，小于768px时，每行显示一个条件
+  width: 100%;
+  @media (min-width: 768px) {
+    width: 50%;
+  }
+  &::before {
+    @apply content-[''] absolute h-4 w-0.5 bg-blue-4 top-30%;
+    left: 0;
   }
   // 奇数行为灰底，偶数行为白底
   // &:nth-child(odd) {

@@ -30,3 +30,74 @@
 .search-container .el-form .el-input {
   width: 16rem !important;
 }
+
+.el-form {
+  &.g-form-1 {
+    .el-form-item__label {
+      color: rgb(72, 93, 142);
+      font-size: 14px;
+      font-family:
+        Helvetica Neue,
+        Helvetica,
+        Microsoft YaHei,
+        微软雅黑,
+        Arial,
+        sans-serif,
+        PingFang SC,
+        Hiragino Sans GB;
+    }
+    .el-form-item__content {
+      font-size: 16px;
+      @apply text-gray-950;
+    }
+  }
+}
+
+.g-main-wrapper {
+  @apply p-10px;
+}
+
+.g-title-block {
+  @apply m-1;
+  .__title {
+    @apply text-xl font-bold relative pl-3 mb-2;
+    &::after {
+      @apply block h-full w-1.25 bg-blue-5 absolute left-0 top-0;
+      content: "";
+    }
+  }
+  .__stat {
+    @apply flex;
+    .__item {
+      @apply m-1 text-sm text-gray-5;
+    }
+  }
+}
+
+.g-title-block-2 {
+  @apply m-1;
+  .__title {
+    @apply text-xl font-bold relative pl-15px;
+  }
+  .__stat {
+    @apply flex;
+    .__item {
+      @apply m-1 text-sm text-gray-5;
+    }
+  }
+}
+
+.info-card-level1 {
+  @apply p-20px bg-white;
+
+  .__title {
+    @apply relative color-black text-md font-bold mb-20px;
+    &::after {
+      @apply block h-0.5 w-1em bg-blue-5 absolute left-0 bottom-0;
+      content: "";
+    }
+  }
+  .__content {
+    @apply mt-2;
+  }
+}
