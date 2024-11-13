@@ -20,7 +20,7 @@
     </div>
     <!-- 表格操作区 -->
     <div class="op-block">
-      <el-button type="primary" icon="Plus">导出excel</el-button>
+      <el-button>导出excel</el-button>
       <el-button icon="Arrow-down">更多功能</el-button>
     </div>
     <!-- 表格区 -->

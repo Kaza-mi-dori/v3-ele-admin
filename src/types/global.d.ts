@@ -109,5 +109,7 @@ declare global {
     /** 状态 */
     status: boolean;
   }
+
+  type GenericRecord = Record<string, any>;
 }
 export {};

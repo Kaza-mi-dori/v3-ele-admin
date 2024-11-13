@@ -88,6 +88,15 @@
                 <span>{{ infoForm.isHandy ? "是" : "否" }}</span>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="更新频率">
+                <el-radio-group v-model="infoForm.updateFrequency" disabled>
+                  <el-radio label="1">每日</el-radio>
+                  <el-radio label="2">每周</el-radio>
+                  <el-radio label="3">每月</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
           </el-form>
         </div>
         <div class="info-card-level1 ml-20px">
@@ -211,6 +220,7 @@ const infoForm = ref({
   updatedAt: "2021-09-02",
   relatedDatasource: "数据来源1",
   isHandy: true,
+  updateFrequency: "3",
   props: [
     {
       label: "属性1",

@@ -91,13 +91,18 @@
   @apply p-20px bg-white;
 
   .__title {
-    @apply relative color-black text-md font-bold mb-20px;
+    @apply relative color-black text-size-18px font-bold mb-20px;
     &::after {
-      @apply block h-0.5 w-1em bg-blue-5 absolute left-0 bottom-0;
+      @apply block h-0.5 w-1em bg-blue-5 absolute left-0;
+      bottom: -10px;
       content: "";
     }
   }
   .__content {
     @apply mt-2;
   }
+}
+
+.g-button-1 {
+  @apply shadow-md;
 }
