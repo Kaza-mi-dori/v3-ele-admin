@@ -80,20 +80,28 @@ const handleCancel = () => {
   }
 };
 
+watch(
+  () => route.query.type,
+  (value) => {
+    if (value === "yearlyReport") {
+      currentComponent.value = yearlyReportDetailForm;
+    } else if (value === "marketPriceReport") {
+      currentComponent.value = marketPriceReportDetailForm;
+    } else if (value === "firmMngReport") {
+      currentComponent.value = firmMngReportDetailForm;
+    } else if (value === "firmReport") {
+      currentComponent.value = firmReportDetailForm;
+    } else if (value === "customReport") {
+      currentComponent.value = customReportDetailForm;
+    } else if (value === "partnerReport") {
+      currentComponent.value = partnerReportDetailForm;
+    }
+  },
+  { immediate: true }
+);
+
 onMounted(() => {
-  if (route.query.type === "yearlyReport") {
-    currentComponent.value = yearlyReportDetailForm;
-  } else if (route.query.type === "marketPriceReport") {
-    currentComponent.value = marketPriceReportDetailForm;
-  } else if (route.query.type === "firmMngReport") {
-    currentComponent.value = firmMngReportDetailForm;
-  } else if (route.query.type === "firmReport") {
-    currentComponent.value = firmReportDetailForm;
-  } else if (route.query.type === "customReport") {
-    currentComponent.value = customReportDetailForm;
-  } else if (route.query.type === "partnerReport") {
-    currentComponent.value = partnerReportDetailForm;
-  }
+  console.log("mounted");
 });
 </script>
 

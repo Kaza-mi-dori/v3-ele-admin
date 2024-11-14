@@ -4,13 +4,13 @@
     <!-- <div class="g-title-block-2">
       <div class="__title">年度经营报表</div>
     </div> -->
-    <!-- <div class="mb-4 p-10px bg-white">
+    <div class="mb-4 p-10px bg-white">
       <el-button class="g-button-1" type="primary" @click="submitForm">
         提交
       </el-button>
       <el-button class="g-button-1" @click="favoForm">收藏</el-button>
       <el-button class="g-button-1" @click="exportForm">导出</el-button>
-    </div> -->
+    </div>
     <div class="info-card-level1">
       <div class="__title">
         <span>基本信息</span>
@@ -27,17 +27,29 @@
           <el-row class="w-full">
             <el-col :span="8">
               <el-form-item label="年度" prop="year">
-                <span>{{ yearlyReportDetailForm.year }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.year"
+                />
+                <span v-else>{{ yearlyReportDetailForm.year }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="利润">
-                <span>{{ yearlyReportDetailForm.profit }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.profit"
+                />
+                <span v-else>{{ yearlyReportDetailForm.profit }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="收入">
-                <span>{{ yearlyReportDetailForm.revenue }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.revenue"
+                />
+                <span v-else>{{ yearlyReportDetailForm.revenue }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -49,10 +61,29 @@
                   border
                   height="300"
                 >
-                  <el-table-column prop="rank" label="排名" width="180" />
-                  <el-table-column prop="name" label="名称" width="180" />
-                  <el-table-column prop="profit" label="利润" width="180" />
-                  <el-table-column prop="revenue" label="收入" width="180" />
+                  <el-table-column prop="rank" label="排名" width="180">
+                    <template #default="{ row }">
+                      <span>{{ row.rank }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="name" label="企业名称" width="180">
+                    <template #default="{ row }">
+                      <el-input v-if="editing" v-model="row.name" />
+                      <el-link v-else type="primary">{{ row.name }}</el-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="profit" label="利润(元)" width="180">
+                    <template #default="{ row }">
+                      <el-input v-if="editing" v-model="row.profit" />
+                      <span v-else type="primary">{{ row.profit }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="revenue" label="收入(元)" width="180">
+                    <template #default="{ row }">
+                      <el-input v-if="editing" v-model="row.revenue" />
+                      <span v-else type="primary">{{ row.revenue }}</span>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </el-form-item>
             </el-col>
