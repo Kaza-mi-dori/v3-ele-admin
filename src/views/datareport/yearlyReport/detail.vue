@@ -3,16 +3,19 @@
     <!-- <div class="g-title-block-2">
       <div class="__title">年度经营报表</div>
     </div> -->
-    <div class="mb-4 p-10px bg-white">
+    <!-- <div class="mb-4 p-10px bg-white">
+      <el-button class="g-button-1" type="primary" @click="handleEdit">
+        编辑
+      </el-button>
       <el-button class="g-button-1" type="primary" @click="submitForm">
         提交
       </el-button>
       <el-button class="g-button-1" @click="favoForm">收藏</el-button>
       <el-button class="g-button-1" @click="exportForm">导出</el-button>
-    </div>
+    </div> -->
     <div class="info-card-level1">
       <div class="__title">
-        <span>报表信息</span>
+        <span>基本信息</span>
       </div>
       <div class="__content">
         <el-form
@@ -26,37 +29,66 @@
           <el-row class="w-full">
             <el-col :span="8">
               <el-form-item label="年度" prop="year">
-                <span>{{ yearlyReportDetailForm.year }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="收入" prop="income">
-                <span>{{ yearlyReportDetailForm.income }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="支出" prop="outcome">
-                <span>{{ yearlyReportDetailForm.outcome }}</span>
+                <el-date-picker
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.year"
+                  type="year"
+                />
+                <span v-else>{{ yearlyReportDetailForm.year }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="利润" prop="profit">
-                <span>{{ yearlyReportDetailForm.profit }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.profit"
+                />
+                <span v-else>{{ yearlyReportDetailForm.profit }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="收入" prop="income">
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.income"
+                />
+                <span v-else>{{ yearlyReportDetailForm.income }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="支出" prop="outcome">
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.outcome"
+                />
+                <span v-else>{{ yearlyReportDetailForm.outcome }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="采购金额" prop="purchaseAmount">
-                <span>{{ yearlyReportDetailForm.purchaseAmount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.purchaseAmount"
+                />
+                <span v-else>{{ yearlyReportDetailForm.purchaseAmount }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="销售金额" prop="salesAmount">
-                <span>{{ yearlyReportDetailForm.salesAmount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.salesAmount"
+                />
+                <span v-else>{{ yearlyReportDetailForm.salesAmount }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="合同数量" prop="contractCount">
-                <span>{{ yearlyReportDetailForm.contractCount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.contractCount"
+                />
+                <span v-else>{{ yearlyReportDetailForm.contractCount }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -64,67 +96,135 @@
                 label="已履行合同数量"
                 prop="contractFulfilledCount"
               >
-                <span>{{ yearlyReportDetailForm.contractFulfilledCount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.contractFulfilledCount"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.contractFulfilledCount }}
+                </span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="现存风险合同数量" prop="riskContractCount">
-                <span>{{ yearlyReportDetailForm.riskContractCount }}</span>
+              <el-form-item label="风险合同数量" prop="riskContractCount">
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.riskContractCount"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.riskContractCount }}
+                </span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="采购合同数量" prop="purchaseContractCount">
-                <span>{{ yearlyReportDetailForm.purchaseContractCount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.purchaseContractCount"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.purchaseContractCount }}
+                </span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="销售合同数量" prop="salesContractCount">
-                <span>{{ yearlyReportDetailForm.salesContractCount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.salesContractCount"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.salesContractCount }}
+                </span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="采购订单数量" prop="purchaseOrderCount">
-                <span>{{ yearlyReportDetailForm.purchaseOrderCount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.purchaseOrderCount"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.purchaseOrderCount }}
+                </span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="销售订单数量" prop="salesOrderCount">
-                <span>{{ yearlyReportDetailForm.salesOrderCount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.salesOrderCount"
+                />
+                <span v-else>{{ yearlyReportDetailForm.salesOrderCount }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="结算数量" prop="settlementCount">
-                <span>{{ yearlyReportDetailForm.settlementCount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.settlementCount"
+                />
+                <span v-else>{{ yearlyReportDetailForm.settlementCount }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="结算金额" prop="settlementAmount">
-                <span>{{ yearlyReportDetailForm.settlementAmount }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.settlementAmount"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.settlementAmount }}
+                </span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="计划收入" prop="planIncome">
-                <span>{{ yearlyReportDetailForm.planIncome }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.planIncome"
+                />
+                <span v-else>{{ yearlyReportDetailForm.planIncome }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="计划支出" prop="planOutcome">
-                <span>{{ yearlyReportDetailForm.planOutcome }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.planOutcome"
+                />
+                <span v-else>{{ yearlyReportDetailForm.planOutcome }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="计划利润" prop="planProfit">
-                <span>{{ yearlyReportDetailForm.planProfit }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.planProfit"
+                />
+                <span v-else>{{ yearlyReportDetailForm.planProfit }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="营收目标完成率" prop="incomeFulfilledRate">
-                <span>{{ yearlyReportDetailForm.incomeFulfilledRate }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.incomeFulfilledRate"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.incomeFulfilledRate }}
+                </span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="利润目标完成率" prop="profitFulfilledRate">
-                <span>{{ yearlyReportDetailForm.profitFulfilledRate }}</span>
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.profitFulfilledRate"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.profitFulfilledRate }}
+                </span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -208,8 +308,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, unref, onMounted } from "vue";
+import { useManualRefHistory } from "@vueuse/core";
 import business from "@/types/business";
+
+const props = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
+  editing: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const { id, editing } = toRefs(props);
 
 // 按照类型定义产出数据
 /**
@@ -290,6 +404,10 @@ const rules: Ref<GenericRecord> = ref({
   cost: [{ required: true, message: "请输入成本", trigger: "blur" }],
 });
 
+const handleEdit = () => {
+  console.log("handleEdit");
+};
+
 const submitForm = () => {
   console.log("submitForm");
 };
@@ -301,6 +419,34 @@ const favoForm = () => {
 const exportForm = () => {
   console.log("exportForm");
 };
+
+// snippet: ts-useManualRefHistory
+const { history, commit, undo, redo } = useManualRefHistory(
+  yearlyReportDetailForm,
+  { clone: true }
+);
+
+const saveForm = () => {
+  commit();
+};
+const restoreForm = () => {
+  undo();
+};
+const getFormValue = () => {
+  return unref(yearlyReportDetailForm.value);
+};
+const setFormValue = (value: any) => {
+  if (value) {
+    yearlyReportDetailForm.value = value;
+  }
+};
+
+defineExpose({
+  saveForm,
+  restoreForm,
+  getFormValue,
+  setFormValue,
+});
 </script>
 
 <style lang="scss" scoped></style>

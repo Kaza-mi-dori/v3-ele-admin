@@ -5,13 +5,13 @@
     <!-- <div class="g-title-block-2">
       <div class="__title">年度经营报表</div>
     </div> -->
-    <div class="mb-4 p-10px bg-white">
+    <!-- <div class="mb-4 p-10px bg-white">
       <el-button class="g-button-1" type="primary" @click="submitForm">
         提交
       </el-button>
       <el-button class="g-button-1" @click="favoForm">收藏</el-button>
       <el-button class="g-button-1" @click="exportForm">导出</el-button>
-    </div>
+    </div> -->
     <div class="info-card-level1">
       <div class="__title">
         <span>报表信息</span>
@@ -55,6 +55,20 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useManualRefHistory } from "@vueuse/core";
+
+const props = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
+  editing: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const { id, editing } = toRefs(props);
 
 const firmReportDetailForm = ref({
   name: "广投石化",
@@ -78,6 +92,33 @@ const favoForm = () => {
 const exportForm = () => {
   console.log("exportForm");
 };
+
+const { history, commit, undo, redo } = useManualRefHistory(
+  firmReportDetailForm,
+  { clone: true }
+);
+
+const saveForm = () => {
+  commit();
+};
+const restoreForm = () => {
+  undo();
+};
+const getFormValue = () => {
+  return unref(firmReportDetailForm.value);
+};
+const setFormValue = (value: any) => {
+  if (value) {
+    firmReportDetailForm.value = value;
+  }
+};
+
+defineExpose({
+  saveForm,
+  restoreForm,
+  getFormValue,
+  setFormValue,
+});
 </script>
 
 <style lang="scss" scoped></style>

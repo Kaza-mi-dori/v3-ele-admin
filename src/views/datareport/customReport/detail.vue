@@ -47,6 +47,18 @@
 // 获取元数据、定义，然后渲染
 import { ref, onMounted } from "vue";
 
+const props = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
+  editing: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const { id, editing } = toRefs(props);
 /**
  * 元数据的结构应为
  *  id: string,  // 元数据的id,

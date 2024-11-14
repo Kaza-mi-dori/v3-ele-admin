@@ -156,6 +156,27 @@ namespace business {
     employees: number; // 员工数量
   }
 
+  // 库存台账记录
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface IStockRecord {
+    id: string;
+    no: string;
+    date: string;
+    onway: boolean; // 在途还是在库
+    // goods?: IGoods;
+    goodsId: string;
+    goodsName: string;
+    goodsCode: string;
+    goodsType: string; // 货品类别：原材料、半成品、成品、油品、非油品之类
+    goodsUnit: string;
+    goodsPrice: 10;
+    goodsStock: 100;
+    goodsAmount: 1000; // 货品金额
+    location: string; // 仓库位置 1号仓库、2号仓库
+    shelf: string; // 货架 仅为概念，实际上可能是某个区域、某个油罐等
+    description: string; // 备注
+  }
+
   // 泛型，某个类型T和可审计项的组合
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type IAuditableEntity<T> = T & IAuditable;
