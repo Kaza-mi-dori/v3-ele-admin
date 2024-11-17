@@ -109,6 +109,17 @@ export const constantRoutes: RouteRecordRaw[] = [
   //     },
   //   ],
   // },
+  /**
+   * 此路由可能直接由能源一体化跳转故用独立路由守卫
+   * 仍然需要鉴权，先查看有无token, 没有的话查看是否有code
+   */
+  {
+    path: "/bigScreenBoard",
+    component: () => import("@/views/bigscreen/index.vue"),
+    beforeEnter: (to, from, next) => {
+      next();
+    },
+  },
 ];
 
 /**
