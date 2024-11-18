@@ -200,6 +200,12 @@ const props = defineProps({
 
 const { id, editing } = toRefs(props);
 
+interface Partner {
+  name: string;
+  type: string;
+  yearlyScore: number;
+}
+
 const yearlyReportDetailForm = ref({
   name: "贸易伙伴报表",
   year: "2021",
