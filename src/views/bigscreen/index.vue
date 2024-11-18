@@ -29,11 +29,14 @@
         </div>
       </div>
     </div>
-    <div class="bg-view__body">组件内容</div>
+    <div class="bg-view__body">
+      <Screen1 />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import Screen1 from "./Screen1.vue";
 import { ref, computed } from "vue";
 
 const businessTypeArr = ref([
@@ -139,6 +142,10 @@ const businessTypeArrRight = computed(() => {
       background-image: url(./img/nav2.png);
     }
   }
+}
+.bg-view__body {
+  height: 100%;
+  margin: 20px;
 }
 @keyframes light-up {
   0% {
