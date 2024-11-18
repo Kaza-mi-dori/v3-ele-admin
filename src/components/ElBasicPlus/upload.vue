@@ -67,7 +67,7 @@
           </el-icon>
         </span>
         <span class="el-upload-list__item-delete" @click="handleRemove(file)">
-          <el-icon>
+          <el-icon v-if="props.editing">
             <Delete />
           </el-icon>
         </span>
@@ -83,6 +83,13 @@ import WordPNG from "@/assets/icons/WORD.png";
 import ZipSVG from "@/assets/icons/zip.svg";
 
 import { useAttrs } from "vue";
+
+const props = defineProps({
+  editing: {
+    type: Boolean,
+    default: true,
+  },
+});
 
 // 允许使用attrs
 const attrs = useAttrs();
@@ -110,4 +117,15 @@ const handleRemove = (file: any) => {
     onRemove(file);
   }
 };
+
+// 是否编辑中
+watch(
+  () => props.editing,
+  (value) => {
+    console.log("是否编辑中", value);
+  },
+  {
+    immediate: true,
+  }
+);
 </script>

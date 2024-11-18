@@ -132,7 +132,10 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import importExcelDialog from "@/components/Dialogs/importExcelDialog.vue";
+
+const router = useRouter();
 
 interface Partner {
   id: string;
@@ -329,7 +332,8 @@ const handleDelete = (index: number, row: any) => {
 };
 
 const handleClickName = () => {
-  console.log("click name");
+  // console.log("click name");
+  router.push({ name: "PartnerDetail" });
 };
 
 const handleImportExcel = () => {
