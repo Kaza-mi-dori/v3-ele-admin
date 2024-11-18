@@ -2,6 +2,7 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
+      <div class="b-space" />
       <Model1 class="model1" title="企业宣传"></Model1>
       <div class="b-space" />
       <Model2 class="model2" title="合同总数与金额"></Model2>
