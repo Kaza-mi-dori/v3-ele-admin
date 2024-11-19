@@ -83,16 +83,16 @@ const totalData = ref([
     position: relative;
     .middle-item {
       display: flex;
-      flex: 0.6;
+      flex: 1;
       align-items: center;
       justify-content: center;
       border: 1px solid #ccc;
     }
     .flex-grow {
-      flex-grow: 2;
+      flex: 3;
     }
     .flex-large {
-      flex: 1.2;
+      flex: 2;
     }
   }
   .b-right {
