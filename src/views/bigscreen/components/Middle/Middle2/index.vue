@@ -35,9 +35,9 @@ import { ref } from "vue";
 .total-box {
   display: flex;
   justify-content: flex-end;
-  margin-right: 10px;
   height: 30px;
-  margin-top: -25px;
+  margin-top: -35px;
+  margin-right: -10px;
   .total-content {
     display: flex;
     justify-content: space-between;
@@ -53,7 +53,7 @@ import { ref } from "vue";
     display: flex;
   }
   .content2 {
-    margin-left: 10px;
+    margin-left: 15px;
   }
   .num {
     margin-left: 5px;
