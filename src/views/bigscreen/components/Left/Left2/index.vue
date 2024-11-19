@@ -25,7 +25,7 @@
     <div class="model-body">
       <div class="model-body__content">
         <div v-for="(item, index) in contractData" :key="index">
-          <img :src="item.bgImage" alt="" />
+          <img :src="backgroundImages[index]" alt="" />
           <div class="body-content">
             <div>{{ item.label }}</div>
             <div class="content-value">
@@ -45,6 +45,10 @@ import blueBg from "@/views/bigscreen/img/blue_bg.png";
 import greenBg from "@/views/bigscreen/img/green_bg.png";
 import redBg from "@/views/bigscreen/img/red_bg.png";
 import { h, ref, shallowRef } from "vue";
+
+// 定义背景图片数组
+const backgroundImages = [yellowBg, blueBg, greenBg, redBg];
+
 defineProps({
   title: {
     type: String,
@@ -67,25 +71,21 @@ const contractData = ref([
     label: "合同总金额",
     value: "355480",
     unit: "万元",
-    bgImage: yellowBg,
   },
   {
     label: "合同总数",
     value: "2460",
     unit: "份",
-    bgImage: blueBg,
   },
   {
     label: "采购合同",
     value: "980",
     unit: "份",
-    bgImage: greenBg,
   },
   {
     label: "销售合同",
     value: "1480",
     unit: "份",
-    bgImage: redBg,
   },
 ]);
 const formatNumber = (num: number | string): string => {
