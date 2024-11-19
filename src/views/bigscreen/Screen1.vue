@@ -23,7 +23,9 @@
         <Middle2 class="middle2" />
       </div>
       <div class="b-space" />
-      <div class="middle-item">利润</div>
+      <div class="middle-item">
+        <Middle3 />
+      </div>
       <div class="b-space" />
       <div class="middle-item flex-large">价格</div>
       <div class="b-space" />
@@ -39,6 +41,7 @@ import Model1 from "./components/Model1/index.vue";
 import Left2 from "./components/Left/Left2/index.vue";
 import Model2 from "./components/Model2/index.vue";
 import Middle2 from "./components/Middle/Middle2/index.vue";
+import Middle3 from "./components/Middle/Middle3/index.vue";
 import { ref } from "vue";
 
 const totalData = ref([
