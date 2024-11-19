@@ -1,5 +1,6 @@
 <template>
   <div ref="container" class="bg-view">
+    <img style="position: absolute; top: 0" height="100vh" />
     <div class="bg-view__header">
       <div class="header-left header-left-right">
         <!-- 使用计算属性显示前一半元素 -->
@@ -39,7 +40,12 @@
 import Screen1 from "./Screen1.vue";
 import { ref, computed } from "vue";
 
-const businessTypeArr = ref([
+interface navItem {
+  id: number;
+  label: string;
+}
+
+const businessTypeArr: Ref<navItem[]> = ref([
   { id: 1, label: "LNG" },
   { id: 2, label: "燃料油" },
   { id: 3, label: "成品油" },
@@ -48,9 +54,9 @@ const businessTypeArr = ref([
   { id: 6, label: "煤炭" },
 ]);
 
-const selectedTypeId = ref(null); // 当前选中item
+const selectedTypeId = ref<number | null>(null); // 当前选中item
 
-const selectType = (id: null) => {
+const selectType = (id: number) => {
   selectedTypeId.value = id;
 };
 
@@ -77,7 +83,7 @@ const businessTypeArrRight = computed(() => {
   line-height: 1.5715;
   font-feature-settings: "tnum";
   width: 100vw;
-  height: 100vh;
+  // height: 100vh;
   font-family:
     PingFangSC,
     Microsoft YaHei,
@@ -121,7 +127,15 @@ const businessTypeArrRight = computed(() => {
       line-height: 48px;
       font-weight: bold;
       text-align: center;
-      color: #70b9fd;
+      // color: #70b9fd;
+      // 字体颜色从rgb(163,243,250)到rgb(78,149,253)的均匀渐变
+      background: linear-gradient(
+        to bottom,
+        rgb(163, 241, 251),
+        rgb(78, 149, 253)
+      );
+      -webkit-background-clip: text; /* 兼容性设置 */
+      -webkit-text-fill-color: transparent; /* 兼容性设置 */
       position: relative;
     }
   }
