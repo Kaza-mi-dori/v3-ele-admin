@@ -89,7 +89,6 @@ const totalData = ref([
       flex: 1;
       align-items: center;
       justify-content: center;
-      border: 1px solid #ccc;
     }
     .flex-grow {
       flex: 3;
