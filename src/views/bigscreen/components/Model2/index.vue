@@ -1,23 +1,23 @@
 <template>
   <div class="middle1-box">
-    <img class="middle1-bg" src="../../../img/tag2.png" alt="">
+    <img class="middle1-bg" src="../../img/tag2.png" alt="" />
     <div class="content-wrapper">
       <div class="content-box" v-for="(item, index) in totalData" :key="index">
         <div class="content-item">
           <div class="title-box">
-            <img class="title-icon" :src="titleArr[index].icon">
+            <img class="title-icon" :src="titleArr[index].icon" />
             <div>{{ titleArr[index].title }}</div>
           </div>
-        <div class="annual-total">
-        <div>年度累计</div>
-        <div class="year-num">{{ formatNumber(item.year) }}</div>
-        <div>万元</div>
-        </div>
-        <div class="monthly-total">
-        <div>本月累计</div>
-        <div class="month-num">{{ formatNumber(item.month) }}</div>
-        <div>万元</div>
-        </div>
+          <div class="annual-total">
+            <div>年度累计</div>
+            <div class="year-num">{{ formatNumber(item.year) }}</div>
+            <div>万元</div>
+          </div>
+          <div class="monthly-total">
+            <div>本月累计</div>
+            <div class="month-num">{{ formatNumber(item.month) }}</div>
+            <div>万元</div>
+          </div>
         </div>
       </div>
     </div>
@@ -25,46 +25,38 @@
 </template>
 
 <script setup lang="ts">
-import buyIcon from "../../../img/buy.png";
-import sellIcon from '../../../img/sell.png';
-import incomeIcon from "../../../img/income.png";
+import buyIcon from "../../img/buy.png";
+import sellIcon from "../../img/sell.png";
+import incomeIcon from "../../img/income.png";
 
-import { ref } from "vue";
+import { ref, defineProps } from "vue";
+
+// 接收父组件传入的数据
+defineProps({
+  totalData: {
+    type: Array,
+    required: true,
+    default: () => [],
+  },
+});
+
 const titleArr = ref([
   {
-    title: '累计采购',
+    title: "累计采购",
     icon: buyIcon,
   },
   {
-    title: '累计销售',
+    title: "累计销售",
     icon: sellIcon,
   },
   {
-    title: '累计营收',
+    title: "累计营收",
     icon: incomeIcon,
   },
   {
-    title: '累计利润',
+    title: "累计利润",
     icon: incomeIcon,
   },
-]);
-const totalData = ref([
-  {
-    year: '25438',
-    month: '25438'
-  },
-  {
-    year: '25438',
-    month: '25438'
-  },
-  {
-    year: '25438',
-    month: '25438'
-  },
-  {
-    year: '25438',
-    month: '25438'
-  }
 ]);
 
 const formatNumber = (num: number | string): string => {
@@ -91,7 +83,7 @@ const formatNumber = (num: number | string): string => {
   }
   .content-wrapper {
     display: flex;
-    height: 100%;    
+    height: 100%;
     justify-content: center; /* 平均分配每个div之间的空间 */
     align-items: center;
     padding: 0 10px;
@@ -101,7 +93,6 @@ const formatNumber = (num: number | string): string => {
     z-index: 1; /* 确保文字在背景图片上方 */
     color: #fdfdfc;
     font-size: 14px;
-
   }
   .title-box,
   .annual-total,
@@ -130,7 +121,7 @@ const formatNumber = (num: number | string): string => {
     margin: 0 5px;
   }
   .year-num {
-    color: #12f5fB;
+    color: #12f5fb;
   }
   .month-num {
     color: #d6e337;

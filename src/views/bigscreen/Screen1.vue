@@ -16,7 +16,7 @@
     <div class="b-middle">
       <div class="b-space" />
       <div class="middle-item">
-        <Middle1 class="middle1" />
+        <Model2 class="middle1" :totalData="totalData" />
       </div>
       <div class="b-space" />
       <div class="middle-item flex-grow">地图</div>
@@ -35,7 +35,27 @@
 <script setup lang="ts">
 import Model1 from "./components/Model1/index.vue";
 import Left2 from "./components/Left/Left2/index.vue";
-import Middle1 from "./components/Middle/Middle1/index.vue";
+import Model2 from "./components/Model2/index.vue";
+import { ref } from "vue";
+
+const totalData = ref([
+  {
+    year: "25438",
+    month: "25438",
+  },
+  {
+    year: "25438",
+    month: "25438",
+  },
+  {
+    year: "25438",
+    month: "25438",
+  },
+  {
+    year: "25438",
+    month: "25438",
+  },
+]);
 </script>
 
 <style lang="scss" scoped>
