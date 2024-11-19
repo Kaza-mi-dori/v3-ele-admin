@@ -1,7 +1,7 @@
 <template>
   <div class="model-box">
     <div class="model-header">
-      <img class="model-header__bg" src="../../img/box2_top.png" />
+      <img class="model-header__bg" src="@/views/bigscreen/img/box2_top.png" />
       <div class="model-title" v-if="showHeader">
         <div class="model-title__text">{{ title }}</div>
       </div>
