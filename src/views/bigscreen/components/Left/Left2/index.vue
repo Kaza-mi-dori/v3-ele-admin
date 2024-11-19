@@ -24,43 +24,13 @@
     </div>
     <div class="model-body">
       <div class="model-body__content">
-        <div>
-          <img src="../../img/yellow_bg.png" alt="" />
+        <div v-for="(item, index) in contractData" :key="index">
+          <img :src="item.bgImage" alt="" />
           <div class="body-content">
-            <div>合同总金额</div>
+            <div>{{ item.label }}</div>
             <div class="content-value">
-              <div class="content-num">355,480</div>
-              <div class="content-unit">万元</div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img src="../../img/blue_bg.png" alt="" />
-          <div class="body-content">
-            <div>合同总数</div>
-            <div class="content-value">
-              <div class="content-num">2460</div>
-              <div class="content-unit">份</div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img src="../../img/green_bg.png" alt="" />
-          <div class="body-content">
-            <div>采购合同</div>
-            <div class="content-value">
-              <div class="content-num">980</div>
-              <div class="content-unit">份</div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img src="../../img/red_bg.png" alt="" />
-          <div class="body-content">
-            <div>销售合同</div>
-            <div class="content-value">
-              <div class="content-num">1480</div>
-              <div class="content-unit">份</div>
+              <div class="content-num">{{ item.value }}</div>
+              <div class="content-unit">{{ item.unit }}</div>
             </div>
           </div>
         </div>
@@ -70,6 +40,10 @@
 </template>
 
 <script setup lang="ts">
+import yellowBg from "@/views/bigscreen/img/yellow_bg.png";
+import blueBg from "@/views/bigscreen/img/blue_bg.png";
+import greenBg from "@/views/bigscreen/img/green_bg.png";
+import redBg from "@/views/bigscreen/img/red_bg.png";
 import { h, ref, shallowRef } from "vue";
 defineProps({
   title: {
@@ -87,6 +61,33 @@ const customPrefix = shallowRef({
     return h("p", "");
   },
 });
+// 定义合同数据
+const contractData = ref([
+  {
+    label: "合同总金额",
+    value: "355,480",
+    unit: "万元",
+    bgImage: yellowBg,
+  },
+  {
+    label: "合同总数",
+    value: "2460",
+    unit: "份",
+    bgImage: blueBg,
+  },
+  {
+    label: "采购合同",
+    value: "980",
+    unit: "份",
+    bgImage: greenBg,
+  },
+  {
+    label: "销售合同",
+    value: "1480",
+    unit: "份",
+    bgImage: redBg,
+  },
+]);
 </script>
 
 <style lang="scss" scoped>
