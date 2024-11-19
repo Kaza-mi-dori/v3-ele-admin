@@ -13,7 +13,19 @@
       <div class="b-space" />
     </div>
     <div class="c-space" />
-    <div class="b-middle"></div>
+    <div class="b-middle">
+      <div class="b-space" />
+      <div class="middle-item">
+        <Middle1 class="middle1" />
+      </div>
+      <div class="b-space" />
+      <div class="middle-item flex-grow">地图</div>
+      <div class="b-space" />
+      <div class="middle-item">利润</div>
+      <div class="b-space" />
+      <div class="middle-item flex-large">价格</div>
+      <div class="b-space" />
+    </div>
     <div class="c-space" />
     <div class="b-right"></div>
     <div class="c-space" />
@@ -23,6 +35,7 @@
 <script setup lang="ts">
 import Model1 from "./components/Model1/index.vue";
 import Left2 from "./components/Left/Left2/index.vue";
+import Middle1 from "./components/Middle/Middle1/index.vue";
 </script>
 
 <style lang="scss" scoped>
@@ -42,7 +55,22 @@ import Left2 from "./components/Left/Left2/index.vue";
   }
   .b-middle {
     flex: 1.4;
+    display: flex;
+    justify-content: space-between;
     position: relative;
+    .middle-item {
+      display: flex;
+      flex: 0.6;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ccc;
+    }
+    .flex-grow {
+      flex-grow: 2;
+    }
+    .flex-large {
+      flex: 1.2;
+    }
   }
   .b-right {
     flex: 1;
