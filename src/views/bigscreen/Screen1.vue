@@ -5,7 +5,7 @@
       <div class="b-space" />
       <Model1 class="model1" title="企业宣传"></Model1>
       <div class="b-space" />
-      <Model2 class="model2" title="合同总数与金额"></Model2>
+      <Left2 class="left2" title="合同总数与金额"></Left2>
       <div class="b-space" />
       <Model1 class="model1" title="合同执行情况"></Model1>
       <div class="b-space" />
@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import Model1 from "./components/Model1/index.vue";
-import Model2 from "./components/Model2/index.vue";
+import Left2 from "./components/Left/Left2/index.vue";
 </script>
 
 <style lang="scss" scoped>
@@ -62,7 +62,7 @@ import Model2 from "./components/Model2/index.vue";
   flex-direction: column;
   height: 100%;
 }
-.model2 {
+.left2 {
   flex: 0.5;
 }
 </style>
