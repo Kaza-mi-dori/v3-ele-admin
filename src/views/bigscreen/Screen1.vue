@@ -81,8 +81,14 @@ import Middle1 from "./components/Middle/Middle1/index.vue";
   height: 10px;
 }
 .c-space {
-  width: 10px;
+  width: 25px;
   height: 0;
+}
+.bg-view-body > .c-space:first-child {
+  width: 15px;
+}
+.bg-view-body > .c-space:last-child {
+  width: 15px;
 }
 .model1 {
   flex: 1;

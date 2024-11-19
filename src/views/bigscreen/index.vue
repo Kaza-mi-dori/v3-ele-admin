@@ -145,7 +145,7 @@ const businessTypeArrRight = computed(() => {
 }
 .bg-view__body {
   height: 100%;
-  margin: 20px;
+  margin: 20px 0;
 }
 @keyframes light-up {
   0% {
