@@ -29,7 +29,7 @@
           <div class="body-content">
             <div>{{ item.label }}</div>
             <div class="content-value">
-              <div class="content-num">{{ item.value }}</div>
+              <div class="content-num">{{ formatNumber(item.value) }}</div>
               <div class="content-unit">{{ item.unit }}</div>
             </div>
           </div>
@@ -65,7 +65,7 @@ const customPrefix = shallowRef({
 const contractData = ref([
   {
     label: "合同总金额",
-    value: "355,480",
+    value: "355480",
     unit: "万元",
     bgImage: yellowBg,
   },
@@ -88,6 +88,14 @@ const contractData = ref([
     bgImage: redBg,
   },
 ]);
+const formatNumber = (num: number | string): string => {
+  // 判断是否需要格式化
+  if (Number(num) > 10000) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  } else {
+    return num.toString(); // 直接返回原始数字，不格式化
+  }
+};
 </script>
 
 <style lang="scss" scoped>
