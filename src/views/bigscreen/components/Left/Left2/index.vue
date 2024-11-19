@@ -176,8 +176,9 @@ const formatNumber = (num: number | string): string => {
         align-items: flex-start; /* 水平居中 */
         justify-content: center; /* 垂直居中 */
         text-align: left; /* 文字居中 */
-        font-size: 15px;
+        font-size: 14px;
         padding-left: 15px;
+        color: #fdfdfc;
       }
       .content-value {
         display: flex;
