@@ -169,7 +169,6 @@ const formatNumber = (num: number | string): string => {
         bottom: 0;
         left: 0;
         right: 0;
-        object-fit: cover; /* 确保图片按比例填充整个区域 */
       }
       .body-content {
         display: flex;
