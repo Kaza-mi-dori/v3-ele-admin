@@ -19,9 +19,13 @@
         <Model2 class="middle1" :totalData="totalData" />
       </div>
       <div class="b-space" />
-      <div class="middle-item flex-grow">地图</div>
+      <div class="middle-item flex-grow">
+        <Middle2 class="middle2" />
+      </div>
       <div class="b-space" />
-      <div class="middle-item">利润</div>
+      <div class="middle-item">
+        <Middle3 />
+      </div>
       <div class="b-space" />
       <!-- <div class="middle-item flex-large"></div> -->
       <Middle4 />
@@ -45,6 +49,8 @@
 import Model1 from "./components/Model1/index.vue";
 import Left2 from "./components/Left/Left2/index.vue";
 import Model2 from "./components/Model2/index.vue";
+import Middle2 from "./components/Middle/Middle2/index.vue";
+import Middle3 from "./components/Middle/Middle3/index.vue";
 import Right1 from "./components/FirstPage/Right/right1.vue";
 import Right2 from "./components/FirstPage/Right/right2.vue";
 import Right3 from "./components/FirstPage/Right/right3.vue";
@@ -95,16 +101,15 @@ const totalData = ref([
     position: relative;
     .middle-item {
       display: flex;
-      flex: 0.6;
+      flex: 1;
       align-items: center;
       justify-content: center;
-      border: 1px solid #ccc;
     }
     .flex-grow {
-      flex-grow: 2;
+      flex: 3;
     }
     .flex-large {
-      flex: 1.2;
+      flex: 2;
     }
   }
   .b-right {
