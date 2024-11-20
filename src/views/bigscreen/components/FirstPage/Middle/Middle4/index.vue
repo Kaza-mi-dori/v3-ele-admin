@@ -5,7 +5,7 @@
       <el-tab-pane label="汽柴油" name="QICHAIYOU" />
       <el-tab-pane label="化工产品" name="HUAGONG" />
     </Tab>
-    <div id="chart-middle-4" style="height: 180px" />
+    <div id="chart-middle-4" style="height: 180px; margin-top: -10px" />
   </Model1>
 </template>
 
@@ -184,7 +184,7 @@ const initChartMiddle4 = () => {
       data: xAxisData,
       axisLine: {
         lineStyle: {
-          color: "#fff",
+          color: "#2a5999",
         },
       },
     },
@@ -193,8 +193,16 @@ const initChartMiddle4 = () => {
       min: 200,
       max: 600,
       axisLine: {
+        show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#fff",
+          color: "#2a5999",
+        },
+      },
+      splitLine: {
+        show: true, // 显示分割线
+        lineStyle: {
+          type: "dashed", // 虚线
+          color: "#2a5999",
         },
       },
     },
@@ -203,6 +211,7 @@ const initChartMiddle4 = () => {
       return {
         name: item,
         type: "line",
+        smooth: true,
         data: getRandomDataOneMonth().map((item) => item.value),
       };
     }),
@@ -217,9 +226,13 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model1 {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   height: 100%;
+}
+
+::v-deep .el-tabs__active-bar {
+  background-color: #48e4f1;
 }
 </style>
