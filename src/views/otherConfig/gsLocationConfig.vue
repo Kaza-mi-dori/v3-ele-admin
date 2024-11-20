@@ -3,7 +3,7 @@
   <!-- 左侧可放置图标列表、图标详情、右侧地图，可点击根据相对位置确定坐标 -->
   <div class="main-wrapper">
     <div class="item-menu-block">
-      <div class="bg-white pl-10px pr-10px shadow-coolGray-100 max-w-280px">
+      <div class="item-menu">
         <!-- <el-input
           v-model="searchValue"
           search-icon="el-icon-search"
@@ -30,11 +30,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="编号">
-              <span>{{ currentItem.id }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
             <el-form-item label="图标">
               <template #label>
                 <span>图标</span>
@@ -44,13 +39,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="相对地图坐标">
+            <el-form-item label="地图坐标">
               <template #label>
-                <span>相对地图坐标</span>
+                <span>地图坐标</span>
                 <el-button
                   v-if="!isPositionEdit"
                   size="small"
                   type="text"
+                  style="padding-left: 5px"
                   @click="handleStartChangePos"
                 >
                   修改
@@ -71,7 +67,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="说明(在驾驶舱显示)">
+            <el-form-item label="说明">
               <span>{{ currentItem.description }}</span>
             </el-form-item>
           </el-col>
@@ -95,6 +91,9 @@
           取消
         </el-button> -->
       </div>
+      <div v-else class="item-detail text-center w-full">
+        <span class="text-xl color-coolgray">详情区</span>
+      </div>
     </div>
     <div class="map-block">
       <div
@@ -105,7 +104,7 @@
         @mouseenter="handleMouseEnter"
         @mouseleave="handleMouseLeave"
       >
-        <span>地图</span>
+        <!-- <span>地图</span> -->
         <span v-if="isMouseWithInMap">
           当前坐标: ({{ currentPos.x }}, {{ currentPos.y }})
         </span>
@@ -284,7 +283,7 @@ const handleMouseOver = async (e: MouseEvent) => {
     return;
   }
   // 还需要减去尺寸
-  console.log(e.offsetX, e.offsetY);
+  // console.log(e.offsetX, e.offsetY);
   currentPos.value = {
     x: e.offsetX,
     y: e.offsetY,
@@ -301,19 +300,22 @@ const handleMouseOver = async (e: MouseEvent) => {
 const handleMapClick = () => {
   if (isPositionEdit.value) {
     isPositionEdit.value = false;
-    currentItem.value = {
-      ...currentItem.value,
-      xOffSet: currentPos.value.x,
-      yOffSet: currentPos.value.y,
-    };
-    // 修改gsListdata中的数据
-    const item = gsListdata.value
-      .map((item) => item.children)
-      .flat()
-      .find((item) => item.id === currentItem.value?.id);
-    if (item) {
-      item.xOffSet = currentPos.value.x;
-      item.yOffSet = currentPos.value.y;
+    // 保证currentItem不为空
+    if (currentItem.value) {
+      currentItem.value = {
+        ...currentItem.value,
+        xOffSet: currentPos.value.x,
+        yOffSet: currentPos.value.y,
+      };
+      // 修改gsListdata中的数据
+      const item = gsListdata.value
+        .map((item) => item.children)
+        .flat()
+        .find((item) => item.id === currentItem.value?.id);
+      if (item) {
+        item.xOffSet = currentPos.value.x;
+        item.yOffSet = currentPos.value.y;
+      }
     }
   }
 };
@@ -440,11 +442,13 @@ onMounted(() => {
 }
 
 .item-menu-block {
-  @apply flex;
+  @apply flex bg-white mr-4;
+  flex: 1;
   .item-menu {
-    @apply mr-10px bg-white p-2;
+    @apply mr-10px p-2 pr-15px;
     display: flex;
     flex-direction: column;
+    border-right: 1px solid #fefefe;
     .item {
       margin: 10px;
       padding: 10px;

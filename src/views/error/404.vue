@@ -33,8 +33,8 @@ function back() {
       />
     </div>
     <div class="bullshit">
-      <div class="bullshit__oops">OOPS!</div>
-      <div class="bullshit__info">
+      <div class="bullshit__oops">您访问的网页无法进入</div>
+      <!-- <div class="bullshit__info">
         All rights reserved
         <a
           style="color: #20a0ff"
@@ -43,16 +43,15 @@ function back() {
         >
           wallstreetcn
         </a>
-      </div>
+      </div> -->
       <div class="bullshit__headline">
-        The webmaster said that you can not enter this page...
+        您访问的页面不存在，或者您没有权限访问该页面
       </div>
       <div class="bullshit__info">
-        Please check that the URL you entered is correct, or click the button
-        below to return to the homepage.
+        请确认您输入的网址是否正确，或者联系管理员
       </div>
       <a href="#" class="bullshit__return-home" @click.prevent="back">
-        Back to home
+        返回首页
       </a>
     </div>
   </div>
