@@ -92,7 +92,7 @@ const formatNumber = (num: number | string): string => {
     display: flex;
     justify-content: center;
     z-index: 1; /* 确保文字在背景图片上方 */
-    color: #fdfdfc;
+    color: #ffffff;
     font-size: 16px;
   }
   .content-item {
