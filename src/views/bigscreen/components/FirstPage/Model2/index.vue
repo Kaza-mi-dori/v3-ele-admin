@@ -1,6 +1,6 @@
 <template>
   <div class="middle1-box">
-    <img class="middle1-bg" src="../../img/tag2.png" alt="" />
+    <img class="middle1-bg" src="../../../img/tag2.png" alt="" />
     <div class="content-wrapper">
       <div class="content-box" v-for="(item, index) in totalData" :key="index">
         <div class="content-item">
@@ -25,9 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import buyIcon from "../../img/buy.png";
-import sellIcon from "../../img/sell.png";
-import incomeIcon from "../../img/income.png";
+import buyIcon from "../../../img/buy.png";
+import sellIcon from "../../../img/sell.png";
+import incomeIcon from "../../../img/income.png";
 
 import { ref, defineProps } from "vue";
 

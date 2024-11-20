@@ -1,18 +1,18 @@
 <template>
   <div class="model-box">
     <div class="model-title" v-if="showHeader">
-      <img class="model-title__bg" src="../../img/box1_top.png" />
+      <img class="model-title__bg" src="../../../img/box1_top.png" />
       <div class="model-title__text">{{ title }}</div>
     </div>
     <div class="model-body">
-      <img class="model-body__bg" src="../../img/box1_center.png" />
+      <img class="model-body__bg" src="../../../img/box1_center.png" />
       <div class="model-body__content">
         <slot name="customTool" />
         <slot />
       </div>
     </div>
     <div class="model-footer">
-      <img class="model-footer__bg" src="../../img/box1_bottom.png" />
+      <img class="model-footer__bg" src="../../../img/box1_bottom.png" />
     </div>
   </div>
 </template>

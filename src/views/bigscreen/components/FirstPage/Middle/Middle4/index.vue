@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import Model1 from "@/views/bigscreen/components/Model1/index.vue";
+import Model1 from "@/views/bigscreen/components/FirstPage/Model1/index.vue";
 import Tab from "@/views/bigscreen/components/FirstPage/Tab/index.vue";
 import * as echarts from "echarts";
 import type { TabsPaneContext } from "element-plus";

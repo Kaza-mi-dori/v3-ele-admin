@@ -44,7 +44,7 @@ import no1 from "@/views/bigscreen/img/no1.png";
 import no2 from "@/views/bigscreen/img/no2.png";
 import no3 from "@/views/bigscreen/img/no3.png";
 import no4 from "@/views/bigscreen/img/no4.png";
-import Model1 from "../../Model1/index.vue";
+import Model1 from "../../FirstPage/Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, computed } from "vue";
 
