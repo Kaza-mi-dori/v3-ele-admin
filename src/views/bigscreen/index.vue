@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" class="bg-view">
+  <div id="bg-container" ref="container" class="bg-view">
     <img style="position: absolute; top: 0" height="100vh" />
     <div class="bg-view__header">
       <div class="header-left header-left-right">
@@ -71,12 +71,54 @@ const businessTypeArrRight = computed(() => {
   const midIndex = Math.ceil(businessTypeArr.value.length / 2);
   return businessTypeArr.value.slice(midIndex);
 });
+
+const initScale = () => {
+  const originalWidth = 1920;
+  const originalHeight = 1080;
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  const containerElement = document.getElementById("bg-container");
+  if (!containerElement) return;
+  const aspectRatio = 1920 / 1080;
+  const ratio = windowWidth / windowHeight;
+  // console.log(containerElement.computedStyleMap, '&', window.innerWidth)
+  const newWidth = window.innerWidth * (originalHeight / windowHeight);
+
+  // console.log('newWidth', newWidth)
+
+  containerElement.style.width = newWidth + "px";
+
+  const scale = windowHeight / originalHeight;
+  document.body.style.zoom = scale + "";
+  document.styleSheets[document.styleSheets.length - 1].insertRule(
+    "canvas { zoom: " + 1 / scale + " !important; }"
+  );
+  document.styleSheets[document.styleSheets.length - 1].insertRule(
+    "canvas { transform: scale(" + scale + ") !important; }"
+  );
+  document.styleSheets[document.styleSheets.length - 1].insertRule(
+    "canvas { transform-origin: 0 0 !important; }"
+  );
+};
+
+onMounted(() => {
+  // window.addEventListener("resize", () => {
+  //   initScale();
+  // });
+  initScale();
+  // 让所有echarts图表自适应
+  setTimeout(() => {
+    window.dispatchEvent(new Event("resize"));
+  }, 100);
+});
 </script>
 
 <style lang="scss" scoped>
 .bg-view {
-  min-width: 1750px;
-  min-height: 900px;
+  // min-width: 1750px;
+  // min-height: 900px;
+  height: 1080px;
+  width: 1920px;
   font-size: 12px;
   color: #bfbfbf;
   font-variant: tabular-nums;
@@ -114,17 +156,37 @@ const businessTypeArrRight = computed(() => {
     width: 30%;
     height: 52px;
   }
+  // .header-left {
+  //   display: flex;
+  //   justify-content: center; /* 水平居中 */
+  //   align-items: center; /* 垂直居中 */
+  //   position: absolute;
+  //   left: clamp(10px, 20%, 50px);
+  //   top: clamp(5px, 10px, 33px);
+  // }
+  // .header-right {
+  //   display: flex;
+  //   justify-content: center; /* 水平居中 */
+  //   align-items: center; /* 垂直居中 */
+  //   position: absolute;
+  //   right: clamp(10px, 20%, 50px);
+  //   top: clamp(5px, 10px, 33px);
+  // }
   .title {
+    flex: 1;
+    height: 66px;
     width: max-content;
     position: relative;
+    // top: clamp(10px, 25px, 30%);
     margin-left: auto;
     margin-right: auto;
     margin-top: auto;
     margin-bottom: auto;
     .__title--text {
-      font-size: 2rem;
-      letter-spacing: 4px;
-      line-height: 48px;
+      margin: auto 0;
+      font-size: 2.5rem;
+      letter-spacing: 6px;
+      // line-height: px;
       font-weight: bold;
       text-align: center;
       // color: #70b9fd;
@@ -143,7 +205,7 @@ const businessTypeArrRight = computed(() => {
     background-image: url(./img/nav1.png);
     background-repeat: no-repeat; /* 防止背景图片重复 */
     background-size: cover; /* 背景图片填充整个元素，保持比例 */
-    width: 97px;
+    width: 100px;
     height: 30px;
     margin-right: 15px;
     display: flex;
@@ -158,8 +220,14 @@ const businessTypeArrRight = computed(() => {
   }
 }
 .bg-view__body {
-  height: 100%;
+  // height: 100%;
+  height: calc(100% - 66px);
+  overflow-y: hidden;
   margin: 20px 0;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
 }
 @keyframes light-up {
   0% {

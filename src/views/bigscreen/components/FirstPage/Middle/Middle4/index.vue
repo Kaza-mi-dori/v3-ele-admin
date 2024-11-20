@@ -5,7 +5,10 @@
       <el-tab-pane label="汽柴油" name="QICHAIYOU" />
       <el-tab-pane label="化工产品" name="HUAGONG" />
     </Tab>
-    <div id="chart-middle-4" style="height: 180px; margin-top: -10px" />
+    <div
+      id="chart-middle-4"
+      style="height: 180px; width: 100%; margin-top: -10px"
+    />
   </Model1>
 </template>
 
@@ -21,6 +24,8 @@ const HUAGONG = "HUAGONG";
 const QICHAIYOU = "QICHAIYOU";
 
 const activeName = ref<number | string | undefined>(YUANYOU);
+
+const chart = shallowRef<echarts.ECharts | null>(null);
 
 interface DataRecord {
   time: string;
@@ -139,10 +144,10 @@ const handleClick = (tab: TabsPaneContext) => {
 };
 
 const initChartMiddle4 = () => {
-  const chart = echarts.init(
+  chart.value?.clear();
+  chart.value = echarts.init(
     document.getElementById("chart-middle-4") as HTMLDivElement
   );
-  chart.clear();
   // 根据数据渲染图表
   // 类目x轴
   const xAxisData = getDateOfOneMonth();
@@ -216,11 +221,18 @@ const initChartMiddle4 = () => {
       };
     }),
   };
-  chart.setOption(option);
+  chart.value.setOption(option);
 };
 
 onMounted(() => {
   initChartMiddle4();
+  window.addEventListener("resize", () => {
+    try {
+      chart.value?.resize();
+    } catch (e) {
+      console.log(e);
+    }
+  });
 });
 </script>
 
