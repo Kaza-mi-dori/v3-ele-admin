@@ -27,7 +27,8 @@
         <Middle3 />
       </div>
       <div class="b-space" />
-      <div class="middle-item flex-large">价格</div>
+      <!-- <div class="middle-item flex-large"></div> -->
+      <Middle4 />
       <div class="b-space" />
     </div>
     <div class="c-space" />
@@ -54,6 +55,8 @@ import Right1 from "./components/FirstPage/Right/right1.vue";
 import Right2 from "./components/FirstPage/Right/right2.vue";
 import Right3 from "./components/FirstPage/Right/right3.vue";
 import Right4 from "./components/FirstPage/Right/right4.vue";
+import Middle4 from "../bigscreen/components/FirstPage/Middle/Middle4/index.vue";
+
 import { ref } from "vue";
 
 const totalData = ref([
