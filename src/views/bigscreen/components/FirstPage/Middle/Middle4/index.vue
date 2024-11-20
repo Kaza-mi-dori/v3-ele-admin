@@ -231,8 +231,4 @@ onMounted(() => {
   flex-direction: column;
   height: 100%;
 }
-
-::v-deep .el-tabs__active-bar {
-  background-color: #48e4f1;
-}
 </style>

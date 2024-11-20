@@ -48,5 +48,8 @@ const attrs = useAttrs();
       color: $bigscreen-primary-color-1 !important;
     }
   }
+  :deep(.el-tabs__active-bar) {
+    background-color: $bigscreen-primary-color-1 !important;
+  }
 }
 </style>
