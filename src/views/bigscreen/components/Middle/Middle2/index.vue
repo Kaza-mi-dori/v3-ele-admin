@@ -24,11 +24,12 @@ import { ref } from "vue";
 
 <style lang="scss" scoped>
 .middle2-box {
+  text-align: center;
   padding: 10px;
 }
 .map-box {
   .map-img {
-    width: 100%;
+    width: 80%;
     padding: 10px 10px 0 10px;
   }
 }
