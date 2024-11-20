@@ -2,7 +2,7 @@
   <div class="model-box">
     <div class="model-header">
       <img class="model-header__bg" src="@/views/bigscreen/img/box2_top.png" />
-      <div class="model-title" v-if="showHeader">
+      <div v-if="showHeader" class="model-title">
         <div class="model-title__text">{{ title }}</div>
       </div>
       <div class="model-select">
@@ -202,22 +202,22 @@ const formatNumber = (num: number | string): string => {
     margin-right: 15px;
   }
 }
-::v-deep .el-input__prefix {
+:deep(.el-input__prefix) {
   display: none;
 }
-::v-deep .el-input__wrapper {
+:deep(.el-input__wrapper) {
   background-color: #0d2555;
   color: #7fa1f1;
   border-color: #0d2555;
   box-shadow: 0 0 0 1px #0d2555 inset;
 }
 /* 输入框内的文字颜色 */
-::v-deep .el-input__inner {
+:deep(.el-input__inner) {
   color: #7fa1f1;
   background-color: #0d2555;
 }
 /* 占位符的颜色 */
-::v-deep .el-input__inner::placeholder {
+:deep(.el-input__inner::placeholder) {
   color: #7fa1f1;
 }
 </style>
