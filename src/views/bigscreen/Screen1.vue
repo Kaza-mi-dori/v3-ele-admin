@@ -24,7 +24,6 @@
         <Middle3 />
       </div>
       <div class="b-space" />
-      <!-- <div class="middle-item flex-large"></div> -->
       <Middle4 />
     </div>
     <div class="c-space" />
@@ -103,9 +102,6 @@ const totalData = ref([
     }
     .flex-grow {
       flex: 3;
-    }
-    .flex-large {
-      flex: 2;
     }
   }
   .b-right {
