@@ -1,6 +1,6 @@
 <template>
   <div class="middle1-box">
-    <img class="middle1-bg" src="../../../img/tag3.png" alt="" />
+    <img class="middle1-bg" src="../../../../img/tag3.png" alt="" />
     <div class="content-wrapper">
       <div v-for="(item, index) in totalData" :key="index" class="content-box">
         <img class="title-icon" :src="titleArr[index].icon" />
@@ -23,9 +23,9 @@
 </template>
 
 <script setup lang="ts">
-import refinedOilProductIcon from "../../../img/refined_oil_product.png";
-import crudeOilIcon from "../../../img/crude_oil.png";
-import chemicalProductIcon from "../../../img/chemical_product.png";
+import refinedOilProductIcon from "../../../../img/refined_oil_product.png";
+import crudeOilIcon from "../../../../img/crude_oil.png";
+import chemicalProductIcon from "../../../../img/chemical_product.png";
 
 import { ref } from "vue";
 

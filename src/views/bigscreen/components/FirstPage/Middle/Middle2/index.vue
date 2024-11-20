@@ -1,7 +1,7 @@
 <template>
   <div class="middle2-box">
     <div class="map-box">
-      <img class="map-img" src="../../../img/country_map_bg.png" alt="" />
+      <img class="map-img" src="../../../../img/country_map_bg.png" alt="" />
     </div>
     <div class="total-box">
       <div class="total-content">

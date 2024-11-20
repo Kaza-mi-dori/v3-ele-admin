@@ -47,10 +47,10 @@
 
 <script setup lang="ts">
 import Model1 from "./components/Model1/index.vue";
-import Left2 from "./components/Left/Left2/index.vue";
+import Left2 from "./components/FirstPage/Left/left2.vue";
 import Model2 from "./components/Model2/index.vue";
-import Middle2 from "./components/Middle/Middle2/index.vue";
-import Middle3 from "./components/Middle/Middle3/index.vue";
+import Middle2 from "./components/FirstPage/Middle/Middle2/index.vue";
+import Middle3 from "./components/FirstPage/Middle/Middle3/index.vue";
 import Right1 from "./components/FirstPage/Right/right1.vue";
 import Right2 from "./components/FirstPage/Right/right2.vue";
 import Right3 from "./components/FirstPage/Right/right3.vue";
