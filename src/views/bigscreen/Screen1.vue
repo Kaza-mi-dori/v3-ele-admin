@@ -2,7 +2,6 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
-      <div class="b-space" />
       <Model1 class="model1" title="企业宣传" />
       <div class="b-space" />
       <Left2 class="left2" title="合同总数与金额" />
@@ -10,11 +9,9 @@
       <Model1 class="model1" title="合同执行情况" />
       <div class="b-space" />
       <Model1 class="model1" title="合同类型" />
-      <div class="b-space" />
     </div>
     <div class="c-space" />
     <div class="b-middle">
-      <div class="b-space" />
       <div class="middle-item">
         <Model2 class="middle1" :totalData="totalData" />
       </div>
@@ -29,7 +26,6 @@
       <div class="b-space" />
       <!-- <div class="middle-item flex-large"></div> -->
       <Middle4 />
-      <div class="b-space" />
     </div>
     <div class="c-space" />
     <div class="b-right">
