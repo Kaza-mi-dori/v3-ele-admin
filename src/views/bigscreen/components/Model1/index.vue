@@ -42,7 +42,7 @@ defineProps({
     display: flex;
     align-items: center; /* 垂直居中 */
     height: 50px;
-    padding: 0 20px;
+    padding: 0 15px;
     .model-title__bg {
       width: 100%;
       height: 100%;

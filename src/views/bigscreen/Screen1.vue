@@ -2,7 +2,10 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
+      <div class="b-space" />
       <Model1 class="model1" title="企业宣传" />
+      <div class="b-space" />
+      <Left2 class="left2" title="合同总数与金额" />
       <div class="b-space" />
       <Model1 class="model1" title="合同执行情况" />
       <div class="b-space" />
@@ -10,7 +13,19 @@
       <div class="b-space" />
     </div>
     <div class="c-space" />
-    <div class="b-middle" />
+    <div class="b-middle">
+      <div class="b-space" />
+      <div class="middle-item">
+        <Model2 class="middle1" :totalData="totalData" />
+      </div>
+      <div class="b-space" />
+      <div class="middle-item flex-grow">地图</div>
+      <div class="b-space" />
+      <div class="middle-item">利润</div>
+      <div class="b-space" />
+      <div class="middle-item flex-large">价格</div>
+      <div class="b-space" />
+    </div>
     <div class="c-space" />
     <div class="b-right">
       <Right1 />
@@ -27,10 +42,32 @@
 
 <script setup lang="ts">
 import Model1 from "./components/Model1/index.vue";
+import Left2 from "./components/Left/Left2/index.vue";
+import Model2 from "./components/Model2/index.vue";
 import Right1 from "./components/FirstPage/Right/right1.vue";
 import Right2 from "./components/FirstPage/Right/right2.vue";
 import Right3 from "./components/FirstPage/Right/right3.vue";
 import Right4 from "./components/FirstPage/Right/right4.vue";
+import { ref } from "vue";
+
+const totalData = ref([
+  {
+    year: "25438",
+    month: "25438",
+  },
+  {
+    year: "25438",
+    month: "25438",
+  },
+  {
+    year: "25438",
+    month: "25438",
+  },
+  {
+    year: "25438",
+    month: "25438",
+  },
+]);
 </script>
 
 <style lang="scss" scoped>
@@ -50,7 +87,22 @@ import Right4 from "./components/FirstPage/Right/right4.vue";
   }
   .b-middle {
     flex: 1.4;
+    display: flex;
+    justify-content: space-between;
     position: relative;
+    .middle-item {
+      display: flex;
+      flex: 0.6;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ccc;
+    }
+    .flex-grow {
+      flex-grow: 2;
+    }
+    .flex-large {
+      flex: 1.2;
+    }
   }
   .b-right {
     flex: 1;
@@ -61,13 +113,22 @@ import Right4 from "./components/FirstPage/Right/right4.vue";
   height: 10px;
 }
 .c-space {
-  width: 10px;
+  width: 25px;
   height: 0;
+}
+.bg-view-body > .c-space:first-child {
+  width: 15px;
+}
+.bg-view-body > .c-space:last-child {
+  width: 15px;
 }
 .model1 {
   flex: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+.left2 {
+  flex: 0.5;
 }
 </style>
