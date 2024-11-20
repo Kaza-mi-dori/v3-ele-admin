@@ -160,7 +160,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 
   .order {
     width: 30px;

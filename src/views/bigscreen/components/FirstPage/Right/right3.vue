@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex justify-center">
     <img :src="entries" height="300" />
   </div>
 </template>
