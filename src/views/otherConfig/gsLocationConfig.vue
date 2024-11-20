@@ -42,23 +42,24 @@
             <el-form-item label="地图坐标">
               <template #label>
                 <span>地图坐标</span>
-                <el-button
+                <el-link
                   v-if="!isPositionEdit"
                   size="small"
-                  type="text"
-                  style="padding-left: 5px"
+                  type="primary"
+                  style="margin-left: 10px"
                   @click="handleStartChangePos"
                 >
                   修改
-                </el-button>
-                <el-button
+                </el-link>
+                <el-link
                   v-if="isPositionEdit"
+                  style="margin-left: 10px"
                   size="small"
-                  type="text"
+                  type="primary"
                   @click="handleCancelChangePos"
                 >
                   恢复
-                </el-button>
+                </el-link>
               </template>
               <span v-if="currentItem.xOffSet && currentItem.yOffSet">
                 (x: {{ currentItem.xOffSet }}, y: {{ currentItem.yOffSet }})
@@ -72,9 +73,9 @@
             </el-form-item>
           </el-col>
         </el-form>
-        <div class="flex justify-end mt-4">
+        <!-- <div class="flex justify-end mt-4">
           <el-button size="small" type="primary">修改</el-button>
-        </div>
+        </div> -->
         <!-- <el-button
           v-if="!isPositionEdit"
           size="small"
@@ -100,13 +101,15 @@
         id="mapbox"
         class="map"
         @click="handleMapClick"
-        @mousemove="handleMouseOver"
-        @mouseenter="handleMouseEnter"
-        @mouseleave="handleMouseLeave"
+        @mousemove.stop="handleMouseOver"
+        @mouseleave.stop="handleMouseLeave"
       >
         <!-- <span>地图</span> -->
         <span v-if="isMouseWithInMap">
           当前坐标: ({{ currentPos.x }}, {{ currentPos.y }})
+        </span>
+        <span v-if="isPositionEdit && isMouseWithInMap" class="color-red">
+          请点击想要放置的位置以完成位置修改
         </span>
         <!-- 图标，如果有相对坐标与图标则显示 -->
         <div v-for="item in positions" :key="item.id">
@@ -146,7 +149,15 @@
         :src="currentIcon"
         class="absolute"
         height="25"
-        :style="{ left: currentPos.x + 'px', top: currentPos.y + 'px' }"
+        :style="{
+          left: currentPos.x + 'px',
+          top: currentPos.y + 'px',
+          pointerEvents: 'none',
+        }"
+        @mousemove.stop
+        @mouseover.stop
+        @mouseleave.stop
+        @mouseenter.stop
       />
       <!-- <img
         v-if="isPositionEdit && isMouseWithInMap"
@@ -260,7 +271,7 @@ const iconRange = 16;
  * @description: 鼠标进入地图，判断是否为修改位置状态，如果是则将图标位置设置为当前鼠标位置，否则不做任何操作
  * @param {*}
  */
-const handleMouseEnter = () => {
+const handleMouseEnter = (e: MouseEvent) => {
   // if (isPositionEdit.value) {
   //   currentItem.value = {
   //     ...currentItem.value,
@@ -268,19 +279,32 @@ const handleMouseEnter = () => {
   //     yOffSet: currentPos.value.y,
   //   };
   // }
-  isMouseWithInMap.value = true;
+  console.log("enter!");
+  e.preventDefault();
+  if (!isMouseWithInMap.value) {
+    isMouseWithInMap.value = true;
+  }
+  // isMouseWithInMap.value = true;
 };
 
-const handleMouseLeave = () => {
-  isMouseWithInMap.value = false;
+const handleMouseLeave = (e: MouseEvent) => {
+  // console.log("leave!");
+  // isMouseWithInMap.value = false;
+  e.preventDefault();
+  if (isMouseWithInMap.value) {
+    isMouseWithInMap.value = false;
+  }
 };
 
-const handleMouseOver = async (e: MouseEvent) => {
-  isMouseWithInMap.value = true;
+const handleMouseOver = (e: MouseEvent) => {
+  // isMouseWithInMap.value = true;
   // 获取相对map-box的坐标
   // 需要判断target是否为map-box
   if (e.target !== e.currentTarget) {
     return;
+  }
+  if (!isMouseWithInMap.value) {
+    isMouseWithInMap.value = true;
   }
   // 还需要减去尺寸
   // console.log(e.offsetX, e.offsetY);
@@ -325,7 +349,10 @@ const handleMapClick = () => {
  * @param {*}
  */
 const handleStartChangePos = () => {
-  isPositionEdit.value = true;
+  // isPositionEdit.value = true;
+  if (!isPositionEdit.value) {
+    isPositionEdit.value = true;
+  }
 };
 
 /**
@@ -333,16 +360,25 @@ const handleStartChangePos = () => {
  * @param {*}
  */
 const handleCancelChangePos = () => {
-  isPositionEdit.value = false;
+  // isPositionEdit.value = false;
+  if (isPositionEdit.value) {
+    isPositionEdit.value = false;
+  }
 };
 
 // 鼠标移动到图标上时显示其内容
 const handleMouseEnterIcon = () => {
+  // isMouseInIcon.value = true;
+  if (!isMouseInIcon.value) {
+    return;
+  }
   isMouseInIcon.value = true;
 };
 
 const handleMouseLeaveIcon = () => {
-  isMouseInIcon.value = false;
+  if (isMouseInIcon.value) {
+    isMouseInIcon.value = false;
+  }
 };
 
 const handleNodeClick = (data: any) => {
