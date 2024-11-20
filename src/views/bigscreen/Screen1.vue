@@ -2,7 +2,7 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
-      <Model1 class="model1" title="企业宣传" />
+      <Left1 />
       <div class="b-space" />
       <Left2 class="left2" title="合同总数与金额" />
       <div class="b-space" />
@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 import Model1 from "./components/FirstPage/Model1/index.vue";
+import Left1 from "./components/FirstPage/Left/left1.vue";
 import Left2 from "./components/FirstPage/Left/left2.vue";
 import Model2 from "./components/FirstPage/Model2/index.vue";
 import Middle2 from "./components/FirstPage/Middle/Middle2/index.vue";

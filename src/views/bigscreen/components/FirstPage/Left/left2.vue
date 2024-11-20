@@ -178,7 +178,7 @@ const formatNumber = (num: number | string): string => {
         text-align: left; /* 文字居中 */
         font-size: 14px;
         padding-left: 15px;
-        color: #fdfdfc;
+        color: #ffffff;
       }
       .content-value {
         display: flex;

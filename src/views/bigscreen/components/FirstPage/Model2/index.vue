@@ -91,7 +91,7 @@ const formatNumber = (num: number | string): string => {
   .content-box {
     flex: 1;
     z-index: 1; /* 确保文字在背景图片上方 */
-    color: #fdfdfc;
+    color: #ffffff;
     font-size: 14px;
   }
   .title-box,
