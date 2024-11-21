@@ -21,11 +21,13 @@
         <Middle2 class="middle2" />
       </div>
       <div class="b-space" />
-      <div class="middle-item">
+      <div class="middle-item" style="margin-bottom: 10px">
         <Middle3 />
       </div>
       <div class="b-space" />
-      <Middle4 />
+      <div class="middle-item">
+        <Middle4 />
+      </div>
     </div>
     <div class="c-space" />
     <div class="b-right">
@@ -83,6 +85,8 @@ const totalData = ref([
   flex: 1;
   display: flex;
   width: 100%;
+  // height如果设为100%会导致左右定高，不设则会根据内容撑开
+  // 定高可以自适应一屏，但是会使得中间地图无法保持比例，进而导致相对坐标不准确
   height: 100%;
   .b-left,
   .b-middle,
@@ -96,6 +100,7 @@ const totalData = ref([
   .b-middle {
     flex: 1.4;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     position: relative;
     .middle-item {

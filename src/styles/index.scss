@@ -106,3 +106,31 @@
 .g-button-1 {
   @apply shadow-md;
 }
+
+.dark-popper {
+  &.el-popper.el-popover {
+    background-color: #303133;
+    border: 1px solid #303133;
+    padding: 5px 10px;
+    &[data-popper-placement^="top"] {
+      .el-popper__arrow::after {
+        border-color: #303133 transparent transparent transparent !important;
+      }
+    }
+    &[data-popper-placement^="bottom"] {
+      .el-popper__arrow::after {
+        border-color: transparent transparent #303133 transparent !important;
+      }
+    }
+    &[data-popper-placement^="left"] {
+      .el-popper__arrow::after {
+        border-color: transparent transparent transparent #303133 !important;
+      }
+    }
+    &[data-popper-placement^="right"] {
+      .el-popper__arrow::after {
+        border-color: transparent #303133 transparent transparent !important;
+      }
+    }
+  }
+}

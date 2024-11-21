@@ -74,7 +74,10 @@ const businessTypeArrRight = computed(() => {
 
 const initScale = () => {
   const originalWidth = 1920;
-  const originalHeight = 1080;
+  // const originalHeight = 1080;
+  // 渲染后读取容器的高度
+  const bgContainer = ref<HTMLElement | null>(null);
+  const originalHeight = bgContainer.value?.offsetHeight || 1080;
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const containerElement = document.getElementById("bg-container");
@@ -105,11 +108,13 @@ onMounted(() => {
   // window.addEventListener("resize", () => {
   //   initScale();
   // });
-  initScale();
-  // 让所有echarts图表自适应
-  setTimeout(() => {
-    window.dispatchEvent(new Event("resize"));
-  }, 100);
+  nextTick(() => {
+    initScale();
+    // 让所有echarts图表自适应
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 100);
+  });
 });
 </script>
 
@@ -117,7 +122,7 @@ onMounted(() => {
 .bg-view {
   // min-width: 1750px;
   // min-height: 900px;
-  height: 1080px;
+  // height: 1080px;
   width: 1920px;
   font-size: 12px;
   color: #bfbfbf;
@@ -221,7 +226,8 @@ onMounted(() => {
 }
 .bg-view__body {
   // height: 100%;
-  height: calc(100% - 66px);
+  // height: calc(100% - 66px);
+  // overflow-y: auto; /* 纵向滚动条 */
   overflow-y: hidden;
   margin: 20px 0;
   ::-webkit-scrollbar {
