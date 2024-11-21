@@ -153,6 +153,7 @@ const formatNumber = (num: number | string): string => {
       position: relative;
       width: 100%;
       height: 100%;
+      padding-left: 5px;
       div {
         flex: 1;
         position: relative;
