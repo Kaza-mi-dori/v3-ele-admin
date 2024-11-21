@@ -8,7 +8,7 @@
       <div class="b-space" />
       <Model1 class="model1" title="合同执行情况" />
       <div class="b-space" />
-      <Model1 class="model1" title="合同类型" />
+      <Left4 />
     </div>
     <div class="c-space" />
     <div class="b-middle">
@@ -44,6 +44,7 @@
 import Model1 from "./components/FirstPage/Model1/index.vue";
 import Left1 from "./components/FirstPage/Left/left1.vue";
 import Left2 from "./components/FirstPage/Left/left2.vue";
+import Left4 from "./components/FirstPage/Left/left4.vue";
 import Model2 from "./components/FirstPage/Model2/index.vue";
 import Middle2 from "./components/FirstPage/Middle/Middle2/index.vue";
 import Middle3 from "./components/FirstPage/Middle/Middle3/index.vue";
