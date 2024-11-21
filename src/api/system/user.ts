@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import request2 from "@/utils/request2";
 
 const USER_BASE_URL = "/api/v1/users";
 
@@ -378,3 +379,138 @@ export interface EmailBindingForm {
   /** 验证码 */
   code?: string;
 }
+
+const USER_BASE_URL_2 = "/Api/Core";
+
+export interface LoginParams_2 {
+  /** 用户名 */
+  username: string;
+  /** 密码 */
+  password: string;
+  /** 验证码 */
+  code: string;
+}
+
+export interface UserForm_2 {
+  /** 用户ID */
+  id?: number;
+  /** 账号*/
+  登录名: string;
+  /** 昵称 */
+  显示名: string;
+  /** 密码 */
+  密码: string;
+  /** 手机号 */
+  mobile: string;
+  /** 部门ID集合 */
+  部门: number[];
+  /** 角色ID集合 */
+  角色: number[];
+  /** 职务ID集合 */
+  职务: number[];
+  /** 显示顺序 */
+  优先级: number;
+  /** 手机 */
+  手机: string;
+}
+
+/** 开发API */
+export const UserAPI2 = {
+  /**
+   * 登录
+   */
+  login(data: LoginParams_2) {
+    return request2<any, any>({
+      url: `${USER_BASE_URL_2}/Other/Login`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 获取当前登录用户信息
+   *
+   * @returns 登录用户昵称、头像信息，包括角色和权限
+   */
+  getInfo(token: string) {
+    return request2<any, any>({
+      url: `${USER_BASE_URL_2}/Other/Login`,
+      method: "get",
+      params: {
+        token: token,
+      },
+    });
+  },
+
+  /**
+   * 获取用户分页列表
+   *
+   * @param queryParams 查询参数
+   */
+  getPage(queryParams: UserPageQuery) {
+    return request2<any, PageResult<UserPageVO[]>>({
+      url: `${USER_BASE_URL_2}/Other/page`,
+      method: "get",
+      params: queryParams,
+    });
+  },
+
+  /**
+   * 获取验证码
+   * @returns 验证码图片
+   */
+  getCaptCha(loginName: string) {
+    return request2<any, any>({
+      url: `${USER_BASE_URL_2}/Other/GetLoginCaptcha`,
+      method: "get",
+      params: {
+        登录名: loginName,
+      },
+    });
+  },
+  /**
+   * 获取用户表单详情
+   */
+  getFormData(userId: number) {
+    return request2<any, any>({
+      url: `${USER_BASE_URL_2}/System/User/`,
+      method: "get",
+      params: {
+        id: userId,
+      },
+    });
+  },
+  /**
+   * 添加用户
+   */
+  add(data: UserForm) {
+    return request2({
+      url: `${USER_BASE_URL_2}/System/User`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 修改用户
+   */
+  update(id: number, data: UserForm) {
+    return request2({
+      url: `${USER_BASE_URL_2}/System/User`,
+      method: "put",
+      params: { id: id },
+      data: data,
+    });
+  },
+
+  /**
+   * 修改用户密码
+   */
+  resetPassword(id: number, password: string) {
+    return request2({
+      url: `${USER_BASE_URL_2}/System/User/ResetPassword`,
+      method: "put",
+      params: { id: id, password: password },
+    });
+  },
+};
