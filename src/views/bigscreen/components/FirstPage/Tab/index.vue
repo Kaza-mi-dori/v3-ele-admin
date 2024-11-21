@@ -23,7 +23,7 @@ const attrs = useAttrs();
     }
   }
   :deep(.el-tabs__item) {
-    padding: 0 10px !important;
+    padding: 0 20px !important;
     text-align: center;
     color: white;
     font-size: 1.1em;
