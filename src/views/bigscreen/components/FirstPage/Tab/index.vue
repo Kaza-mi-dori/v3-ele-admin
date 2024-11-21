@@ -33,7 +33,7 @@ const attrs = useAttrs();
       &::after {
         content: "";
         display: block;
-        height: 2px;
+        height: 3px;
         color: $bigscreen-primary-color-1 !important;
         background-color: $bigscreen-primary-color-1;
         position: absolute;

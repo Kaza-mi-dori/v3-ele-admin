@@ -63,7 +63,10 @@ const handleMouseoutText = () => {
     letter-spacing: 1px;
     height: 200px;
     overflow-y: hidden;
-    @keyframes identifier {
+    // 需要有间隔时间，否则会出现闪烁
+    animation: scroll 30s ease-in-out forwards infinite;
+    animation-delay: 3s;
+    @keyframes scroll {
       0% {
         transform: translateY(80%);
       }
@@ -71,9 +74,6 @@ const handleMouseoutText = () => {
         transform: translateY(-100%);
       }
     }
-    // 需要有间隔时间，否则会出现闪烁
-    animation: identifier 15s ease-in-out forwards infinite;
-    animation-delay: 3s;
   }
 }
 </style>
