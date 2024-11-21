@@ -59,7 +59,6 @@ import { ref } from "vue";
   .num {
     margin-left: 5px;
     font-size: 15px;
-    font-weight: bold;
     color: #78ecf1;
   }
 }
