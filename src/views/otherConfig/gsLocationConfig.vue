@@ -504,9 +504,6 @@ onMounted(() => {
     background-size: 100% 100%;
     width: 1261px;
     height: 853px;
-    // width: 100%;
-    // margin: 10px;
-    // padding: 10px;
     border: 1px solid #ccc;
   }
 }

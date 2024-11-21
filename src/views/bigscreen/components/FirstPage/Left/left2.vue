@@ -108,7 +108,9 @@ const formatNumber = (num: number | string): string => {
   .model-header {
     display: flex;
     justify-content: space-between;
+    position: relative; // 让头部背景高度与头部一致
     .model-header__bg {
+      height: 100%;
       width: 100%;
       position: absolute;
       top: 0;
@@ -147,23 +149,28 @@ const formatNumber = (num: number | string): string => {
       right: 0;
     }
     .model-body__content {
+      padding-left: 5px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      overflow-x: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
       width: 100%;
-      height: 100%;
-      padding-left: 5px;
+      // height: 100%;
       div {
         flex: 1;
         position: relative;
-        height: 80%;
+        // height: 80%;
         display: flex;
         justify-content: center;
         align-items: center;
       }
       img {
-        width: 100%;
+        // width: 100%;
+        // 150%效果似乎更好
+        width: 150%;
         height: 100%;
         position: absolute;
         top: 0;
@@ -177,8 +184,10 @@ const formatNumber = (num: number | string): string => {
         align-items: flex-start; /* 水平居中 */
         justify-content: center; /* 垂直居中 */
         text-align: left; /* 文字居中 */
-        font-size: 14px;
+        font-size: 16px;
         padding-left: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
         color: #ffffff;
       }
       .content-value {

@@ -4,12 +4,14 @@
       <div class="item-img">
         <img src="../../../img/company.png" alt="" />
       </div>
-      <div
-        class="item-text"
-        @mouseover="handleMouseoverText"
-        @mouseout="handleMouseoutText"
-      >
-        <div>{{ companyInfo }}</div>
+      <div class="scroll-area">
+        <div
+          class="item-text"
+          @mouseover="handleMouseoverText"
+          @mouseout="handleMouseoutText"
+        >
+          {{ companyInfo }}
+        </div>
       </div>
     </div>
   </Model1>
@@ -56,19 +58,24 @@ const handleMouseoutText = () => {
     text-align: center;
     margin: auto;
   }
+  .scroll-area {
+    flex: 1;
+    max-height: 150px;
+    margin: 10px;
+    overflow: hidden;
+  }
   .item-text {
     flex: 1;
     color: #ffffff;
     font-size: 14px;
     letter-spacing: 1px;
-    height: 200px;
-    overflow-y: hidden;
+    line-height: 20px;
     // 需要有间隔时间，否则会出现闪烁
-    animation: scroll 30s ease-in-out forwards infinite;
-    animation-delay: 3s;
+    animation: scroll 25s ease-in forwards infinite;
+    // animation-delay: 0.5s;
     @keyframes scroll {
       0% {
-        transform: translateY(80%);
+        transform: translateY(100%);
       }
       100% {
         transform: translateY(-100%);
