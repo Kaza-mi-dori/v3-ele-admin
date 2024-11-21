@@ -189,7 +189,7 @@ const initChartMiddle4 = () => {
       data: xAxisData,
       axisLine: {
         lineStyle: {
-          color: "#2a5999",
+          color: "#5099E3",
         },
       },
     },
@@ -200,14 +200,14 @@ const initChartMiddle4 = () => {
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#2a5999",
+          color: "#5099E3",
         },
       },
       splitLine: {
         show: true, // 显示分割线
         lineStyle: {
           type: "dashed", // 虚线
-          color: "#2a5999",
+          color: "#27518D",
         },
       },
     },
