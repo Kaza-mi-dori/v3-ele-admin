@@ -6,8 +6,8 @@
         style="
           width: 100%;
           padding-top: 10px;
-          padding-right: 10px;
-          padding-left: 10px;
+          padding-right: 20px;
+          padding-left: 20px;
         "
       >
         <div
@@ -153,7 +153,7 @@ onMounted(() => {
   .el-progress.el-progress--line.el-progress--without-text.__progress
   .el-progress-bar
   > .el-progress-bar__outer {
-  background-color: inherit !important;
+  background-color: #192d56 !important;
 }
 
 .rank-item {
@@ -170,6 +170,7 @@ onMounted(() => {
     font-size: 14px;
     font-weight: bold;
     padding-left: 5px;
+    margin-right: 15px;
     color: #fff;
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -177,7 +178,7 @@ onMounted(() => {
 
   .__name {
     font-size: 14px;
-    color: #fff;
+    color: #7b9eeb;
     margin-right: 3em;
   }
 
@@ -188,7 +189,7 @@ onMounted(() => {
   .__value {
     font-size: 14px;
     margin-left: 2em;
-    color: #fff;
+    color: #7b9eeb;
   }
 }
 </style>
