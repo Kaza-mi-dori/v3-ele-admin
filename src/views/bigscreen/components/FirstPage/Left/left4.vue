@@ -20,6 +20,8 @@ const SELL = "SELL";
 
 const activeName = ref<number | string | undefined>(PURCHASE);
 
+const chart = shallowRef<echarts.ECharts | null>(null);
+
 // 每个类别对应的数据系列
 const categoryMap = {
   PURCHASE: ["原油", "化工产品", "燃料油", "成品油", "LNG", "煤炭"],
@@ -38,10 +40,10 @@ const handleClick = (tab: TabsPaneContext) => {
 };
 
 const initChartMiddle4 = () => {
-  const chart = echarts.init(
+  chart.value = echarts.init(
     document.getElementById("chart-left-4") as HTMLDivElement
   );
-  chart.clear();
+  chart.value.clear();
   const categories = categoryMap[activeName.value as keyof typeof categoryMap];
   const data = getRandomCategoryData(categories);
 
@@ -116,11 +118,14 @@ const initChartMiddle4 = () => {
       },
     ],
   };
-  chart.setOption(option);
+  chart.value.setOption(option);
 };
 
 onMounted(() => {
   initChartMiddle4();
+  window.addEventListener("resize", () => {
+    chart.value?.resize();
+  });
 });
 </script>
 
