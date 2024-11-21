@@ -206,7 +206,7 @@ onMounted(() => {
     background-repeat: no-repeat; /* 防止背景图片重复 */
     background-size: cover; /* 背景图片填充整个元素，保持比例 */
     width: 100px;
-    height: 30px;
+    height: 42px;
     margin-right: 15px;
     display: flex;
     justify-content: center;
