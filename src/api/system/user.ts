@@ -382,15 +382,6 @@ export interface EmailBindingForm {
 
 const USER_BASE_URL_2 = "/Api/Core";
 
-export interface LoginParams_2 {
-  /** 用户名 */
-  username: string;
-  /** 密码 */
-  password: string;
-  /** 验证码 */
-  code: string;
-}
-
 export interface UserForm_2 {
   /** 用户ID */
   id?: number;
@@ -400,8 +391,6 @@ export interface UserForm_2 {
   显示名: string;
   /** 密码 */
   密码: string;
-  /** 手机号 */
-  mobile: string;
   /** 部门ID集合 */
   部门: number[];
   /** 角色ID集合 */
@@ -415,18 +404,7 @@ export interface UserForm_2 {
 }
 
 /** 开发API */
-export const UserAPI2 = {
-  /**
-   * 登录
-   */
-  login(data: LoginParams_2) {
-    return request2<any, any>({
-      url: `${USER_BASE_URL_2}/Other/Login`,
-      method: "post",
-      data: data,
-    });
-  },
-
+export const UserAPI_2 = {
   /**
    * 获取当前登录用户信息
    *
@@ -452,20 +430,6 @@ export const UserAPI2 = {
       url: `${USER_BASE_URL_2}/Other/page`,
       method: "get",
       params: queryParams,
-    });
-  },
-
-  /**
-   * 获取验证码
-   * @returns 验证码图片
-   */
-  getCaptCha(loginName: string) {
-    return request2<any, any>({
-      url: `${USER_BASE_URL_2}/Other/GetLoginCaptcha`,
-      method: "get",
-      params: {
-        登录名: loginName,
-      },
     });
   },
   /**

@@ -1,3 +1,4 @@
+import { unref } from "vue";
 /**
  * Check if an element has a class
  * @param {HTMLElement} ele
@@ -38,4 +39,22 @@ export function removeClass(ele: HTMLElement, cls: string) {
 export function isExternal(path: string) {
   const isExternal = /^(https?:|http?:|mailto:|tel:)/.test(path);
   return isExternal;
+}
+
+/**
+ * 深度unref
+ */
+export function deepUnref(value: any) {
+  if (Array.isArray(value)) {
+    return value.map((item) => deepUnref(item));
+  } else if (value && typeof value === "object") {
+    const unrefObject = {};
+    for (const key in value) {
+      if (value.hasOwnProperty(key)) {
+        unrefObject[key] = deepUnref(unref(value[key]));
+      }
+    }
+    return unrefObject;
+  }
+  return unref(value);
 }

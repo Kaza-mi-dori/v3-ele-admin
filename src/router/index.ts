@@ -91,24 +91,26 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-  // {
-  //   path: "/datasource",
-  //   name: "DataSource",
-  //   component: Layout,
-  //   redirect: "/list",
-  //   meta: {
-  //     title: "数据源管理",
-  //     icon: "hdd",
-  //   },
-  //   children: [
-  //     {
-  //       path: "list",
-  //       name: "DataSourceList",
-  //       component: () => import("@/views/datasource/index.vue"),
-  //       meta: { title: "数据源列表" },
-  //     },
-  //   ],
-  // },
+  {
+    path: "/reportMng",
+    name: "ReportMng",
+    component: Layout,
+    meta: {
+      title: "报表管理",
+      icon: "report",
+    },
+    children: [
+      {
+        path: "yearlyReportMng",
+        name: "YearlyReportMng",
+        component: () => import("@/views/datareport/yearlyReport/index.vue"),
+        meta: {
+          title: "业态经营报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+    ],
+  },
   /**
    * 此路由可能直接由能源一体化跳转故用独立路由守卫
    * 仍然需要鉴权，先查看有无token, 没有的话查看是否有code
@@ -119,6 +121,12 @@ export const constantRoutes: RouteRecordRaw[] = [
     beforeEnter: (to, from, next) => {
       next();
     },
+  },
+  // 开发环境后端登录页
+  {
+    path: "/devLogin",
+    component: () => import("@/views/login/loginDev.vue"),
+    meta: { hidden: true },
   },
 ];
 

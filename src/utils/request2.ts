@@ -32,7 +32,8 @@ service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const accessToken = getToken();
     if (accessToken) {
-      config.headers.Authorization = accessToken;
+      // config.headers.Authorization = accessToken;
+      config.headers["Gtzn-Token"] = `${accessToken}`;
     }
     return config;
   },
@@ -63,7 +64,8 @@ service.interceptors.response.use(
       时间戳: timestamp,
     } = response.data;
 
-    if (code === ResultEnum.SUCCESS) {
+    if (code === ResultEnum.DEV_SUCCESS) {
+      // console.log("开发环境请求成功", flag, msg, code, data, timestamp);
       return data;
     }
 

@@ -21,10 +21,9 @@
       <el-button
         v-if="isEditing && editable"
         class="g-button-1"
-        type="primary"
         @click="handleCancel"
       >
-        取消
+        取消更改
       </el-button>
       <el-button class="g-button-1" @click="favoForm">收藏</el-button>
       <el-button class="g-button-1" @click="exportForm">导出</el-button>
@@ -61,6 +60,8 @@ import customReportDetailForm from "./customReport/detail.vue";
 import partnerReportDetailForm from "./partnerReport/detail.vue";
 import partnerDetailForm from "@/views/partner/detail.vue";
 
+import BusinessFormAPI from "@/api/businessForm";
+
 import { ref, onMounted, shallowRef } from "vue";
 import { useRoute } from "vue-router";
 
@@ -72,7 +73,7 @@ const formRef = ref(null);
 
 const currentComponent = shallowRef<any>(null);
 
-const currentComponentType = ref("");
+const currentComponentType = ref();
 
 const currentFormStatus = ref<string | null>();
 
@@ -94,8 +95,115 @@ const handleEdit = () => {
   }
 };
 
-const submitForm = () => {
-  console.log("submit form");
+const convertToBackendData = (type: string | null, data: any) => {
+  const result: GenericRecord = {
+    id: route.query.id,
+  };
+  switch (type) {
+    case "yearlyReport":
+      result["日期"] = new Date().setFullYear(data.year);
+      result["业务维度"] = data.businessDimension;
+      result["内容"] = {
+        利润金额: data.profit,
+        营收金额: data.income,
+        采购金额: data.purchaseAmount,
+        销售金额: data.salesAmount,
+        采购合同数: data.purchaseContractCount,
+        销售合同数: data.salesContractCount,
+        合同总份数: data.contractCount,
+        合同总金额: data.contractAmount,
+        采购合同份数: data.purchaseOrderCount,
+        销售合同份数: data.salesOrderCount,
+        合同履行数: data.contractFulfilledCount,
+        风险合同数: data.riskContractCount,
+        库存量: data.storage,
+        结算金额: data.settlementAmount,
+        结算数量: data.settlementCount,
+        计划营收: data.planIncome,
+        计划利润: data.planProfit,
+        营收目标完成率: data.incomeFulfilledRate,
+        利润目标完成率: data.profitFulfilledRate,
+      };
+      console.log("converted", result);
+      return result;
+    case "marketPriceReport":
+      return {
+        ...data,
+        // 转换数据
+      };
+    case "firmMngReport":
+      return {
+        ...data,
+        // 转换数据
+      };
+    case "firmReport":
+      return {
+        ...data,
+        // 转换数据
+      };
+    case "customReport":
+      return {
+        ...data,
+        // 转换数据
+      };
+    case "partnerReport":
+      return {
+        ...data,
+        // 转换数据
+      };
+    case "partnerDetail":
+      return {
+        ...data,
+        // 转换数据
+      };
+    default:
+      return data;
+  }
+};
+
+const submitForm = async () => {
+  // 获取数据
+  if (!formRef.value) return;
+  const form = formRef.value as any;
+  const valid = await form.validateForm();
+  if (!valid) return;
+  const submitData = form.getFormValue();
+  if (!submitData) return;
+  // console.log(submitData);
+  const realDataToSubmit = convertToBackendData(
+    route.query.type as Nullable<string>,
+    submitData
+  );
+  console.log("real", realDataToSubmit);
+  // 根据当前表单类型提交数据
+  // switch (currentComponentType.value) {
+  //   case "yearlyReport":
+  //     const op = route.query.id
+  //       ? BusinessFormAPI.editBusinessReportForm
+  //       : BusinessFormAPI.addBusinessReportForm;
+  //     op(submitData);
+  //     break;
+  //   case "marketPriceReport":
+  //     BusinessFormAPI.saveMarketPriceReport(submitData);
+  //     break;
+  //   case "firmMngReport":
+  //     BusinessFormAPI.saveFirmMngReport(submitData);
+  //     break;
+  //   case "firmReport":
+  //     BusinessFormAPI.saveFirmReport(submitData);
+  //     break;
+  //   case "customReport":
+  //     BusinessFormAPI.saveCustomReport(submitData);
+  //     break;
+  //   case "partnerReport":
+  //     BusinessFormAPI.savePartnerReport(submitData);
+  //     break;
+  //   case "partnerDetail":
+  //     BusinessFormAPI.savePartnerDetail(submitData);
+  //     break;
+  //   default:
+  //     break;
+  // }
 };
 
 const favoForm = () => {
@@ -181,9 +289,9 @@ onMounted(() => {
   // color: #fefefe;
   top: -5px;
   right: 10px;
-  box-shadow: 0 0 -10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -10px rgba(0, 0, 0, 0.5);
   z-index: 1;
   padding: 5px 20px;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 10px 10px;
 }
 </style>

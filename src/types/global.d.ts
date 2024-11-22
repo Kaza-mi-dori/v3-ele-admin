@@ -1,5 +1,20 @@
 declare global {
   /**
+   * 空类型
+   */
+  type Nullable<T> = T | null;
+
+  type NullableObject<T> = {
+    [P in keyof T]: Nullable<T[P]>;
+  };
+  /**
+   * 通用对象
+   */
+  interface AnyObject {
+    [key: string]: any;
+  }
+
+  /**
    * 响应数据
    */
   interface ResponseData<T = any> {
@@ -17,6 +32,16 @@ declare global {
   }
 
   /**
+   * 分页查询对象(开发版)
+   */
+  interface PageQueryDev {
+    /** 页码 */
+    页码: number;
+    /** 每页显示数量 */
+    页容量: number;
+  }
+
+  /**
    * 分页响应对象
    */
   interface PageResult<T> {
@@ -26,6 +51,19 @@ declare global {
     total: number;
   }
 
+  /**
+   * 分页响应对象(开发版)
+   */
+  interface PageResultDev<T> {
+    /** 数据列表 */
+    当前记录: T;
+    /** 总数 */
+    记录总数: number;
+    /** 当前页 */
+    当前页: number;
+    /** 总页数 */
+    总页数: number;
+  }
   /**
    * 页签对象
    */
