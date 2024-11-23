@@ -425,11 +425,11 @@ export const UserAPI_2 = {
    *
    * @param queryParams 查询参数
    */
-  getPage(queryParams: UserPageQuery) {
-    return request2<any, PageResult<UserPageVO[]>>({
-      url: `${USER_BASE_URL_2}/Other/page`,
-      method: "get",
-      params: queryParams,
+  getPage(queryParams: any) {
+    return request2<any, PageResult<any[]>>({
+      url: `${USER_BASE_URL_2}/System/User/Query`,
+      method: "post",
+      data: queryParams,
     });
   },
   /**
@@ -437,7 +437,7 @@ export const UserAPI_2 = {
    */
   getFormData(userId: number) {
     return request2<any, any>({
-      url: `${USER_BASE_URL_2}/System/User/`,
+      url: `${USER_BASE_URL_2}/System/User`,
       method: "get",
       params: {
         id: userId,
@@ -447,7 +447,7 @@ export const UserAPI_2 = {
   /**
    * 添加用户
    */
-  add(data: UserForm) {
+  add(data: any) {
     return request2({
       url: `${USER_BASE_URL_2}/System/User`,
       method: "post",
@@ -458,15 +458,24 @@ export const UserAPI_2 = {
   /**
    * 修改用户
    */
-  update(id: number, data: UserForm) {
+  update(id: number, data: any) {
     return request2({
       url: `${USER_BASE_URL_2}/System/User`,
-      method: "put",
-      params: { id: id },
+      method: "patch",
       data: data,
     });
   },
 
+  /**
+   * 删除用户
+   */
+  delete(id: number | string) {
+    return request2({
+      url: `${USER_BASE_URL_2}/System/User`,
+      method: "delete",
+      params: { id: id },
+    });
+  },
   /**
    * 修改用户密码
    */

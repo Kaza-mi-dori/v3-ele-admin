@@ -73,6 +73,7 @@ service.interceptors.response.use(
     return Promise.reject(new Error(msg || "Error"));
   },
   (error: any) => {
+    console.log("请求错误", error);
     // 异常处理 非 2xx 状态码 会进入这里
     if (error.response.data) {
       const { code, msg } = error.response.data;

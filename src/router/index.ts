@@ -128,6 +128,53 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: () => import("@/views/login/loginDev.vue"),
     meta: { hidden: true },
   },
+  // 开发环境系统管理
+  {
+    path: "/devSystemMng",
+    component: Layout,
+    meta: {
+      title: "系统管理2",
+      icon: "setting",
+    },
+    children: [
+      {
+        path: "userMng",
+        name: "UserMngDev",
+        component: () => import("@/views/system/user/index2.vue"),
+        meta: {
+          title: "用户管理",
+          icon: "user",
+        },
+      },
+      {
+        path: "deptMng",
+        name: "DeptMngDev",
+        component: () => import("@/views/system/dept/index2.vue"),
+        meta: {
+          title: "部门管理",
+          icon: "tree",
+        },
+      },
+      {
+        path: "roleMng",
+        name: "RoleMngDev",
+        component: () => import("@/views/system/role/index2.vue"),
+        meta: {
+          title: "角色管理",
+          icon: "role",
+        },
+      },
+      {
+        path: "logMng",
+        name: "LogMngDev",
+        component: () => import("@/views/system/log/index2.vue"),
+        meta: {
+          title: "操作日志",
+          icon: "document",
+        },
+      },
+    ],
+  },
 ];
 
 /**

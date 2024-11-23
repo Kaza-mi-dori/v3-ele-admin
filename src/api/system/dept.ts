@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import request2 from "@/utils/request2";
 
 const DEPT_BASE_URL = "/api/v1/dept";
 
@@ -128,3 +129,73 @@ export interface DeptForm {
   /** 状态(1:启用；0：禁用) */
   status?: number;
 }
+
+const DEPT_BASE_URL_2 = "/Api/Core";
+
+export const DeptAPI2 = {
+  /**
+   * 获取部门列表
+   * @param queryParams 查询参数（可选）
+   * @returns 部门树形表格数据
+   */
+  getList(queryParams?: any) {
+    return request2<any, any[]>({
+      url: `${DEPT_BASE_URL_2}/Dept/Query`,
+      method: "get",
+      params: queryParams,
+    });
+  },
+
+  /**
+   * 新增部门
+   * @param data 部门表单数据
+   * @returns 请求结果
+   */
+  add(data: any) {
+    return request2({
+      url: `${DEPT_BASE_URL_2}/Dept/Create`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 修改部门
+   * @param id 部门ID
+   * @param data 部门表单数据
+   * @returns 请求结果
+   */
+  update(id: number, data: any) {
+    return request2({
+      url: `${DEPT_BASE_URL_2}/Dept/Update`,
+      method: "put",
+      data: data,
+    });
+  },
+
+  /**
+   * 删除部门
+   * @param ids 部门ID，多个以英文逗号(,)分隔
+   * @returns 请求结果
+   */
+  deleteByIds(ids: string) {
+    return request2({
+      url: `${DEPT_BASE_URL_2}/Dept/Delete`,
+      method: "delete",
+      params: { ids: ids },
+    });
+  },
+
+  /**
+   * 获取部门表单数据
+   * @param id 部门ID
+   * @returns 部门表单数据
+   */
+  getFormData(id: number) {
+    return request2<any, any>({
+      url: `${DEPT_BASE_URL_2}/Dept/GetForm`,
+      method: "get",
+      params: { id: id },
+    });
+  },
+};
