@@ -130,9 +130,35 @@ export interface DeptForm {
   status?: number;
 }
 
-const DEPT_BASE_URL_2 = "/Api/Core";
+const DEPT_BASE_URL_2 = "/Api/Core/System";
+
+export interface DeptQuery2 {
+  名称: string;
+  id集合: Array<string | number>;
+}
+
+export interface DeptForm2 {
+  id?: number;
+  名称: string;
+  描述: string;
+  层级?: number;
+  左值: Nullable<number>;
+  右值: Nullable<number>;
+  角色: Array<string | number>;
+}
 
 export const DeptAPI2 = {
+  getAllDeptList() {
+    return request2<any, any>({
+      url: `${DEPT_BASE_URL_2}/Dept/Query`,
+      method: "post",
+      // data: {},
+      data: {
+        页码: 1,
+        页容量: 100,
+      },
+    });
+  },
   /**
    * 获取部门列表
    * @param queryParams 查询参数（可选）
@@ -141,8 +167,8 @@ export const DeptAPI2 = {
   getList(queryParams?: any) {
     return request2<any, any[]>({
       url: `${DEPT_BASE_URL_2}/Dept/Query`,
-      method: "get",
-      params: queryParams,
+      method: "post",
+      data: queryParams,
     });
   },
 
@@ -153,7 +179,7 @@ export const DeptAPI2 = {
    */
   add(data: any) {
     return request2({
-      url: `${DEPT_BASE_URL_2}/Dept/Create`,
+      url: `${DEPT_BASE_URL_2}/Dept`,
       method: "post",
       data: data,
     });
@@ -167,8 +193,8 @@ export const DeptAPI2 = {
    */
   update(id: number, data: any) {
     return request2({
-      url: `${DEPT_BASE_URL_2}/Dept/Update`,
-      method: "put",
+      url: `${DEPT_BASE_URL_2}/Dept`,
+      method: "patch",
       data: data,
     });
   },
@@ -178,11 +204,11 @@ export const DeptAPI2 = {
    * @param ids 部门ID，多个以英文逗号(,)分隔
    * @returns 请求结果
    */
-  deleteByIds(ids: string) {
+  deleteByIds(id: string) {
     return request2({
-      url: `${DEPT_BASE_URL_2}/Dept/Delete`,
+      url: `${DEPT_BASE_URL_2}/Dept`,
       method: "delete",
-      params: { ids: ids },
+      params: { id: id },
     });
   },
 
@@ -193,7 +219,7 @@ export const DeptAPI2 = {
    */
   getFormData(id: number) {
     return request2<any, any>({
-      url: `${DEPT_BASE_URL_2}/Dept/GetForm`,
+      url: `${DEPT_BASE_URL_2}/Dept`,
       method: "get",
       params: { id: id },
     });

@@ -33,7 +33,10 @@
             <el-input v-model="loginData.password" type="password" />
           </el-form-item>
           <el-form-item label="验证码" prop="captcha">
-            <el-input v-model="loginData.captcha">
+            <el-input
+              v-model="loginData.captcha"
+              @keyup.enter="handleLoginSubmit"
+            >
               <template #append>
                 <el-image
                   v-if="captcha"

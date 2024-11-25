@@ -1,5 +1,6 @@
 import request from "@/utils/request";
 import request2 from "@/utils/request2";
+import { s } from "vite/dist/node/types.d-aGj9QkWt";
 
 const ROLE_BASE_URL = "/api/v1/roles";
 
@@ -140,13 +141,27 @@ export interface RoleForm {
 
 const ROLE_BASE_URL_2 = "/Api/Core/System/Role";
 
+export interface RolePageQueryDev {
+  id集合: Array<number | string>;
+  名称: string;
+  权限id集合: Array<number | string>;
+  权限id集合全部匹配: boolean;
+}
+
+export interface RoleFormDev {
+  id?: number | string;
+  名称: string;
+  描述: string;
+  权限: any[];
+}
+
 export const RoleAPI2 = {
   /** 获取角色分页数据 */
   getPage(queryParams?: any) {
     return request2<any, PageResultDev<any[]>>({
       url: `${ROLE_BASE_URL_2}/Query`,
-      method: "get",
-      params: queryParams,
+      method: "post",
+      data: queryParams,
     });
   },
 

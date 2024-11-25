@@ -125,19 +125,17 @@
               width="80"
             />
             <el-table-column
-              key="username"
+              key="登录名"
+              label="账号"
+              align="center"
+              prop="登录名"
+            />
+            <el-table-column
+              key="显示名"
               label="用户名"
               align="center"
-              prop="username"
+              prop="显示名"
             />
-            <el-table-column label="用户昵称" align="center" prop="nickname" />
-
-            <el-table-column label="性别" width="100" align="center">
-              <template #default="scope">
-                <DictLabel :v-modle="scope.row.gender" code="gender" />
-              </template>
-            </el-table-column>
-
             <el-table-column
               label="部门"
               width="150"
@@ -147,7 +145,7 @@
             <el-table-column
               label="手机号码"
               align="center"
-              prop="mobile"
+              prop="手机"
               width="120"
             />
 
@@ -229,16 +227,16 @@
         :rules="rules"
         label-width="80px"
       >
-        <el-form-item label="用户名" prop="username">
+        <el-form-item label="账号" prop="登录名">
           <el-input
-            v-model="formData.username"
+            v-model="formData.登录名"
             :readonly="!!formData.id"
             placeholder="请输入用户名"
           />
         </el-form-item>
 
-        <el-form-item label="用户昵称" prop="nickname">
-          <el-input v-model="formData.nickname" placeholder="请输入用户昵称" />
+        <el-form-item label="显示名" prop="显示名">
+          <el-input v-model="formData.显示名" placeholder="请输入用户显示名" />
         </el-form-item>
 
         <el-form-item label="所属部门" prop="deptId">
@@ -322,6 +320,8 @@ import { type UserForm_2 } from "@/api/system/user";
 
 import DeptAPI from "@/api/system/dept";
 import RoleAPI from "@/api/system/role";
+import { DeptAPI2 } from "@/api/system/dept";
+import { getTreeFromLeftRightTreeNodes } from "@/utils/datastruct";
 
 import DeptTree from "./components/DeptTree.vue";
 import UserImport from "./components/UserImport.vue";
@@ -400,8 +400,9 @@ const rules = reactive({
 function handleQuery() {
   loading.value = true;
   UserAPI_2.getPage(queryParams.value)
-    .then((data) => {
+    .then((data: any) => {
       // console.log(data);
+      pageData.value = data["当前记录"];
     })
     .finally(() => {
       loading.value = false;
@@ -454,10 +455,31 @@ function hancleResetPassword(row: { [key: string]: any }) {
  */
 async function handleOpenDialog(id?: number) {
   dialog.visible = true;
-  // 加载角色下拉数据源
-  roleOptions.value = await RoleAPI.getOptions();
-  // 加载部门下拉数据源
-  deptOptions.value = await DeptAPI.getOptions();
+
+  try {
+    // 加载角色下拉数据源
+    roleOptions.value = await RoleAPI.getOptions();
+    // 加载部门下拉数据源
+    // deptOptions.value = await DeptAPI.getOptions();
+    const { 当前记录: deptList } = await DeptAPI2.getAllDeptList();
+    const treeNodes = deptList.map((node: any) => {
+      return {
+        id: node.id,
+        value: +node.id,
+        leftValue: +node.左值,
+        rightValue: +node.右值,
+        label: node.名称,
+        ...node,
+      };
+    });
+    deptOptions.value = getTreeFromLeftRightTreeNodes(
+      treeNodes,
+      "leftValue",
+      "rightValue"
+    );
+  } catch (error) {
+    console.error(error + "加载数据源失败，请重试");
+  }
 
   if (id) {
     dialog.title = "修改用户";

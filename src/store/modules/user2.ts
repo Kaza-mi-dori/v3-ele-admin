@@ -9,7 +9,7 @@ import { setToken, clearToken, setToken2, clearToken2 } from "@/utils/auth";
 import { AuthAPI_2, type LoginData_2 } from "@/api/auth";
 import { UserAPI_2 } from "@/api/system/user";
 
-export const useUserStoreDev = defineStore("user", () => {
+export const useUserStoreDev = defineStore("user2", () => {
   const userInfo = useStorage<any>("userInfo", {} as any);
 
   /**

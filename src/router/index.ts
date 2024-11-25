@@ -165,6 +165,15 @@ export const constantRoutes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "permissionMng",
+        name: "PermissionMngDev",
+        component: () => import("@/views/system/permission/index.vue"),
+        meta: {
+          title: "权限管理",
+          icon: "document",
+        },
+      },
+      {
         path: "logMng",
         name: "LogMngDev",
         component: () => import("@/views/system/log/index2.vue"),

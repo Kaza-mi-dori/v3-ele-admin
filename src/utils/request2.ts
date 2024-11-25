@@ -20,7 +20,7 @@ export const retryRequestWrapper = (request: any, times: number = 3) => {
 // 创建 axios 实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API_DEV,
-  timeout: 50000,
+  timeout: 10000,
   headers: { "Content-Type": "application/json;charset=utf-8" },
   paramsSerializer: (params) => {
     return qs.stringify(params);
@@ -63,6 +63,10 @@ service.interceptors.response.use(
       对象: data,
       时间戳: timestamp,
     } = response.data;
+
+    if (Number(code) > ResultEnum.DEV_TOKEN_INVALID_BENCHMARK) {
+      window.location.assign("/#/devLogin");
+    }
 
     if (code === ResultEnum.DEV_SUCCESS) {
       // console.log("开发环境请求成功", flag, msg, code, data, timestamp);
