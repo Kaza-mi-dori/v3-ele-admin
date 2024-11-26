@@ -117,10 +117,15 @@ export const constantRoutes: RouteRecordRaw[] = [
    */
   {
     path: "/bigScreenBoard",
+    name: "BigScreenBoard",
     component: () => import("@/views/bigscreen/index.vue"),
-    beforeEnter: (to, from, next) => {
-      next();
-    },
+    children: [
+      {
+        path: "chemicalProduct",
+        name: "ChemicalProduct",
+        component: () => import("@/views/bigscreen/components/SecondPage/second-index.vue"),
+      },
+    ],
   },
   // 开发环境后端登录页
   {
