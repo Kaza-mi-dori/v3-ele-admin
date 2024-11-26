@@ -86,12 +86,14 @@ defineProps({
   .title__bg2 {
     background-image: url(../../../img/tit_small2_bg.png);
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: 75% 100%;
+    background-position: center;
   }
   .title__bg1 {
     background-image: url(../../../img/tit_small_bg.png);
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: 75% 100%;
+    background-position: center;
   }
   .model-body {
     flex: 1;
