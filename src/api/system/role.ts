@@ -1,4 +1,6 @@
 import request from "@/utils/request";
+import request2 from "@/utils/request2";
+import { s } from "vite/dist/node/types.d-aGj9QkWt";
 
 const ROLE_BASE_URL = "/api/v1/roles";
 
@@ -136,3 +138,93 @@ export interface RoleForm {
   /** 角色状态(1-正常；0-停用) */
   status?: number;
 }
+
+const ROLE_BASE_URL_2 = "/Api/Core/System/Role";
+
+export interface RolePageQueryDev {
+  id集合: Array<number | string>;
+  名称: string;
+  权限id集合: Array<number | string>;
+  权限id集合全部匹配: boolean;
+}
+
+export interface RoleFormDev {
+  id?: number | string;
+  名称: string;
+  描述: string;
+  权限: any[];
+}
+
+export const RoleAPI2 = {
+  /**
+   * 获取角色下拉数据源
+   */
+  getOptions() {
+    return request2<any, any>({
+      url: `${ROLE_BASE_URL_2}/Query`,
+      method: "post",
+      data: {
+        页码: 1,
+        页容量: 1000,
+      },
+    });
+  },
+  /** 获取角色分页数据 */
+  getPage(queryParams?: any) {
+    return request2<any, PageResultDev<any[]>>({
+      url: `${ROLE_BASE_URL_2}/Query`,
+      method: "post",
+      data: queryParams,
+    });
+  },
+
+  /**
+   * 获取角色表单数据
+   *
+   * @param id 角色ID
+   * @returns 角色表单数据
+   */
+  getFormData(id: number) {
+    return request2<any, any>({
+      url: `${ROLE_BASE_URL_2}`,
+      method: "get",
+      params: { id: id },
+    });
+  },
+
+  /** 添加角色 */
+  add(data: any) {
+    return request2({
+      url: `${ROLE_BASE_URL_2}`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 更新角色
+   *
+   * @param id 角色ID
+   * @param data 角色表单数据
+   */
+  update(data: any) {
+    return request2({
+      url: `${ROLE_BASE_URL_2}`,
+      method: "patch",
+      data: data,
+    });
+  },
+
+  /**
+   * 删除角色
+   *
+   * @param id 角色ID
+   */
+  deleteByIds(id: string) {
+    return request2({
+      url: `${ROLE_BASE_URL_2}`,
+      method: "delete",
+      params: { id: id },
+    });
+  },
+};

@@ -113,16 +113,16 @@ watch(
   }
 );
 
-watch(
-  () => props.menuList,
-  () => {
-    // 重置已展开的菜单项索引
-    console.log("menuList changed");
-    console.log(props.menuList);
-  },
-  {
-    deep: true,
-    immediate: true,
-  }
-);
+// watch(
+//   () => props.menuList,
+//   () => {
+//     // 重置已展开的菜单项索引
+//     console.log("menuList changed");
+//     console.log(props.menuList);
+//   },
+//   {
+//     deep: true,
+//     immediate: true,
+//   }
+// );
 </script>

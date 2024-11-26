@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import request2 from "@/utils/request2";
 
 const USER_BASE_URL = "/api/v1/users";
 
@@ -378,3 +379,111 @@ export interface EmailBindingForm {
   /** 验证码 */
   code?: string;
 }
+
+const USER_BASE_URL_2 = "/Api/Core";
+
+export interface UserForm_2 {
+  /** 用户ID */
+  id?: number;
+  /** 账号*/
+  登录名: string;
+  /** 昵称 */
+  显示名: string;
+  /** 密码 */
+  密码: string;
+  /** 部门ID集合 */
+  部门: number[];
+  /** 角色ID集合 */
+  角色: number[];
+  /** 职务ID集合 */
+  职务: number[];
+  /** 显示顺序 */
+  优先级: number;
+  /** 手机 */
+  手机: string;
+}
+
+/** 开发API */
+export const UserAPI_2 = {
+  /**
+   * 获取当前登录用户信息
+   *
+   * @returns 登录用户昵称、头像信息，包括角色和权限
+   */
+  getInfo(token: string) {
+    return request2<any, any>({
+      url: `${USER_BASE_URL_2}/Other/Login`,
+      method: "get",
+      params: {
+        token: token,
+      },
+    });
+  },
+
+  /**
+   * 获取用户分页列表
+   *
+   * @param queryParams 查询参数
+   */
+  getPage(queryParams: any) {
+    return request2<any, PageResult<any[]>>({
+      url: `${USER_BASE_URL_2}/System/User/Query`,
+      method: "post",
+      data: queryParams,
+    });
+  },
+  /**
+   * 获取用户表单详情
+   */
+  getFormData(userId: number) {
+    return request2<any, any>({
+      url: `${USER_BASE_URL_2}/System/User`,
+      method: "get",
+      params: {
+        id: userId,
+      },
+    });
+  },
+  /**
+   * 添加用户
+   */
+  add(data: any) {
+    return request2({
+      url: `${USER_BASE_URL_2}/System/User`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 修改用户
+   */
+  update(data: any) {
+    return request2({
+      url: `${USER_BASE_URL_2}/System/User`,
+      method: "patch",
+      data: data,
+    });
+  },
+
+  /**
+   * 删除用户
+   */
+  delete(id: number | string) {
+    return request2({
+      url: `${USER_BASE_URL_2}/System/User`,
+      method: "delete",
+      params: { id: id },
+    });
+  },
+  /**
+   * 修改用户密码
+   */
+  resetPassword(id: number, password: string) {
+    return request2({
+      url: `${USER_BASE_URL_2}/System/User/ResetPassword`,
+      method: "put",
+      params: { id: id, password: password },
+    });
+  },
+};

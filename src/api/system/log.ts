@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import request2 from "@/utils/request2";
 
 const LOG_BASE_URL = "/api/v1/logs";
 
@@ -118,3 +119,31 @@ export interface VisitStatsVO {
   /** 同比增长率（相对于昨天同一时间段的增长率） */
   growthRate: number;
 }
+
+const LOG_BASE_URL2 = "/Api/Core/System/OperateRecord";
+
+export interface LogPageQuery2 {
+  用户id: number | string;
+  用户名: string;
+  时间开始: string;
+  时间结束: string;
+  地址: string;
+  目标: string;
+  耗时: number;
+  异常: boolean;
+}
+
+export const LogAPI2 = {
+  /**
+   * 获取日志分页列表
+   *
+   * @param queryParams 查询参数
+   */
+  getPage(queryParams: any) {
+    return request2<any, PageResultDev<any[]>>({
+      url: `${LOG_BASE_URL2}/Query`,
+      method: "post",
+      data: queryParams,
+    });
+  },
+};

@@ -19,6 +19,7 @@
       </div>
       <div class="__content">
         <el-form
+          ref="formRef"
           label-position="top"
           label-width="100px"
           inline
@@ -179,7 +180,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="计划收入" prop="planIncome">
+              <el-form-item label="计划营收" prop="planIncome">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.planIncome"
@@ -244,19 +245,41 @@
           class="w-full g-form-1"
           :model="yearlyReportDetailForm"
         >
-          <el-row>
-            <el-col :span="24">
-              <el-table :data="yearlyReportDetailForm.storage" stripe border>
-                <el-table-column prop="warehouse" label="仓库" />
-                <el-table-column prop="name" label="产品" />
-                <el-table-column prop="amount" label="数量" />
-              </el-table>
-            </el-col>
-          </el-row>
+          <el-table :data="yearlyReportDetailForm.storage" stripe border>
+            <el-table-column prop="warehouse" label="仓库">
+              <template v-slot="{ row }">
+                <el-input v-if="editing" v-model="row.warehouse" />
+                <span v-else>{{ row.warehouse }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="name" label="产品名称">
+              <template v-slot="{ row }">
+                <el-input v-if="editing" v-model="row.name" />
+                <span v-else>{{ row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="amount" label="产品数量">
+              <template v-slot="{ row }">
+                <el-input v-if="editing" v-model="row.amount" />
+                <span v-else>{{ row.amount }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="unit" label="单位">
+              <template v-slot="{ row }">
+                <el-input v-if="editing" v-model="row.unit" />
+                <span v-else>{{ row.unit }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" fixed="right" width="100">
+              <template v-slot="{ row }">
+                <el-link type="danger" @click="handleDelete(row)">删除</el-link>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-form>
       </div>
     </div>
-    <div class="info-card-level1">
+    <div v-if="!editing" class="info-card-level1">
       <div class="__title">
         <span>维护信息</span>
       </div>
@@ -310,6 +333,7 @@
 <script setup lang="ts">
 import { ref, unref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
+import { type FormInstance } from "element-plus";
 import business from "@/types/business";
 
 const props = defineProps({
@@ -323,6 +347,7 @@ const props = defineProps({
   },
 });
 
+const formRef = ref<FormInstance | null>(null);
 const { id, editing } = toRefs(props);
 
 // 按照类型定义产出数据
@@ -370,16 +395,19 @@ const yearlyReportDetailForm = ref<
       warehouse: "仓库1",
       name: "产品1",
       amount: 1000,
+      unit: "吨",
     },
     {
       warehouse: "仓库2",
       name: "产品2",
       amount: 2000,
+      unit: "吨",
     },
     {
       warehouse: "在途",
       name: "产品3",
       amount: 3000,
+      unit: "吨",
     },
   ],
   settlementCount: 1000,
@@ -420,6 +448,10 @@ const exportForm = () => {
   console.log("exportForm");
 };
 
+const handleDelete = (row: any) => {
+  console.log("handleDelete", row);
+};
+
 // snippet: ts-useManualRefHistory
 const { history, commit, undo, redo } = useManualRefHistory(
   yearlyReportDetailForm,
@@ -432,8 +464,12 @@ const saveForm = () => {
 const restoreForm = () => {
   undo();
 };
+const validateForm = () => {
+  return formRef.value?.validate();
+};
 const getFormValue = () => {
-  return unref(yearlyReportDetailForm.value);
+  // 先校验
+  return unref(yearlyReportDetailForm);
 };
 const setFormValue = (value: any) => {
   if (value) {
@@ -444,6 +480,7 @@ const setFormValue = (value: any) => {
 defineExpose({
   saveForm,
   restoreForm,
+  validateForm,
   getFormValue,
   setFormValue,
 });
