@@ -156,6 +156,19 @@ export interface RoleFormDev {
 }
 
 export const RoleAPI2 = {
+  /**
+   * 获取角色下拉数据源
+   */
+  getOptions() {
+    return request2<any, any>({
+      url: `${ROLE_BASE_URL_2}/Query`,
+      method: "post",
+      data: {
+        页码: 1,
+        页容量: 1000,
+      },
+    });
+  },
   /** 获取角色分页数据 */
   getPage(queryParams?: any) {
     return request2<any, PageResultDev<any[]>>({

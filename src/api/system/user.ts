@@ -458,7 +458,7 @@ export const UserAPI_2 = {
   /**
    * 修改用户
    */
-  update(id: number, data: any) {
+  update(data: any) {
     return request2({
       url: `${USER_BASE_URL_2}/System/User`,
       method: "patch",

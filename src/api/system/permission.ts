@@ -65,11 +65,13 @@ const PermissionApi = {
    * 获取权限详情
    * @param data
    */
-  getPermissionDetail(data: any) {
+  getPermissionDetail(id: string | number) {
     return request2({
       url: `${PERM_BASE_URL}`,
       method: "get",
-      params: data,
+      params: {
+        id,
+      },
     });
   },
   /**
