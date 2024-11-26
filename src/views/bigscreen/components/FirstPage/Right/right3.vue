@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import router from "@/router";
 import entries from "@/views/bigscreen/img/pic.png";
 import yellow from "@/views/bigscreen/img/yellow.png";
 import green from "@/views/bigscreen/img/green.png";
@@ -51,6 +52,9 @@ const getIconStyle = (index: number) => {
 
 const handleType = (index: number) => {
   const selectedBusinessType = businessTypeArr.value[index];
+  const routeName = selectedBusinessType.name;
+  const route = router.resolve({ name: routeName });
+  window.open(route.href, "_blank");
 };
 </script>
 

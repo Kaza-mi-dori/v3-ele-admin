@@ -1,44 +1,48 @@
 <template>
   <div id="bg-container" ref="container" class="bg-view">
-    <img style="position: absolute; top: 0" height="100vh" />
-    <div class="bg-view__header">
-      <div class="header-left header-left-right">
-        <!-- 使用计算属性显示前一半元素 -->
-        <div v-for="item in businessTypeArrLeft" :key="item.id">
-          <div
-            class="type-item"
-            :class="{ active: selectedTypeId === item.id }"
-            @click="handleType(item)"
-          >
-            {{ item.label }}
+    <div v-if="showOtherContent" class="bg-view-img">
+      <img style="position: absolute; top: 0" height="100vh" />
+      <div class="bg-view__header">
+        <div class="header-left header-left-right">
+          <!-- 使用计算属性显示前一半元素 -->
+          <div v-for="item in businessTypeArrLeft" :key="item.id">
+            <div
+              class="type-item"
+              :class="{ active: selectedTypeId === item.id }"
+              @click="handleType(item)"
+            >
+              {{ item.label }}
+            </div>
+          </div>
+        </div>
+        <div class="title">
+          <div class="__title--text">广投石化驾驶舱</div>
+        </div>
+        <div class="header-right header-left-right">
+          <!-- 使用计算属性显示后一半元素 -->
+          <div v-for="item in businessTypeArrRight" :key="item.id">
+            <div
+              class="type-item"
+              :class="{ active: selectedTypeId === item.id }"
+              @click="handleType(item)"
+            >
+              {{ item.label }}
+            </div>
           </div>
         </div>
       </div>
-      <div class="title">
-        <div class="__title--text">广投石化驾驶舱</div>
-      </div>
-      <div class="header-right header-left-right">
-        <!-- 使用计算属性显示后一半元素 -->
-        <div v-for="item in businessTypeArrRight" :key="item.id">
-          <div
-            class="type-item"
-            :class="{ active: selectedTypeId === item.id }"
-            @click="handleType(item)"
-          >
-            {{ item.label }}
-          </div>
-        </div>
+      <div class="bg-view__body">
+        <ScreenIndexContent />
       </div>
     </div>
-    <div class="bg-view__body">
-      <ScreenIndexContent />
-    </div>
+    <router-view v-else />
   </div>
 </template>
 
 <script setup lang="ts">
 import ScreenIndexContent from "./index-content.vue";
 import { ref, computed } from "vue";
+import router from "@/router";
 import { businessTypes, navItem } from "./components/constants";
 
 const businessTypeArr = ref<navItem[]>(businessTypes);
@@ -47,6 +51,9 @@ const selectedTypeId = ref<number | null>(null); // 当前选中item
 
 const handleType = (item: any) => {
   selectedTypeId.value = item.id;
+  const routeName = item.name;
+  const route = router.resolve({ name: routeName });
+  window.open(route.href, "_blank");
 };
 
 // 计算属性，获取数组的前一半
@@ -59,6 +66,11 @@ const businessTypeArrLeft = computed(() => {
 const businessTypeArrRight = computed(() => {
   const midIndex = Math.ceil(businessTypeArr.value.length / 2);
   return businessTypeArr.value.slice(midIndex);
+});
+
+// 根据路由决定显示内容
+const showOtherContent = computed(() => {
+  return router.currentRoute.value.name == "BigScreenBoard";
 });
 
 const initScale = () => {
@@ -130,13 +142,17 @@ onMounted(() => {
   overscroll-behavior: none;
   scroll-behavior: smooth;
   user-select: none;
-  background-image: url(./img/bg.jpg);
-  background-size: cover;
   display: flex;
   flex-direction: column;
   &::-webkit-scrollbar {
     display: none;
   }
+}
+.bg-view-img {
+  width: 100%;
+  height: 100%;
+  background-image: url(./img/bg.jpg);
+  background-size: cover;
 }
 .bg-view__header {
   width: 100%;
