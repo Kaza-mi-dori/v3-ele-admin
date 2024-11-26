@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import request2 from "@/utils/request2";
 
 const AUTH_BASE_URL = "/api/v1/auth";
 
@@ -70,3 +71,54 @@ export interface CaptchaResult {
   /** 验证码图片Base64字符串 */
   captchaBase64: string;
 }
+
+export interface LoginData_2 {
+  /** 用户名 */
+  username: string;
+  /** 密码 */
+  password: string;
+  /** 验证码 */
+  captcha: string;
+}
+
+const USER_BASE_URL_2 = "/Api/Core";
+
+export const AuthAPI_2 = {
+  /**
+   * 登录
+   */
+  login(data: LoginData_2) {
+    return request2<any, any>({
+      url: `${USER_BASE_URL_2}/Other/Login`,
+      method: "post",
+      data: {
+        登录名: data.username,
+        密码: data.password,
+        验证码: data.captcha,
+      },
+    });
+  },
+
+  /**
+   * 登出
+   */
+  logout() {
+    return request2<any, any>({
+      url: `${USER_BASE_URL_2}/Other/Login`,
+      method: "delete",
+    });
+  },
+  /**
+   * 获取验证码
+   * @returns 验证码图片
+   */
+  getCaptCha(loginName: string) {
+    return request2<any, any>({
+      url: `${USER_BASE_URL_2}/Other/Login/GetLoginCaptcha`,
+      method: "get",
+      params: {
+        登录名: loginName,
+      },
+    });
+  },
+};

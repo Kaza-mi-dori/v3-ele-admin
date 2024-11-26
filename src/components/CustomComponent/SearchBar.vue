@@ -62,6 +62,15 @@
               clearable
             />
           </template>
+          <template v-else-if="item.inputType === 'month'">
+            <el-date-picker
+              v-model="item.value"
+              value-format="YYYY-MM"
+              type="month"
+              placeholder="请选择月份"
+              clearable
+            />
+          </template>
           <template v-else-if="item.inputType === 'daterange'">
             <el-date-picker
               v-model="item.value"
@@ -69,6 +78,7 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="YYYY-MM-DD"
               clearable
             />
           </template>
@@ -140,8 +150,9 @@
 </template>
 
 <script setup lang="ts">
-import { emit } from "process";
+// import { emit } from "process";
 import { defineProps, getCurrentInstance, nextTick } from "vue";
+import { deepUnref } from "@/utils";
 
 const { ctx: that } = getCurrentInstance() as any;
 let selectedItems = ref<Array<any>>([]);
@@ -184,6 +195,9 @@ const handleSelect = (item: any, option: any) => {
           item.value = "";
           break;
         case "date":
+          item.value = null;
+          break;
+        case "month":
           item.value = null;
           break;
         case "daterange":
@@ -271,6 +285,7 @@ watch(
       .map((item: any) => {
         return {
           label: item.label,
+          prop: item.prop,
           value: item.value,
           multiple: item.multiple,
           inputType: item.inputType,
@@ -283,6 +298,8 @@ watch(
           case "input":
             return item.value && item.value !== "";
           case "date":
+            return item.value && item.value !== null;
+          case "month":
             return item.value && item.value !== null;
           case "daterange":
             return item.value[0] !== null && item.value[1] !== null;
@@ -313,7 +330,13 @@ watch(
 // 4. 筛选结果操作
 // 5. 筛选结果分页
 const handleSearch = () => {
-  emit("confirmFilter", selectedItems.value);
+  // 直接返回{ prop: value }的形式
+  const itemUnref = unref(selectedItems);
+  const values = itemUnref.reduce((acc: any, item: any) => {
+    acc[item.prop] = item.value;
+    return acc;
+  }, {});
+  emit("confirmFilter", values);
 };
 
 const handleReset = () => {
@@ -326,6 +349,9 @@ const handleReset = () => {
         item.value = "";
         break;
       case "date":
+        item.value = null;
+        break;
+      case "month":
         item.value = null;
         break;
       case "daterange":
