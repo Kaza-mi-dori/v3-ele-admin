@@ -1,6 +1,6 @@
 <template>
   <div class="middle2-box">
-    <div class="map-box">
+    <div class="map-box" :class="{ center: !showTotalNum }">
       <!-- <img class="map-img" src="../../../../img/country_map_bg.png" alt="" /> -->
       <div
         style="
@@ -12,8 +12,16 @@
         "
       >
         <img
+          v-if="showTotalNum"
           class="map-img"
           src="../../../../img/country_map_bg.png"
+          style="width: 100%; height: auto; object-fit: cover"
+          alt="描述"
+        />
+        <img
+          v-else
+          class="map-img"
+          src="../../../../img/guangxi_map.png"
           style="width: 100%; height: auto; object-fit: cover"
           alt="描述"
         />
@@ -43,7 +51,7 @@
         </div>
       </div>
     </div>
-    <div class="total-box">
+    <div v-if="showTotalNum" class="total-box">
       <div class="total-content">
         <div class="content1">
           <div class="title">油库</div>
@@ -62,6 +70,13 @@
 import oil from "@/views/bigscreen/img/oil.png";
 import gas from "@/views/bigscreen/img/oil2.png";
 import { ref } from "vue";
+
+defineProps({
+  showTotalNum: {
+    type: Boolean,
+    default: true,
+  },
+});
 
 interface posItem {
   id: number;
@@ -204,6 +219,11 @@ onMounted(() => {
     font-size: 15px;
     color: #78ecf1;
   }
+}
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .pop-content {
