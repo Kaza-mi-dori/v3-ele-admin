@@ -1,7 +1,8 @@
 <template>
   <div class="model-box">
     <div class="model-title" v-if="showHeader">
-      <img class="model-title__bg" src="../../../img/box1_top.png" />
+      <img v-if="showSpecialTitleBg" class="model-title__bg" src="../../../img/box3_top.png" />
+      <img v-else class="model-title__bg" src="../../../img/box1_top.png" />
       <div class="model-title__text">{{ title }}</div>
     </div>
     <div class="model-body">
@@ -26,6 +27,10 @@ defineProps({
   showHeader: {
     type: Boolean,
     default: true,
+  },
+  showSpecialTitleBg: {
+    type: Boolean,
+    default: false,
   },
 });
 </script>
