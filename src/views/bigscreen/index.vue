@@ -23,7 +23,7 @@
           <div
             class="type-item"
             :class="{ active: selectedTypeId === item.id }"
-            @click="selectType(item.id)"
+          @click="selectType(item.id)"
           >
             {{ item.label }}
           </div>
@@ -31,13 +31,13 @@
       </div>
     </div>
     <div class="bg-view__body">
-      <Screen1 />
+      <ScreenIndexContent />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Screen1 from "./Screen1.vue";
+import ScreenIndexContent from "./index-content.vue";
 import { ref, computed } from "vue";
 
 interface navItem {
