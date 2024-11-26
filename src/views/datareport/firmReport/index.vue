@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">业态经营报表</div>
+      <div class="__title">企业概况报表</div>
       <div class="__stat">
         <span class="__item">你有</span>
         <span class="__item">统计指标一</span>
@@ -203,7 +203,7 @@ const handleDelete = (row: any) => {
         return;
       }
       // 删除操作
-      BusinessFormAPI.deleteBusinessReportForm(row.id).then(() => {
+      BusinessFormAPI.deleteCompanyDescForm(row.id).then(() => {
         initTableData();
       });
     })
@@ -250,9 +250,7 @@ const handleConfirmFilter = (value: any) => {
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res = await BusinessFormAPI.getBusinessReportFormList(
-      queryForm.value
-    );
+    const res = await BusinessFormAPI.getCompanyDescFormList(queryForm.value);
     tableData.value = res["当前记录"];
     pagination.value.total = res["记录总数"];
   } catch (error) {
@@ -274,7 +272,7 @@ const handleAddRecord = () => {
   router.push({
     name: "ReportForm",
     query: {
-      type: "yearlyReport",
+      type: "firmReport",
     },
   });
 };
@@ -282,7 +280,7 @@ const handleAddRecord = () => {
 const handleBatchDelete = () => {
   // console.log("批量删除");
   const selected = tableData.value.filter((item: any) => item.checked);
-  console.log(selected);
+  // console.log(selected);
   if (!selected?.length) {
     ElMessageBox.alert("请选择要删除的数据", "提示", {
       confirmButtonText: "确定",
@@ -298,7 +296,7 @@ const handleBatchDelete = () => {
     const ids = selected.map((item: any) => item.id);
     // 批量调用删除接口
     const deleteTasks = ids.map((id: any) =>
-      BusinessFormAPI.deleteBusinessReportForm(id)
+      BusinessFormAPI.deleteCompanyDescForm(id)
     );
     Promise.all(deleteTasks).then(() => {
       tableRef?.value?.clearSelection();

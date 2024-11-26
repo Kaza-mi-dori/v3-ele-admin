@@ -97,7 +97,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: "报表管理",
-      icon: "report",
+      icon: "el-icon-MessageBox",
     },
     children: [
       {
@@ -106,6 +106,119 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/datareport/yearlyReport/index.vue"),
         meta: {
           title: "业态经营报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "yearlyPlanReportMng",
+        name: "YearlyPlanReportMng",
+        component: () =>
+          import("@/views/datareport/yearlyPlanReport/index.vue"),
+        meta: {
+          title: "年度计划报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "marketPriceReportMng",
+        name: "MarketPriceReportMng",
+        component: () =>
+          import("@/views/datareport/marketPriceReport/index.vue"),
+        meta: {
+          title: "市场价格报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "firmMngReportMng",
+        name: "FirmMngReportMng",
+        component: () => import("@/views/datareport/firmMngReport/index.vue"),
+        meta: {
+          title: "企业经营报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "partnerReportMng",
+        name: "PartnerReportMng",
+        component: () => import("@/views/datareport/partnerReport/index.vue"),
+        meta: {
+          title: "合作伙伴报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "firmReportMng",
+        name: "FirmReportMng",
+        component: () => import("@/views/datareport/firmReport/index.vue"),
+        meta: {
+          title: "企业概况报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+    ],
+  },
+  // 台账类
+  {
+    path: "/ledgerMng",
+    name: "LedgerMng",
+    component: Layout,
+    meta: {
+      title: "台账管理",
+      icon: "el-icon-MessageBox",
+    },
+    children: [
+      {
+        path: "contractLedgerMng",
+        name: "ContractLedgerMng",
+        component: () => import("@/views/business/contract.vue"),
+        meta: {
+          title: "合同台账管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "goodsLedgerMng",
+        name: "GoodsLedgerMng",
+        component: () => import("@/views/business/goods.vue"),
+        meta: {
+          title: "物资台账管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "storageLedgerMng",
+        name: "StorageLedgerMng",
+        component: () => import("@/views/business/storage.vue"),
+        meta: {
+          title: "库存台账管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "orderLedgerMng",
+        name: "OrderLedgerMng",
+        component: () => import("@/views/business/order.vue"),
+        meta: {
+          title: "订单台账管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "paymentLedgerMng",
+        name: "PaymentLedgerMng",
+        component: () => import("@/views/business/payment.vue"),
+        meta: {
+          title: "款项台账管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "settlementLedgerMng",
+        name: "SettlementLedgerMng",
+        component: () => import("@/views/business/settlement.vue"),
+        meta: {
+          title: "结算台账管理",
           icon: "el-icon-coin",
         },
       },

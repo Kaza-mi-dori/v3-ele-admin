@@ -136,7 +136,7 @@ const BusinessFormAPI = {
    * @param companyId 企业ID
    * @returns 业态经营报表详情
    */
-  getBusinessReportForm(companyId: number) {
+  getBusinessReportForm(companyId: number | string) {
     return request2<any, any>({
       url: `${BUSINESS_FORM_BASE_URL}/BusinessOperationsReportShow`,
       method: "get",
@@ -305,6 +305,298 @@ const BusinessFormAPI = {
   importCompanyReportForm(data: any) {
     return request2({
       url: `${BUSINESS_FORM_BASE_URL}/CorporateOperationsReportShow/Import`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 贸易伙伴报表新增
+   * @param data 贸易伙伴报表
+   * @returns
+   */
+  addTradePartnersReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 贸易伙伴报表修改
+   * @param data 贸易伙伴报表
+   * @returns
+   */
+  editTradePartnersReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow`,
+      method: "patch",
+      data: data,
+    });
+  },
+
+  /**
+   * 贸易伙伴报表详情
+   * @param companyId 企业ID
+   * @returns 贸易伙伴报表详情
+   */
+  getTradePartnersReportForm(companyId: number) {
+    return request2<any, any>({
+      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow`,
+      method: "get",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 贸易伙伴报表删除
+   * @param companyId 企业ID
+   * @returns
+   */
+  deleteTradePartnersReportForm(companyId: number) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow`,
+      method: "delete",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 贸易伙伴报表列表
+   * @param data 查询条件
+   * @returns 贸易伙伴报表列表
+   */
+  getTradePartnersReportFormList(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/Query`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 贸易伙伴报表导出
+   * @param data 查询条件
+   * @returns 贸易伙伴报表列表
+   */
+  exportTradePartnersReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/Export`,
+      method: "get",
+      data,
+    });
+  },
+
+  /**
+   * 贸易伙伴报表导入
+   * @param data 查询条件
+   * @returns 贸易伙伴报表列表
+   */
+  importTradePartnersReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/Import`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 市场报价报表新增
+   * @param data 市场报价报表
+   * @returns
+   * @throws
+   */
+  addMarketQuotationReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/MarketQuotationShow`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 市场报价报表修改
+   * @param data 市场报价报表
+   * @returns
+   * @throws
+   */
+  editMarketQuotationReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/MarketQuotationShow`,
+      method: "patch",
+      data: data,
+    });
+  },
+
+  /**
+   * 市场报价报表详情
+   * @param companyId 企业ID
+   * @returns 市场报价报表详情
+   * @throws
+   */
+  getMarketQuotationReportForm(companyId: number) {
+    return request2<any, any>({
+      url: `${BUSINESS_FORM_BASE_URL}/MarketQuotationShow`,
+      method: "get",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 市场报价报表删除
+   * @param companyId 企业ID
+   * @returns
+   * @throws
+   */
+  deleteMarketQuotationReportForm(companyId: number) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/MarketQuotationShow`,
+      method: "delete",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 市场报价报表列表
+   * @param data 查询条件
+   * @returns 市场报价报表列表
+   * @throws
+   */
+  getMarketQuotationReportFormList(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/MarketQuotationShow/Query`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 市场报价报表导出
+   * @param data 查询条件
+   * @returns 市场报价报表列表
+   * @throws
+   */
+  exportMarketQuotationReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/MarketQuotationShow/Export`,
+      method: "get",
+      data,
+    });
+  },
+
+  /**
+   * 市场报价报表导入
+   * @param data 查询条件
+   * @returns 市场报价报表列表
+   * @throws
+   */
+  importMarketQuotationReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/MarketQuotationShow/Import`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 产品报价报表新增
+   * @param data 产品报价报表
+   * @returns
+   */
+  addProductQuotationReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductQuotationShow`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 产品报价报表修改
+   * @param data 产品报价报表
+   * @returns
+   */
+  editProductQuotationReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductQuotationShow`,
+      method: "patch",
+      data: data,
+    });
+  },
+
+  /**
+   * 产品报价报表详情
+   * @param companyId 企业ID
+   * @returns 产品报价报表详情
+   */
+  getProductQuotationReportForm(companyId: number) {
+    return request2<any, any>({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductQuotationShow`,
+      method: "get",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 产品报价报表删除
+   * @param companyId 企业ID
+   * @returns
+   */
+  deleteProductQuotationReportForm(companyId: number) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductQuotationShow`,
+      method: "delete",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 产品报价报表列表
+   * @param data 查询条件
+   * @returns 产品报价报表列表
+   */
+  getProductQuotationReportFormList(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductQuotationShow/Query`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 产品报价报表导出
+   * @param data 查询条件
+   * @returns 产品报价报表列表
+   */
+  exportProductQuotationReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductQuotationShow/Export`,
+      method: "get",
+      data,
+    });
+  },
+
+  /**
+   * 产品报价报表导入
+   * @param data 查询条件
+   * @returns 产品报价报表列表
+   */
+  importProductQuotationReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductQuotationShow/Import`,
       method: "post",
       data,
     });

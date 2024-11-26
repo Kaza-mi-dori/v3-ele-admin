@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">业态经营报表</div>
+      <div class="__title">年度经营计划报表</div>
       <div class="__stat">
         <span class="__item">你有</span>
         <span class="__item">统计指标一</span>
@@ -282,7 +282,7 @@ const handleAddRecord = () => {
 const handleBatchDelete = () => {
   // console.log("批量删除");
   const selected = tableData.value.filter((item: any) => item.checked);
-  console.log(selected);
+  // console.log(selected);
   if (!selected?.length) {
     ElMessageBox.alert("请选择要删除的数据", "提示", {
       confirmButtonText: "确定",

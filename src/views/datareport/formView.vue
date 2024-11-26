@@ -18,6 +18,16 @@
       >
         提交
       </el-button>
+      <!-- DEV_ONLY -->
+      <el-button
+        v-if="isEditing && editable"
+        type="danger"
+        class="g-button-1"
+        @click="handleGenerateRandomData"
+      >
+        生成随机数据
+      </el-button>
+      <!-- DEV_ONLY -->
       <el-button
         v-if="isEditing && editable"
         class="g-button-1"
@@ -43,7 +53,7 @@
     </div>
     <div class="relative">
       <!-- 状态 -->
-      <div v-if="currentComponent" class="status-tag">
+      <div v-if="currentComponent && currentFormStatus" class="status-tag">
         <span>{{ currentFormStatus }}</span>
       </div>
       <component :is="currentComponent" ref="formRef" :editing="isEditing" />
@@ -61,6 +71,7 @@ import partnerReportDetailForm from "./partnerReport/detail.vue";
 import partnerDetailForm from "@/views/partner/detail.vue";
 
 import BusinessFormAPI from "@/api/businessForm";
+import { ElMessage } from "element-plus";
 
 import { ref, onMounted, shallowRef } from "vue";
 import { useRoute } from "vue-router";
@@ -95,13 +106,83 @@ const handleEdit = () => {
   }
 };
 
+const handleGenerateRandomData = () => {
+  if (formRef.value) {
+    const form = formRef.value as any;
+    if (form.generateRandomData) {
+      form.generateRandomData();
+    } else {
+      ElMessage.error("该表单不支持生成随机数据");
+    }
+  }
+};
+
+const converToFrontendFormData = (type: string | null, data: any) => {
+  switch (type) {
+    case "yearlyReport":
+      return {
+        year: data["日期"],
+        businessDimension: data["业务维度"],
+        profit: data["内容"]["利润金额"],
+        income: data["内容"]["营收金额"],
+        purchaseAmount: data["内容"]["采购金额"],
+        salesAmount: data["内容"]["销售金额"],
+        purchaseContractCount: data["内容"]["采购合同数"],
+        salesContractCount: data["内容"]["销售合同数"],
+        contractCount: data["内容"]["合同总份数"],
+        contractAmount: data["内容"]["合同总金额"],
+        purchaseOrderCount: data["内容"]["采购合同份数"],
+        salesOrderCount: data["内容"]["销售合同份数"],
+        contractFulfilledCount: data["内容"]["合同履行数"],
+        riskContractCount: data["内容"]["风险合同数"],
+        storage: data["内容"]["库存量"],
+        settlementAmount: data["内容"]["结算金额"],
+        settlementCount: data["内容"]["结算数量"],
+        planIncome: data["内容"]["计划营收"],
+        planProfit: data["内容"]["计划利润"],
+        incomeFulfilledRate: data["内容"]["营收目标完成率"],
+        profitFulfilledRate: data["内容"]["利润目标完成率"],
+        createdBy: data["创建者"],
+        createdAt: data["创建时间"],
+        updatedBy: data["修改者"],
+        updatedAt: data["修改时间"],
+      };
+    case "marketPriceReport":
+      return {
+        // 转换数据
+      };
+    case "firmMngReport":
+      return {
+        // 转换数据
+      };
+    case "firmReport":
+      return {
+        // 转换数据
+      };
+    case "customReport":
+      return {
+        // 转换数据
+      };
+    case "partnerReport":
+      return {
+        // 转换数据
+      };
+    case "partnerDetail":
+      return {
+        // 转换数据
+      };
+    default:
+      return data;
+  }
+};
+
 const convertToBackendData = (type: string | null, data: any) => {
   const result: GenericRecord = {
     id: route.query.id,
   };
   switch (type) {
     case "yearlyReport":
-      result["日期"] = new Date().setFullYear(data.year);
+      result["日期"] = data.year;
       result["业务维度"] = data.businessDimension;
       result["内容"] = {
         利润金额: data.profit,
@@ -124,7 +205,7 @@ const convertToBackendData = (type: string | null, data: any) => {
         营收目标完成率: data.incomeFulfilledRate,
         利润目标完成率: data.profitFulfilledRate,
       };
-      console.log("converted", result);
+      // console.log("converted", result);
       return result;
     case "marketPriceReport":
       return {
@@ -176,34 +257,40 @@ const submitForm = async () => {
   );
   console.log("real", realDataToSubmit);
   // 根据当前表单类型提交数据
-  // switch (currentComponentType.value) {
-  //   case "yearlyReport":
-  //     const op = route.query.id
-  //       ? BusinessFormAPI.editBusinessReportForm
-  //       : BusinessFormAPI.addBusinessReportForm;
-  //     op(submitData);
-  //     break;
-  //   case "marketPriceReport":
-  //     BusinessFormAPI.saveMarketPriceReport(submitData);
-  //     break;
-  //   case "firmMngReport":
-  //     BusinessFormAPI.saveFirmMngReport(submitData);
-  //     break;
-  //   case "firmReport":
-  //     BusinessFormAPI.saveFirmReport(submitData);
-  //     break;
-  //   case "customReport":
-  //     BusinessFormAPI.saveCustomReport(submitData);
-  //     break;
-  //   case "partnerReport":
-  //     BusinessFormAPI.savePartnerReport(submitData);
-  //     break;
-  //   case "partnerDetail":
-  //     BusinessFormAPI.savePartnerDetail(submitData);
-  //     break;
-  //   default:
-  //     break;
-  // }
+  switch (route.query.type as Nullable<string>) {
+    case "yearlyReport":
+      const op = route.query.id
+        ? BusinessFormAPI.editBusinessReportForm
+        : BusinessFormAPI.addBusinessReportForm;
+      op(realDataToSubmit).then(() => {
+        isEditing.value = false;
+      });
+      break;
+    // case "marketPriceReport":
+    //   BusinessFormAPI.saveMarketPriceReport(submitData);
+    //   break;
+    // case "firmMngReport":
+    //   BusinessFormAPI.saveFirmMngReport(submitData);
+    //   break;
+    // case "firmReport":
+    //   BusinessFormAPI.saveFirmReport(submitData);
+    //   break;
+    // case "customReport":
+    //   BusinessFormAPI.saveCustomReport(submitData);
+    //   break;
+    // case "partnerReport":
+    //   BusinessFormAPI.savePartnerReport(submitData);
+    //   break;
+    // case "partnerDetail":
+    //   BusinessFormAPI.savePartnerDetail(submitData);
+    //   break;
+    default:
+      break;
+  }
+};
+
+const handleSubmitSuccess = () => {
+  isEditing.value = false;
 };
 
 const favoForm = () => {
@@ -221,6 +308,48 @@ const handleCancel = () => {
     form.restoreForm();
   }
 };
+
+/**
+ * 初始化表单
+ * 根据当前指定的表单类型，初始化表单，从路由参数获取id
+ */
+const initForm = () => {
+  switch (currentComponent.value) {
+    case yearlyReportDetailForm:
+      if (route.query.id) {
+        BusinessFormAPI.getBusinessReportForm(route.query.id as string).then(
+          (data) => {
+            if (formRef.value) {
+              const form = formRef.value as any;
+              form.setFormValue(
+                converToFrontendFormData(
+                  route.query.type as Nullable<string>,
+                  data
+                )
+              );
+            }
+          }
+        );
+      }
+      break;
+    case marketPriceReportDetailForm:
+      break;
+    case firmMngReportDetailForm:
+      break;
+    case firmReportDetailForm:
+      break;
+    case customReportDetailForm:
+      break;
+    case partnerReportDetailForm:
+      break;
+    case partnerDetailForm:
+      break;
+    default:
+      break;
+  }
+};
+
+watch(() => currentComponent.value, initForm, { immediate: true });
 
 watch(
   () => route.query.type,
@@ -278,7 +407,7 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  console.log("mounted");
+  // initForm();
 });
 </script>
 
@@ -289,7 +418,7 @@ onMounted(() => {
   // color: #fefefe;
   top: -5px;
   right: 10px;
-  box-shadow: 0 -10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -2px rgba(0, 0, 0, 0.5);
   z-index: 1;
   padding: 5px 20px;
   border-radius: 0 10px 10px;

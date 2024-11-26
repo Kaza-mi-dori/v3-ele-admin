@@ -294,6 +294,291 @@ const BusinessFormAPI = {
       data,
     });
   },
+
+  /**
+   * 款项台账记录新增
+   * @param data 款项台账记录
+   * @returns
+   */
+  addPaymentLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow`,
+      method: "post",
+      data: data,
+    });
+  }
+
+  /**
+   * 款项台账记录修改
+   * @param data 款项台账记录
+   * @returns
+   */
+  editPaymentLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow`,
+      method: "patch",
+      data: data,
+    });
+  },
+
+  /**
+   * 款项台账记录详情
+   * @param companyId 企业ID
+   * @returns 款项台账记录详情
+   */
+  getPaymentLedgerRecord(companyId: number) {
+    return request2<any, any>({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow`,
+      method: "get",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 款项台账记录删除
+   * @param companyId 企业ID
+   * @returns
+   */
+  deletePaymentLedgerRecord(companyId: number) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow`,
+      method: "delete",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 款项台账记录列表
+   * @param data 查询条件
+   * @returns 款项台账记录列表
+   */
+  getPaymentLedgerRecordList(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow`,
+      method: "get",
+      data,
+    });
+  },
+
+  /**
+   * 款项台账记录导出
+   * @param data 查询条件
+   * @returns 款项台账记录列表
+   */
+  exportPaymentLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow/Export`,
+      method: "get",
+      data,
+    });
+  },
+
+  /**
+   * 款项台账记录导入
+   * @param data 查询条件
+   * @returns 款项台账记录列表
+   */
+  importPaymentLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow/Import`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 结算台账记录新增
+   * @param data 结算台账记录
+   * @returns
+   */
+  addSettlementLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 结算台账记录修改
+   * @param data 结算台账记录
+   * @returns
+   */
+  editSettlementLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow`,
+      method: "patch",
+      data: data,
+    });
+  },
+
+  /**
+   * 结算台账记录详情
+   * @param companyId 企业ID
+   * @returns 结算台账记录详情
+   */
+  getSettlementLedgerRecord(companyId: number) {
+    return request2<any, any>({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow`,
+      method: "get",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 结算台账记录删除
+   * @param companyId 企业ID
+   * @returns
+   */
+  deleteSettlementLedgerRecord(companyId: number) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow`,
+      method: "delete",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 结算台账记录列表
+   * @param data 查询条件
+   * @returns 结算台账记录列表
+   */
+  getSettlementLedgerRecordList(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow`,
+      method: "get",
+      data,
+    });
+  },
+
+  /**
+   * 结算台账记录导出
+   * @param data 查询条件
+   * @returns 结算台账记录列表
+   */
+  exportSettlementLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow/Export`,
+      method: "get",
+      data,
+    });
+  },
+
+  /**
+   * 结算台账记录导入
+   * @param data 查询条件
+   * @returns 结算台账记录列表
+   */
+  importSettlementLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow/Import`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 货单台账记录新增
+   * @param data 货单台账记录
+   * @returns
+   */
+  addWaybillLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 货单台账记录修改
+   * @param data 货单台账记录
+   * @returns
+   */
+  editWaybillLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      method: "patch",
+      data: data,
+    });
+  },
+
+  /**
+   * 货单台账记录详情
+   * @param companyId 企业ID
+   * @returns 货单台账记录详情
+   */
+  getWaybillLedgerRecord(companyId: number) {
+    return request2<any, any>({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      method: "get",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 货单台账记录删除
+   * @param companyId 企业ID
+   * @returns
+   */
+  deleteWaybillLedgerRecord(companyId: number) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      method: "delete",
+      params: {
+        id: companyId,
+      },
+    });
+  },
+
+  /**
+   * 货单台账记录列表
+   * @param data 查询条件
+   * @returns 货单台账记录列表
+   */
+  getWaybillLedgerRecordList(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      method: "get",
+      data,
+    });
+  },
+
+  /**
+   * 货单台账记录导出
+   * @param data 查询条件
+   * @returns 货单台账记录列表
+   */
+  exportWaybillLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow/Export`,
+      method: "get",
+      data,
+    });
+  },
+
+  /**
+   * 货单台账记录导入
+   * @param data 查询条件
+   * @returns 货单台账记录列表
+   */
+  importWaybillLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow/Import`,
+      method: "post",
+      data,
+    });
+  },
 };
 
 export interface CompanyOverviewForm {
