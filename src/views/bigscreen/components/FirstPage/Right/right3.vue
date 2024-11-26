@@ -11,6 +11,7 @@
           class="entry-icon"
           :class="index % 2 === 0 ? 'floating-up' : 'floating-down'"
           :style="getIconStyle(index)"
+          @click="handleType(index)"
         />
       </div>
     </div>
@@ -26,6 +27,9 @@ import blue from "@/views/bigscreen/img/blue.png";
 import purple from "@/views/bigscreen/img/purple.png";
 import orange from "@/views/bigscreen/img/orange.png";
 import red from "@/views/bigscreen/img/red.png";
+import { businessTypes2, navItem } from "../../constants";
+
+const businessTypeArr = ref<navItem[]>(businessTypes2);
 
 const imgArr = ref([yellow, blue, orange, green, purple, red]);
 // 用于生成错落布局的样式
@@ -43,6 +47,10 @@ const getIconStyle = (index: number) => {
     top: `${positions[index].top}px`,
     left: `${positions[index].left}%`,
   };
+};
+
+const handleType = (index: number) => {
+  const selectedBusinessType = businessTypeArr.value[index];
 };
 </script>
 

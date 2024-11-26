@@ -8,7 +8,7 @@
           <div
             class="type-item"
             :class="{ active: selectedTypeId === item.id }"
-            @click="selectType(item.id)"
+            @click="handleType(item)"
           >
             {{ item.label }}
           </div>
@@ -23,7 +23,7 @@
           <div
             class="type-item"
             :class="{ active: selectedTypeId === item.id }"
-          @click="selectType(item.id)"
+            @click="handleType(item)"
           >
             {{ item.label }}
           </div>
@@ -39,25 +39,14 @@
 <script setup lang="ts">
 import ScreenIndexContent from "./index-content.vue";
 import { ref, computed } from "vue";
+import { businessTypes, navItem } from "./components/constants";
 
-interface navItem {
-  id: number;
-  label: string;
-}
-
-const businessTypeArr: Ref<navItem[]> = ref([
-  { id: 1, label: "LNG" },
-  { id: 2, label: "燃料油" },
-  { id: 3, label: "成品油" },
-  { id: 4, label: "化工产品" },
-  { id: 5, label: "原油" },
-  { id: 6, label: "煤炭" },
-]);
+const businessTypeArr = ref<navItem[]>(businessTypes);
 
 const selectedTypeId = ref<number | null>(null); // 当前选中item
 
-const selectType = (id: number) => {
-  selectedTypeId.value = id;
+const handleType = (item: any) => {
+  selectedTypeId.value = item.id;
 };
 
 // 计算属性，获取数组的前一半
