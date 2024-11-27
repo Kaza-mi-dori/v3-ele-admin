@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">市场报价报表</div>
+      <div class="__title">市场价格报表</div>
       <div class="__stat">
         <span class="__item">你有</span>
         <span class="__item">统计指标一</span>
@@ -119,7 +119,9 @@ import sassvariables from "@/styles/variables.module.scss";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
-import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import BusinessFormAPI, {
+  type MarketQuotationReportQuery,
+} from "@/api/businessForm";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { onMounted } from "vue";
 
@@ -127,7 +129,7 @@ const router = useRouter();
 
 type IExampleData = business.IAuditableEntity<Partial<business.IGoods>>;
 
-const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
+const queryForm: Ref<Partial<MarketQuotationReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
   状态集合: undefined,
   日期早于: undefined,
@@ -182,7 +184,7 @@ const handleViewDetail = (row: any) => {
     name: "ReportForm",
     query: {
       id: row.id,
-      type: "yearlyReport",
+      type: "marketPriceReport",
     },
   });
 };
@@ -341,8 +343,8 @@ onMounted(() => {
 }
 
 .op-block {
-  @apply flex justify-end;
-  margin: 10px;
+  @apply flex justify-between;
+  margin-block: 10px;
 }
 
 .table-header-custom {

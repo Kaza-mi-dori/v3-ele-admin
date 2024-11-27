@@ -182,7 +182,7 @@ const handleViewDetail = (row: any) => {
     name: "ReportForm",
     query: {
       id: row.id,
-      type: "yearlyReport",
+      type: "firmReport",
     },
   });
 };
@@ -339,8 +339,8 @@ onMounted(() => {
 }
 
 .op-block {
-  @apply flex justify-end;
-  margin: 10px;
+  @apply flex justify-between;
+  margin-block: 10px;
 }
 
 .table-header-custom {

@@ -20,8 +20,31 @@
     </div>
     <!-- 表格操作区 -->
     <div class="op-block">
-      <el-button>导出excel</el-button>
-      <el-button icon="Arrow-down">更多功能</el-button>
+      <div>
+        <el-button type="primary" @click="handleAddRecord">新增</el-button>
+      </div>
+      <div>
+        <el-button>导出excel</el-button>
+        <el-button>导入excel</el-button>
+        <el-dropdown class="ml-2">
+          <el-button>
+            更多功能
+            <el-icon>
+              <ArrowDown />
+            </el-icon>
+          </el-button>
+          <template v-slot:dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <span>批量审核</span>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <span class="text-red-5">批量删除</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
     <!-- 表格区 -->
     <el-table
@@ -69,10 +92,12 @@
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
-          <el-button type="text" @click="handleViewDetail(scope.row)">
-            详情
-          </el-button>
-          <el-button type="text">编辑</el-button>
+          <div class="w-full flex justify-evenly">
+            <el-button type="text" @click="handleViewDetail(scope.row)">
+              详情
+            </el-button>
+            <el-button type="text">编辑</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -97,6 +122,9 @@ import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
 import { ref } from "vue";
 import type { Ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 type IExampleData = {
   name: string;
@@ -145,6 +173,17 @@ const handleCurrentChange = (currentPage: number) => {
 };
 const handleViewDetail = (row: IExampleData) => {
   console.log(row);
+};
+const handleAddRecord = () => {
+  router.push({
+    name: "ReportForm",
+    query: {
+      type: "settlementDetail",
+    },
+  });
+};
+const handleDeleteRecord = () => {
+  console.log("删除");
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
@@ -213,8 +252,8 @@ const handleConfirmFilter = (filter: any) => {
 }
 
 .op-block {
-  @apply flex justify-end;
-  margin: 10px;
+  @apply flex justify-between;
+  margin-block: 10px;
 }
 
 .table-header-custom {

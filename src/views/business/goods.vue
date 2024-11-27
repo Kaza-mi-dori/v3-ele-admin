@@ -5,9 +5,12 @@
     <div class="title-block">
       <div class="__title">产品台账</div>
       <div class="__stat">
-        <span class="__item">你有</span>
-        <span class="__item">统计指标一</span>
-        <span class="__item">统计指标二</span>
+        <span class="__item">共有</span>
+        <span class="__item">
+          <span class="inline-block ml-1 mr-1">{{ pagination.total }}</span>
+          条产品记录
+        </span>
+        <!-- <span class="__item">统计指标二</span> -->
       </div>
     </div>
     <!-- 筛选操作区 -->
@@ -20,8 +23,31 @@
     </div>
     <!-- 表格操作区 -->
     <div class="op-block">
-      <el-button>导出excel</el-button>
-      <el-button icon="Arrow-down">更多功能</el-button>
+      <div>
+        <el-button type="primary" @click="handleAddRecord">新增</el-button>
+      </div>
+      <div>
+        <el-button>导出excel</el-button>
+        <el-button>导入excel</el-button>
+        <el-dropdown class="ml-2">
+          <el-button>
+            更多功能
+            <el-icon>
+              <ArrowDown />
+            </el-icon>
+          </el-button>
+          <template v-slot:dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <span>批量审核</span>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <span class="text-red-5">批量删除</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
     <!-- 表格区 -->
     <el-table
@@ -42,7 +68,7 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" width="150" sortable>
+      <el-table-column prop="name" label="名称" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
@@ -69,10 +95,12 @@
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
-          <el-button type="text" @click="handleViewDetail(scope.row)">
-            详情
-          </el-button>
-          <el-button type="text">编辑</el-button>
+          <div class="w-full flex justify-evenly">
+            <el-button type="text" @click="handleViewDetail(scope.row)">
+              详情
+            </el-button>
+            <el-button type="text">编辑</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -97,8 +125,35 @@ import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
 import { ref } from "vue";
 import type { Ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const handleAddRecord = () => {
+  router.push({
+    name: "ReportForm",
+    query: {
+      type: "goodsDetail",
+    },
+  });
+};
 
 type IExampleData = business.IAuditableEntity<Partial<business.IGoods>>;
+
+const popoverVisible: Ref<boolean> = ref(false);
+const checkedColumns: Ref<string[]> = ref([
+  "产品来源",
+  "产品编号",
+  "产品类型",
+  "状态",
+  "创建时间",
+  "更新时间",
+  "创建人",
+  "更新人",
+]);
+
+watch(checkedColumns, (val) => {
+  // 隐藏或显示列
+});
 
 const loading: Ref<boolean> = ref(false);
 const exampleData: Ref<IExampleData[]> = ref([
@@ -208,8 +263,8 @@ const handleConfirmFilter = (filter: any) => {
 }
 
 .op-block {
-  @apply flex justify-end;
-  margin: 10px;
+  @apply flex justify-between;
+  margin-block: 10px;
 }
 
 .table-header-custom {

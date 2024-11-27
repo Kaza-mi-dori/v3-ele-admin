@@ -405,11 +405,13 @@ const yearlyReportDetailForm = ref<
   business.IAuditableEntity<business.IYearlyBusinessReport>
 >({
   year: "2021",
+  businessDimension: "成品油",
   income: 1000,
   outcome: 2000,
   profit: 1000,
   purchaseAmount: 1000,
   salesAmount: 2000,
+  contractAmount: 1000,
   contractCount: 1000,
   contractFulfilledCount: 2000,
   riskContractCount: 1000,
@@ -462,9 +464,7 @@ const rules: Ref<GenericRecord> = ref({
 
 /** 中文键值转为英文 */
 const converter: (data: any) => YearlyReportDetailFormData = (data) => {
-  const result: {
-    [key: string]: any;
-  } = {};
+  const result = {} as YearlyReportDetailFormData;
   result.year = data["年度"];
   result.businessDimension = data["业务维度"];
   result.profit = data["利润金额"];
@@ -549,6 +549,8 @@ const setFormValue = (value: any) => {
 const generateRandomData = () => {
   yearlyReportDetailForm.value = {
     // 随机生成数据
+    // name: "成品油",
+    businessDimension: "成品油",
     year: Math.floor(Math.random() * 10) + 2010 + "-01-01",
     income: Math.floor(Math.random() * 1000) + 1000,
     outcome: Math.floor(Math.random() * 1000) + 1000,
@@ -556,12 +558,14 @@ const generateRandomData = () => {
     purchaseAmount: Math.floor(Math.random() * 1000) + 1000,
     salesAmount: 2000,
     contractCount: 1000,
+    contractAmount: 1000,
     contractFulfilledCount: 2000,
     riskContractCount: 1000,
     purchaseContractCount: 2000,
     salesContractCount: 1000,
     purchaseOrderCount: 2000,
     salesOrderCount: 1000,
+    storage: undefined,
     // storage: [
     //   {
     //     warehouse: "仓库1",

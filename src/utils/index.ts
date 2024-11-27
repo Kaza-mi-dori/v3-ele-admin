@@ -58,3 +58,10 @@ export function deepUnref(value: any) {
   }
   return unref(value);
 }
+
+/**
+ * 数值转换为千分位
+ */
+export function toThousands(num: number) {
+  return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, "$1,");
+}

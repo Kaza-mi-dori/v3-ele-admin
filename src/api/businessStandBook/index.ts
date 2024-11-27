@@ -2,7 +2,7 @@ import request2 from "@/utils/request2";
 
 const BUSINESS_STANDBOOK_BASE_URL = "/Api/Business";
 
-const BusinessFormAPI = {
+const BusinessStandbookAPI = {
   /**
    * 合同展示台账记录新增
    * @param data 合同展示台账记录
@@ -53,7 +53,7 @@ const BusinessFormAPI = {
    * @returns
    * @throws
    */
-  deleteContractLedgerRecord(companyId: number) {
+  deleteContractLedgerRecord(companyId: number | string) {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow`,
       method: "delete",
@@ -72,7 +72,7 @@ const BusinessFormAPI = {
   getContractLedgerRecordList(data: any) {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow`,
-      method: "get",
+      method: "post",
       data,
     });
   },
@@ -169,7 +169,7 @@ const BusinessFormAPI = {
   getCustomerAndSupplierLedgerRecordList(data: any) {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/CustomerAndSupplierLedgerShow`,
-      method: "get",
+      method: "post",
       data,
     });
   },
@@ -264,7 +264,7 @@ const BusinessFormAPI = {
   getCompanyReportFormList(data: any) {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/CorporateOperationsReportShow`,
-      method: "get",
+      method: "post",
       data,
     });
   },
@@ -306,7 +306,7 @@ const BusinessFormAPI = {
       method: "post",
       data: data,
     });
-  }
+  },
 
   /**
    * 款项台账记录修改
@@ -359,7 +359,7 @@ const BusinessFormAPI = {
   getPaymentLedgerRecordList(data: any) {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow`,
-      method: "get",
+      method: "post",
       data,
     });
   },
@@ -454,7 +454,7 @@ const BusinessFormAPI = {
   getSettlementLedgerRecordList(data: any) {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow`,
-      method: "get",
+      method: "post",
       data,
     });
   },
@@ -549,7 +549,7 @@ const BusinessFormAPI = {
   getWaybillLedgerRecordList(data: any) {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
-      method: "get",
+      method: "post",
       data,
     });
   },
@@ -610,4 +610,28 @@ export interface CompanyOverviewForm {
   companyLogo: string;
 }
 
-export default BusinessFormAPI;
+export interface CustomerAndSupplierQuery {
+  id集合: Array<number | string>;
+  数据源集合: Array<string>;
+  状态集合: Array<string>;
+  日期晚于: string;
+  日期早于: string;
+}
+
+/** 客商台账详情 */
+export interface CustomerAndSupplierLedgerRecordForm {
+  id?: number | string;
+  履约风险合同数: number;
+  累计贸易额: number;
+  累计签订合同数: number;
+  未履约合同数: number;
+  数据源: string;
+  日期: string;
+  状态: string;
+  客商名称: string;
+  客商类型: string;
+  准入状态: string;
+  评价: string;
+  备注: string;
+}
+export default BusinessStandbookAPI;

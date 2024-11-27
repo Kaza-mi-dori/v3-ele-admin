@@ -80,12 +80,12 @@ namespace business {
   // 合同信息
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface IContract {
-    id: string;
+    id: string | number;
     no: string; // 编号
     name: string; // 名称
-    amount: number; // 金额（含税)
-    tax: number; // 税率
-    taxAmount: number; // 税额
+    amount: number | string; // 金额（含税)
+    tax: number | string; // 税率
+    taxAmount: number | string; // 税额
     description: string; // 说明
     currency: string; // 币种
     partner: string; // 合作伙伴(相对人)
@@ -93,17 +93,21 @@ namespace business {
     date: string; // 签订日期
     from?: string; // 合同信息来源，如：泛微、钉钉
     goodsDetails?: any[]; // 商品明细
+    isRisk?: boolean; // 是否风险合同
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface IYearlyBusinessReport {
     id?: string;
+    /** 业态名称 */
+    businessDimension: string;
     year: string;
     income: number;
     outcome: number;
     profit: number;
     purchaseAmount: number; // 采购金额
     salesAmount: number; // 销售金额
+    contractAmount: number; // 合同金额
     contractCount: number; // 合同数量
     contractFulfilledCount: number; // 已履行合同数量
     riskContractCount: number; // 风险合同数量
@@ -121,6 +125,34 @@ namespace business {
     profitFulfilledRate: number; // 利润目标完成率
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface ICompanyBusinessReport {
+    id?: string;
+    /** 企业名称 */
+    name: string;
+    year: string;
+    income: number;
+    outcome: number;
+    profit: number;
+    purchaseAmount: number; // 采购金额
+    salesAmount: number; // 销售金额
+    contractCount: number; // 合同数量
+    contractAmount: number; // 合同金额
+    contractFulfilledCount: number; // 已履行合同数量
+    riskContractCount: number; // 风险合同数量
+    purchaseContractCount: number; // 采购合同数量
+    salesContractCount: number; // 销售合同数量
+    purchaseOrderCount: number; // 采购订单数量
+    salesOrderCount: number; // 销售订单数量,
+    storage: Arrat<Record<string, number>>; // 仓储信息
+    settlementCount: number; // 结算数量
+    settlementAmount: number; // 结算金额
+    planIncome: number; // 计划收入
+    planOutcome: number; // 计划支出
+    planProfit: number; // 计划利润
+    incomeFulfilledRate: number; // 营收目标完成率
+    profitFulfilledRate: number; // 利润目标完成率
+  }
   // 月度业务报表
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface IMonthlyBusinessReport {

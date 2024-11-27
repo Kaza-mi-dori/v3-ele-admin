@@ -3,10 +3,13 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">年度经营计划报表</div>
+      <div class="__title">客商台账</div>
       <div class="__stat">
-        <span class="__item">你有</span>
-        <span class="__item">统计指标一</span>
+        <span class="__item">当前有</span>
+        <span class="__item">
+          <span class="inline-block ml-1 mr-1">{{ pagination.total }}</span>
+          条客商记录
+        </span>
         <span class="__item">统计指标二</span>
       </div>
     </div>
@@ -21,23 +24,25 @@
     <!-- 表格操作区 -->
     <div class="op-block">
       <el-button type="primary" @click="handleAddRecord">新增数据</el-button>
-      <el-button>导出excel</el-button>
-      <el-button>导入excel</el-button>
-      <el-dropdown trigger="click" class="ml-4">
-        <el-button>
-          更多功能
-          <el-icon>
-            <ArrowDown />
-          </el-icon>
-        </el-button>
-        <template v-slot:dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="handleBatchDelete">
-              <span class="text-red-5">批量删除</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <div>
+        <el-button>导出excel</el-button>
+        <el-button>导入excel</el-button>
+        <el-dropdown trigger="click" class="ml-4">
+          <el-button>
+            更多功能
+            <el-icon>
+              <ArrowDown />
+            </el-icon>
+          </el-button>
+          <template v-slot:dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="handleBatchDelete">
+                <span class="text-red-5">批量删除</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
     <!-- 表格区 -->
     <el-table
@@ -120,6 +125,9 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import BusinessStandbookAPI, {
+  type CustomerAndSupplierQuery,
+} from "@/api/businessStandBook";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { onMounted } from "vue";
 
@@ -127,8 +135,8 @@ const router = useRouter();
 
 type IExampleData = business.IAuditableEntity<Partial<business.IGoods>>;
 
-const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
-  业务维度: undefined,
+const queryForm: Ref<Partial<CustomerAndSupplierQuery> & PageQueryDev> = ref({
+  数据源集合: undefined,
   状态集合: undefined,
   日期早于: undefined,
   日期晚于: undefined,
@@ -182,7 +190,7 @@ const handleViewDetail = (row: any) => {
     name: "ReportForm",
     query: {
       id: row.id,
-      type: "yearlyReport",
+      type: "firmReport",
     },
   });
 };
@@ -203,9 +211,11 @@ const handleDelete = (row: any) => {
         return;
       }
       // 删除操作
-      BusinessFormAPI.deleteBusinessReportForm(row.id).then(() => {
-        initTableData();
-      });
+      BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecord(row.id).then(
+        () => {
+          initTableData();
+        }
+      );
     })
     .catch(() => {
       // 取消删除
@@ -250,9 +260,10 @@ const handleConfirmFilter = (value: any) => {
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res = await BusinessFormAPI.getBusinessReportFormList(
-      queryForm.value
-    );
+    const res =
+      await BusinessStandbookAPI.getCustomerAndSupplierLedgerRecordList(
+        queryForm.value
+      );
     tableData.value = res["当前记录"];
     pagination.value.total = res["记录总数"];
   } catch (error) {
@@ -274,7 +285,7 @@ const handleAddRecord = () => {
   router.push({
     name: "ReportForm",
     query: {
-      type: "yearlyReport",
+      type: "singlePartnerDetail",
     },
   });
 };
@@ -298,7 +309,7 @@ const handleBatchDelete = () => {
     const ids = selected.map((item: any) => item.id);
     // 批量调用删除接口
     const deleteTasks = ids.map((id: any) =>
-      BusinessFormAPI.deleteBusinessReportForm(id)
+      BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecord(id)
     );
     Promise.all(deleteTasks).then(() => {
       tableRef?.value?.clearSelection();

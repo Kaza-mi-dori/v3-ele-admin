@@ -4,19 +4,20 @@
     <!-- <div class="g-title-block-2">
       <div class="__title">年度经营报表</div>
     </div> -->
-    <div class="mb-4 p-10px bg-white">
+    <!-- <div class="mb-4 p-10px bg-white">
       <el-button class="g-button-1" type="primary" @click="submitForm">
         提交
       </el-button>
       <el-button class="g-button-1" @click="favoForm">收藏</el-button>
       <el-button class="g-button-1" @click="exportForm">导出</el-button>
-    </div>
+    </div> -->
     <div class="info-card-level1">
       <div class="__title">
         <span>基本信息</span>
       </div>
       <div class="__content">
         <el-form
+          ref="formRef"
           label-position="top"
           label-width="100px"
           inline
@@ -230,6 +231,7 @@ import datePickerPlus from "@/components/ElBasicPlus/datePicker.vue";
 import uploadPlus from "@/components/ElBasicPlus/upload.vue";
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
+import { FormInstance } from "element-plus";
 
 const props = defineProps({
   id: {
@@ -242,6 +244,7 @@ const props = defineProps({
   },
 });
 
+const formRef = ref<Nullable<FormInstance>>(null);
 const { id, editing } = toRefs(props);
 
 // 客商名称、客商类型、年度评分列表、准入状态、准入时间、是否封禁、交易金额、风险金额、合同金额、联系电话、地址、创建时间、创建人、更新时间、更新人、数据来源、是否审核
@@ -364,11 +367,49 @@ const setFormValue = (value: any) => {
   }
 };
 
+const validateForm = () => {
+  return formRef.value?.validate();
+};
+
+const generateRandomData = () => {
+  partnerDetailForm.value = {
+    name: "广投石化",
+    type: "石化",
+    currentYearScore: "90",
+    yearScores: [
+      {
+        year: "2020",
+        score: "90",
+      },
+      {
+        year: "2021",
+        score: "90",
+      },
+    ],
+    admissionStatus: "已准入",
+    admissionTime: "2024-08-01",
+    banned: "否",
+    tradeAmount: "1000",
+    riskAmount: "100",
+    contractAmount: "100",
+    phone: "13888888888",
+    address: "广州市天河区",
+    createdAt: "2021-08-01",
+    createdBy: "admin",
+    updatedAt: "2021-08-01",
+    updatedBy: "admin",
+    dataFrom: "手动录入",
+    audited: "是",
+  };
+};
+
 defineExpose({
   saveForm,
   restoreForm,
   getFormValue,
   setFormValue,
+  validateForm,
+  generateRandomData,
 });
 </script>
 

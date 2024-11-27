@@ -7,6 +7,7 @@
     </el-tabs>
     <div class="flex justify-between mb-2">
       <div class="flex">
+        <el-button class="mr-2" @click="handleAddRecord">新增</el-button>
         <el-select
           v-model="searchForm.status"
           placeholder="请选择"
@@ -52,7 +53,6 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <el-button>新增客商</el-button>
       </div>
     </div>
     <el-table border stripe :data="tableData" style="width: 100%">
@@ -321,6 +321,15 @@ const handleTabClick = (tab: any) => {
   } else {
     tableData.value = providerTableData.value;
   }
+};
+
+const handleAddRecord = () => {
+  router.push({
+    name: "ReportForm",
+    query: {
+      type: "partnerDetail",
+    },
+  });
 };
 
 const handleEdit = (index: number, row: any) => {
