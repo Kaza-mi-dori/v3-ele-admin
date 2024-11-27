@@ -1,11 +1,72 @@
 <template>
   <Model1 class="model1" title="合同总数与金额">
-    <div />
+    <div class="model-body">
+      <div class="model-body__content">
+        <div
+          v-for="(item, index) in contractData"
+          :key="index"
+          class="item-box"
+        >
+          <img :src="backgroundImages[index]" alt="" />
+          <div class="body-content">
+            <div>{{ item.label }}</div>
+            <div class="content-value">
+              <div class="content-num" :style="{ color: numColors[index] }">
+                {{ formatNumber(item.value) }}
+              </div>
+              <div class="content-unit">{{ item.unit }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </Model1>
 </template>
 
 <script setup lang="ts">
 import Model1 from "../Model1/index.vue";
+import yellowBg from "@/views/bigscreen/img/yellow2_bg.png";
+import blueBg from "@/views/bigscreen/img/blue2_bg.png";
+import greenBg from "@/views/bigscreen/img/green2_bg.png";
+import redBg from "@/views/bigscreen/img/red2_bg.png";
+import { ref } from "vue";
+
+// 定义背景图片数组
+const backgroundImages = [yellowBg, blueBg, greenBg, redBg];
+const numColors = ["#fed971", "#4fdefe", "#4df0b8", "#fe8787"];
+
+// 定义合同数据
+const contractData = ref([
+  {
+    label: "合同总金额",
+    value: "355480",
+    unit: "万元",
+  },
+  {
+    label: "合同总数",
+    value: "3556",
+    unit: "份",
+  },
+  {
+    label: "采购合同",
+    value: "55480",
+    unit: "份",
+  },
+  {
+    label: "销售合同",
+    value: "556",
+    unit: "份",
+  },
+]);
+
+const formatNumber = (num: number | string): string => {
+  // 判断是否需要格式化
+  if (Number(num) > 10000) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  } else {
+    return num.toString(); // 直接返回原始数字，不格式化
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -14,5 +75,65 @@ import Model1 from "../Model1/index.vue";
   flex: 1;
   flex-direction: column;
   height: 100%;
+}
+.model-body {
+  flex: 1;
+  position: relative;
+  .model-body__bg {
+    height: 100%;
+    margin: 10px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .model-body__content {
+    // 四宫格布局
+    @apply flex items-center w-full flex-wrap pl-4 pr-4 pt-4;
+    .item-box {
+      position: relative; // 文字定位在图片上
+      width: calc(50% - 25px);
+      margin: 10px;
+      height: 85px;
+    }
+    .item-box:nth-child(2n-1) {
+      margin-right: 15px;
+    }
+    img {
+      width: 120%;
+      height: 100%;
+      object-fit: cover; // 确保图片比例适用容器
+    }
+    .body-content {
+      position: absolute; // 使文字定位
+      top: 50%; // 调整文字位置
+      left: 15px; // 适当调整文字位置
+      transform: translateY(-50%); // 垂直居中
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      text-align: left;
+      font-size: 19px;
+      padding-left: 15px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      color: #ffffff;
+    }
+    .content-value {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .content-num {
+        font-size: 21px;
+        font-weight: bold;
+      }
+      .content-unit {
+        margin-left: 5px;
+        font-size: 16px;
+      }
+    }
+  }
 }
 </style>
