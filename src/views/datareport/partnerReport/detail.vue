@@ -4,19 +4,20 @@
     <!-- <div class="g-title-block-2">
       <div class="__title">年度经营报表</div>
     </div> -->
-    <div class="mb-4 p-10px bg-white">
+    <!-- <div class="mb-4 p-10px bg-white">
       <el-button class="g-button-1" type="primary" @click="submitForm">
         提交
       </el-button>
       <el-button class="g-button-1" @click="favoForm">收藏</el-button>
       <el-button class="g-button-1" @click="exportForm">导出</el-button>
-    </div>
+    </div> -->
     <div class="info-card-level1">
       <div class="__title">
         <span>基本信息</span>
       </div>
       <div class="__content">
         <el-form
+          ref="formRef"
           label-position="top"
           label-width="100px"
           inline
@@ -186,6 +187,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
+import { type FormInstance } from "element-plus";
 
 const props = defineProps({
   id: {
@@ -198,6 +200,7 @@ const props = defineProps({
   },
 });
 
+const formRef = ref<Nullable<FormInstance>>(null);
 const { id, editing } = toRefs(props);
 
 const yearlyReportDetailForm = ref({
@@ -288,11 +291,47 @@ const setFormValue = (value: any) => {
   }
 };
 
+const validateForm = () => {
+  return formRef.value?.validate();
+};
+
+const generateRandomData = () => {
+  yearlyReportDetailForm.value = {
+    name: "贸易伙伴报表",
+    year: "2021",
+    profit: "1000",
+    revenue: "2000",
+    cost: "1000",
+    rankData: [
+      { rank: "1", name: "永盛石化", profit: "1000", revenue: "2000" },
+      { rank: "2", name: "广投石化", profit: "1000", revenue: "2000" },
+      { rank: "3", name: "中石化", profit: "1000", revenue: "2000" },
+      {
+        rank: "4",
+        name: "中石油",
+        profit: "1000",
+        revenue: "2000",
+        product: "石油",
+        bargainAmount: "1000",
+        bargainCount: "1000",
+      },
+    ],
+    createdAt: "2021-01-01",
+    createdBy: "admin",
+    updatedAt: "2021-01-01",
+    updatedBy: "admin",
+    dataFrom: "系统录入",
+    audited: "是",
+  };
+};
+
 defineExpose({
   saveForm,
   restoreForm,
   getFormValue,
   setFormValue,
+  validateForm,
+  generateRandomData,
 });
 </script>
 

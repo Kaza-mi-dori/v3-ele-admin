@@ -37,7 +37,7 @@ const BusinessFormAPI = {
    * @returns 企业概况表单详情
    * @throws
    */
-  getCompanyDescForm(companyId: number) {
+  getCompanyDescForm(companyId: number | string) {
     return request2<any, any>({
       url: `${BUSINESS_FORM_BASE_URL}/CompanyOverviewShow`,
       method: "get",
@@ -639,6 +639,21 @@ export interface BusinessReportQuery {
   状态集合: string[];
   /** id集合 */
   id集合: string[];
+  /** 日期早于 */
+  日期早于: string;
+  /** 日期晚于 */
+  日期晚于: string;
+}
+
+export interface MarketQuotationReportQuery {
+  /** 业务维度 */
+  业务维度: string;
+  /** 状态集合 */
+  状态集合: string[];
+  /** id集合 */
+  id集合: string[];
+  /** 产品名称 */
+  产品名称: string;
   /** 日期早于 */
   日期早于: string;
   /** 日期晚于 */

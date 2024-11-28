@@ -339,8 +339,8 @@ onMounted(() => {
 }
 
 .op-block {
-  @apply flex justify-end;
-  margin: 10px;
+  @apply flex justify-between;
+  margin-block: 10px;
 }
 
 .table-header-custom {

@@ -5,8 +5,8 @@
     <div>
       <div class="active-filters-block">
         <div v-for="item in selectedItems" :key="item.label" class="__item">
-          <span class="__label">{{ item.label }}</span>
-          <div v-if="Array.isArray(item.value)">
+          <span v-if="item.value" class="__label">{{ item.label }}</span>
+          <div v-if="Array.isArray(item.value) && item.value.length > 0">
             <span
               v-for="option in item.value"
               :key="option"
@@ -22,7 +22,9 @@
               <CircleClose />
             </el-icon>
           </div>
-          <span v-else class="closable-tag">{{ item.value }}</span>
+          <span v-else-if="item.value" class="closable-tag">
+            {{ item.value }}
+          </span>
         </div>
       </div>
     </div>
@@ -201,7 +203,8 @@ const handleSelect = (item: any, option: any) => {
           item.value = null;
           break;
         case "daterange":
-          item.value = [null, null];
+          // item.value = [null, null];
+          item.value = null;
           break;
         case "checkbox":
           item.value = [];
@@ -397,6 +400,10 @@ const handleReset = () => {
 }
 .closable-tag {
   @apply inline-block font-bold color-black p-1 m-1;
+  // 虚线下划线
+  &::after {
+    @apply block h-0.5 w-full bg-gray-200 content-[''];
+  }
 }
 .condition-block {
   @apply lh-8 h-10 pl-10px pr-10px bg-white flex justify-between items-center relative;

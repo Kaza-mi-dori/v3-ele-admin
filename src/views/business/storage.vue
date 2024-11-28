@@ -21,8 +21,31 @@
     </div>
     <!-- 表格操作区 -->
     <div class="op-block">
-      <el-button>导出excel</el-button>
-      <el-button icon="Arrow-down">更多功能</el-button>
+      <div>
+        <el-button type="primary" @click="handleAddRecord">新增</el-button>
+      </div>
+      <div>
+        <el-button>导出excel</el-button>
+        <el-button>导入excel</el-button>
+        <el-dropdown class="ml-2">
+          <el-button>
+            更多功能
+            <el-icon>
+              <ArrowDown />
+            </el-icon>
+          </el-button>
+          <template v-slot:dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <span>批量审核</span>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <span class="text-red-5">批量删除</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
     <!-- 表格区 -->
     <el-table :data="tableData" border style="width: 100%">
@@ -57,6 +80,9 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import business from "@/types/business";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const goodsTypeList = ref([
   {
@@ -229,6 +255,22 @@ const tableData: Ref<business.IAuditableEntity<business.IStockRecord>[]> = ref([
   },
 ]);
 
+const handleAddRecord = () => {
+  router.push({
+    name: "ReportForm",
+    query: {
+      type: "storageDetail",
+    },
+  });
+};
+const handleViewDetail = (row: any) => {
+  console.log(row);
+};
+
+const handleDeleteRecord = (row: any) => {
+  console.log(row);
+};
+
 const search = () => {
   console.log(searchForm.value);
 };
@@ -264,8 +306,8 @@ onMounted(() => {
 }
 
 .op-block {
-  @apply flex justify-end;
-  margin: 10px;
+  @apply flex justify-between;
+  margin-block: 10px;
 }
 
 .table-header-custom {

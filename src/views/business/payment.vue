@@ -20,8 +20,31 @@
     </div>
     <!-- 表格操作区 -->
     <div class="op-block">
-      <el-button>导出excel</el-button>
-      <el-button icon="Arrow-down">更多功能</el-button>
+      <div>
+        <el-button type="primary" @click="handleAddRecord">新增</el-button>
+      </div>
+      <div>
+        <el-button>导出excel</el-button>
+        <el-button>导入excel</el-button>
+        <el-dropdown class="ml-2">
+          <el-button>
+            更多功能
+            <el-icon>
+              <ArrowDown />
+            </el-icon>
+          </el-button>
+          <template v-slot:dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <span>批量审核</span>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <span class="text-red-5">批量删除</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
     <!-- 表格区 -->
     <el-table
@@ -42,9 +65,11 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" width="150" sortable>
+      <el-table-column prop="name" label="名称" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.name }}</span>
+          <el-link type="primary" @click="handleViewDetail(scope.row)">
+            {{ scope.row.name }}
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column prop="dataFrom" label="款项来源" width="150" sortable>
@@ -54,7 +79,15 @@
       </el-table-column>
       <el-table-column prop="orderNo" label="款项订单" width="150" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.orderNo }}</span>
+          <!-- <span>{{ scope.row.orderNo }}</span> -->
+          <el-link
+            v-if="scope.row.orderNo"
+            type="primary"
+            @click="handleViewOrderDetail(scope.row)"
+          >
+            {{ scope.row.orderNo }}
+          </el-link>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column prop="no" label="款项编号" width="150" sortable>
@@ -84,10 +117,15 @@
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
-          <el-button type="text" @click="handleViewDetail(scope.row)">
-            详情
-          </el-button>
-          <el-button type="text">编辑</el-button>
+          <div class="w-full flex justify-evenly">
+            <!-- <el-button type="text" @click="handleViewDetail(scope.row)">
+              详情
+            </el-button>
+            <el-button type="text">编辑</el-button> -->
+            <el-link type="danger" @click="handleDelete(scope.row)">
+              删除
+            </el-link>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -112,6 +150,9 @@ import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
 import { ref } from "vue";
 import type { Ref } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 type IExampleData = business.IAuditableEntity<Partial<business.IPayment>>;
 
@@ -161,6 +202,20 @@ const handleCurrentChange = (currentPage: number) => {
 };
 const handleViewDetail = (row: IExampleData) => {
   console.log(row);
+};
+const handleViewOrderDetail = (row: IExampleData) => {
+  console.log(row);
+};
+const handleDelete = (row: IExampleData) => {
+  console.log(row);
+};
+const handleAddRecord = () => {
+  router.push({
+    name: "ReportForm",
+    query: {
+      type: "paymentDetail",
+    },
+  });
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
@@ -229,8 +284,8 @@ const handleConfirmFilter = (filter: any) => {
 }
 
 .op-block {
-  @apply flex justify-end;
-  margin: 10px;
+  @apply flex justify-between;
+  margin-block: 10px;
 }
 
 .table-header-custom {

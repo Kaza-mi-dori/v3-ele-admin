@@ -1,22 +1,35 @@
-<!-- 企业经营报表 -->
 <template>
   <div class="main-wrapper">
     <!-- <div class="g-title-block-2">
       <div class="__title">年度经营报表</div>
     </div> -->
     <!-- <div class="mb-4 p-10px bg-white">
+      <el-button class="g-button-1" type="primary" @click="handleEdit">
+        编辑
+      </el-button>
       <el-button class="g-button-1" type="primary" @click="submitForm">
         提交
       </el-button>
       <el-button class="g-button-1" @click="favoForm">收藏</el-button>
       <el-button class="g-button-1" @click="exportForm">导出</el-button>
     </div> -->
+    <!-- 校验模式开关 -->
+    <!-- <el-switch
+      v-if="editing"
+      v-model="validateOn"
+      active-text="校验"
+      inactive-text="不校验"
+      :active-value="true"
+      :inactive-value="false"
+      class="m-2"
+    /> -->
     <div class="info-card-level1">
       <div class="__title">
         <span>基本信息</span>
       </div>
       <div class="__content">
         <el-form
+          ref="formRef"
           label-position="top"
           label-width="100px"
           inline
@@ -31,12 +44,13 @@
                   v-if="editing"
                   v-model="yearlyReportDetailForm.year"
                   type="year"
+                  value-format="YYYY-01-01"
                 />
                 <span v-else>{{ yearlyReportDetailForm.year }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="利润" prop="profit">
+              <el-form-item label="利润(万元)" prop="profit">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.profit"
@@ -45,7 +59,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="收入" prop="income">
+              <el-form-item label="收入(万元)" prop="income">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.income"
@@ -54,7 +68,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="支出" prop="outcome">
+              <el-form-item label="支出(万元)" prop="outcome">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.outcome"
@@ -63,7 +77,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="采购金额" prop="purchaseAmount">
+              <el-form-item label="采购金额(万元)" prop="purchaseAmount">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.purchaseAmount"
@@ -72,7 +86,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="销售金额" prop="salesAmount">
+              <el-form-item label="销售金额(万元)" prop="salesAmount">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.salesAmount"
@@ -81,7 +95,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="合同数量" prop="contractCount">
+              <el-form-item label="合同数量(万元)" prop="contractCount">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.contractCount"
@@ -157,7 +171,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="结算数量" prop="settlementCount">
+              <el-form-item label="结算数量(吨)" prop="settlementCount">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.settlementCount"
@@ -166,7 +180,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="结算金额" prop="settlementAmount">
+              <el-form-item label="结算金额(万元)" prop="settlementAmount">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.settlementAmount"
@@ -177,7 +191,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="计划收入" prop="planIncome">
+              <el-form-item label="计划营收(万元)" prop="planIncome">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.planIncome"
@@ -186,7 +200,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="计划支出" prop="planOutcome">
+              <el-form-item label="计划支出(万元)" prop="planOutcome">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.planOutcome"
@@ -195,7 +209,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="计划利润" prop="planProfit">
+              <el-form-item label="计划利润(万元)" prop="planProfit">
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.planProfit"
@@ -204,7 +218,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="营收目标完成率" prop="incomeFulfilledRate">
+              <el-form-item
+                label="营收目标完成率(%)"
+                prop="incomeFulfilledRate"
+              >
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.incomeFulfilledRate"
@@ -215,7 +232,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="利润目标完成率" prop="profitFulfilledRate">
+              <el-form-item
+                label="利润目标完成率(%)"
+                prop="profitFulfilledRate"
+              >
                 <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.profitFulfilledRate"
@@ -231,10 +251,57 @@
     </div>
     <div class="info-card-level1">
       <div class="__title">
-        <span>附件信息</span>
+        <span>库存信息</span>
+      </div>
+      <div class="__content">
+        <el-form
+          label-position="top"
+          label-width="100px"
+          inline
+          :rules="rules"
+          class="w-full g-form-1"
+          :model="yearlyReportDetailForm"
+        >
+          <el-table :data="yearlyReportDetailForm.storage" stripe border>
+            <el-table-column prop="warehouse" label="仓库">
+              <template v-slot="{ row }">
+                <el-input v-if="editing" v-model="row.warehouse" />
+                <span v-else>{{ row.warehouse }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="name" label="产品名称">
+              <template v-slot="{ row }">
+                <el-input v-if="editing" v-model="row.name" />
+                <span v-else>{{ row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="amount" label="产品数量">
+              <template v-slot="{ row }">
+                <el-input v-if="editing" v-model="row.amount" />
+                <span v-else>{{ row.amount }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="unit" label="单位">
+              <template v-slot="{ row }">
+                <el-input v-if="editing" v-model="row.unit" />
+                <span v-else>{{ row.unit }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="editing"
+              label="操作"
+              fixed="right"
+              width="100"
+            >
+              <template v-slot="{ row }">
+                <el-link type="danger" @click="handleDelete(row)">删除</el-link>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form>
       </div>
     </div>
-    <div class="info-card-level1">
+    <div v-if="!editing" class="info-card-level1">
       <div class="__title">
         <span>维护信息</span>
       </div>
@@ -286,8 +353,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, unref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import { useManualRefHistory } from "@vueuse/core";
+import { type FormInstance } from "element-plus";
+import BusinessFormAPI from "@/api/businessForm";
+import business from "@/types/business";
 
 const props = defineProps({
   id: {
@@ -300,48 +371,136 @@ const props = defineProps({
   },
 });
 
+const route = useRoute();
+const formRef = ref<FormInstance | null>(null);
 const { id, editing } = toRefs(props);
 
+// 按照类型定义产出数据
+/**
+ *  year: string;
+    income: number;
+    outcome: number;
+    profit: number;
+    purchaseAmount: number; // 采购金额
+    salesAmount: number; // 销售金额
+    contractCount: number; // 合同数量
+    contractFulfilledCount: number; // 已履行合同数量
+    riskContractCount: number; // 风险合同数量
+    purchaseContractCount: number; // 采购合同数量
+    salesContractCount: number; // 销售合同数量
+    purchaseOrderCount: number; // 采购订单数量
+    salesOrderCount: number; // 销售订单数量,
+    storage: Record<string, number>; // 仓储信息
+    settlementCount: number; // 结算数量
+    settlementAmount: number; // 结算金额
+    planIncome: number; // 计划收入
+    planOutcome: number; // 计划支出
+    planProfit: number; // 计划利润
+    incomeFulfilledRate: number; // 营收目标完成率
+    profitFulfilledRate: number; // 利润目标完成率
+ */
+type YearlyReportDetailFormData =
+  business.IAuditableEntity<business.ICompanyBusinessReport>;
 const yearlyReportDetailForm = ref({
-  name: "年度经营报表",
-  firm: "永盛石化",
+  name: "永盛石化",
   year: "2021",
-  profit: "1000",
-  revenue: "2000",
-  cost: "1000",
-  income: "2000",
-  outcome: "1000",
-  purchaseAmount: "1000",
-  salesAmount: "1000",
-  contractCount: "100",
-  contractFulfilledCount: "80",
-  riskContractCount: "20",
-  purchaseContractCount: "50",
-  salesContractCount: "50",
-  purchaseOrderCount: "50",
-  salesOrderCount: "50",
-  settlementCount: "50",
-  settlementAmount: "1000",
-  planIncome: "2000",
-  planOutcome: "1000",
-  planProfit: "1000",
-  incomeFulfilledRate: "50%",
-  profitFulfilledRate: "50%",
-  createdAt: "2021-10-01",
-  createdBy: "admin",
-  updatedAt: "2021-10-01",
-  updatedBy: "admin",
-  dataFrom: "系统录入",
-  audited: "是",
+  income: 1000,
+  outcome: 2000,
+  profit: 1000,
+  purchaseAmount: 1000,
+  salesAmount: 2000,
+  contractCount: 1000,
+  contractFulfilledCount: 2000,
+  riskContractCount: 1000,
+  purchaseContractCount: 2000,
+  salesContractCount: 1000,
+  purchaseOrderCount: 2000,
+  salesOrderCount: 1000,
+  storage: [
+    {
+      warehouse: "仓库1",
+      name: "产品1",
+      amount: 1000,
+      unit: "吨",
+    },
+    {
+      warehouse: "仓库2",
+      name: "产品2",
+      amount: 2000,
+      unit: "吨",
+    },
+    {
+      warehouse: "在途",
+      name: "产品3",
+      amount: 3000,
+      unit: "吨",
+    },
+  ],
+  settlementCount: 1000,
+  settlementAmount: 2000,
+  planIncome: 1000,
+  planOutcome: 2000,
+  planProfit: 1000,
+  incomeFulfilledRate: 1000,
+  profitFulfilledRate: 2000,
+  createdAt: "",
+  createdBy: "",
+  updatedAt: "",
+  updatedBy: "",
+  dataFrom: "",
+  audited: false,
 });
 
+const validateOn = ref(false);
 const rules: Ref<GenericRecord> = ref({
   year: [{ required: true, message: "请输入年度", trigger: "blur" }],
-  firm: [{ required: true, message: "请输入企业", trigger: "blur" }],
   profit: [{ required: true, message: "请输入利润", trigger: "blur" }],
   revenue: [{ required: true, message: "请输入收入", trigger: "blur" }],
   cost: [{ required: true, message: "请输入成本", trigger: "blur" }],
 });
+
+/** 中文键值转为英文 */
+const converter: (data: any) => YearlyReportDetailFormData = (data) => {
+  const result = {} as YearlyReportDetailFormData;
+  result.name = data["企业名称"];
+  result.year = data["年度"];
+  // result.businessDimension = data["业务维度"];
+  result.profit = data["利润金额"];
+  result.income = data["营收金额"];
+  result.purchaseAmount = data["采购金额"];
+  result.salesAmount = data["销售金额"];
+  result.purchaseContractCount = data["采购合同数"];
+  result.salesContractCount = data["销售合同数"];
+  result.contractCount = data["合同总份数"];
+  result.contractAmount = data["合同总金额"];
+  result.purchaseOrderCount = data["采购合同份数"];
+  result.salesOrderCount = data["销售合同份数"];
+  result.contractFulfilledCount = data["合同履行数"];
+  result.riskContractCount = data["风险合同数"];
+  result.storage = data["库存量"];
+  result.settlementAmount = data["结算金额"];
+  result.settlementCount = data["结算数量"];
+  result.planIncome = data["计划营收"];
+  result.planProfit = data["计划利润"];
+  result.incomeFulfilledRate = data["营收目标完成率"];
+  result.profitFulfilledRate = data["利润目标完成率"];
+  result.createdAt = data["创建时间"];
+  result.createdBy = data["创建人"];
+  result.updatedAt = data["更新时间"];
+  result.updatedBy = data["更新人"];
+  result.dataFrom = data["数据来源"];
+  result.audited = data["是否审核"];
+  return result;
+};
+
+const initForm = (formData: any) => {
+  // console.log("initForm", formData);
+  yearlyReportDetailForm.value = converter(formData);
+};
+
+const handleEdit = () => {
+  console.log("handleEdit");
+};
 
 const submitForm = () => {
   console.log("submitForm");
@@ -355,6 +514,11 @@ const exportForm = () => {
   console.log("exportForm");
 };
 
+const handleDelete = (row: any) => {
+  console.log("handleDelete", row);
+};
+
+// snippet: ts-useManualRefHistory
 const { history, commit, undo, redo } = useManualRefHistory(
   yearlyReportDetailForm,
   { clone: true }
@@ -366,20 +530,92 @@ const saveForm = () => {
 const restoreForm = () => {
   undo();
 };
+const validateForm = () => {
+  return formRef.value?.validate();
+};
 const getFormValue = () => {
-  return unref(yearlyReportDetailForm.value);
+  // 先校验
+  return unref(yearlyReportDetailForm);
 };
 const setFormValue = (value: any) => {
   if (value) {
+    saveForm();
     yearlyReportDetailForm.value = value;
   }
+};
+
+const generateRandomData = () => {
+  yearlyReportDetailForm.value = {
+    // 随机生成数据
+    name: "永盛石化",
+    year: Math.floor(Math.random() * 10) + 2010 + "-01-01",
+    income: Math.floor(Math.random() * 1000) + 1000,
+    outcome: Math.floor(Math.random() * 1000) + 1000,
+    profit: Math.floor(Math.random() * 1000) + 1000,
+    purchaseAmount: Math.floor(Math.random() * 1000) + 1000,
+    salesAmount: 2000,
+    contractCount: 1000,
+    contractFulfilledCount: 2000,
+    riskContractCount: 1000,
+    purchaseContractCount: 2000,
+    salesContractCount: 1000,
+    purchaseOrderCount: 2000,
+    salesOrderCount: 1000,
+    storage: [],
+    // storage: [
+    //   {
+    //     warehouse: "仓库1",
+    //     name: "产品1",
+    //     amount: 1000,
+    //     unit: "吨",
+    //   },
+    //   {
+    //     warehouse: "仓库2",
+    //     name: "产品2",
+    //     amount: 2000,
+    //     unit: "吨",
+    //   },
+    //   {
+    //     warehouse: "在途",
+    //     name: "产品3",
+    //     amount: 3000,
+    //     unit: "吨",
+    //   },
+    // ],
+    settlementCount: 1000,
+    settlementAmount: 2000,
+    planIncome: 1000,
+    planOutcome: 2000,
+    planProfit: 1000,
+    incomeFulfilledRate: 1000,
+    profitFulfilledRate: 2000,
+    createdAt: "",
+    createdBy: "",
+    updatedAt: "",
+    updatedBy: "",
+    dataFrom: "",
+    audited: false,
+  };
 };
 
 defineExpose({
   saveForm,
   restoreForm,
+  validateForm,
   getFormValue,
   setFormValue,
+  generateRandomData,
+});
+
+onMounted(() => {
+  // if (route.query.id) {
+  //   // 根据id获取数据
+  //   BusinessFormAPI.getBusinessReportForm(route.query.id as string).then(
+  //     (data) => {
+  //       initForm(data);
+  //     }
+  //   );
+  // }
 });
 </script>
 

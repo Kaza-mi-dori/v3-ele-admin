@@ -182,7 +182,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "GoodsLedgerMng",
         component: () => import("@/views/business/goods.vue"),
         meta: {
-          title: "物资台账管理",
+          title: "产品台账管理",
           icon: "el-icon-coin",
         },
       },
@@ -222,6 +222,15 @@ export const constantRoutes: RouteRecordRaw[] = [
           icon: "el-icon-coin",
         },
       },
+      {
+        path: "partnerLedgerMng",
+        name: "PartnerLedgerMng",
+        component: () => import("@/views/business/partner.vue"),
+        meta: {
+          title: "客商台账管理",
+          icon: "el-icon-coin",
+        },
+      },
     ],
   },
   /**
@@ -236,7 +245,8 @@ export const constantRoutes: RouteRecordRaw[] = [
       {
         path: "chemicalProduct",
         name: "ChemicalProduct",
-        component: () => import("@/views/bigscreen/components/SecondPage/second-index.vue"),
+        component: () =>
+          import("@/views/bigscreen/components/SecondPage/second-index.vue"),
       },
     ],
   },
@@ -297,6 +307,24 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/system/log/index2.vue"),
         meta: {
           title: "操作日志",
+          icon: "document",
+        },
+      },
+      {
+        path: "dictMng",
+        name: "DictMngDev",
+        component: () => import("@/views/system/dictdev/index.vue"),
+        meta: {
+          title: "字典管理",
+          icon: "document",
+        },
+      },
+      {
+        path: "processMng",
+        name: "ProcessMngDev",
+        component: () => import("@/views/system/process/index.vue"),
+        meta: {
+          title: "流程管理",
           icon: "document",
         },
       },

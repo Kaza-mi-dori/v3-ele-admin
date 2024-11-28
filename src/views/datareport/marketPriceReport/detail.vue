@@ -18,6 +18,7 @@
       </div>
       <div class="__content">
         <el-form
+          ref="formRef"
           label-position="top"
           label-width="100px"
           inline
@@ -115,6 +116,7 @@
 import datePickerPlus from "@/components/ElBasicPlus/datePicker.vue";
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
+import { FormInstance } from "element-plus";
 
 const props = defineProps({
   id: {
@@ -127,6 +129,7 @@ const props = defineProps({
   },
 });
 
+const formRef = ref<Nullable<FormInstance>>(null);
 const { id, editing } = toRefs(props);
 
 const priceDetailForm = ref({
@@ -220,11 +223,46 @@ const setFormValue = (value: any) => {
   }
 };
 
+const validateForm = () => {
+  return formRef.value?.validate();
+};
+
+const generateRandomData = () => {
+  priceDetailForm.value = {
+    id: null,
+    name: "广投石化",
+    year: "2024",
+    description: "广投石化有限公司",
+    priceTime: "2024-01-01 12:00:00",
+    asset: "1000",
+    prices: [
+      {
+        name: "甲醇",
+        spec: "99%",
+        firm: "广投石化",
+        price: 1000,
+        unit: "元/吨",
+        change: 0.1,
+      },
+      {
+        name: "乙醇",
+        spec: "99%",
+        firm: "广投石化",
+        price: 2000,
+        unit: "元/吨",
+        change: 0.2,
+      },
+    ] as PriceRecord[],
+  };
+};
+
 defineExpose({
   saveForm,
   restoreForm,
   getFormValue,
   setFormValue,
+  validateForm,
+  generateRandomData,
 });
 </script>
 

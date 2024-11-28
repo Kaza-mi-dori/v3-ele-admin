@@ -96,24 +96,27 @@ const attrs = useAttrs();
 
 // 预览图片
 const handlePictureCardPreview = (file: any) => {
-  if (attrs.onPreview) {
-    const onPreview = attrs.onPreview as Function;
+  if (attrs["on-preview"] || attrs.onPreview) {
+    const op = attrs["on-preview"] || attrs.onPreview;
+    const onPreview = op as Function;
     onPreview(file);
   }
 };
 
 // 下载文件
 const handleDownload = (file: any) => {
-  if (attrs.onDownload) {
-    const onDownload = attrs.onDownload as Function;
+  if (attrs.onDownload || attrs["on-download"]) {
+    const op = attrs.onDownload || attrs["on-download"];
+    const onDownload = op as Function;
     onDownload(file);
   }
 };
 
 // 删除文件
 const handleRemove = (file: any) => {
-  if (attrs.onRemove) {
-    const onRemove = attrs.onRemove as Function;
+  if (attrs.onRemove || attrs["on-remove"]) {
+    const op = attrs.onRemove || attrs["on-remove"];
+    const onRemove = op as Function;
     onRemove(file);
   }
 };
