@@ -1,6 +1,6 @@
 <template>
   <Model1 class="model1" title="原油采购价格历史趋势分析">
-    <div id="chart22-left-1" style="width: 100%; height: 420px" />
+    <div id="chart22-left-1" style="width: 100%; height: 360px" />
   </Model1>
 </template>
 

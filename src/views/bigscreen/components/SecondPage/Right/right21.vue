@@ -2,7 +2,7 @@
   <Model1 class="model1" title="历年销售趋势">
     <div
       id="chart22-right-1"
-      style="width: 100%; height: 380px; margin-top: 10px"
+      style="width: 100%; height: 360px; margin-top: 10px"
     />
   </Model1>
 </template>
