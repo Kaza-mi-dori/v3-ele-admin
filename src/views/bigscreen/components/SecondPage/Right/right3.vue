@@ -2,7 +2,7 @@
   <Model1 class="model1" title="经营利润分析">
     <div
       id="chart2-right-3"
-      style="width: 100%; height: 280px; margin-top: -10px"
+      style="width: 100%; height: 230px; margin-top: -10px"
     />
   </Model1>
 </template>
