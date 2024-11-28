@@ -10,7 +10,7 @@
     </div>
     <div
       id="chart2-right-2"
-      style="width: 100%; height: 220px; margin-top: -30px"
+      style="width: 100%; height: 200px; margin-top: -30px"
     />
   </Model1>
 </template>
