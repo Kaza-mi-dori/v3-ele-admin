@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-view1">
+  <div class="bg-view-img2">
     <img style="position: absolute; top: 0" height="100vh" />
     <div class="bg-view1__header">
       <div class="title">
@@ -36,7 +36,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.bg-view1 {
+.bg-view-img2 {
   display: flex;
   flex-direction: column;
   width: 100%;
