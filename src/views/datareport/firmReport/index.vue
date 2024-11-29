@@ -21,23 +21,25 @@
     <!-- 表格操作区 -->
     <div class="op-block">
       <el-button type="primary" @click="handleAddRecord">新增数据</el-button>
-      <el-button>导出excel</el-button>
-      <el-button>导入excel</el-button>
-      <el-dropdown trigger="click" class="ml-4">
-        <el-button>
-          更多功能
-          <el-icon>
-            <ArrowDown />
-          </el-icon>
-        </el-button>
-        <template v-slot:dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="handleBatchDelete">
-              <span class="text-red-5">批量删除</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <div>
+        <el-button>导出excel</el-button>
+        <el-button>导入excel</el-button>
+        <el-dropdown trigger="click" class="ml-4">
+          <el-button>
+            更多功能
+            <el-icon>
+              <ArrowDown />
+            </el-icon>
+          </el-button>
+          <template v-slot:dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="handleBatchDelete">
+                <span class="text-red-5">批量删除</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
     <!-- 表格区 -->
     <el-table

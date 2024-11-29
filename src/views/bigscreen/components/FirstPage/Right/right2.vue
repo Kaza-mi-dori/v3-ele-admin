@@ -149,8 +149,14 @@ onMounted(() => {
   height: 100%;
 }
 
-::v-deep
-  .el-progress.el-progress--line.el-progress--without-text.__progress
+// ::v-deep
+//   .el-progress.el-progress--line.el-progress--without-text.__progress
+//   .el-progress-bar
+//   > .el-progress-bar__outer {
+//   background-color: #192d56 !important;
+// }
+
+:deep(.el-progress.el-progress--line.el-progress--without-text.__progress)
   .el-progress-bar
   > .el-progress-bar__outer {
   background-color: #192d56 !important;

@@ -1,12 +1,12 @@
 <template>
   <Model1 class="model1" title="监控视频">
+    <div class="flex justify-end mb-2 mr-2">
+      <a class="text-sm link">更多>></a>
+    </div>
     <div class="box1">
       <div v-for="k in 4" :key="k" class="item-box">
         <span>监控{{ k }}</span>
       </div>
-    </div>
-    <div class="flex justify-end mt-2 mr-2">
-      <a class="text-sm link">查看更多</a>
     </div>
   </Model1>
 </template>
@@ -34,7 +34,7 @@ const oilBargain = ref<string>("254,38");
 }
 
 .link {
-  color: #fff;
+  color: $bigscreen-primary-color-1;
   &:hover {
     text-decoration: underline;
   }

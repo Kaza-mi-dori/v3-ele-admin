@@ -4,6 +4,7 @@ dist
 dist-ssr
 *.local
 .history
+.VSCodeCounter
 
 # Editor directories and files
 .idea

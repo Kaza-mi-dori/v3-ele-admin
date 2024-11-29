@@ -83,7 +83,6 @@ import { ElMessage } from "element-plus";
 
 import { ref, onMounted, shallowRef } from "vue";
 import { useRoute } from "vue-router";
-import { c } from "vite/dist/node/types.d-aGj9QkWt";
 
 const route = useRoute();
 const router = useRouter();
