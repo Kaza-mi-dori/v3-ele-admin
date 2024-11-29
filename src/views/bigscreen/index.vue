@@ -153,7 +153,7 @@ onMounted(() => {
 }
 .bg-view-img {
   width: 100%;
-  height: 100%;
+  // height: 100%;
   background-image: url(./img/bg.jpg);
   background-size: cover;
 }

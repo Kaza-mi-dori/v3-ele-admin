@@ -40,7 +40,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  // height: 100%;
   background-color: #030542;
 }
 .bg-view1__header {
