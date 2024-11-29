@@ -14,11 +14,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import Screen1 from "./Screen1.vue";
 import Screen2 from "./Screen2.vue";
+import { businessTypes } from "../constants";
 
-const title = ref("化工产品");
+const route = useRoute();
+const title = ref("");
+
+onMounted(() => {
+  const paramName = route.params.businessName;
+  const matchedItem = businessTypes.find(
+    (item: { name: string | string[] }) => item.name === paramName
+  );
+
+  if (matchedItem) {
+    title.value = matchedItem.label;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
