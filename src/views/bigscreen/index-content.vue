@@ -6,7 +6,6 @@
       <div class="b-space" />
       <Left2 class="left2" title="合同总数与金额" />
       <div class="b-space" />
-      <!-- <Model1 class="model1" title="合同执行情况"> -->
       <Left3 />
       <div class="b-space" />
       <Left4 />
@@ -44,7 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import Model1 from "./components/FirstPage/Model1/index.vue";
 import Left1 from "./components/FirstPage/Left/left1.vue";
 import Left2 from "./components/FirstPage/Left/left2.vue";
 import Left4 from "./components/FirstPage/Left/left4.vue";
