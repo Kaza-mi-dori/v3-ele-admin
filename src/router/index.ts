@@ -243,8 +243,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: () => import("@/views/bigscreen/index.vue"),
     children: [
       {
-        path: "chemicalProduct",
-        name: "ChemicalProduct",
+        path: "business/:businessName",
+        name: "Business",
         component: () =>
           import("@/views/bigscreen/components/SecondPage/second-index.vue"),
       },

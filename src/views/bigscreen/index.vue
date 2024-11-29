@@ -51,8 +51,11 @@ const selectedTypeId = ref<number | null>(null); // 当前选中item
 
 const handleType = (item: any) => {
   selectedTypeId.value = item.id;
-  const routeName = item.name;
-  const route = router.resolve({ name: routeName });
+  const businessName = item.name;
+  const route = router.resolve({
+    name: "Business",
+    params: { businessName },
+  });
   window.open(route.href, "_blank");
 };
 

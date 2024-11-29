@@ -52,8 +52,11 @@ const getIconStyle = (index: number) => {
 
 const handleType = (index: number) => {
   const selectedBusinessType = businessTypeArr.value[index];
-  const routeName = selectedBusinessType.name;
-  const route = router.resolve({ name: routeName });
+  const businessName = selectedBusinessType.name;
+  const route = router.resolve({
+    name: "Business",
+    params: { businessName },
+  });
   window.open(route.href, "_blank");
 };
 </script>
