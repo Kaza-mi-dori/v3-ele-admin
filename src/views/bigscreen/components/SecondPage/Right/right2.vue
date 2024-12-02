@@ -10,7 +10,7 @@
     </div>
     <div
       id="chart2-right-2"
-      style="width: 100%; height: 200px; margin-top: -30px"
+      style="width: 100%; height: 190px; margin-top: -30px"
     />
   </Model1>
 </template>
@@ -66,6 +66,8 @@ const initChart = () => {
       right: 40,
       itemWidth: 12,
       itemHeight: 7,
+      itemGap: 8, // 图例项之间的间距
+      padding: [-5, 0, 0, 0], // 图例的上下内边距，格式为 [上, 右, 下, 左]
     },
     xAxis: [
       {
@@ -91,6 +93,12 @@ const initChart = () => {
         min: 0,
         max: 100,
         interval: 20,
+        name: "单位：万元",
+        nameTextStyle: {
+          color: "#5099E3",
+          fontSize: 15,
+        },
+        nameGap: 15,
         axisLine: {
           show: true, // 显示坐标轴线
           lineStyle: {
@@ -114,6 +122,12 @@ const initChart = () => {
         min: 0,
         max: 10,
         interval: 2,
+        name: "单位：份",
+        nameTextStyle: {
+          color: "#5099E3",
+          fontSize: 15,
+        },
+        nameGap: 20,
         axisLine: {
           show: true, // 显示坐标轴线
           lineStyle: {
@@ -196,7 +210,8 @@ onMounted(() => {
   letter-spacing: 1px;
   color: #fff;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 10px;
+  margin-bottom: 5px;
   margin-left: 20px;
   position: relative;
   z-index: 10; /* 确保点击事件能触发 */

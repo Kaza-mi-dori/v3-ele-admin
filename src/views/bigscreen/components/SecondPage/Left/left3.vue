@@ -1,6 +1,6 @@
 <template>
   <Model1 class="model1" title="合同类型">
-    <div id="chart-left-4" style="height: 230px; margin-top: -10px" />
+    <div id="chart-left-4" style="height: 230px" />
   </Model1>
 </template>
 
@@ -63,6 +63,12 @@ const initChartMiddle4 = () => {
     },
     yAxis: {
       type: "value",
+      name: "单位：份",
+      nameTextStyle: {
+        color: "#5099E3",
+        fontSize: 15,
+      },
+      nameGap: 20, // 控制轴名与轴线之间的间距，单位为像素
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {

@@ -34,6 +34,12 @@ const initChart = () => {
   chart.value.clear();
   const data = getRandomData(months);
   const option = {
+    grid: {
+      left: "3%",
+      right: "6%",
+      bottom: "1%",
+      containLabel: true,
+    },
     xAxis: {
       type: "category",
       boundaryGap: false,
@@ -50,6 +56,12 @@ const initChart = () => {
     },
     yAxis: {
       type: "value",
+      name: "单位：万元",
+      nameTextStyle: {
+        color: "#5099E3",
+        fontSize: 15,
+      },
+      nameGap: 20,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {

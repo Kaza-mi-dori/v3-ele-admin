@@ -62,9 +62,9 @@ const initChart = () => {
       itemGap: 20, // 增加图例间距
     },
     grid: {
-      left: "3%",
+      left: "2%",
       right: "4%",
-      bottom: "2%",
+      bottom: "1%",
       containLabel: true,
     },
     xAxis: {
@@ -82,6 +82,12 @@ const initChart = () => {
     },
     yAxis: {
       type: "value",
+      name: "单位：万元",
+      nameTextStyle: {
+        color: "#5099E3",
+        fontSize: 15,
+      },
+      nameGap: 20,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {

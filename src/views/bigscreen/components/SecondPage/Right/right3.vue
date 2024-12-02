@@ -1,9 +1,6 @@
 <template>
   <Model1 class="model1" title="经营利润分析">
-    <div
-      id="chart2-right-3"
-      style="width: 100%; height: 220px; margin-top: -10px"
-    />
+    <div id="chart2-right-3" style="width: 100%; height: 230px" />
   </Model1>
 </template>
 
@@ -53,6 +50,12 @@ const initChart = () => {
         color: "#F44586", // 矩形颜色
       },
     },
+    grid: {
+      left: "3%",
+      right: "5%",
+      bottom: "2%",
+      containLabel: true,
+    },
     xAxis: {
       type: "category",
       boundaryGap: false,
@@ -69,6 +72,15 @@ const initChart = () => {
     },
     yAxis: {
       type: "value",
+      min: 0,
+      max: 100,
+      interval: 20,
+      name: "单位：万元",
+      nameTextStyle: {
+        color: "#5099E3",
+        fontSize: 15,
+      },
+      nameGap: 20,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {

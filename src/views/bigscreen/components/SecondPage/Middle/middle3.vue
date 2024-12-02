@@ -1,6 +1,6 @@
 <template>
   <Model1 class="model1" title="经营收入分析">
-    <div id="chart2-middle-3" style="width: 100%; height: 230px; margin-top: -10px" />
+    <div id="chart2-middle-3" style="width: 100%; height: 230px" />
   </Model1>
 </template>
 
@@ -60,7 +60,7 @@ const initChart = () => {
     grid: {
       left: "3%",
       right: "4%",
-      bottom: "2%",
+      bottom: "1%",
       containLabel: true,
     },
     xAxis: {
@@ -78,6 +78,12 @@ const initChart = () => {
     },
     yAxis: {
       type: "value",
+      name: "单位：万元",
+      nameTextStyle: {
+        color: "#5099E3",
+        fontSize: 15,
+      },
+      nameGap: 20,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {

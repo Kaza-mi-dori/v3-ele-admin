@@ -60,6 +60,12 @@ const initChart22Right2 = () => {
   const data = getRandomData(categories);
 
   const option = {
+    grid: {
+      left: "2%",
+      right: "5%",
+      bottom: "0.5%",
+      containLabel: true,
+    },
     xAxis: {
       type: "category",
       boundaryGap: false,
@@ -76,6 +82,12 @@ const initChart22Right2 = () => {
     },
     yAxis: {
       type: "value",
+      name: "单位：万元",
+      nameTextStyle: {
+        color: "#5099E3",
+        fontSize: 15,
+      },
+      nameGap: 20,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
