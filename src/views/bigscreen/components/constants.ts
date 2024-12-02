@@ -22,7 +22,8 @@ export const businessTypes2: navItem[] = [
   { id: 6, label: "煤炭", name: "coal" },
 ];
 
+// 动态计算市场信息的id为businessTypes的长度加1
 export const allBusinessTypes: navItem[] = [
   ...businessTypes,
-  { id: 7, label: "市场信息", name: "marketInfo" },
+  { id: businessTypes.length + 1, label: "市场信息", name: "marketInfo" },
 ];
