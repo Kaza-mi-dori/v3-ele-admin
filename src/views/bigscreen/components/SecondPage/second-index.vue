@@ -18,14 +18,14 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import Screen1 from "./Screen1.vue";
 import Screen2 from "./Screen2.vue";
-import { businessTypes } from "../constants";
+import { allBusinessTypes } from "../constants";
 
 const route = useRoute();
 const title = ref("");
 
 onMounted(() => {
   const paramName = route.params.businessName;
-  const matchedItem = businessTypes.find(
+  const matchedItem = allBusinessTypes.find(
     (item: { name: string | string[] }) => item.name === paramName
   );
 
