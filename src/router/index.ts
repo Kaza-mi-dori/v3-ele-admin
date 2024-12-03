@@ -231,6 +231,15 @@ export const constantRoutes: RouteRecordRaw[] = [
           icon: "el-icon-coin",
         },
       },
+      {
+        path: "safetyLedgerMng",
+        name: "SafetyLedgerMng",
+        component: () => import("@/views/safety/index.vue"),
+        meta: {
+          title: "安全台账管理",
+          icon: "el-icon-coin",
+        },
+      },
     ],
   },
   /**
@@ -241,12 +250,25 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: "/bigScreenBoard",
     name: "BigScreenBoard",
     component: () => import("@/views/bigscreen/index.vue"),
+    meta: {
+      title: "大屏看板",
+      icon: "el-icon-coin",
+      hidden: true,
+    },
+    redirect: "/bigScreenBoard/business",
     children: [
       {
         path: "business/:businessName",
         name: "Business",
         component: () =>
           import("@/views/bigscreen/components/SecondPage/second-index.vue"),
+      },
+      // 监控页面
+      {
+        path: "monitor",
+        name: "Monitor",
+        component: () =>
+          import("@/views/bigscreen/components/MonitorPage/index.vue"),
       },
     ],
   },

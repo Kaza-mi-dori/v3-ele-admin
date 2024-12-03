@@ -1,7 +1,7 @@
 <template>
   <Model1 class="model1" title="监控视频">
     <div class="flex justify-end mb-2 mr-2">
-      <a class="text-sm link">更多>></a>
+      <a class="text-sm link" @click="onCheckMore">更多>></a>
     </div>
     <div class="box1">
       <div v-for="k in 4" :key="k" class="item-box">
@@ -16,9 +16,18 @@ import Item1 from "../DescribeItems/Item1.vue";
 import inventory from "@/views/bigscreen/img/inventory.png";
 import business from "@/views/bigscreen/img/business.png";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 const oilStorage = ref<string>("254,38");
 const oilBargain = ref<string>("254,38");
+
+const router = useRouter();
+const onCheckMore = async () => {
+  const route = router.resolve({
+    name: "Monitor",
+  });
+  window.open(route.href, "_blank");
+};
 </script>
 
 <style lang="scss" scoped>
