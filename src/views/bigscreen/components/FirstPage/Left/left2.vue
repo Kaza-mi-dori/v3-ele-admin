@@ -29,7 +29,9 @@
           <div class="body-content">
             <div>{{ item.label }}</div>
             <div class="content-value">
-              <div class="content-num">{{ formatNumber(item.value) }}</div>
+              <div class="content-num">
+                <el-statistic :value="outputValues[index]" />
+              </div>
               <div class="content-unit">{{ item.unit }}</div>
             </div>
           </div>
@@ -45,6 +47,7 @@ import blueBg from "@/views/bigscreen/img/blue_bg.png";
 import greenBg from "@/views/bigscreen/img/green_bg.png";
 import redBg from "@/views/bigscreen/img/red_bg.png";
 import { h, ref, shallowRef } from "vue";
+import { useTransition } from "@vueuse/core";
 
 // 定义背景图片数组
 const backgroundImages = [yellowBg, blueBg, greenBg, redBg];
@@ -88,14 +91,31 @@ const contractData = ref([
     unit: "份",
   },
 ]);
-const formatNumber = (num: number | string): string => {
-  // 判断是否需要格式化
-  if (Number(num) > 10000) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  } else {
-    return num.toString(); // 直接返回原始数字，不格式化
-  }
-};
+
+const outputValues = ref([]);
+
+contractData.value.forEach((item) => {
+  const source = ref(0); // 初始值为 0
+  const decimalPlaces = item.value.toString().includes(".")
+    ? item.value.toString().split(".")[1].length
+    : 0; // 获取小数位数
+
+  const output = useTransition(source, {
+    duration: 2000, // 动画持续时间
+  });
+
+  // 使用 Intl.NumberFormat 添加分隔符，并保持小数位数
+  const formattedOutput = computed(() => {
+    const numberFormatter = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: decimalPlaces,
+      maximumFractionDigits: decimalPlaces,
+    });
+    return numberFormatter.format(output.value);
+  });
+
+  source.value = Number(item.value); // 设置目标值
+  outputValues.value.push(formattedOutput); // 存储格式化后的值
+});
 </script>
 
 <style lang="scss" scoped>
@@ -229,5 +249,9 @@ const formatNumber = (num: number | string): string => {
 /* 占位符的颜色 */
 :deep(.el-input__inner::placeholder) {
   color: #7fa1f1;
+}
+
+::v-deep(.el-statistic__content) {
+  all: unset;
 }
 </style>
