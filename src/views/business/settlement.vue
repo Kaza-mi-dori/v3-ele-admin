@@ -6,7 +6,12 @@
       <div class="__title">合同结算</div>
       <div class="__stat">
         <span class="__item">你有</span>
-        <span class="__item">统计指标一</span>
+        <span class="__item">
+          <span>
+            <span class="text-red-5 mr-2">{{ pagination.total }}</span>
+            <span>份结算单</span>
+          </span>
+        </span>
         <span class="__item">统计指标二</span>
       </div>
     </div>
@@ -65,19 +70,25 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column>
-      <el-table-column prop="date" label="日期" width="150" sortable>
+      <el-table-column
+        prop="date"
+        label="结算日期"
+        align="center"
+        width="150"
+        sortable
+      >
         <template v-slot="scope">
           <span>{{ scope.row.date }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="number" label="结算单号" align="center" sortable>
+        <template v-slot="scope">
+          <el-link type="primary">{{ scope.row.number }}</el-link>
         </template>
       </el-table-column>
       <el-table-column prop="name" label="名称" width="150" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="number" label="结算单号" width="150" sortable>
-        <template v-slot="scope">
-          <span>{{ scope.row.number }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="type" label="结算类型" width="150" sortable>
@@ -93,10 +104,13 @@
       <el-table-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
           <div class="w-full flex justify-evenly">
-            <el-button type="text" @click="handleViewDetail(scope.row)">
+            <!-- <el-button type="text" @click="handleViewDetail(scope.row)">
               详情
             </el-button>
-            <el-button type="text">编辑</el-button>
+            <el-button type="text">编辑</el-button> -->
+            <el-link type="danger" @click="handleDeleteRecord(scope.row)">
+              删除
+            </el-link>
           </div>
         </template>
       </el-table-column>
@@ -163,7 +177,7 @@ const exampleData: Ref<IExampleData[]> = ref([
   },
 ]);
 const pagination: Ref<any> = ref({
-  total: 100,
+  total: 0,
   pageSizes: [10, 20, 30, 40, 50],
   pageSize: 10,
   currentPage: 1,
@@ -182,7 +196,7 @@ const handleAddRecord = () => {
     },
   });
 };
-const handleDeleteRecord = () => {
+const handleDeleteRecord = (row: any) => {
   console.log("删除");
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
@@ -203,7 +217,7 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
     order: 2,
   },
   {
-    label: "日期",
+    label: "结算日期",
     prop: "date",
     value: null,
     selected: null,

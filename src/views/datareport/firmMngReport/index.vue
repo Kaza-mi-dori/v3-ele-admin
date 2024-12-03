@@ -5,8 +5,13 @@
     <div class="title-block">
       <div class="__title">企业经营报表</div>
       <div class="__stat">
-        <span class="__item">你有</span>
-        <span class="__item">统计指标一</span>
+        <span class="__item">当前有</span>
+        <span class="__item">
+          <span>
+            <span class="text-red-5 mr-2">{{ pagination.total }}</span>
+            <span>份报表</span>
+          </span>
+        </span>
         <span class="__item">统计指标二</span>
       </div>
     </div>

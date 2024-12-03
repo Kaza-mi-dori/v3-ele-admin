@@ -65,9 +65,9 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" width="150" sortable>
+      <el-table-column prop="name" label="名称" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.name }}</span>
+          <el-link type="primary">{{ scope.row.name }}</el-link>
         </template>
       </el-table-column>
       <el-table-column prop="dataFrom" label="订单来源" width="150" sortable>
@@ -75,7 +75,7 @@
           <span>{{ scope.row.dataFrom }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="no" label="订单编号" width="150" sortable>
+      <el-table-column prop="no" label="订单编号" align="center" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.no }}</span>
         </template>
@@ -131,7 +131,7 @@ type IExampleData = business.IAuditableEntity<Partial<business.IOrder>>;
 const loading: Ref<boolean> = ref(false);
 const exampleData: Ref<IExampleData[]> = ref([
   {
-    name: "商品1",
+    name: "订单1",
     from: "供应商1",
     no: "123456",
     category: "订单类别1",
@@ -145,7 +145,7 @@ const exampleData: Ref<IExampleData[]> = ref([
     updatedBy: "管理员",
   },
   {
-    name: "商品2",
+    name: "订单2",
     from: "供应商2",
     no: "654321",
     type: "销售",

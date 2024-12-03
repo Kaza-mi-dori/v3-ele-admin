@@ -135,24 +135,62 @@
       </div>
       <div class="__content">
         <el-table
+          :header-cell-style="{
+            'text-align': 'center',
+          }"
           :data="partnerDetailForm.yearScores"
           style="width: 100%"
           stripe
           border
         >
-          <el-table-column prop="year" label="年度" width="180">
+          <el-table-column prop="year" label="年度" width="250">
             <template #default="{ row }">
-              <el-input v-if="editing" v-model="row.year" />
+              <el-date-picker
+                v-if="editing"
+                v-model="row.year"
+                type="year"
+                value-format="YYYY"
+                placeholder="选择年度"
+              />
               <span v-else>{{ row.year }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="score" label="评分" width="180">
             <template #default="{ row }">
-              <el-input v-if="editing" v-model="row.score" />
+              <el-input v-if="editing" v-model="row.score" type="number" />
               <span v-else>{{ row.score }}</span>
             </template>
           </el-table-column>
+          <el-table-column prop="score" label="备注" show-overflow-tooltip>
+            <template #default="{ row }">
+              <el-input v-if="editing" v-model="row.desc" />
+              <span v-else>{{ row.desc }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="180" fixed="right">
+            <template #default="{ row }">
+              <div class="flex justify-evenly">
+                <el-link
+                  v-if="editing"
+                  type="danger"
+                  @click="handleDelete(row)"
+                >
+                  删除
+                </el-link>
+              </div>
+            </template>
+          </el-table-column>
         </el-table>
+        <div class="w-full">
+          <el-button
+            v-if="editing"
+            icon="plus"
+            class="w-full g-button-1"
+            @click="handleAddYearScore"
+          >
+            添加年度评分
+          </el-button>
+        </div>
       </div>
     </div>
     <div class="info-card-level1">
@@ -277,10 +315,12 @@ const partnerDetailForm = ref<Partner>({
     {
       year: "2020",
       score: "90",
+      desc: "年度评分2020",
     },
     {
       year: "2021",
       score: "90",
+      desc: "年度评分2021",
     },
   ],
   admissionStatus: "已准入",
@@ -305,6 +345,18 @@ const rules: Ref<GenericRecord> = ref({
   revenue: [{ required: true, message: "请输入收入", trigger: "blur" }],
   cost: [{ required: true, message: "请输入成本", trigger: "blur" }],
 });
+
+const handleAddYearScore = () => {
+  partnerDetailForm.value.yearScores.push({
+    year: "",
+    score: "",
+  });
+};
+
+const handleDelete = (row: any) => {
+  const index = partnerDetailForm.value.yearScores.indexOf(row);
+  partnerDetailForm.value.yearScores.splice(index, 1);
+};
 
 const submitForm = () => {
   console.log("submitForm");
@@ -363,6 +415,7 @@ const getFormValue = () => {
 };
 const setFormValue = (value: any) => {
   if (value) {
+    saveForm();
     partnerDetailForm.value = value;
   }
 };

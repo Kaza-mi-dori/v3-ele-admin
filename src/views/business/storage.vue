@@ -48,7 +48,17 @@
       </div>
     </div>
     <!-- 表格区 -->
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table
+      :header-cell-style="{
+        'background-color': sassvariables['custom-table-header-background'],
+        color: sassvariables['custom-table-header-color'],
+        'text-align': 'center',
+      }"
+      :data="tableData"
+      stripe
+      border
+      style="width: 100%"
+    >
       <el-table-column prop="goodsName" label="商品名称" />
       <el-table-column prop="goodsCode" label="商品编码" />
       <el-table-column prop="goodsType" label="商品分类" />
@@ -64,13 +74,20 @@
       <el-table-column prop="updatedBy" label="更新人" />
       <el-table-column prop="updatedAt" label="更新时间" /> -->
       <el-table-column prop="dataFrom" label="数据来源" />
-      <el-table-column prop="audited" label="是否审核" />
-      <el-table-column prop="goodsStock" label="操作">
+      <el-table-column prop="audited" label="是否审核" align="center">
         <template v-slot="scope">
-          <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(scope.row)">
-            删除
-          </el-button>
+          <el-tag v-if="scope.row.audited" type="success">已审核</el-tag>
+          <el-tag v-else type="danger">未审核</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="goodsStock" label="操作" fixed="right" width="100">
+        <template v-slot="scope">
+          <!-- <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button> -->
+          <div class="flex justify-evenly">
+            <el-link type="danger" @click="handleDelete(scope.row)">
+              删除
+            </el-link>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -79,8 +96,9 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import business from "@/types/business";
 import { useRouter } from "vue-router";
+import business from "@/types/business";
+import sassvariables from "@/styles/variables.module.scss";
 
 const router = useRouter();
 

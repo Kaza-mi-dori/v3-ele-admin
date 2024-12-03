@@ -73,10 +73,7 @@
       <el-table-column prop="type" label="客商类型" />
       <el-table-column prop="yearlyScore" label="年度评分">
         <template v-slot="{ row }">
-          <el-progress
-            :percentage="row.yearlyScore"
-            :format="() => row.yearlyScore"
-          />
+          <el-progress :percentage="row.yearlyScore" />
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态">

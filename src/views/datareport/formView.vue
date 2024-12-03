@@ -141,6 +141,7 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         businessDimension: data["业务维度"],
         profit: data["内容"]["利润金额"],
         income: data["内容"]["营收金额"],
+        outcoming: data["内容"]["支出金额"],
         purchaseAmount: data["内容"]["采购金额"],
         salesAmount: data["内容"]["销售金额"],
         purchaseContractCount: data["内容"]["采购合同数"],
@@ -156,6 +157,7 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         settlementCount: data["内容"]["结算数量"],
         planIncome: data["内容"]["计划营收"],
         planProfit: data["内容"]["计划利润"],
+        planOutcome: data["内容"]["计划支出"],
         incomeFulfilledRate: data["内容"]["营收目标完成率"],
         profitFulfilledRate: data["内容"]["利润目标完成率"],
         createdBy: data["创建者"],
@@ -164,10 +166,12 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         updatedAt: data["修改时间"],
       };
     case "marketPriceReport":
+      // 市场价格报表
       return {
         // 转换数据
       };
     case "firmMngReport":
+      // 企业经营报表
       return {
         // 转换数据
       };
@@ -186,10 +190,12 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         // 转换数据
       };
     case "partnerReport":
+      // 合作伙伴报表
       return {
         // 转换数据
       };
     case "partnerDetail":
+      // 合作伙伴详情
       return {
         // 转换数据
       };
@@ -253,6 +259,7 @@ const convertToBackendData = (type: string | null, data: any) => {
         营收金额: data.income,
         采购金额: data.purchaseAmount,
         销售金额: data.salesAmount,
+        支出金额: data.outcome,
         采购合同数: data.purchaseContractCount,
         销售合同数: data.salesContractCount,
         合同总份数: data.contractCount,
@@ -266,6 +273,7 @@ const convertToBackendData = (type: string | null, data: any) => {
         结算数量: data.settlementCount,
         计划营收: data.planIncome,
         计划利润: data.planProfit,
+        计划支出: data.planOutcome,
         营收目标完成率: data.incomeFulfilledRate,
         利润目标完成率: data.profitFulfilledRate,
       };

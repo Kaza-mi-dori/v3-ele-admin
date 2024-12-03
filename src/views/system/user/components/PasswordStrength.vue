@@ -6,8 +6,8 @@
       placeholder="请输入密码"
       clearable
       show-password
-      @input="attrs.handleInput"
-      @blur="attrs.handleBlur"
+      @input="attrs.handleInput as Attrs['handleInput']"
+      @blur="attrs.handleBlur as Attrs['handleBlur']"
     />
     <div class="password-strength">
       <div
@@ -31,6 +31,19 @@ import { ref, watch, useAttrs } from "vue";
 
 const password = ref("");
 const passwordStrength = ref(0);
+// 规定attrs的类型:
+// const attrs = useAttrs<{
+//   handleInput: () => void;
+//   handleBlur: () => void;
+// }>();
+
+interface Attrs {
+  handleInput: () => void;
+  handleBlur: () => void;
+  [key: string]: any;
+}
+
+const attrs = useAttrs();
 
 const handleInput = () => {
   passwordStrength.value = 0;
@@ -49,7 +62,7 @@ const handleBlur = () => {
   passwordStrength.value = 0;
 };
 
-watch(password, handleInput);
+watch(password, handleInput, { immediate: true });
 </script>
 
 <style lang="scss" scoped>
@@ -68,6 +81,7 @@ watch(password, handleInput);
     }
     &.__strong.active {
       background-color: #52c41a;
+    }
   }
 }
 </style>

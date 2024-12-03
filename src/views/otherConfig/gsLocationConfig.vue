@@ -12,10 +12,14 @@
           placeholder="请输入搜索内容"
           clearable
         /> -->
+        <el-button icon="plus" size="small" class="mb-10px" @click="addItem">
+          添加
+        </el-button>
         <el-tree
           class="w-full"
           :data="gsListdata"
           :props="defaultProps"
+          default-expand-all
           @node-click="handleNodeClick"
         />
       </div>
@@ -167,6 +171,41 @@
         :style="{ left: currentPos.x + 'px', top: currentPos.y + 'px' }"
       /> -->
     </div>
+    <!-- 新增弹窗 -->
+    <el-dialog v-model="dialogVisible" title="新增配置点" width="30%" center>
+      <el-form ref="itemFormRef" :model="itemForm" :rules="rules">
+        <el-form-item label="类别" prop="type">
+          <el-select v-model="itemForm.type" placeholder="请选择">
+            <el-option label="加油站" value="1" />
+            <el-option label="油库" value="2" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="名称" prop="name">
+          <el-input
+            v-model="itemForm.name"
+            placeholder="请输入名称, 大屏上将显示这里的内容"
+          />
+        </el-form-item>
+        <el-form-item label="描述" prop="description">
+          <el-input
+            v-model="itemForm.description"
+            placeholder="请输入描述, 大屏上将显示这里的内容"
+          />
+        </el-form-item>
+      </el-form>
+      <template v-slot:footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button
+            type="primary"
+            :loading="submitItemLoading"
+            @click="onSubmitItemForm"
+          >
+            确 定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -177,7 +216,29 @@ import oil from "@/views/bigscreen/img/oil.png";
 import gas from "@/views/bigscreen/img/oil2.png";
 import * as echarts from "echarts";
 import "echarts/extension/bmap/bmap";
+import { FormInstance } from "element-plus";
 import { ref, onMounted, nextTick } from "vue";
+
+interface ItemFormType {
+  name: string | undefined;
+  description: string | undefined;
+  type: number | undefined;
+}
+
+const dialogVisible = ref(false);
+const searchValue = ref("");
+const itemForm = ref<ItemFormType>({
+  name: undefined,
+  description: undefined,
+  type: undefined,
+});
+const itemFormRef = ref<Nullable<FormInstance>>(null);
+const rules = {
+  name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+  description: [{ required: true, message: "请输入描述", trigger: "blur" }],
+  type: [{ required: true, message: "请选择类别", trigger: "change" }],
+};
+const submitItemLoading = ref(false);
 
 const gsListdata = ref([
   {
@@ -392,17 +453,16 @@ const handleNodeClick = (data: any) => {
 /**
  * 添加加油站
  */
-const addGS = () => {
-  gsListdata.value[0].children.push({
-    id: gsListdata.value[0].children.length + 1,
-    label: "新加油站",
-    description: "新加油站",
-    iconName: "gas",
-    xOffSet: 0,
-    yOffSet: 0,
-  });
-
-  // console.log(gsListdata.value);
+const addItem = () => {
+  // gsListdata.value[0].children.push({
+  //   id: gsListdata.value[0].children.length + 1,
+  //   label: "新加油站",
+  //   description: "新加油站",
+  //   iconName: "gas",
+  //   xOffSet: 0,
+  //   yOffSet: 0,
+  // });
+  dialogVisible.value = true;
 };
 
 /**
@@ -417,6 +477,39 @@ const addStorage = () => {
     iconName: "oil",
     xOffSet: 0,
     yOffSet: 0,
+  });
+};
+
+const onSubmitItemForm = () => {
+  itemFormRef.value?.validate().then((valid) => {
+    if (valid) {
+      // 提交表单
+      // console.log(itemForm.value);
+      // 添加到gsListdata中
+      submitItemLoading.value = true;
+      setTimeout(() => {
+        submitItemLoading.value = false;
+        const type = itemForm.value.type;
+        const item = {
+          // type保证为1或2
+          id: gsListdata.value[type - 1].children.length + 1,
+          label: itemForm.value.name as unknown as string,
+          description: itemForm.value.description as unknown as string,
+          iconName: type === 1 ? "gas" : "oil",
+          xOffSet: 0,
+          yOffSet: 0,
+        };
+        gsListdata.value[type - 1].children.push(item);
+        // 重置表单
+        itemForm.value = {
+          name: "",
+          description: "",
+          type: undefined,
+        };
+        itemFormRef.value?.resetFields();
+        dialogVisible.value = false;
+      }, 1000);
+    }
   });
 };
 
@@ -474,7 +567,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .main-wrapper {
   @apply flex;
-  padding: 20px;
+  padding: 10px;
 }
 
 .item-menu-block {

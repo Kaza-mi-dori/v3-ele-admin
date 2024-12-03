@@ -298,6 +298,18 @@
               </template>
             </el-table-column>
           </el-table>
+          <div class="w-full">
+            <!-- 新增按钮 -->
+            <el-button
+              v-if="editing"
+              icon="plus"
+              size="small"
+              class="w-full g-button-1"
+              @click="handleAddStorage"
+            >
+              新增
+            </el-button>
+          </div>
         </el-form>
       </div>
     </div>
@@ -462,6 +474,16 @@ const rules: Ref<GenericRecord> = ref({
   cost: [{ required: true, message: "请输入成本", trigger: "blur" }],
 });
 
+/** 新增库存信息 */
+const handleAddStorage = () => {
+  yearlyReportDetailForm.value.storage.push({
+    warehouse: "",
+    name: "",
+    amount: 0,
+    unit: "",
+  });
+};
+
 /** 中文键值转为英文 */
 const converter: (data: any) => YearlyReportDetailFormData = (data) => {
   const result = {} as YearlyReportDetailFormData;
@@ -517,7 +539,10 @@ const exportForm = () => {
 };
 
 const handleDelete = (row: any) => {
-  console.log("handleDelete", row);
+  const index = yearlyReportDetailForm.value.storage.indexOf(row);
+  if (index !== -1) {
+    yearlyReportDetailForm.value.storage.splice(index, 1);
+  }
 };
 
 // snippet: ts-useManualRefHistory

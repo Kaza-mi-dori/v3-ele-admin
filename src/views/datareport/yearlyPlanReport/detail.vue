@@ -355,6 +355,8 @@ const yearlyReportDetailForm = ref<
   year: "2021",
   income: 1000,
   outcome: 2000,
+  businessDimension: "成品油",
+  contractAmount: 1000,
   profit: 1000,
   purchaseAmount: 1000,
   salesAmount: 2000,

@@ -56,17 +56,28 @@
             <el-col :span="24">
               <el-form-item label="期间排名">
                 <el-table
+                  :header-cell-style="{
+                    'background-color':
+                      sassvariables['custom-table-header-background'],
+                    color: sassvariables['custom-table-header-color'],
+                    'text-align': 'center',
+                  }"
                   :data="yearlyReportDetailForm.rankData"
                   style="width: 100%"
                   stripe
                   border
                 >
-                  <el-table-column prop="rank" label="排名" width="180">
+                  <el-table-column
+                    prop="rank"
+                    label="排名"
+                    width="80"
+                    align="center"
+                  >
                     <template #default="{ row }">
                       <span>{{ row.rank }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="name" label="企业名称" width="180">
+                  <el-table-column prop="name" label="企业名称">
                     <template #default="{ row }">
                       <!-- <el-input v-if="editing" v-model="row.name" /> -->
                       <el-autocomplete
@@ -121,7 +132,32 @@
                       <span v-else type="primary">{{ row.revenue }}</span>
                     </template>
                   </el-table-column>
+                  <el-table-column
+                    v-if="editing"
+                    key="操作"
+                    label="操作"
+                    fixed="right"
+                    width="100"
+                  >
+                    <template #default="{ row }">
+                      <div class="w-full flex justify-evenly">
+                        <el-link type="danger" @click="handleDelete(row)">
+                          删除
+                        </el-link>
+                      </div>
+                    </template>
+                  </el-table-column>
                 </el-table>
+                <div v-if="editing" class="w-full">
+                  <el-button
+                    icon="plus"
+                    class="w-full g-button-1"
+                    size="small"
+                    @click="addRankRecord"
+                  >
+                    新增
+                  </el-button>
+                </div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -131,6 +167,21 @@
     <div class="info-card-level1">
       <div class="__title">
         <span>附件信息</span>
+      </div>
+      <div class="__content">
+        <div class="flex mb-4 items-center">
+          <el-checkbox v-model="allSelected" style="margin-right: 20px">
+            全选
+          </el-checkbox>
+          <el-button>下载</el-button>
+          <el-button v-if="editing" type="danger">删除</el-button>
+        </div>
+        <upload
+          :disabled="!editing"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
+          :file-list="yearlyReportDetailForm.attachment"
+        />
       </div>
     </div>
     <div class="info-card-level1">
@@ -188,6 +239,8 @@
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
 import { type FormInstance } from "element-plus";
+import upload from "@/components/ElBasicPlus/upload.vue";
+import sassvariables from "@/styles/variables.module.scss";
 
 const props = defineProps({
   id: {
@@ -202,6 +255,8 @@ const props = defineProps({
 
 const formRef = ref<Nullable<FormInstance>>(null);
 const { id, editing } = toRefs(props);
+
+const allSelected = ref(false);
 
 const yearlyReportDetailForm = ref({
   name: "贸易伙伴报表",
@@ -268,6 +323,33 @@ const queryPartnerSearchAsync = (query: string, cb: (args: any) => void) => {
 
 const handleSelectPartner = (value: any) => {
   console.log("handleSelectPartner", value);
+};
+
+/** 新增排名记录 */
+const addRankRecord = () => {
+  const rank = yearlyReportDetailForm.value.rankData.length + 1;
+  yearlyReportDetailForm.value.rankData.push({
+    rank: rank.toString(),
+    name: "",
+    profit: "",
+    revenue: "",
+  });
+};
+
+/** 删除排名记录 */
+const handleDelete = (row: any) => {
+  const index = yearlyReportDetailForm.value.rankData.indexOf(row);
+  yearlyReportDetailForm.value.rankData.splice(index, 1);
+};
+
+/** 图片预览 */
+const handlePictureCardPreview = async (file: any) => {
+  console.log("handlePictureCardPreview", file);
+};
+
+/** 删除图片 */
+const handleRemove = async (file: any) => {
+  console.log("handleRemove", file);
 };
 
 // 历史记录功能

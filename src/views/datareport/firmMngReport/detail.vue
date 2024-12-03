@@ -262,7 +262,17 @@
           class="w-full g-form-1"
           :model="yearlyReportDetailForm"
         >
-          <el-table :data="yearlyReportDetailForm.storage" stripe border>
+          <el-table
+            :header-cell-style="{
+              'background-color':
+                sassvariables['custom-table-header-background'],
+              color: sassvariables['custom-table-header-color'],
+              'text-align': 'center',
+            }"
+            :data="yearlyReportDetailForm.storage"
+            stripe
+            border
+          >
             <el-table-column prop="warehouse" label="仓库">
               <template v-slot="{ row }">
                 <el-input v-if="editing" v-model="row.warehouse" />
@@ -294,10 +304,24 @@
               width="100"
             >
               <template v-slot="{ row }">
-                <el-link type="danger" @click="handleDelete(row)">删除</el-link>
+                <div class="flex justify-evenly">
+                  <el-link type="danger" @click="handleDelete(row)">
+                    删除
+                  </el-link>
+                </div>
               </template>
             </el-table-column>
           </el-table>
+          <div class="w-full">
+            <el-button
+              v-if="editing"
+              class="w-full g-button-1"
+              icon="plus"
+              @click="addStorage"
+            >
+              新增
+            </el-button>
+          </div>
         </el-form>
       </div>
     </div>
@@ -342,7 +366,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="是否审核" prop="audited">
-                <span>{{ yearlyReportDetailForm.audited }}</span>
+                <span>{{ yearlyReportDetailForm.audited ? "是" : "否" }}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -357,6 +381,7 @@ import { ref, unref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useManualRefHistory } from "@vueuse/core";
 import { type FormInstance } from "element-plus";
+import sassvariables from "@/styles/variables.module.scss";
 import BusinessFormAPI from "@/api/businessForm";
 import business from "@/types/business";
 
@@ -493,6 +518,15 @@ const converter: (data: any) => YearlyReportDetailFormData = (data) => {
   return result;
 };
 
+const addStorage = () => {
+  yearlyReportDetailForm.value.storage.push({
+    warehouse: "",
+    name: "",
+    amount: 0,
+    unit: "",
+  });
+};
+
 const initForm = (formData: any) => {
   // console.log("initForm", formData);
   yearlyReportDetailForm.value = converter(formData);
@@ -515,7 +549,8 @@ const exportForm = () => {
 };
 
 const handleDelete = (row: any) => {
-  console.log("handleDelete", row);
+  yearlyReportDetailForm.value.storage =
+    yearlyReportDetailForm.value.storage.filter((item) => item !== row);
 };
 
 // snippet: ts-useManualRefHistory

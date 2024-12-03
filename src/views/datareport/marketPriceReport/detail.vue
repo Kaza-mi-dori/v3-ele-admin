@@ -60,12 +60,17 @@
       </div>
       <div class="__content">
         <el-table
+          :header-cell-style="{
+            'background-color': sassvariables['custom-table-header-background'],
+            color: sassvariables['custom-table-header-color'],
+            'text-align': 'center',
+          }"
           :data="priceDetailForm.prices"
           style="width: 100%"
           stripe
           border
         >
-          <el-table-column prop="name" label="商品名称" width="180">
+          <el-table-column prop="name" label="商品名称">
             <template #default="{ row }">
               <el-input v-if="editing" v-model="row.name" />
               <span v-else>{{ row.name }}</span>
@@ -77,7 +82,7 @@
               <span v-else>{{ row.spec }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="firm" label="报价企业" width="180">
+          <el-table-column prop="firm" label="报价企业">
             <template #default="{ row }">
               <el-input v-if="editing" v-model="row.firm" />
               <span v-else>{{ row.firm }}</span>
@@ -101,7 +106,30 @@
               <span v-else>{{ row.change }}</span>
             </template>
           </el-table-column>
+          <el-table-column
+            v-if="editing"
+            key="操作"
+            label="操作"
+            fixed="right"
+            width="100"
+          >
+            <template #default="{ row }">
+              <div class="w-full flex justify-evenly">
+                <el-link type="danger" @click="handleDelete(row)">删除</el-link>
+              </div>
+            </template>
+          </el-table-column>
         </el-table>
+        <div v-if="editing" class="w-full">
+          <el-button
+            class="w-full g-button-1"
+            size="small"
+            icon="plus"
+            @click="addPriceRecord"
+          >
+            新增
+          </el-button>
+        </div>
       </div>
     </div>
     <div v-if="priceDetailForm.id" class="info-card-level1">
@@ -117,6 +145,7 @@ import datePickerPlus from "@/components/ElBasicPlus/datePicker.vue";
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
 import { FormInstance } from "element-plus";
+import sassvariables from "@/styles/variables.module.scss";
 
 const props = defineProps({
   id: {
@@ -173,6 +202,24 @@ interface PriceRecord {
 const rules: Ref<GenericRecord> = ref({
   name: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
 });
+
+/** 新增报价记录 */
+const addPriceRecord = () => {
+  priceDetailForm.value.prices.push({
+    name: "",
+    spec: "",
+    firm: "",
+    price: 0,
+    unit: "",
+    change: 0,
+  });
+};
+
+/** 删除报价记录 */
+const handleDelete = (row: PriceRecord) => {
+  const index = priceDetailForm.value.prices.indexOf(row);
+  priceDetailForm.value.prices.splice(index, 1);
+};
 
 const submitForm = () => {
   console.log("submitForm");
