@@ -1,6 +1,6 @@
 <template>
   <Model1 class="model1" title="合同类型">
-    <div id="chart-left-4" style="height: 230px" />
+    <div id="chart2-left-3" style="height: 230px" />
   </Model1>
 </template>
 
@@ -21,7 +21,7 @@ const chart = shallowRef<echarts.ECharts | null>(null);
 
 const initChartMiddle4 = () => {
   chart.value = echarts.init(
-    document.getElementById("chart-left-4") as HTMLDivElement
+    document.getElementById("chart2-left-3") as HTMLDivElement
   );
   chart.value.clear();
   const data = getRandomCategoryData(categoryMap);
