@@ -8,7 +8,7 @@
         {{ props.title }}
       </div>
       <div class="box__amount" :style="{ color: props.amountColor }">
-        {{ props.amount }}
+        <el-statistic :value="animatedAmount" />
       </div>
     </div>
   </div>
@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 import { ref, computed, withDefaults, defineProps } from "vue";
+import { useTransition } from "@vueuse/core";
 
 const props = withDefaults(
   defineProps<{
@@ -38,6 +39,18 @@ const props = withDefaults(
     height: 100,
   }
 );
+
+const source = ref(0);
+const animatedAmount = useTransition(source, {
+  duration: 1500,
+});
+
+// 将字符串转换为数字
+source.value = parseInt(props.amount, 10);
+// 确保转换后的值不会是 NaN
+if (isNaN(source.value)) {
+  source.value = 0;
+}
 </script>
 
 <style lang="scss" scoped>
@@ -71,5 +84,9 @@ const props = withDefaults(
       color: #333;
     }
   }
+}
+
+::v-deep(.el-statistic__content) {
+  all: unset;
 }
 </style>

@@ -25,8 +25,8 @@ import inventory from "@/views/bigscreen/img/inventory.png";
 import business from "@/views/bigscreen/img/business.png";
 import { ref } from "vue";
 
-const oilStorage = ref<string>("254,38");
-const oilBargain = ref<string>("254,38");
+const oilStorage = ref<string>("25438");
+const oilBargain = ref<string>("25438");
 </script>
 
 <style lang="scss" scoped>
