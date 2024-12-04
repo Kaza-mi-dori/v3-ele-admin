@@ -160,7 +160,7 @@
         </el-form-item>
 
         <el-form-item label="权限类型" prop="类型">
-          <el-radio-group v-model="formData.type">
+          <el-radio-group v-model="formData.类型">
             <el-radio value="菜单">菜单</el-radio>
             <el-radio value="按钮">按钮</el-radio>
             <el-radio value="接口">接口</el-radio>
@@ -215,6 +215,7 @@ import PermissionApi, {
   type PermissionForm,
   type PermissionQuery,
 } from "@/api/system/permission";
+import { ElMessage } from "element-plus";
 import { MenuTypeEnum } from "@/enums/MenuTypeEnum";
 import { PermissionEnum } from "@/enums/PermissionEnum";
 

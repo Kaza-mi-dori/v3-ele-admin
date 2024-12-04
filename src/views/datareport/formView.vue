@@ -14,6 +14,7 @@
         v-if="isEditing && editable"
         class="g-button-1"
         type="primary"
+        :loading="submitting"
         @click="submitForm"
       >
         提交
@@ -67,6 +68,7 @@ import marketPriceReportDetailForm from "./marketPriceReport/detail.vue";
 import firmMngReportDetailForm from "./firmMngReport/detail.vue";
 import firmReportDetailForm from "./firmReport/detail.vue";
 import customReportDetailForm from "./customReport/detail.vue";
+// import partnerReportDetailForm from "./partnerReport/detail_reserve.vue";
 import partnerReportDetailForm from "./partnerReport/detail.vue";
 import partnerDetailForm from "@/views/partner/detail.vue";
 import contractDetailForm from "@/views/business/detail/contract.vue";
@@ -96,6 +98,8 @@ const currentComponent = shallowRef<any>(null);
 const currentComponentType = ref();
 
 const currentFormStatus = ref<string | null>();
+
+const submitting = ref(false);
 
 const reportTypes = [
   { value: "yearlyReport", label: "年度报表" },
@@ -193,6 +197,19 @@ const converToFrontendFormData = (type: string | null, data: any) => {
       // 合作伙伴报表
       return {
         // 转换数据
+        name: "贸易伙伴报表",
+        year: data["日期"],
+        partnerName: data["伙伴名称"],
+        partnerType: data["内容"]["伙伴类型"],
+        totalTradeAmount: data["累计贸易额"],
+        tradeAmountYoY: data["内容"]["同比"],
+        tradeAmountMoM: data["内容"]["环比"],
+        createdBy: data["创建者"],
+        createdAt: data["创建时间"],
+        updatedBy: data["修改者"],
+        updatedAt: data["修改时间"],
+        dataFrom: "手动录入",
+        audited: data["状态"],
       };
     case "partnerDetail":
       // 合作伙伴详情
@@ -326,10 +343,16 @@ const convertToBackendData = (type: string | null, data: any) => {
         // 转换数据
       };
     case "partnerReport":
-      return {
-        ...data,
-        // 转换数据
+      result["日期"] = data.year;
+      result["伙伴名称"] = data.partnerName;
+      result["累计贸易额"] = data.totalTradeAmount;
+      result["内容"] = {
+        贸易额伙伴类型: data.partnerType,
+        贸易伙伴名称: data.partnerName,
+        贸易额同比: data.tradeAmountYoY,
+        贸易额环比: data.tradeAmountMoM,
       };
+      return result;
     case "partnerDetail":
       return {
         ...data,
@@ -398,6 +421,7 @@ const submitForm = async () => {
     route.query.type as Nullable<string>,
     submitData
   );
+  submitting.value = true;
   // console.log("real", realDataToSubmit);
   // 根据当前表单类型提交数据
   switch (route.query.type as Nullable<string>) {
@@ -426,6 +450,9 @@ const submitForm = async () => {
         .catch((err) => {
           isEditing.value = false;
           ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
         });
       break;
     case "marketPriceReport":
@@ -453,6 +480,9 @@ const submitForm = async () => {
         .catch((err) => {
           isEditing.value = false;
           ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
         });
       break;
     case "firmMngReport":
@@ -480,6 +510,9 @@ const submitForm = async () => {
         .catch((err) => {
           isEditing.value = false;
           ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
         });
       break;
     case "firmReport":
@@ -507,6 +540,9 @@ const submitForm = async () => {
         .catch((err) => {
           isEditing.value = false;
           ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
         });
       break;
     // case "customReport":
@@ -524,10 +560,7 @@ const submitForm = async () => {
             ElMessage.success("提交成功, 正在跳转到列表页");
             setTimeout(() => {
               router.push({
-                name: "ReportList",
-                query: {
-                  type: "partnerReport",
-                },
+                name: "PartnerReportMng",
               });
             }, 1000);
           } else {
@@ -537,6 +570,9 @@ const submitForm = async () => {
         .catch((err) => {
           isEditing.value = false;
           ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
         });
       break;
     // case "partnerDetail":
@@ -564,20 +600,24 @@ const submitForm = async () => {
       const opSinglePartnerDetail = route.query.id
         ? BusinessStandbookAPI.editCustomerAndSupplierLedgerRecord
         : BusinessStandbookAPI.addCustomerAndSupplierLedgerRecord;
-      opSinglePartnerDetail(realDataToSubmit).then(() => {
-        isEditing.value = false;
-        if (!route.query.id) {
-          // 跳转到列表页
-          ElMessage.success("提交成功, 正在跳转到列表页");
-          setTimeout(() => {
-            router.push({
-              name: "PartnerLedgerMng",
-            });
-          }, 1000);
-        } else {
-          ElMessage.success("提交成功");
-        }
-      });
+      opSinglePartnerDetail(realDataToSubmit)
+        .then(() => {
+          isEditing.value = false;
+          if (!route.query.id) {
+            // 跳转到列表页
+            ElMessage.success("提交成功, 正在跳转到列表页");
+            setTimeout(() => {
+              router.push({
+                name: "PartnerLedgerMng",
+              });
+            }, 1000);
+          } else {
+            ElMessage.success("提交成功");
+          }
+        })
+        .finally(() => {
+          submitting.value = false;
+        });
     default:
       break;
   }

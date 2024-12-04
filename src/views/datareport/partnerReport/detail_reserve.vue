@@ -28,73 +28,32 @@
           <el-row class="w-full">
             <el-col :span="8">
               <el-form-item label="年度" prop="year">
-                <el-date-picker
+                <el-input
                   v-if="editing"
                   v-model="yearlyReportDetailForm.year"
-                  type="year"
-                  value-format="YYYY-MM-DD"
-                  placeholder="选择年度"
                 />
                 <span v-else>{{ yearlyReportDetailForm.year }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="伙伴名称">
+              <el-form-item label="利润">
                 <el-input
                   v-if="editing"
-                  v-model="yearlyReportDetailForm.partnerName"
+                  v-model="yearlyReportDetailForm.profit"
                 />
-                <span v-else>{{ yearlyReportDetailForm.partnerName }}</span>
+                <span v-else>{{ yearlyReportDetailForm.profit }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="伙伴类型">
-                <el-select
-                  v-if="editing"
-                  v-model="yearlyReportDetailForm.partnerType"
-                  placeholder="请选择"
-                >
-                  <el-option label="供应商" value="供应商" />
-                  <el-option label="客户" value="客户" />
-                </el-select>
-                <span v-else>{{ yearlyReportDetailForm.partnerType }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="年度累计贸易额(万元)">
+              <el-form-item label="收入">
                 <el-input
                   v-if="editing"
-                  v-model="yearlyReportDetailForm.totalTradeAmount"
+                  v-model="yearlyReportDetailForm.revenue"
                 />
-                <span v-else>
-                  {{ yearlyReportDetailForm.totalTradeAmount }}
-                </span>
+                <span v-else>{{ yearlyReportDetailForm.revenue }}</span>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="贸易额同比(%)">
-                <el-input
-                  v-if="editing"
-                  v-model="yearlyReportDetailForm.tradeAmountYoY"
-                  type="number"
-                  placeholder="请输入贸易额同比"
-                />
-                <span v-else>{{ yearlyReportDetailForm.tradeAmountYoY }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="贸易额环比(%)">
-                <el-input
-                  v-if="editing"
-                  v-model="yearlyReportDetailForm.tradeAmountMoM"
-                  type="number"
-                  placeholder="请输入环比"
-                />
-                <span v-else>{{ yearlyReportDetailForm.tradeAmountMoM }}</span>
-              </el-form-item>
-            </el-col>
-
-            <!-- <el-col :span="24">
+            <el-col :span="24">
               <el-form-item label="期间排名">
                 <el-table
                   :header-cell-style="{
@@ -120,6 +79,7 @@
                   </el-table-column>
                   <el-table-column prop="name" label="企业名称">
                     <template #default="{ row }">
+                      <!-- <el-input v-if="editing" v-model="row.name" /> -->
                       <el-autocomplete
                         v-if="editing"
                         v-model="row.name"
@@ -199,7 +159,7 @@
                   </el-button>
                 </div>
               </el-form-item>
-            </el-col> -->
+            </el-col>
           </el-row>
         </el-form>
       </div>
@@ -300,33 +260,25 @@ const allSelected = ref(false);
 
 const yearlyReportDetailForm = ref({
   name: "贸易伙伴报表",
-  partnerName: "永盛石化",
-  partnerType: "供应商",
-  /** 累计贸易额 */
-  totalTradeAmount: "1000",
-  /** 贸易额同比 */
-  tradeAmountYoY: "124",
-  /** 贸易额环比 */
-  tradeAmountMoM: "98",
   year: "2021",
-  // profit: "1000",
-  // revenue: "2000",
-  // cost: "1000",
-  // // 包含贸易量、贸易额、主要贸易产品
-  // rankData: [
-  //   { rank: "1", name: "永盛石化", profit: "1000", revenue: "2000" },
-  //   { rank: "2", name: "广投石化", profit: "1000", revenue: "2000" },
-  //   { rank: "3", name: "中石化", profit: "1000", revenue: "2000" },
-  //   {
-  //     rank: "4",
-  //     name: "中石油",
-  //     profit: "1000",
-  //     revenue: "2000",
-  //     product: "石油",
-  //     bargainAmount: "1000",
-  //     bargainCount: "1000",
-  //   },
-  // ],
+  profit: "1000",
+  revenue: "2000",
+  cost: "1000",
+  // 包含贸易量、贸易额、主要贸易产品
+  rankData: [
+    { rank: "1", name: "永盛石化", profit: "1000", revenue: "2000" },
+    { rank: "2", name: "广投石化", profit: "1000", revenue: "2000" },
+    { rank: "3", name: "中石化", profit: "1000", revenue: "2000" },
+    {
+      rank: "4",
+      name: "中石油",
+      profit: "1000",
+      revenue: "2000",
+      product: "石油",
+      bargainAmount: "1000",
+      bargainCount: "1000",
+    },
+  ],
   createdAt: "2021-01-01",
   createdBy: "admin",
   updatedAt: "2021-01-01",
@@ -428,12 +380,24 @@ const validateForm = () => {
 const generateRandomData = () => {
   yearlyReportDetailForm.value = {
     name: "贸易伙伴报表",
-    year: "2024-01-01",
-    partnerName: "永盛石化",
-    partnerType: "供应商",
-    totalTradeAmount: "1000",
-    tradeAmountYoY: "124",
-    tradeAmountMoM: "98",
+    year: "2021",
+    profit: "1000",
+    revenue: "2000",
+    cost: "1000",
+    rankData: [
+      { rank: "1", name: "永盛石化", profit: "1000", revenue: "2000" },
+      { rank: "2", name: "广投石化", profit: "1000", revenue: "2000" },
+      { rank: "3", name: "中石化", profit: "1000", revenue: "2000" },
+      {
+        rank: "4",
+        name: "中石油",
+        profit: "1000",
+        revenue: "2000",
+        product: "石油",
+        bargainAmount: "1000",
+        bargainCount: "1000",
+      },
+    ],
     createdAt: "2021-01-01",
     createdBy: "admin",
     updatedAt: "2021-01-01",
