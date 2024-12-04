@@ -255,7 +255,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       icon: "el-icon-coin",
       hidden: true,
     },
-    redirect: "/bigScreenBoard/business",
+    // redirect: "/bigScreenBoard/business",
     children: [
       {
         path: "business/:businessName",
