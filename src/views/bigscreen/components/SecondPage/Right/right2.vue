@@ -176,6 +176,9 @@ const initChart = () => {
             { offset: 1, color: "rgba(219, 137, 67, 0)" }, // 底部渐变透明
           ]),
         },
+        itemStyle: {
+          color: "#E8325C",
+        },
         data: data.map((item) => item.transactionVolume),
       },
     ],
