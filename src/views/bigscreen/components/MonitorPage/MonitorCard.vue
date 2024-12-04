@@ -18,7 +18,7 @@ const props = defineProps({
   },
   // 编号，用于区分不同的监控区域
   blockId: {
-    type: String,
+    type: [String, Number],
     required: true,
   },
 });
@@ -78,6 +78,7 @@ watch(
   width: 100%;
   height: 100%;
   object-fit: cover;
-  @apply border-1 rounded-lg;
+  @apply border-1;
+  border-color: #e2e8f0;
 }
 </style>
