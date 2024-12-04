@@ -3,7 +3,7 @@
   <!-- 左侧可放置图标列表、图标详情、右侧地图，可点击根据相对位置确定坐标 -->
   <div class="main-wrapper">
     <div class="item-menu-block">
-      <div class="item-menu">
+      <div v-loading="menuLoading" class="item-menu">
         <!-- <el-input
           v-model="searchValue"
           search-icon="el-icon-search"
@@ -23,7 +23,11 @@
           @node-click="handleNodeClick"
         />
       </div>
-      <div v-if="currentItem" class="item-detail">
+      <div
+        v-if="currentItem"
+        v-loading="currentItemLoading"
+        class="item-detail"
+      >
         <!-- <div class="mb-4">
           <el-button size="small" icon="edit" />
         </div> -->
@@ -77,28 +81,27 @@
             </el-form-item>
           </el-col>
         </el-form>
-        <!-- <div class="flex justify-end mt-4">
-          <el-button size="small" type="primary">修改</el-button>
-        </div> -->
-        <!-- <el-button
-          v-if="!isPositionEdit"
-          size="small"
-          type="primary"
-          @click="handleStartChangePos"
-        >
-          修改位置
-        </el-button>
-        <el-button
-          v-if="isPositionEdit"
-          size="small"
-          @click="handleCancelChangePos"
-        >
-          取消
-        </el-button> -->
+        <div v-if="!isPositionEdit" class="bottom-op mt-8 text-align-end">
+          <el-button
+            type="primary"
+            size="small"
+            @click="onSubmitChangeCurrentItemForm"
+          >
+            保存
+          </el-button>
+          <el-button
+            type="danger"
+            class="mr-10px"
+            size="small"
+            @click="handleDeleteItem(currentItem.id)"
+          >
+            删除
+          </el-button>
+        </div>
       </div>
-      <div v-else class="item-detail text-center w-full">
+      <!-- <div v-else class="item-detail text-center w-full">
         <span class="text-xl color-coolgray">详情区</span>
-      </div>
+      </div> -->
     </div>
     <div class="map-block">
       <div
@@ -176,8 +179,8 @@
       <el-form ref="itemFormRef" :model="itemForm" :rules="rules">
         <el-form-item label="类别" prop="type">
           <el-select v-model="itemForm.type" placeholder="请选择">
-            <el-option label="加油站" value="1" />
-            <el-option label="油库" value="2" />
+            <el-option label="加油站" :value="GAS_ENUM_VALUE" />
+            <el-option label="油库" :value="STORAGE_ENUM_VALUE" />
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
@@ -216,21 +219,38 @@ import oil from "@/views/bigscreen/img/oil.png";
 import gas from "@/views/bigscreen/img/oil2.png";
 import * as echarts from "echarts";
 import "echarts/extension/bmap/bmap";
+import { ElMessage } from "element-plus";
+import { GsLocationAPI } from "@/api/config/gsLocation";
 import { FormInstance } from "element-plus";
 import { ref, onMounted, nextTick } from "vue";
 
 interface ItemFormType {
+  id: number | string | undefined;
   name: string | undefined;
   description: string | undefined;
   type: number | undefined;
+  xOffSet: number | undefined;
+  yOffSet: number | undefined;
+}
+
+interface BackEndFormType {
+  id: number | string;
+  名称: string;
+  类型: string;
+  描述: string;
+  坐标: string;
+  图标: string;
 }
 
 const dialogVisible = ref(false);
 const searchValue = ref("");
 const itemForm = ref<ItemFormType>({
+  id: undefined,
   name: undefined,
   description: undefined,
   type: undefined,
+  xOffSet: 0,
+  yOffSet: 0,
 });
 const itemFormRef = ref<Nullable<FormInstance>>(null);
 const rules = {
@@ -244,38 +264,12 @@ const gsListdata = ref([
   {
     id: 1,
     label: "加油站",
-    children: [
-      {
-        id: 11,
-        label: "五合加油站",
-        description: "五合加油站",
-        iconName: "gas",
-        xOffSet: 719,
-        yOffSet: 660,
-      },
-    ],
+    children: [],
   },
   {
     id: 2,
     label: "油库",
-    children: [
-      {
-        id: 21,
-        label: "钦州油库",
-        description: "钦州油库，永盛自建油库",
-        iconName: "oil",
-        xOffSet: 729,
-        yOffSet: 660,
-      },
-      {
-        id: 22,
-        label: "东莞油库",
-        description: "广东油库，租用",
-        iconName: "oil",
-        xOffSet: 800,
-        yOffSet: 676,
-      },
-    ],
+    children: [],
   },
 ]);
 
@@ -307,6 +301,8 @@ interface PointPos {
 }
 
 const currentItem = ref<CurrentItem | null>(null);
+const menuLoading = ref(false);
+const currentItemLoading = ref(false);
 
 const currentIcon = computed(() => {
   switch (currentItem.value?.iconName) {
@@ -328,6 +324,9 @@ const isMouseInIcon = ref(false);
 // 范围大小
 const iconRange = 16;
 
+const GAS_ENUM_VALUE = 1;
+const STORAGE_ENUM_VALUE = 2;
+
 /**
  * @description: 鼠标进入地图，判断是否为修改位置状态，如果是则将图标位置设置为当前鼠标位置，否则不做任何操作
  * @param {*}
@@ -340,7 +339,7 @@ const handleMouseEnter = (e: MouseEvent) => {
   //     yOffSet: currentPos.value.y,
   //   };
   // }
-  console.log("enter!");
+  // console.log("enter!");
   e.preventDefault();
   if (!isMouseWithInMap.value) {
     isMouseWithInMap.value = true;
@@ -446,6 +445,10 @@ const handleNodeClick = (data: any) => {
   // console.log(data);
   if (!data.children) {
     currentItem.value = data;
+    currentItemLoading.value = true;
+    setTimeout(() => {
+      currentItemLoading.value = false;
+    }, 1000);
   }
   // currentItem.value = data;
 };
@@ -480,35 +483,85 @@ const addStorage = () => {
   });
 };
 
+/** 修改坐标提交 */
+const onSubmitChangeCurrentItemForm = async () => {
+  // 提交表单
+  // console.log(itemForm.value);
+  // 添加到gsListdata中
+  currentItemLoading.value = true;
+  const submitData: BackEndFormType = {
+    id: currentItem.value?.id as number,
+    名称: currentItem.value?.label as string,
+    类型: currentItem.value?.iconName === "gas" ? "加油站" : "油库",
+    描述: currentItem.value?.description as string,
+    坐标: `${currentItem.value?.xOffSet},${currentItem.value?.yOffSet}`,
+    图标: currentItem.value?.iconName as string,
+  };
+  GsLocationAPI.updateMapElement(submitData)
+    .then((res) => {
+      currentItemLoading.value = false;
+      ElMessage.success("修改成功");
+      initListData();
+    })
+    .catch((err) => {
+      currentItemLoading.value = false;
+      ElMessage.error("修改失败");
+    });
+};
+
+/**
+ * 新建提交表单
+ */
 const onSubmitItemForm = () => {
-  itemFormRef.value?.validate().then((valid) => {
+  itemFormRef.value?.validate().then(async (valid) => {
     if (valid) {
       // 提交表单
       // console.log(itemForm.value);
       // 添加到gsListdata中
       submitItemLoading.value = true;
-      setTimeout(() => {
-        submitItemLoading.value = false;
-        const type = itemForm.value.type;
-        const item = {
-          // type保证为1或2
-          id: gsListdata.value[type - 1].children.length + 1,
-          label: itemForm.value.name as unknown as string,
-          description: itemForm.value.description as unknown as string,
-          iconName: type === 1 ? "gas" : "oil",
-          xOffSet: 0,
-          yOffSet: 0,
-        };
-        gsListdata.value[type - 1].children.push(item);
-        // 重置表单
-        itemForm.value = {
-          name: "",
-          description: "",
-          type: undefined,
-        };
-        itemFormRef.value?.resetFields();
-        dialogVisible.value = false;
-      }, 1000);
+      const submitData = {
+        id: itemForm.value.id,
+        名称: itemForm.value.name,
+        类型: itemForm.value.type === GAS_ENUM_VALUE ? "加油站" : "油库",
+        描述: itemForm.value.description,
+        坐标: `${itemForm.value.xOffSet},${itemForm.value.yOffSet}`,
+        图标: itemForm.value.type === GAS_ENUM_VALUE ? "gas" : "oil",
+      };
+      const op = itemForm.value.id
+        ? GsLocationAPI.updateMapElement
+        : GsLocationAPI.addMapElement;
+      op(submitData)
+        .then((res) => {
+          submitItemLoading.value = false;
+          const type = itemForm.value.type;
+          const item = {
+            // type保证为1或2
+            id: gsListdata.value[type - 1].children.length + 1,
+            label: itemForm.value.name as unknown as string,
+            description: itemForm.value.description as unknown as string,
+            iconName: type === GAS_ENUM_VALUE ? "gas" : "oil",
+            xOffSet: itemForm.value.xOffSet,
+            yOffSet: itemForm.value.yOffSet,
+          };
+          gsListdata.value[type - 1].children.push(item);
+          // 重置表单
+          itemForm.value = {
+            id: undefined,
+            name: "",
+            description: "",
+            type: undefined,
+            xOffSet: 0,
+            yOffSet: 0,
+          };
+          itemFormRef.value?.resetFields();
+          dialogVisible.value = false;
+          initListData();
+          ElMessage.success("添加成功");
+        })
+        .catch((err) => {
+          submitItemLoading.value = false;
+          ElMessage.error("添加失败");
+        });
     }
   });
 };
@@ -522,6 +575,25 @@ const getIcon = (iconName: string) => {
     default:
       return "";
   }
+};
+
+const handleDeleteItem = (id: number | string) => {
+  // 删除gsListdata中的数据
+  menuLoading.value = true;
+  currentItemLoading.value = true;
+  GsLocationAPI.deleteMapElement(id)
+    .then((res) => {
+      currentItemLoading.value = false;
+      currentItem.value = null;
+      ElMessage.success("删除成功");
+      initListData();
+    })
+    .catch((err) => {
+      menuLoading.value = false;
+      currentItemLoading.value = false;
+      ElMessage.error("删除失败");
+      console.log(err);
+    });
 };
 
 const initChart = () => {
@@ -557,10 +629,37 @@ const initChart = () => {
   myChart.setOption(option);
 };
 
+const initListData = async () => {
+  // chartDOM.value = document.getElementById("chart1");
+  menuLoading.value = true;
+  const res: any = await GsLocationAPI.getAllMapElement();
+  menuLoading.value = false;
+  // console.log("res", res);
+  const list = res["当前记录"];
+  for (let i = 0; i < gsListdata.value.length; i++) {
+    gsListdata.value[i].children = [];
+  }
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i];
+    const type = item.类型 === "加油站" ? 1 : 2;
+    const newItem = {
+      id: item.id,
+      label: item.名称,
+      description: item.描述,
+      iconName: item.图标,
+      xOffSet: item.坐标 ? item.坐标.split(",")[0] : null,
+      yOffSet: item.坐标 ? item.坐标.split(",")[1] : null,
+    };
+    gsListdata.value[type - 1].children.push(newItem);
+  }
+  // initChart();
+};
+
 onMounted(() => {
   // chartDOM.value = document.getElementById("chart1");
   // echarts.registerMap("china", chinaGeoJson as any);
   // initChart();
+  initListData();
 });
 </script>
 
@@ -585,7 +684,7 @@ onMounted(() => {
     }
   }
   .item-detail {
-    @apply bg-white pl-20px pr-20px pt-10px shadow-coolGray-100;
+    @apply bg-white pl-20px pr-20px pt-10px shadow-coolGray-100 relative;
   }
 }
 
