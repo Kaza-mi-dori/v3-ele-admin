@@ -12,7 +12,10 @@
               placeholder="搜索监控名称"
               clearable
             />
-            <el-icon style="font-size: 22px" @click="onRefresh">
+            <el-icon
+              style="font-size: 22px; cursor: pointer"
+              @click="onRefresh"
+            >
               <RefreshLeft />
             </el-icon>
           </div>
@@ -112,17 +115,17 @@
             <el-popover placement="top" width="100" trigger="hover">
               <template #reference>
                 <el-button
-                  icon="platform"
+                  icon="menu"
                   round
                   @click="onChangeMonitorAmount(4)"
                 />
               </template>
-              <div style="text-align: center">显示九个监控</div>
+              <div style="text-align: center">显示四个监控</div>
             </el-popover>
             <el-popover placement="top" width="100" trigger="hover">
               <template #reference>
                 <el-button
-                  icon="platform"
+                  icon="grid"
                   round
                   @click="onChangeMonitorAmount(9)"
                 />

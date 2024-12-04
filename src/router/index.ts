@@ -357,6 +357,28 @@ export const constantRoutes: RouteRecordRaw[] = [
       // todo 维护导入导出功能
     ],
   },
+  // 综合管理2
+  {
+    path: "/otherMng",
+    name: "OtherMng",
+    component: Layout,
+    meta: {
+      title: "综合管理2",
+      icon: "Setting",
+    },
+    redirect: "/otherMng/mapElementMng",
+    children: [
+      {
+        path: "mapElementMng",
+        name: "MapElementMng",
+        component: () => import("@/views/otherConfig/gsLocationMng.vue"),
+        meta: {
+          title: "地图元素管理",
+          icon: "el-icon-coin",
+        },
+      },
+    ],
+  },
 ];
 
 /**
