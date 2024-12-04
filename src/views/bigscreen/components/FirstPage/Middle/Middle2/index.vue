@@ -55,11 +55,15 @@
       <div class="total-content">
         <div class="content1">
           <div class="title">油库</div>
-          <div class="num">98</div>
+          <div class="num">
+            <el-statistic :value="gasNumOutputValue" />
+          </div>
         </div>
         <div class="content2">
           <div class="title">加油站</div>
-          <div class="num">98</div>
+          <div class="num">
+            <el-statistic :value="oilNumOutputValue" />
+          </div>
         </div>
       </div>
     </div>
@@ -70,6 +74,7 @@
 import oil from "@/views/bigscreen/img/oil.png";
 import gas from "@/views/bigscreen/img/oil2.png";
 import { ref } from "vue";
+import { useTransition } from "@vueuse/core";
 
 defineProps({
   showTotalNum: {
@@ -170,6 +175,20 @@ onMounted(() => {
   //   }
   // });
 });
+
+const gasNum = ref(98);
+const oilNum = ref(98);
+
+const gasSource = ref(0);
+const oilSource = ref(0);
+const gasNumOutputValue = useTransition(gasSource, {
+  duration: 1500,
+});
+const oilNumOutputValue = useTransition(oilSource, {
+  duration: 1500,
+});
+gasSource.value = gasNum.value;
+oilSource.value = oilNum.value;
 </script>
 
 <style lang="scss" scoped>
@@ -239,5 +258,9 @@ onMounted(() => {
     // 文字颜色改为比较护眼的暗色
     color: #c0c4cc;
   }
+}
+
+::v-deep(.el-statistic__content) {
+  all: unset;
 }
 </style>
