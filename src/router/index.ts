@@ -263,14 +263,18 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () =>
           import("@/views/bigscreen/components/SecondPage/second-index.vue"),
       },
-      // 监控页面
-      {
-        path: "monitor",
-        name: "Monitor",
-        component: () =>
-          import("@/views/bigscreen/components/MonitorPage/index.vue"),
-      },
     ],
+  },
+  // 监控页独立放，避免被缩放影响
+  {
+    path: "/monitor",
+    name: "Monitor",
+    meta: {
+      title: "监控页",
+      icon: "el-icon-monitor",
+    },
+    component: () =>
+      import("@/views/bigscreen/components/MonitorPage/index.vue"),
   },
   // 开发环境后端登录页
   {
