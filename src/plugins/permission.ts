@@ -13,6 +13,7 @@ export function setupPermission() {
   const whiteList = ["/login"];
 
   router.beforeEach(async (to, from, next) => {
+    // console.log("beforeEach", to, from);
     NProgress.start();
 
     const isLogin = !!getToken(); // 判断是否登录

@@ -72,26 +72,6 @@ export const constantRoutes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: "/customComponent",
-    name: "CustomComponent",
-    component: Layout,
-    meta: {
-      title: "自定义组件",
-      icon: "component",
-    },
-    children: [
-      {
-        path: "index",
-        name: "CustomComponentIndex",
-        component: () => import("@/components/CustomComponent/index.vue"),
-        meta: {
-          title: "自定义组件预览",
-          icon: "el-icon-coin",
-        },
-      },
-    ],
-  },
-  {
     path: "/reportMng",
     name: "ReportMng",
     component: Layout,
@@ -374,6 +354,26 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/otherConfig/gsLocationMng.vue"),
         meta: {
           title: "地图元素管理",
+          icon: "el-icon-coin",
+        },
+      },
+    ],
+  },
+  {
+    path: "/customComponent",
+    name: "CustomComponent",
+    component: Layout,
+    meta: {
+      title: "自定义组件",
+      icon: "component",
+    },
+    children: [
+      {
+        path: "index",
+        name: "CustomComponentIndex",
+        component: () => import("@/components/CustomComponent/index.vue"),
+        meta: {
+          title: "自定义组件预览",
           icon: "el-icon-coin",
         },
       },

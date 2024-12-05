@@ -99,9 +99,11 @@ namespace business {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface IYearlyBusinessReport {
     id?: string;
+    /** 时间维度 */
+    timeDimension: string;
     /** 业态名称 */
     businessDimension: string;
-    year: string;
+    year: string | undefined;
     income: number;
     outcome: number;
     profit: number;

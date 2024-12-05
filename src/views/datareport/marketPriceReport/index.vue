@@ -16,6 +16,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @reset-filter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -68,19 +69,64 @@
           </el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="报表时间" sortable>
+      <el-table-column prop="name" label="数据日期" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.日期 || "-" }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="业务维度" sortable>
+      <!-- <el-table-column prop="name" label="业务维度" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.业务维度 || "-" }}</span>
         </template>
-      </el-table-column>
-      <el-table-column prop="number" label="状态" sortable>
+      </el-table-column> -->
+      <el-table-column prop="产品名称" label="报价对象" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.状态 }}</span>
+          <span>{{ scope.row.产品名称 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="产品规格" label="产品规格" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.内容.产品规格 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="报价金额" label="报价金额" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.内容.报价金额 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="报价规格" label="报价规格" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.内容.报价规格 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="报价币种" label="报价币种" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.内容.报价币种 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="状态" label="状态" sortable>
+        <template v-slot="scope">
+          <span v-if="scope.row.状态 === '有效'" class="text-green-5">
+            <!-- 打勾 -->
+            <el-icon>
+              <Check />
+            </el-icon>
+            已审核
+          </span>
+          <span v-else-if="scope.row.状态 === '无效'" class="text-red-5">
+            <!-- 打叉 -->
+            <el-icon>
+              <Close />
+            </el-icon>
+            无效
+          </span>
+          <span v-else class="text-gray-5">
+            <!-- 问号 -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+            未审核
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="200">
@@ -92,6 +138,20 @@
             <el-link type="primary" @click="handleViewDetail(scope.row)">
               编辑
             </el-link> -->
+            <el-link
+              v-if="scope.row['状态'] !== '有效'"
+              type="primary"
+              @click="handleAudit(scope.row)"
+            >
+              审核
+            </el-link>
+            <el-link
+              v-if="scope.row['状态'] === '有效'"
+              type="primary"
+              @click="handleResetAudit(scope.row)"
+            >
+              设为无效
+            </el-link>
             <el-link type="danger" @click="handleDelete(scope.row)">
               删除
             </el-link>
@@ -124,6 +184,7 @@ import { useRouter } from "vue-router";
 import BusinessFormAPI, {
   type MarketQuotationReportQuery,
 } from "@/api/businessForm";
+import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { onMounted } from "vue";
 
@@ -191,30 +252,11 @@ const handleViewDetail = (row: any) => {
   });
 };
 const handleDelete = (row: any) => {
-  // 确认是否删除
-  ElMessageBox.confirm("确定删除该记录吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(() => {
-      // 判断是否为有效数据，如果是则不允许删除(提示)
-      if (row.audited) {
-        ElMessageBox.alert("已审核数据请联系管理员删除", "提示", {
-          confirmButtonText: "确定",
-          type: "warning",
-        });
-        return;
-      }
-      // 删除操作
-      BusinessFormAPI.deleteMarketQuotationReportForm(row.id).then(() => {
-        initTableData();
-      });
-    })
-    .catch(() => {
-      // 取消删除
-      ElMessage.info("已取消删除");
-    });
+  handleDeleteRow(
+    row,
+    BusinessFormAPI.deleteMarketQuotationReportForm,
+    initTableData
+  );
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
@@ -227,11 +269,19 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
   {
     label: "状态",
-    prop: "状态集合",
+    prop: "状态",
     value: null,
     options: ["全部", "有效", "无效"],
     inputType: "select",
     order: 2,
+  },
+  {
+    label: "产品名称",
+    prop: "产品名称",
+    value: null,
+    selected: null,
+    inputType: "input",
+    order: 3,
   },
   {
     label: "时间跨度",
@@ -247,6 +297,27 @@ const handleConfirmFilter = (value: any) => {
   queryForm.value = {
     ...queryForm.value,
     ...value,
+    状态集合: value["状态"]
+      ? value["状态"] === "全部"
+        ? undefined
+        : [value["状态"]]
+      : undefined,
+    日期晚于: value["时间跨度"]?.[0],
+    日期早于: value["时间跨度"]?.[1],
+  };
+  initTableData();
+};
+
+const handleResetFilter = () => {
+  queryForm.value = {
+    业务维度: undefined,
+    状态集合: undefined,
+    产品名称: undefined,
+    日期早于: undefined,
+    日期晚于: undefined,
+    id集合: undefined,
+    页码: 1,
+    页容量: 20,
   };
   initTableData();
 };
@@ -254,7 +325,7 @@ const handleConfirmFilter = (value: any) => {
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res = await BusinessFormAPI.getMarketQuotationReportFormList(
+    const res: any = await BusinessFormAPI.getMarketQuotationReportFormList(
       queryForm.value
     );
     tableData.value = res["当前记录"];
@@ -281,6 +352,26 @@ const handleAddRecord = () => {
       type: "marketPriceReport",
     },
   });
+};
+
+const handleAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessFormAPI.editMarketQuotationReportForm,
+    "状态",
+    "有效",
+    initTableData
+  );
+};
+
+const handleResetAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessFormAPI.editMarketQuotationReportForm,
+    "状态",
+    "无效",
+    initTableData
+  );
 };
 
 const handleBatchDelete = () => {

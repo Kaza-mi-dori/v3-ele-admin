@@ -5,9 +5,14 @@
     <div class="title-block">
       <div class="__title">业态经营报表</div>
       <div class="__stat">
-        <span class="__item">你有</span>
-        <span class="__item">统计指标一</span>
-        <span class="__item">统计指标二</span>
+        <span class="__item">当前有</span>
+        <span class="__item">
+          <span>
+            <span class="text-red-5 mr-2">{{ pagination.total }}</span>
+            <span>份报表</span>
+          </span>
+        </span>
+        <!-- <span class="__item">统计指标二</span> -->
       </div>
     </div>
     <!-- 筛选操作区 -->
@@ -16,6 +21,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @resetFilter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -68,19 +74,52 @@
           </el-link>
         </template>
       </el-table-column>
+      <el-table-column
+        prop="name"
+        label="报表维度"
+        width="120"
+        sortable
+        align="center"
+      >
+        <template v-slot="scope">
+          <span>
+            {{ scope.row.类型 || "-" }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="name" label="报表时间" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.日期 || "-" }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="业务维度" sortable>
+      <el-table-column prop="name" label="业务板块" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.业务维度 || "-" }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="number" label="状态" sortable>
+      <el-table-column prop="状态" label="状态" sortable align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.状态 }}</span>
+          <span v-if="scope.row.状态 === '有效'" class="text-green-5">
+            <!-- 打勾 -->
+            <el-icon>
+              <Check />
+            </el-icon>
+            已审核
+          </span>
+          <span v-else-if="scope.row.状态 === '无效'" class="text-red-5">
+            <!-- 打叉 -->
+            <el-icon>
+              <Close />
+            </el-icon>
+            无效
+          </span>
+          <span v-else class="text-gray-5">
+            <!-- 问号 -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+            未审核
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="200">
@@ -92,6 +131,20 @@
             <el-link type="primary" @click="handleViewDetail(scope.row)">
               编辑
             </el-link> -->
+            <el-link
+              v-if="scope.row['状态'] !== '有效'"
+              type="primary"
+              @click="handleAudit(scope.row)"
+            >
+              审核
+            </el-link>
+            <el-link
+              v-if="scope.row['状态'] === '有效'"
+              type="primary"
+              @click="handleResetAudit(scope.row)"
+            >
+              设为无效
+            </el-link>
             <el-link type="danger" @click="handleDelete(scope.row)">
               删除
             </el-link>
@@ -118,12 +171,12 @@ import Filter from "@/components/Business/filter.vue";
 import SearchBar from "@/components/CustomComponent/SearchBar.vue";
 import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
-import { ref } from "vue";
-import type { Ref } from "vue";
-import { useRouter } from "vue-router";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
+import { timeDimensionFtoBMap } from "@/enums/OptionLabelEnum";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
-import { onMounted } from "vue";
+import { ref, type Ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -189,34 +242,29 @@ const handleViewDetail = (row: any) => {
   });
 };
 const handleDelete = (row: any) => {
-  // 确认是否删除
-  ElMessageBox.confirm("确定删除该记录吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(() => {
-      // 判断是否为有效数据，如果是则不允许删除(提示)
-      if (row.audited) {
-        ElMessageBox.alert("已审核数据请联系管理员删除", "提示", {
-          confirmButtonText: "确定",
-          type: "warning",
-        });
-        return;
-      }
-      // 删除操作
-      BusinessFormAPI.deleteBusinessReportForm(row.id).then(() => {
-        initTableData();
-      });
-    })
-    .catch(() => {
-      // 取消删除
-      ElMessage.info("已取消删除");
-    });
+  handleDeleteRow(row, BusinessFormAPI.deleteBusinessReportForm, initTableData);
+};
+const handleAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessFormAPI.editBusinessReportForm,
+    "状态",
+    "有效",
+    initTableData
+  );
+};
+const handleResetAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessFormAPI.editBusinessReportForm,
+    "状态",
+    "无效",
+    initTableData
+  );
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
-    label: "业务维度",
+    label: "业务板块",
     prop: "业务维度",
     value: null,
     options: ["成品油", "燃料油", "原油", "化工产品", "LNG", "煤炭"],
@@ -224,8 +272,16 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
     order: 1,
   },
   {
+    label: "时间维度",
+    prop: "类型",
+    value: null,
+    options: ["全部", "年", "月", "日"],
+    inputType: "select",
+    order: 2,
+  },
+  {
     label: "状态",
-    prop: "状态集合",
+    prop: "状态",
     value: null,
     options: ["全部", "有效", "无效"],
     inputType: "select",
@@ -245,10 +301,35 @@ const handleConfirmFilter = (value: any) => {
   queryForm.value = {
     ...queryForm.value,
     ...value,
+    类型集合: value["类型"]
+      ? value["类型"] === "全部"
+        ? undefined
+        : [value["类型"]]
+      : undefined,
+    状态集合: value["状态"]
+      ? value["状态"] === "全部"
+        ? undefined
+        : [value["状态"]]
+      : undefined,
+    日期晚于: value["时间跨度"]?.[0],
+    日期早于: value["时间跨度"]?.[1],
   };
   initTableData();
 };
 
+const handleResetFilter = () => {
+  queryForm.value = {
+    业务维度: undefined,
+    状态集合: undefined,
+    日期早于: undefined,
+    日期晚于: undefined,
+    id集合: undefined,
+    页码: 1,
+    页容量: 20,
+  };
+  pagination.value.currentPage = 1;
+  initTableData();
+};
 const initTableData = async () => {
   loading.value = true;
   try {

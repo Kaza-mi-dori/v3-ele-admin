@@ -21,6 +21,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @reset-filter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -78,14 +79,34 @@
           <span>{{ scope.row.日期 || "-" }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="业务维度" sortable>
+      <el-table-column prop="name" label="报表主体" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.业务维度 || "-" }}</span>
+          <span>{{ scope.row.伙伴名称 || "-" }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="number" label="状态" sortable>
+      <el-table-column prop="状态" label="状态" sortable align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.状态 }}</span>
+          <span v-if="scope.row.状态 === '有效'" class="text-green-5">
+            <!-- 打勾 -->
+            <el-icon>
+              <Check />
+            </el-icon>
+            已审核
+          </span>
+          <span v-else-if="scope.row.状态 === '无效'" class="text-red-5">
+            <!-- 打叉 -->
+            <el-icon>
+              <Close />
+            </el-icon>
+            无效
+          </span>
+          <span v-else class="text-gray-5">
+            <!-- 问号 -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+            未审核
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="200">
@@ -97,6 +118,20 @@
             <el-link type="primary" @click="handleViewDetail(scope.row)">
               编辑
             </el-link> -->
+            <el-link
+              v-if="checkIsAuditData(scope.row)"
+              type="primary"
+              @click="handleAudit(scope.row)"
+            >
+              审核
+            </el-link>
+            <el-link
+              v-if="scope.row['状态'] === '有效'"
+              type="primary"
+              @click="handleResetAudit(scope.row)"
+            >
+              设为无效
+            </el-link>
             <el-link type="danger" @click="handleDelete(scope.row)">
               删除
             </el-link>
@@ -128,8 +163,8 @@ import type { Ref } from "vue";
 import { useRouter } from "vue-router";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
+import { handleDeleteRow, handleAuditRow } from "@/hooks/useTableOp";
 import { onMounted } from "vue";
-
 const router = useRouter();
 
 type IExampleData = business.IAuditableEntity<Partial<business.IGoods>>;
@@ -189,36 +224,50 @@ const handleViewDetail = (row: any) => {
     name: "ReportForm",
     query: {
       id: row.id,
-      type: "yearlyReport",
+      type: "partnerReport",
     },
   });
 };
 const handleDelete = (row: any) => {
-  // 确认是否删除
-  ElMessageBox.confirm("确定删除该记录吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(() => {
-      // 判断是否为有效数据，如果是则不允许删除(提示)
-      if (row.audited) {
-        ElMessageBox.alert("已审核数据请联系管理员删除", "提示", {
-          confirmButtonText: "确定",
-          type: "warning",
-        });
-        return;
-      }
-      // 删除操作
-      BusinessFormAPI.deleteTradePartnersReportForm(row.id).then(() => {
-        initTableData();
-      });
-    })
-    .catch(() => {
-      // 取消删除
-      ElMessage.info("已取消删除");
-    });
+  // todo: 判断是否有数据管理权限
+  // if(!hasDataManagePermission) { return; }
+  handleDeleteRow(row, BusinessFormAPI.deleteTradePartnersReportForm, () => {
+    initTableData();
+  });
 };
+
+const checkIsAuditData = (row: any) => {
+  return !row.状态 || row.状态 === "无效";
+};
+
+const handleAudit = async (row: any) => {
+  // 先获取详情数据
+  await BusinessFormAPI.getTradePartnersReportForm(row.id).then((res) => {
+    // console.log(res);
+    handleAuditRow(
+      row,
+      BusinessFormAPI.editTradePartnersReportForm,
+      "状态",
+      "有效",
+      () => {
+        initTableData();
+      }
+    );
+  });
+};
+
+const handleResetAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessFormAPI.editTradePartnersReportForm,
+    "状态",
+    "无效",
+    () => {
+      initTableData();
+    }
+  );
+};
+
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
     label: "业务维度",
@@ -230,7 +279,7 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
   {
     label: "状态",
-    prop: "状态集合",
+    prop: "状态",
     value: null,
     options: ["全部", "有效", "无效"],
     inputType: "select",
@@ -250,7 +299,28 @@ const handleConfirmFilter = (value: any) => {
   queryForm.value = {
     ...queryForm.value,
     ...value,
+    状态集合: value["状态"]
+      ? value["状态"] === "全部"
+        ? undefined
+        : [value["状态"]]
+      : undefined,
+    日期晚于: value["时间跨度"]?.[0],
+    日期早于: value["时间跨度"]?.[1],
   };
+  initTableData();
+};
+
+const handleResetFilter = () => {
+  queryForm.value = {
+    业务维度: undefined,
+    状态集合: undefined,
+    日期早于: undefined,
+    日期晚于: undefined,
+    id集合: undefined,
+    页码: 1,
+    页容量: 20,
+  };
+  pagination.value.currentPage = 1;
   initTableData();
 };
 

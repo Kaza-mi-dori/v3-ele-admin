@@ -346,7 +346,7 @@ const handleReset = () => {
   props.itemList.forEach((item: any) => {
     switch (item.inputType) {
       case "select":
-        item.value = item.multiple ? [] : null;
+        item.value = item.multiple ? [] : undefined;
         break;
       case "input":
         item.value = "";
@@ -378,6 +378,7 @@ const handleReset = () => {
     }
   });
   selectedItems.value = [];
+  emit("resetFilter");
   that.$forceUpdate();
 };
 

@@ -21,6 +21,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @reset-filter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -85,7 +86,27 @@
       </el-table-column>
       <el-table-column prop="number" label="状态" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.状态 }}</span>
+          <span v-if="scope.row.状态 === '有效'" class="text-green-5">
+            <!-- 打勾 -->
+            <el-icon>
+              <Check />
+            </el-icon>
+            已审核
+          </span>
+          <span v-else-if="scope.row.状态 === '无效'" class="text-red-5">
+            <!-- 打叉 -->
+            <el-icon>
+              <Close />
+            </el-icon>
+            无效
+          </span>
+          <span v-else class="text-gray-5">
+            <!-- 问号 -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+            未审核
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="200">
@@ -97,6 +118,20 @@
             <el-link type="primary" @click="handleViewDetail(scope.row)">
               编辑
             </el-link> -->
+            <el-link
+              v-if="scope.row['状态'] !== '有效'"
+              type="primary"
+              @click="handleAudit(scope.row)"
+            >
+              审核
+            </el-link>
+            <el-link
+              v-if="scope.row['状态'] === '有效'"
+              type="primary"
+              @click="handleResetAudit(scope.row)"
+            >
+              设为无效
+            </el-link>
             <el-link type="danger" @click="handleDelete(scope.row)">
               删除
             </el-link>
@@ -127,6 +162,7 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { onMounted } from "vue";
 
@@ -254,10 +290,46 @@ const handleConfirmFilter = (value: any) => {
   initTableData();
 };
 
+const handleResetFilter = () => {
+  queryForm.value = {
+    业务维度: undefined,
+    状态集合: undefined,
+    日期早于: undefined,
+    日期晚于: undefined,
+    id集合: undefined,
+    页码: 1,
+    页容量: 20,
+  };
+  pagination.value.currentPage = 1;
+  initTableData();
+};
+
+const handleAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessFormAPI.editCompanyReportForm,
+    "状态",
+    "有效",
+    initTableData
+  );
+};
+
+const handleResetAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessFormAPI.editCompanyReportForm,
+    "状态",
+    "无效",
+    initTableData
+  );
+};
+
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
+    const res: any = await BusinessFormAPI.getCompanyReportFormList(
+      queryForm.value
+    );
     tableData.value = res["当前记录"];
     pagination.value.total = res["记录总数"];
   } catch (error) {

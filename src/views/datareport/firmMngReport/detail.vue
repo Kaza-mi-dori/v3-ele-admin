@@ -40,7 +40,7 @@
           <el-row class="w-full">
             <el-col :span="8">
               <el-form-item label="年度" prop="year">
-                <el-date-picker
+                <date-picker-plus
                   v-if="editing"
                   v-model="yearlyReportDetailForm.year"
                   type="year"
@@ -381,6 +381,7 @@ import { ref, unref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useManualRefHistory } from "@vueuse/core";
 import { type FormInstance } from "element-plus";
+import datePickerPlus from "@/components/ElBasicPlus/datePicker.vue";
 import sassvariables from "@/styles/variables.module.scss";
 import BusinessFormAPI from "@/api/businessForm";
 import business from "@/types/business";
@@ -428,7 +429,7 @@ type YearlyReportDetailFormData =
   business.IAuditableEntity<business.ICompanyBusinessReport>;
 const yearlyReportDetailForm = ref({
   name: "永盛石化",
-  year: "2021",
+  year: "2021-01-01",
   income: 1000,
   outcome: 2000,
   profit: 1000,
@@ -441,26 +442,27 @@ const yearlyReportDetailForm = ref({
   salesContractCount: 1000,
   purchaseOrderCount: 2000,
   salesOrderCount: 1000,
-  storage: [
-    {
-      warehouse: "仓库1",
-      name: "产品1",
-      amount: 1000,
-      unit: "吨",
-    },
-    {
-      warehouse: "仓库2",
-      name: "产品2",
-      amount: 2000,
-      unit: "吨",
-    },
-    {
-      warehouse: "在途",
-      name: "产品3",
-      amount: 3000,
-      unit: "吨",
-    },
-  ],
+  storage: undefined,
+  // storage: [
+  //   {
+  //     warehouse: "仓库1",
+  //     name: "产品1",
+  //     amount: 1000,
+  //     unit: "吨",
+  //   },
+  //   {
+  //     warehouse: "仓库2",
+  //     name: "产品2",
+  //     amount: 2000,
+  //     unit: "吨",
+  //   },
+  //   {
+  //     warehouse: "在途",
+  //     name: "产品3",
+  //     amount: 3000,
+  //     unit: "吨",
+  //   },
+  // ],
   settlementCount: 1000,
   settlementAmount: 2000,
   planIncome: 1000,

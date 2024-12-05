@@ -230,7 +230,7 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
   {
     label: "状态",
-    prop: "状态集合",
+    prop: "状态",
     value: null,
     options: ["全部", "有效", "无效"],
     inputType: "select",
@@ -250,6 +250,13 @@ const handleConfirmFilter = (value: any) => {
   queryForm.value = {
     ...queryForm.value,
     ...value,
+    状态集合: value["状态"]
+      ? value["状态"] === "全部"
+        ? undefined
+        : [value["状态"]]
+      : undefined,
+    日期晚于: value["时间跨度"]?.[0],
+    日期早于: value["时间跨度"]?.[1],
   };
   initTableData();
 };

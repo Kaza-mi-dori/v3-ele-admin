@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <github-corner class="github-corner" />
+    <!-- <github-corner class="github-corner" /> -->
 
     <el-card shadow="never">
       <el-row justify="space-between">
@@ -12,9 +12,6 @@
             />
             <div>
               <p>{{ greetings }}</p>
-              <p class="text-sm text-gray">
-                今日天气晴朗，气温在15℃至25℃之间，东南风。
-              </p>
             </div>
           </div>
         </el-col>
@@ -40,7 +37,7 @@
     </el-card>
 
     <!-- 数据卡片 -->
-    <el-row :gutter="10" class="mt-5">
+    <!-- <el-row :gutter="10" class="mt-5">
       <el-col :xs="24" :sm="12" :lg="6">
         <el-card shadow="never">
           <template #header>
@@ -141,18 +138,14 @@
           </template>
         </el-skeleton>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <el-row :gutter="10" class="mt-5">
       <el-col :xs="24" :span="16">
-        <!-- 访问趋势统计图 -->
-        <VisitTrend id="VisitTrend" width="100%" height="400px" />
-      </el-col>
-      <el-col :xs="24" :span="8">
         <el-card>
           <template #header>
             <div class="flex-x-between">
-              <div class="flex-y-center">通知公告</div>
+              <div class="flex-y-center">通知待办</div>
               <el-link type="primary">
                 <span class="text-xs" @click="viewMoreNotice">查看更多</span>
                 <el-icon class="text-xs"><ArrowRight /></el-icon>
@@ -180,6 +173,38 @@
           </el-scrollbar>
         </el-card>
       </el-col>
+      <!-- 常用入口 -->
+      <el-col :xs="24" :span="8">
+        <el-card>
+          <template #header>
+            <div class="flex-x-between">
+              <div class="flex-y-center">常用入口</div>
+            </div>
+          </template>
+
+          <el-row :gutter="10">
+            <el-col
+              v-for="menu in myFavoMenu"
+              :key="menu.name"
+              :xs="24"
+              :span="12"
+            >
+              <el-card shadow="never" class="flex-y-center mb-2">
+                <div class="flex items-center">
+                  <svg-icon :icon-class="menu.iconClass" size="1.5em" />
+                  <el-link
+                    type="primary"
+                    class="text-sm ml-2"
+                    @click.prevent="handleJump(menu)"
+                  >
+                    {{ menu.name }}
+                  </el-link>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-col>
     </el-row>
 
     <NoticeDetail ref="noticeDetailRef" />
@@ -196,6 +221,7 @@ import VisitTrend from "./components/VisitTrend.vue";
 
 import WebSocketManager from "@/utils/websocket";
 import router from "@/router";
+import { useRouter } from "vue-router";
 
 import { useUserStore } from "@/store/modules/user";
 import StatsAPI, { VisitStatsVO } from "@/api/system/log";
@@ -204,6 +230,7 @@ import NoticeAPI, { NoticePageVO } from "@/api/system/notice";
 const noticeDetailRef = ref();
 
 const userStore = useUserStore();
+const router2 = useRouter();
 const date: Date = new Date();
 const greetings = computed(() => {
   const hours = date.getHours();
@@ -220,6 +247,33 @@ const greetings = computed(() => {
   }
 });
 
+const myFavoMenu = ref([
+  {
+    name: "系统监控",
+    iconClass: "monitor",
+    routeName: "Monitor",
+    routeType: "outer",
+  },
+  {
+    name: "数据大屏",
+    iconClass: "user",
+    routeName: "BigScreenBoard",
+    routeType: "outer",
+  },
+  {
+    name: "系统日志",
+    iconClass: "message",
+    routeName: "Log",
+    routeType: "inner",
+  },
+  {
+    name: "业务经营报表",
+    iconClass: "table",
+    routeName: "YearlyReportMng",
+    routeType: "inner",
+  },
+]);
+
 // 右上角数量
 const statisticData = ref([
   {
@@ -235,12 +289,12 @@ const statisticData = ref([
     suffix: "/100",
     key: "upcoming",
   },
-  {
-    value: 10,
-    iconClass: "project",
-    title: "项目",
-    key: "project",
-  },
+  // {
+  //   value: 10,
+  //   iconClass: "project",
+  //   title: "项目",
+  //   key: "project",
+  // },
 ]);
 
 const onlineUserCount = ref(0);
@@ -329,6 +383,20 @@ function viewMoreNotice() {
 // 阅读通知公告
 function viewNoticeDetail(id: string) {
   noticeDetailRef.value.openNotice(id);
+}
+
+/** 跳转 */
+function handleJump(menu: any) {
+  if (menu.routeType === "inner") {
+    // router.push({ name: menu.routeName });
+    const url = router.resolve({ name: menu.routeName }).href;
+    router.push({
+      path: url,
+    });
+  } else {
+    const url = router.resolve({ name: menu.routeName }).href;
+    window.open(url, "_blank");
+  }
 }
 
 onMounted(() => {

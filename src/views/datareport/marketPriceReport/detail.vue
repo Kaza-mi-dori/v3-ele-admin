@@ -27,27 +27,27 @@
           :model="priceDetailForm"
         >
           <el-row class="w-full">
-            <el-col :span="8">
-              <el-form-item label="企业名称" prop="year">
+            <!-- <el-col :span="8">
+              <el-form-item label="报价企业" prop="firmName">
                 <el-autocomplete
                   v-if="editing"
-                  v-model="priceDetailForm.name"
+                  v-model="priceDetailForm.firmName"
                   :fetch-suggestions="querySearch"
                   placeholder="请输入企业名称"
                 />
-                <span v-else>{{ priceDetailForm.name }}</span>
+                <span v-else>{{ priceDetailForm.firmName }}</span>
               </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col :span="8">
-              <el-form-item label="报价时间">
+              <el-form-item label="数据日期" prop="year">
                 <date-picker-plus
                   v-if="editing"
-                  v-model="priceDetailForm.priceTime"
-                  type="datetime"
-                  placeholder="选择报价时间"
-                  value-format="yyyy-MM-DD HH:mm:ss"
+                  v-model="priceDetailForm.year"
+                  type="date"
+                  placeholder="选择数据日期"
+                  value-format="YYYY-MM-DD 00:00:00"
                 />
-                <span v-else>{{ priceDetailForm.priceTime }}</span>
+                <span v-else>{{ priceDetailForm.year }}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -59,7 +59,7 @@
         <span>报价内容</span>
       </div>
       <div class="__content">
-        <el-table
+        <!-- <el-table
           :header-cell-style="{
             'background-color': sassvariables['custom-table-header-background'],
             color: sassvariables['custom-table-header-color'],
@@ -129,7 +129,98 @@
           >
             新增
           </el-button>
-        </div>
+        </div> -->
+        <!-- 将数组内容变成单行表单 -->
+        <el-form
+          ref="formRef"
+          label-position="top"
+          label-width="100px"
+          inline
+          :rules="rules"
+          class="w-full g-form-1"
+          :model="priceDetailForm"
+        >
+          <el-row class="w-full">
+            <el-col :xs="24" :span="8">
+              <el-form-item label="报价企业" prop="firmName">
+                <el-input v-if="editing" v-model="priceDetailForm.firmName" />
+                <span v-else>{{ priceDetailForm.firmName }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :span="8">
+              <el-form-item label="报价日期" prop="firmName">
+                <date-picker-plus
+                  v-if="editing"
+                  v-model="priceDetailForm.priceTime"
+                  type="date"
+                  placeholder="选择报价日期"
+                  value-format="YYYY-MM-DD"
+                />
+                <span v-else>
+                  {{ priceDetailForm.priceTime.split(" ")[0] }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :span="8">
+              <el-form-item label="报价商品" prop="goodsName">
+                <el-input v-if="editing" v-model="priceDetailForm.goodsName" />
+                <span v-else>{{ priceDetailForm.goodsName }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :span="8">
+              <el-form-item label="商品规格" prop="spec">
+                <el-input v-if="editing" v-model="priceDetailForm.spec" />
+                <span v-else>{{ priceDetailForm.spec }}</span>
+              </el-form-item>
+            </el-col>
+
+            <el-col :xs="24" :span="8">
+              <el-form-item label="报价金额" prop="price">
+                <el-input
+                  v-if="editing"
+                  v-model="priceDetailForm.price"
+                  type="number"
+                />
+                <span v-else>{{ priceDetailForm.price }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :span="8">
+              <el-form-item label="报价币种" prop="currency">
+                <el-select v-if="editing" v-model="priceDetailForm.currency">
+                  <el-option
+                    v-for="(value, key) in CurrencyEnumMap"
+                    :key="key"
+                    :label="key"
+                    :value="value"
+                  />
+                </el-select>
+                <span v-else>{{ priceDetailForm.currency }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :span="8">
+              <el-form-item label="较上次涨跌幅(%)" prop="change">
+                <el-input
+                  v-if="editing"
+                  v-model="priceDetailForm.change"
+                  type="number"
+                />
+                <span v-else>{{ priceDetailForm.change }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :span="8">
+              <el-form-item label="单位" prop="unit">
+                <el-input v-if="editing" v-model="priceDetailForm.unit" />
+                <span v-else>{{ priceDetailForm.unit }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :span="24">
+              <el-form-item label="报价描述" prop="desc">
+                <el-input v-if="editing" v-model="priceDetailForm.desc" />
+                <span v-else>{{ priceDetailForm.desc }}</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
       </div>
     </div>
     <div v-if="priceDetailForm.id" class="info-card-level1">
@@ -145,6 +236,7 @@ import datePickerPlus from "@/components/ElBasicPlus/datePicker.vue";
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
 import { FormInstance } from "element-plus";
+import { CurrencyEnum, CurrencyEnumMap } from "@/enums/BusinessEnum";
 import sassvariables from "@/styles/variables.module.scss";
 
 const props = defineProps({
@@ -163,29 +255,37 @@ const { id, editing } = toRefs(props);
 
 const priceDetailForm = ref({
   id: null,
-  name: "广投石化",
-  year: "2024",
+  firmName: "广投石化",
+  year: "2024-01-01", // 数据日期
   description: "广投石化有限公司",
-  priceTime: "2024-01-01 12:00:00",
+  priceTime: "2024-01-30",
   asset: "1000",
-  prices: [
-    {
-      name: "甲醇",
-      spec: "99%",
-      firm: "广投石化",
-      price: 1000,
-      unit: "元/吨",
-      change: 0.1,
-    },
-    {
-      name: "乙醇",
-      spec: "99%",
-      firm: "广投石化",
-      price: 2000,
-      unit: "元/吨",
-      change: 0.2,
-    },
-  ] as PriceRecord[],
+  goodsName: "甲醇",
+  spec: "99%",
+  // firm: "广投石化",
+  desc: "一次报价", // 产品信息·报价描述
+  price: 1000,
+  currency: "人民币/CNY", // 币种
+  unit: "元/吨",
+  change: 0.1, // 环比
+  // prices: [
+  //   {
+  //     name: "甲醇",
+  //     spec: "99%",
+  //     firm: "广投石化",
+  //     price: 1000,
+  //     unit: "元/吨",
+  //     change: 0.1,
+  //   },
+  //   {
+  //     name: "乙醇",
+  //     spec: "99%",
+  //     firm: "广投石化",
+  //     price: 2000,
+  //     unit: "元/吨",
+  //     change: 0.2,
+  //   },
+  // ] as PriceRecord[],
 });
 
 // 报价记录类型
@@ -200,7 +300,12 @@ interface PriceRecord {
 }
 
 const rules: Ref<GenericRecord> = ref({
-  name: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
+  goodsName: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
+  year: [{ required: true, message: "请选择数据日期", trigger: "blur" }],
+  currency: [{ required: true, message: "请选择币种", trigger: "blur" }],
+  price: [{ required: true, message: "请输入报价金额", trigger: "blur" }],
+  priceTime: [{ required: true, message: "请选择报价日期", trigger: "blur" }],
+  // unit: [{ required: true, message: "请输入单位", trigger: "blur" }],
 });
 
 /** 新增报价记录 */
@@ -277,29 +382,29 @@ const validateForm = () => {
 const generateRandomData = () => {
   priceDetailForm.value = {
     id: null,
-    name: "广投石化",
-    year: "2024",
+    firmName: "广投石化",
+    year: "2024-01-01", // 数据日期
     description: "广投石化有限公司",
-    priceTime: "2024-01-01 12:00:00",
-    asset: "1000",
-    prices: [
-      {
-        name: "甲醇",
-        spec: "99%",
-        firm: "广投石化",
-        price: 1000,
-        unit: "元/吨",
-        change: 0.1,
-      },
-      {
-        name: "乙醇",
-        spec: "99%",
-        firm: "广投石化",
-        price: 2000,
-        unit: "元/吨",
-        change: 0.2,
-      },
-    ] as PriceRecord[],
+    priceTime: "2024-01-30",
+
+    // prices: [
+    //   {
+    //     name: "甲醇",
+    //     spec: "99%",
+    //     firm: "广投石化",
+    //     price: 1000,
+    //     unit: "元/吨",
+    //     change: 0.1,
+    //   },
+    //   {
+    //     name: "乙醇",
+    //     spec: "99%",
+    //     firm: "广投石化",
+    //     price: 2000,
+    //     unit: "元/吨",
+    //     change: 0.2,
+    //   },
+    // ] as PriceRecord[],
   };
 };
 

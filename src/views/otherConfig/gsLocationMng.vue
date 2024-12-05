@@ -20,6 +20,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @resetFilter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -215,9 +216,12 @@ const rules = ref({
 const submitItemLoading = ref(false);
 const GAS_ENUM_VALUE = 1;
 const STORAGE_ENUM_VALUE = 2;
-const queryParams = {
+const queryParams: {
+  名称: string | undefined;
+  类型集合: number[] | undefined;
+} = {
   名称: undefined,
-  类型: undefined,
+  类型集合: undefined,
 };
 const handleCurrentChange = (currentPage: number) => {
   pagination.value.currentPage = currentPage;
@@ -251,7 +255,7 @@ const handleDeleteRecord = (row: any) => {
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
     label: "类型",
-    prop: "type",
+    prop: "类型",
     value: null,
     options: ["全部", "油库", "加油站"],
     inputType: "select",
@@ -267,7 +271,22 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
 ]);
 const handleConfirmFilter = (filter: any) => {
+  queryParams.名称 = filter.名称;
+  // queryParams.类型 = filter.type === "全部" ? undefined : filter.type;
   console.log(filter);
+  queryParams["类型集合"] = filter.type
+    ? filter.type === "全部"
+      ? undefined
+      : [filter.type]
+    : undefined;
+  initTableData();
+};
+
+const handleResetFilter = () => {
+  queryParams.名称 = undefined;
+  queryParams["类型集合"] = undefined;
+  pagination.value.currentPage = 1;
+  initTableData();
 };
 
 const initTableData = async () => {

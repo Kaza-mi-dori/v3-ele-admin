@@ -140,30 +140,32 @@ const handleGenerateRandomData = () => {
 const converToFrontendFormData = (type: string | null, data: any) => {
   switch (type) {
     case "yearlyReport":
+      const content = data["内容"];
       return {
+        timeDimension: data["类型"],
         year: data["日期"],
         businessDimension: data["业务维度"],
-        profit: data["内容"]["利润金额"],
-        income: data["内容"]["营收金额"],
-        outcoming: data["内容"]["支出金额"],
-        purchaseAmount: data["内容"]["采购金额"],
-        salesAmount: data["内容"]["销售金额"],
-        purchaseContractCount: data["内容"]["采购合同数"],
-        salesContractCount: data["内容"]["销售合同数"],
-        contractCount: data["内容"]["合同总份数"],
-        contractAmount: data["内容"]["合同总金额"],
-        purchaseOrderCount: data["内容"]["采购合同份数"],
-        salesOrderCount: data["内容"]["销售合同份数"],
-        contractFulfilledCount: data["内容"]["合同履行数"],
-        riskContractCount: data["内容"]["风险合同数"],
-        storage: data["内容"]["库存量"],
-        settlementAmount: data["内容"]["结算金额"],
-        settlementCount: data["内容"]["结算数量"],
-        planIncome: data["内容"]["计划营收"],
-        planProfit: data["内容"]["计划利润"],
-        planOutcome: data["内容"]["计划支出"],
-        incomeFulfilledRate: data["内容"]["营收目标完成率"],
-        profitFulfilledRate: data["内容"]["利润目标完成率"],
+        profit: content["利润金额"],
+        income: content["营收金额"],
+        outcoming: content["支出金额"],
+        purchaseAmount: content["采购金额"],
+        salesAmount: content["销售金额"],
+        purchaseContractCount: content["采购合同数"],
+        salesContractCount: content["销售合同数"],
+        contractCount: content["合同总份数"],
+        contractAmount: content["合同总金额"],
+        purchaseOrderCount: content["采购合同份数"],
+        salesOrderCount: content["销售合同份数"],
+        contractFulfilledCount: content["合同履行数"],
+        riskContractCount: content["风险合同数"],
+        storage: content["库存量"],
+        settlementAmount: content["结算金额"],
+        settlementCount: content["结算数量"],
+        planIncome: content["计划营收"],
+        planProfit: content["计划利润"],
+        planOutcome: content["计划支出"],
+        incomeFulfilledRate: content["营收目标完成率"],
+        profitFulfilledRate: content["利润目标完成率"],
         createdBy: data["创建者"],
         createdAt: data["创建时间"],
         updatedBy: data["修改者"],
@@ -172,7 +174,17 @@ const converToFrontendFormData = (type: string | null, data: any) => {
     case "marketPriceReport":
       // 市场价格报表
       return {
-        // 转换数据
+        year: data["日期"],
+        goodsName: data["产品名称"],
+        desc: data["内容"]["产品信息"],
+        priceTime: data["内容"]["报价日期"],
+        price: data["内容"]["报价金额"],
+        currency: data["内容"]["报价币种"],
+        change: data["内容"]["环比"],
+        createdBy: data["创建者"],
+        createdAt: data["创建时间"],
+        updatedBy: data["修改者"],
+        updatedAt: data["修改时间"],
       };
     case "firmMngReport":
       // 企业经营报表
@@ -271,6 +283,7 @@ const convertToBackendData = (type: string | null, data: any) => {
     case "yearlyReport":
       result["日期"] = data.year;
       result["业务维度"] = data.businessDimension;
+      result["类型"] = data.timeDimension;
       result["内容"] = {
         利润金额: data.profit,
         营收金额: data.income,
@@ -297,10 +310,16 @@ const convertToBackendData = (type: string | null, data: any) => {
       // console.log("converted", result);
       return result;
     case "marketPriceReport":
-      return {
-        ...data,
-        // 转换数据
+      result["日期"] = data.year;
+      result["产品名称"] = data.goodsName;
+      result["内容"] = {
+        产品信息: data.desc,
+        报价日期: data.priceTime,
+        报价金额: data.price,
+        报价币种: data.currency,
+        环比: data.change,
       };
+      return result;
     case "firmMngReport":
       result["日期"] = data.year;
       result["企业类型"] = data.name;
@@ -437,12 +456,9 @@ const submitForm = async () => {
             ElMessage.success("提交成功, 正在跳转到列表页");
             setTimeout(() => {
               router.push({
-                name: "yearlyReportMng",
-                query: {
-                  type: "yearlyReport",
-                },
+                name: "YearlyReportMng",
               });
-            }, 1000);
+            }, 500);
           } else {
             ElMessage.success("提交成功");
           }
@@ -467,12 +483,9 @@ const submitForm = async () => {
             ElMessage.success("提交成功, 正在跳转到列表页");
             setTimeout(() => {
               router.push({
-                name: "ReportList",
-                query: {
-                  type: "marketPriceReport",
-                },
+                name: "MarketPriceReportMng",
               });
-            }, 1000);
+            }, 500);
           } else {
             ElMessage.success("提交成功");
           }
@@ -497,12 +510,9 @@ const submitForm = async () => {
             ElMessage.success("提交成功, 正在跳转到列表页");
             setTimeout(() => {
               router.push({
-                name: "ReportList",
-                query: {
-                  type: "firmMngReport",
-                },
+                name: "FirmMngReportMng",
               });
-            }, 1000);
+            }, 500);
           } else {
             ElMessage.success("提交成功");
           }
@@ -527,12 +537,9 @@ const submitForm = async () => {
             ElMessage.success("提交成功, 正在跳转到列表页");
             setTimeout(() => {
               router.push({
-                name: "ReportList",
-                query: {
-                  type: "firmReport",
-                },
+                name: "FirmReportMng",
               });
-            }, 1000);
+            }, 500);
           } else {
             ElMessage.success("提交成功");
           }
@@ -562,7 +569,7 @@ const submitForm = async () => {
               router.push({
                 name: "PartnerReportMng",
               });
-            }, 1000);
+            }, 500);
           } else {
             ElMessage.success("提交成功");
           }
@@ -610,7 +617,7 @@ const submitForm = async () => {
               router.push({
                 name: "PartnerLedgerMng",
               });
-            }, 1000);
+            }, 500);
           } else {
             ElMessage.success("提交成功");
           }
