@@ -27,8 +27,8 @@
     <div class="op-block">
       <el-button type="primary" @click="handleAddRecord">新增数据</el-button>
       <div>
-        <el-button>导出excel</el-button>
-        <el-button>导入excel</el-button>
+        <el-button icon="ArrowUp">导出excel</el-button>
+        <el-button icon="ArrowDown">导入excel</el-button>
         <el-dropdown trigger="click" class="ml-4">
           <el-button>
             更多功能

@@ -406,6 +406,18 @@ const BusinessFormAPI = {
   },
 
   /**
+   * 贸易伙伴报表导入模板获取
+   * @returns 贸易伙伴报表导入模板
+   */
+  getTradePartnersReportFormImportTemplate() {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/ImportTemplate`,
+      method: "get",
+      responseType: "arraybuffer",
+    });
+  },
+
+  /**
    * 市场报价报表新增
    * @param data 市场报价报表
    * @returns

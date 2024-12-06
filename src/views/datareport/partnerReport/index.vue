@@ -28,8 +28,13 @@
     <div class="op-block">
       <el-button type="primary" @click="handleAddRecord">新增数据</el-button>
       <div>
-        <el-button>导出excel</el-button>
-        <el-button>导入excel</el-button>
+        <el-button icon="ArrowUp">导出excel</el-button>
+        <el-button icon="Download" @click="handleGetExcelTemplate">
+          获取excel模板
+        </el-button>
+        <el-button icon="ArrowDown" @click="handleImportExcel">
+          导入excel
+        </el-button>
         <el-dropdown trigger="click" class="ml-4">
           <el-button>
             更多功能
@@ -150,6 +155,8 @@
       @current-change="handleCurrentChange"
     />
     <!-- 底部操作区 -->
+    <!-- 导入excel -->
+    <importExcelDialog ref="importExcelDialogRef" />
   </div>
 </template>
 
@@ -158,6 +165,7 @@ import Filter from "@/components/Business/filter.vue";
 import SearchBar from "@/components/CustomComponent/SearchBar.vue";
 import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
+import importExcelDialog from "@/components/Dialogs/importExcelDialog.vue";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
@@ -165,6 +173,7 @@ import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { handleDeleteRow, handleAuditRow } from "@/hooks/useTableOp";
 import { onMounted } from "vue";
+
 const router = useRouter();
 
 type IExampleData = business.IAuditableEntity<Partial<business.IGoods>>;
@@ -179,6 +188,7 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   页容量: 20,
 });
 
+const importExcelDialogRef = ref<InstanceType<typeof importExcelDialog>>();
 const loading: Ref<boolean> = ref(false);
 const exampleData: Ref<IExampleData[]> = ref([
   {
@@ -327,7 +337,7 @@ const handleResetFilter = () => {
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res = await BusinessFormAPI.getTradePartnersReportFormList(
+    const res: any = await BusinessFormAPI.getTradePartnersReportFormList(
       queryForm.value
     );
     tableData.value = res["当前记录"];
@@ -344,7 +354,32 @@ const handleExportExcel = () => {
 };
 
 const handleImportExcel = () => {
-  console.log("导入excel");
+  // console.log("导入excel");
+  importExcelDialogRef.value?.open();
+};
+
+/**
+ * 获取excel模板
+ */
+const handleGetExcelTemplate = () => {
+  BusinessFormAPI.getTradePartnersReportFormImportTemplate().then(
+    (res: any) => {
+      const fileName = decodeURI(
+        res.headers["content-disposition"].split(";")[1].split("=")[1]
+      );
+      const fileType =
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8";
+      const blob = new Blob([res.data], {
+        type: fileType,
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  );
 };
 
 const handleAddRecord = () => {

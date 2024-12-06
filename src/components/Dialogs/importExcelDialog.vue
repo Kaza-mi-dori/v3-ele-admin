@@ -32,13 +32,14 @@ const open = () => {
   dialogVisible.value = true;
 };
 
-defineExpose({
-  open,
-});
-
 const handleClose = () => {
   dialogVisible.value = false;
 };
+
+defineExpose({
+  open,
+  handleClose,
+});
 </script>
 
 <style lang="scss" scoped></style>

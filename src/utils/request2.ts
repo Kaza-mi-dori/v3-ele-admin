@@ -52,7 +52,6 @@ service.interceptors.response.use(
     ) {
       return response;
     }
-
     // 将标志、消息、代码、对象、时间戳解构出来分别对应 flag、msg、code、data、timestamp
 
     // const { code, data, msg } = response.data;
