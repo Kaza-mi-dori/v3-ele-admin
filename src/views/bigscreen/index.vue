@@ -6,11 +6,7 @@
         <div class="header-left header-left-right">
           <!-- 使用计算属性显示前一半元素 -->
           <div v-for="item in businessTypeArrLeft" :key="item.id">
-            <div
-              class="type-item"
-              :class="{ active: selectedTypeId === item.id }"
-              @click="handleType(item)"
-            >
+            <div class="type-item" @click="handleType(item)">
               {{ item.label }}
             </div>
           </div>
@@ -21,11 +17,7 @@
         <div class="header-right header-left-right">
           <!-- 使用计算属性显示后一半元素 -->
           <div v-for="item in businessTypeArrRight" :key="item.id">
-            <div
-              class="type-item"
-              :class="{ active: selectedTypeId === item.id }"
-              @click="handleType(item)"
-            >
+            <div class="type-item" @click="handleType(item)">
               {{ item.label }}
             </div>
           </div>
@@ -47,10 +39,7 @@ import { businessTypes, navItem } from "./components/constants";
 
 const businessTypeArr = ref<navItem[]>(businessTypes);
 
-const selectedTypeId = ref<number | null>(null); // 当前选中item
-
 const handleType = (item: any) => {
-  selectedTypeId.value = item.id;
   const businessName = item.name;
   const route = router.resolve({
     name: "Business",
@@ -227,7 +216,7 @@ onMounted(() => {
     color: #d6dde6;
     font-size: 14px;
     cursor: pointer;
-    &.active {
+    &:hover {
       background-image: url(./img/nav2.png);
     }
   }
