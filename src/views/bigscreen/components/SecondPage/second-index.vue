@@ -52,12 +52,12 @@ onMounted(() => {
     flex: 1;
     display: flex;
     justify-content: center;
+    align-items: center;
     background-image: url(../../img/tit_bg.png);
     background-repeat: no-repeat;
     background-size: 80% 100%;
     background-position: center;
     .__title--text {
-      margin: auto 0;
       font-size: 2rem;
       letter-spacing: 6px;
       font-weight: bold;
