@@ -232,14 +232,4 @@ onMounted(() => {
   }
   scrollbar-width: none;
 }
-@keyframes light-up {
-  0% {
-    left: 0;
-    opacity: 0.4;
-  }
-  100% {
-    left: 84%;
-    opacity: 0;
-  }
-}
 </style>
