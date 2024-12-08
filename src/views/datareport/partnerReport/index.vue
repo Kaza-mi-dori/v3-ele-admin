@@ -28,7 +28,9 @@
     <div class="op-block">
       <el-button type="primary" @click="handleAddRecord">新增数据</el-button>
       <div>
-        <el-button icon="ArrowUp">导出excel</el-button>
+        <el-button icon="ArrowUp" @click="handleExportExcel">
+          导出excel
+        </el-button>
         <el-button icon="Download" @click="handleGetExcelTemplate">
           获取excel模板
         </el-button>
@@ -156,7 +158,11 @@
     />
     <!-- 底部操作区 -->
     <!-- 导入excel -->
-    <importExcelDialog ref="importExcelDialogRef" />
+    <importExcelDialog
+      ref="importExcelDialogRef"
+      :upload-url="uploadUrl"
+      :headers="uploadHeaders"
+    />
   </div>
 </template>
 
@@ -173,8 +179,15 @@ import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { handleDeleteRow, handleAuditRow } from "@/hooks/useTableOp";
 import { onMounted } from "vue";
+import { getToken } from "@/utils/auth";
 
 const router = useRouter();
+
+const uploadUrl =
+  import.meta.env.VITE_APP_BASE_API + "/excel/PartnerReportImport";
+const uploadHeaders = {
+  Authorization: getToken(),
+};
 
 type IExampleData = business.IAuditableEntity<Partial<business.IGoods>>;
 
@@ -351,8 +364,30 @@ const initTableData = async () => {
 
 const handleExportExcel = () => {
   console.log("导出excel");
+  BusinessFormAPI.exportTradePartnersReportForm({
+    日期: undefined,
+  }).then((res: any) => {
+    const fileName = decodeURI(
+      res.headers["content-disposition"].split(";")[1].split("=")[1]
+    );
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8";
+    const blob = new Blob([res.data], {
+      type: fileType,
+    });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  });
 };
 
+/**
+ * 导入excel，具体逻辑在子组件中实现
+ *
+ **/
 const handleImportExcel = () => {
   // console.log("导入excel");
   importExcelDialogRef.value?.open();

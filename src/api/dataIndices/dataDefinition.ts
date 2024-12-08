@@ -11,11 +11,7 @@ export const DataDefinitionAPI = {
   getAllDataDefinition: () => {
     return request2({
       url: `${BASE_URL}/GetAllDefinitionType`,
-      method: "post",
-      data: {
-        页码: 1,
-        页容量: 1000,
-      },
+      method: "get",
     });
   },
   /**

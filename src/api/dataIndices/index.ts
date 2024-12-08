@@ -31,7 +31,7 @@ export const DataIndicesAPI = {
 
   /**
    * 新增数据指标
-   * @param data
+   * @param data 新增数据指标信息(数组)
    */
   addDataIndicesInBatch: (data: any) => {
     return request2({

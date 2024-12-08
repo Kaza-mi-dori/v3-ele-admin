@@ -225,7 +225,7 @@ const handleViewDetail = (row: any) => {
     name: "ReportForm",
     query: {
       id: row.id,
-      type: "yearlyReport",
+      type: "firmMngReport",
     },
   });
 };
