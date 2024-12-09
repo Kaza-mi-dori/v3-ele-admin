@@ -1,4 +1,6 @@
 import request2 from "@/utils/request2";
+import request from "@/utils/request";
+import { pa } from "element-plus/es/locale";
 
 const BUSINESS_FORM_BASE_URL = "/Api/Business";
 
@@ -384,11 +386,17 @@ const BusinessFormAPI = {
    * @param data 查询条件
    * @returns 贸易伙伴报表列表
    */
-  exportTradePartnersReportForm(data: any) {
-    return request2({
-      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/Export`,
-      method: "get",
-      data,
+  exportTradePartnersReportForm(params: any) {
+    // return request2({
+    //   url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/Export`,
+    //   method: "get",
+    //   params,
+    // });
+    return request({
+      url: `/excel/PartnerReportExport`,
+      method: "post",
+      data: params,
+      responseType: "arraybuffer",
     });
   },
 
@@ -398,10 +406,32 @@ const BusinessFormAPI = {
    * @returns 贸易伙伴报表列表
    */
   importTradePartnersReportForm(data: any) {
-    return request2({
-      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/Import`,
+    // return request2({
+    //   url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/Import`,
+    //   method: "post",
+    //   data,
+    // });
+    return request({
+      url: `/excel/PartnerReportImport`,
       method: "post",
       data,
+    });
+  },
+
+  /**
+   * 贸易伙伴报表导入模板获取
+   * @returns 贸易伙伴报表导入模板
+   */
+  getTradePartnersReportFormImportTemplate() {
+    // return request2({
+    //   url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/ImportTemplate`,
+    //   method: "get",
+    //   responseType: "arraybuffer",
+    // });
+    return request({
+      url: `/excel/PartnerReportImportTemplate`,
+      method: "get",
+      responseType: "arraybuffer",
     });
   },
 

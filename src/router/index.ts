@@ -344,7 +344,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: "综合管理2",
-      icon: "Setting",
+      icon: "setting",
     },
     redirect: "/otherMng/mapElementMng",
     children: [
@@ -354,6 +354,37 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/otherConfig/gsLocationMng.vue"),
         meta: {
           title: "地图元素管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "dataDefinitionMng",
+        name: "DataDefinitionMng",
+        component: () => import("@/views/otherConfig/dataDefinitionMng.vue"),
+        meta: {
+          title: "数据定义管理",
+          icon: "el-icon-coin",
+        },
+      },
+    ],
+  },
+  // 数据看板
+  {
+    path: "/dataBoard",
+    name: "DataBoard",
+    component: Layout,
+    meta: {
+      title: "数据看板",
+      icon: "el-icon-s-data",
+    },
+    redirect: "/marketData",
+    children: [
+      {
+        path: "marketData",
+        name: "MarketData",
+        component: () => import("@/views/databoard/index.vue"),
+        meta: {
+          title: "数据看板",
           icon: "el-icon-coin",
         },
       },

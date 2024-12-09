@@ -32,8 +32,8 @@
         <el-button type="primary" @click="handleAddRecord">新增</el-button>
       </div>
       <div>
-        <el-button>导出excel</el-button>
-        <el-button>导入excel</el-button>
+        <el-button icon="ArrowUp">导出excel</el-button>
+        <el-button icon="ArrowDown">导入excel</el-button>
         <el-popover
           v-model:visible.sync="popoverVisible"
           placement="bottom"

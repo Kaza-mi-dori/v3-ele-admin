@@ -3,13 +3,13 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">地图节点</div>
+      <div class="__title">数据定义</div>
       <div class="__stat">
-        <span class="__item">当前共有</span>
+        <span class="__item">当前共定义了</span>
         <span class="__item">
           <span>
             <span class="text-red-5 mr-2">{{ pagination.total }}</span>
-            <span>个节点</span>
+            <span>个数据</span>
           </span>
         </span>
       </div>
@@ -123,31 +123,61 @@
     />
     <!-- 底部操作区 -->
     <!-- 新增弹窗 -->
-    <el-dialog v-model="dialogVisible" title="新增配置点" width="30%" center>
-      <el-form ref="itemFormRef" :model="itemForm" :rules="rules">
+    <el-dialog v-model="dialogVisible" title="新增数据定义" width="30%" center>
+      <el-form
+        ref="itemFormRef"
+        :model="itemForm"
+        :rules="rules"
+        label-position="left"
+        label-width="120px"
+      >
         <el-form-item label="类别" prop="type">
-          <el-select v-model="itemForm.type" placeholder="请选择">
-            <el-option label="加油站" :value="GAS_ENUM_VALUE" />
-            <el-option label="油库" :value="STORAGE_ENUM_VALUE" />
+          <el-select v-model="itemForm.type" disabled placeholder="请选择">
+            <el-option label="其他数据" value="其他数据" />
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input
             v-model="itemForm.name"
-            placeholder="请输入名称, 大屏上将显示这里的内容"
+            placeholder="请输入数据大类名称(例如：市场日数据)"
+          />
+        </el-form-item>
+        <el-form-item label="数据细分名称1" prop="name2">
+          <el-input
+            v-model="itemForm.name2"
+            placeholder="请输入数据细分名称(例如: 原油价格)"
+          />
+        </el-form-item>
+        <el-form-item label="数据细分名称2" prop="name3">
+          <el-input
+            v-model="itemForm.name3"
+            placeholder="请输入数据细分名称(例如: 中海油报价)"
+          />
+        </el-form-item>
+        <el-form-item label="单位" prop="unit">
+          <el-input
+            v-model="itemForm.unit"
+            placeholder="请输入单位，如：元/吨"
+          />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="itemForm.status" placeholder="请选择">
+            <el-option label="正常" value="正常" />
+            <el-option label="停用" value="停用" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="显示顺序" prop="order">
+          <el-input
+            v-model="itemForm.order"
+            type="number"
+            placeholder="请输入显示顺序"
           />
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input
             v-model="itemForm.description"
-            placeholder="请输入描述, 大屏上将显示这里的内容"
-          />
-        </el-form-item>
-        <el-form-item v-if="itemForm.id" label="坐标" prop="location">
-          <el-input
-            v-model="itemForm.location"
-            disabled
-            placeholder="在大屏地图上的坐标"
+            type="textarea"
+            placeholder="请输入描述"
           />
         </el-form-item>
       </el-form>
@@ -172,13 +202,12 @@ import Filter from "@/components/Business/filter.vue";
 import SearchBar from "@/components/CustomComponent/SearchBar.vue";
 import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
-import { GsLocationAPI } from "@/api/config/gsLocation";
+import { DataDefinitionAPI } from "@/api/dataIndices/dataDefinition";
 import { onMounted } from "vue";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { ElMessage, ElForm } from "element-plus";
 import { useRouter } from "vue-router";
-import { id } from "element-plus/es/locale";
 
 const router = useRouter();
 
@@ -201,17 +230,30 @@ const pagination: Ref<any> = ref({
 });
 const dialogVisible = ref(false);
 const itemForm = ref({
-  id: null,
-  type: undefined,
-  name: "",
-  description: "",
-  location: "",
+  id: undefined,
+  /** 类型 */
+  type: "其他数据",
+  /** 状态 */
+  status: "正常",
+  /** 显示顺序 */
+  order: 1,
+  /** 名称1 */
+  name: undefined,
+  /** 名称2 */
+  name2: undefined,
+  /** 名称3 */
+  name3: undefined,
+  /** 单位 */
+  unit: undefined,
+  /** 描述 */
+  description: undefined,
 });
 const itemFormRef = ref<InstanceType<typeof ElForm>>();
 const rules = ref({
   type: [{ required: true, message: "请选择类别", trigger: "blur" }],
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
-  description: [{ required: true, message: "请输入描述", trigger: "blur" }],
+  unit: [{ required: true, message: "请输入单位", trigger: "blur" }],
+  // description: [{ required: true, message: "请输入描述", trigger: "blur" }],
 });
 const submitItemLoading = ref(false);
 const GAS_ENUM_VALUE = 1;
@@ -233,19 +275,27 @@ const handleUpdateDetail = (row: any) => {
   dialogVisible.value = true;
   itemForm.value = {
     id: row.id,
-    type: row.类型 === "加油站" ? GAS_ENUM_VALUE : STORAGE_ENUM_VALUE,
-    name: row.名称,
-    description: row.描述,
-    location: row.坐标,
+    type: row["类型"],
+    status: row["状态"],
+    order: row["显示顺序"],
+    name: row["名称"],
+    name2: row["名称2"],
+    name3: row["名称3"],
+    description: row["描述"],
+    unit: row["单位"],
   };
 };
 const handleAddRecord = () => {
   itemForm.value = {
-    id: null,
-    type: null,
-    name: "",
-    description: "",
-    location: "",
+    id: undefined,
+    type: "其他数据",
+    name: undefined,
+    name2: undefined,
+    name3: undefined,
+    status: "正常",
+    unit: undefined,
+    order: 1,
+    description: undefined,
   };
   dialogVisible.value = true;
 };
@@ -291,12 +341,12 @@ const handleResetFilter = () => {
 
 const initTableData = async () => {
   loading.value = true;
-  const params = {
-    ...queryParams,
-    页码: pagination.value.currentPage,
-    页容量: pagination.value.pageSize,
-  };
-  const res: any = await GsLocationAPI.getMapElementList(params);
+  // const params = {
+  //   ...queryParams,
+  //   页码: pagination.value.currentPage,
+  //   页容量: pagination.value.pageSize,
+  // };
+  const res: any = await DataDefinitionAPI.getAllDataDefinition();
   tableData.value = res["当前记录"];
   pagination.value.total = res["记录总数"];
   loading.value = false;
@@ -308,25 +358,33 @@ const onSubmitItemForm = async () => {
       submitItemLoading.value = true;
       const submitData = {
         id: itemForm.value.id,
+        类型: itemForm.value.type,
         名称: itemForm.value.name,
+        名称2: itemForm.value.name2,
+        名称3: itemForm.value.name3,
+        状态: itemForm.value.status,
+        单位: itemForm.value.unit,
         描述: itemForm.value.description,
-        坐标: itemForm.value.location,
-        类型: itemForm.value.type === GAS_ENUM_VALUE ? "加油站" : "油库",
+        显示顺序: itemForm.value.order,
       };
       const op = itemForm.value.id
-        ? GsLocationAPI.updateMapElement
-        : GsLocationAPI.addMapElement;
+        ? DataDefinitionAPI.updateDataDefinition
+        : DataDefinitionAPI.addDataDefinition;
       const res = await op(submitData);
       ElMessage.success("操作成功");
       dialogVisible.value = false;
       initTableData();
       submitItemLoading.value = false;
       itemForm.value = {
-        id: null,
-        location: "",
-        type: null,
-        name: "",
-        description: "",
+        id: undefined,
+        type: "其他数据",
+        name: undefined,
+        name2: undefined,
+        name3: undefined,
+        status: "正常",
+        unit: undefined,
+        order: 1,
+        description: undefined,
       };
     }
   });

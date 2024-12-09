@@ -27,8 +27,8 @@
         <el-button type="primary" @click="handleAddRecord">新增</el-button>
       </div>
       <div>
-        <el-button>导出excel</el-button>
-        <el-button>导入excel</el-button>
+        <el-button icon="ArrowUp">导出excel</el-button>
+        <el-button icon="ArrowDown">导入excel</el-button>
         <el-dropdown class="ml-2">
           <el-button>
             更多功能
