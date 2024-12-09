@@ -17,10 +17,11 @@ export const DataDefinitionAPI = {
   /**
    * 获取数据定义列表
    */
-  getDataDefinitionList: () => {
+  getDataDefinitionList: (data: any) => {
     return request2({
       url: `${BASE_URL}/Query`,
       method: "post",
+      data,
     });
   },
 

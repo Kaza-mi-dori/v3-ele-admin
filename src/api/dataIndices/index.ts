@@ -1,5 +1,4 @@
 import request2 from "@/utils/request2";
-import { write } from "fs";
 
 const BASE_URL = "/Api/Business/IntegratedData";
 
@@ -22,10 +21,11 @@ export const DataIndicesAPI = {
   /**
    * 获取数据指标列表
    */
-  getDataIndicesList: () => {
+  getDataIndicesList: (data: any) => {
     return request2({
       url: `${BASE_URL}/QueryIntegratedData`,
       method: "post",
+      data,
     });
   },
 
@@ -65,12 +65,12 @@ export const DataIndicesAPI = {
   },
 
   /**获取导入模板 */
-  getImportTemplate: (params: { 标识集合: string[] }) => {
+  getImportTemplate: (params: string[]) => {
     return request2({
       url: `${BASE_URL}/GetIntegratedDataTemplate`,
       method: "get",
       params: {
-        标识集合: params.标识集合.join(","), // 将数组转换为字符串
+        标识集合: params.join(","), // 将数组转换为字符串
       },
       responseType: "blob",
     });

@@ -10,6 +10,7 @@
       v-if="fileList.length === 0"
       v-model:file-list="fileList"
       drag
+      :name="props.uploadName"
       :show-file-list="false"
       :action="props.uploadUrl"
       :headers="props.headers"
@@ -71,13 +72,19 @@
       @current-change="handleCurrentChange"
     />
     <!-- 按钮 -->
+    <div class="flex justify-end mt-4">
+      <el-button @click="handleClose">取消</el-button>
+      <el-button type="primary" @click="handleSubmit">提交</el-button>
+    </div>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, defineExpose, defineProps } from "vue";
 import { ElMessageBox, ElMessage, UploadFiles } from "element-plus";
+import { getToken } from "@/utils/auth2";
 
+const emit = defineEmits(["submit"]);
 const props = defineProps({
   uploadUrl: {
     type: String,
@@ -86,7 +93,19 @@ const props = defineProps({
   headers: {
     type: Object,
     required: false,
-    default: () => ({}),
+    default: () => ({
+      "Gtzn-Token": getToken(),
+    }),
+  },
+  uploadName: {
+    type: String,
+    required: false,
+    default: "file",
+  },
+  devType: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 
@@ -94,20 +113,32 @@ const fileList = ref<UploadFiles>([]);
 const tableData = ref<any[]>([]);
 const currentPage = ref<number>(1);
 const pageSize = ref<number>(10);
+const submitLoading = ref<boolean>(false);
 
 const dialogVisible = ref<boolean>(false);
 
 const open = () => {
-  console.log("open");
   dialogVisible.value = true;
 };
 
 const handleSuccess = (response: any, file: any) => {
-  const data = response.data;
-  if (Array.isArray(data)) {
-    tableData.value = data;
+  console.log(response);
+  if (response.data) {
+    // 后端1
+    const data = response.data;
+    if (Array.isArray(data)) {
+      tableData.value = data;
+    } else {
+      ElMessage.error("解析数据失败，请检查文件格式是否正确！");
+    }
   } else {
-    ElMessage.error("解析数据失败，请检查文件格式是否正确！");
+    // 后端2
+    const data: any = response["对象"];
+    if (Array.isArray(data)) {
+      tableData.value = data;
+    } else {
+      ElMessage.error("解析数据失败，请检查文件格式是否正确！");
+    }
   }
 };
 
@@ -145,12 +176,25 @@ const handleRemove = (file: any, fileList: any) => {
 };
 
 const handleClose = () => {
+  fileList.value = [];
+  tableData.value = [];
+  currentPage.value = 1;
+  submitLoading.value = false;
   dialogVisible.value = false;
+};
+
+const handleSubmit = () => {
+  emit("submit", tableData.value);
+};
+
+const setSubmitLoading = (loading: boolean) => {
+  submitLoading.value = loading;
 };
 
 defineExpose({
   open,
   handleClose,
+  setSubmitLoading,
 });
 </script>
 
@@ -163,6 +207,7 @@ defineExpose({
     padding: 10px;
     cursor: pointer;
     .uploaded-item-name {
+      color: blue;
       flex: 1;
     }
     .uploaded-item-action {

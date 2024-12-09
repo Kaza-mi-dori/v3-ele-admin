@@ -8,7 +8,7 @@
         <span class="__item">当前共定义了</span>
         <span class="__item">
           <span>
-            <span class="text-red-5 mr-2">{{ pagination.total }}</span>
+            <span class="text-red-5 mr-2">{{ pagination.total || 0 }}</span>
             <span>个数据</span>
           </span>
         </span>
@@ -87,13 +87,35 @@
       >
         <template v-slot="scope">
           <el-link type="primary" @click="handleUpdateDetail(scope.row)">
-            {{ scope.row.名称 }}
+            {{ scope.row.名称1 || "-" }}
           </el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="描述" label="描述" sortable>
+      <el-table-column
+        prop="名称2"
+        label="名称2"
+        width="150"
+        align="center"
+        sortable
+      >
         <template v-slot="scope">
-          <span>{{ scope.row.描述 }}</span>
+          <span>{{ scope.row.名称2 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="名称"
+        label="名称3"
+        width="150"
+        align="center"
+        sortable
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.名称3 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="描述" label="描述" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.描述 || "-" }}</span>
         </template>
       </el-table-column>
 
@@ -278,7 +300,7 @@ const handleUpdateDetail = (row: any) => {
     type: row["类型"],
     status: row["状态"],
     order: row["显示顺序"],
-    name: row["名称"],
+    name: row["名称1"],
     name2: row["名称2"],
     name3: row["名称3"],
     description: row["描述"],
@@ -341,12 +363,12 @@ const handleResetFilter = () => {
 
 const initTableData = async () => {
   loading.value = true;
-  // const params = {
-  //   ...queryParams,
-  //   页码: pagination.value.currentPage,
-  //   页容量: pagination.value.pageSize,
-  // };
-  const res: any = await DataDefinitionAPI.getAllDataDefinition();
+  const params = {
+    ...queryParams,
+    页码: pagination.value.currentPage,
+    页容量: pagination.value.pageSize,
+  };
+  const res: any = await DataDefinitionAPI.getDataDefinitionList(params);
   tableData.value = res["当前记录"];
   pagination.value.total = res["记录总数"];
   loading.value = false;
@@ -359,7 +381,7 @@ const onSubmitItemForm = async () => {
       const submitData = {
         id: itemForm.value.id,
         类型: itemForm.value.type,
-        名称: itemForm.value.name,
+        名称1: itemForm.value.name,
         名称2: itemForm.value.name2,
         名称3: itemForm.value.name3,
         状态: itemForm.value.status,
@@ -388,6 +410,10 @@ const onSubmitItemForm = async () => {
       };
     }
   });
+};
+
+const onClickName = () => {
+  dialogVisible.value = true;
 };
 
 onMounted(() => {
