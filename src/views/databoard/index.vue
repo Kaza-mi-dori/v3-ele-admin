@@ -4,12 +4,16 @@
       <div class="__title">体系概览</div>
     </div> -->
     <div class="mb-4 bg-white p-10px shadow-coolGray-100">
-      <el-button v-model:disabled="notAllowedToAddPeer">同级新增</el-button>
-      <el-button v-model:disabled="notAllowedToAddSub">下级新增</el-button>
+      <el-button v-model:disabled="notAllowedToAddPeer" @click="handleAddNode">
+        同级新增
+      </el-button>
+      <!-- <el-button v-model:disabled="notAllowedToAddSub" @click="handleAddNode">
+        下级新增
+      </el-button> -->
     </div>
     <div class="flex">
-      <div class="bg-white p-10px shadow-coolGray-100 max-w-250px">
-        <el-input
+      <div class="bg-white p-10px shadow-coolGray-100 max-w-300px">
+        <!-- <el-input
           v-model="searchValue"
           search-icon="el-icon-search"
           class="mb-10px"
@@ -18,9 +22,10 @@
           clearable
           @clear="handleClear"
           @input="handleInput"
-        />
+        /> -->
         <el-tree
           class="w-full"
+          default-expand-all
           :data="data"
           :props="defaultProps"
           @node-click="handleNodeClick"
@@ -58,6 +63,11 @@
                 <span>{{ infoForm.unit }}</span>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="数据标识">
+                <span>{{ infoForm.no }}</span>
+              </el-form-item>
+            </el-col>
           </el-form>
         </div>
         <div class="info-card-level1 ml-20px">
@@ -73,6 +83,53 @@
             <span>最近数据</span>
           </div>
           <div class="__content">
+            <!-- 表格操作区 -->
+            <div class="op-block">
+              <el-button
+                type="primary"
+                :disabled="!activeIndex"
+                @click="handleAddRecord"
+              >
+                新增数据
+              </el-button>
+              <div>
+                <el-button
+                  icon="ArrowUp"
+                  :disabled="!activeIndex"
+                  @click="handleExportExcel"
+                >
+                  导出excel
+                </el-button>
+                <el-button
+                  icon="Download"
+                  :disabled="!activeIndex"
+                  @click="() => handleGetExcelTemplate"
+                >
+                  获取excel模板
+                </el-button>
+                <el-button icon="ArrowDown" @click="handleImportExcel">
+                  导入excel
+                </el-button>
+                <el-dropdown trigger="click" class="ml-4">
+                  <el-button>
+                    更多功能
+                    <el-icon>
+                      <ArrowDown />
+                    </el-icon>
+                  </el-button>
+                  <template v-slot:dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item
+                        :disabled="!activeIndex"
+                        @click="handleBatchDelete"
+                      >
+                        <span class="text-red-5">批量删除</span>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </div>
+            </div>
             <el-table
               :data="latestData"
               stripe
@@ -80,134 +137,236 @@
               class="w-full"
               element-loading-text="拼命加载中"
             >
-              <el-table-column prop="no" label="编号">
+              <!-- <el-table-column prop="no" label="编号" width="80" align="center">
                 <template v-slot="{ row }">
-                  <a>{{ row.no }}</a>
+                  <el-link
+                    type="primary"
+                    underline
+                    class="cursor-pointer"
+                    @click="handleEditRecord(row)"
+                  >
+                    #{{ row.id }}
+                  </el-link>
                 </template>
-              </el-table-column>
+              </el-table-column> -->
+              <!-- 日期、值 -->
               <el-table-column
-                v-for="prop in infoForm.props"
-                :key="prop.prop"
-                :prop="prop.prop"
-                :label="prop.label + (prop.unit ? `(${prop.unit})` : '')"
-              >
-                <template v-slot="{ row }">
-                  <span>{{ row[prop.prop] }}</span>
-                </template>
-              </el-table-column>
+                prop="时间"
+                label="时间"
+                align="center"
+                sortable
+              />
+              <el-table-column prop="数据" label="数据值" align="center" />
             </el-table>
           </div>
         </div>
       </div>
     </div>
+    <!-- 数据编辑弹窗 -->
+    <el-dialog
+      v-model="dialogVisible"
+      :title="activeRow.id ? '编辑数据' : '新增数据'"
+      width="500px"
+      label-width="100px"
+    >
+      <el-form
+        ref="dataForm"
+        :rules="singleDataRules"
+        :model="activeRow"
+        label-position="top"
+        class="g-form-1"
+      >
+        <el-form-item label="标识">
+          <el-input v-model="activeIndex.no" disabled />
+        </el-form-item>
+        <el-form-item label="单位">
+          <el-input v-model="activeIndex.unit" disabled />
+        </el-form-item>
+        <el-form-item label="数据时间">
+          <el-date-picker
+            v-model="activeRow.date"
+            type="datetime"
+            placeholder="选择数据时间，如无精确时间统一选择00:00:00"
+            valueFormat="YYYY-MM-DD HH:mm:ss"
+            style="width: 100%"
+          />
+        </el-form-item>
+        <el-form-item label="数据值">
+          <el-input v-model="activeRow.value" type="number" />
+        </el-form-item>
+      </el-form>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <el-button @click="handleCancelEditData">取 消</el-button>
+          <el-button type="primary" @click="handleSubmitSingleData">
+            确 定
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 导入excel弹窗 -->
+    <importExcelDialog
+      ref="importExcelDialogRef"
+      :upload-url="uploadExcelUrl"
+      :upload-name="'Excel文件'"
+      @submit="handleSubmitDataInBatch"
+    />
+    <!-- 新增定义弹窗 -->
+    <el-dialog
+      v-model="definitionDialogVisible"
+      title="新增数据定义"
+      width="30%"
+      center
+    >
+      <el-form
+        ref="definitionFormRef"
+        :model="definitionForm"
+        :rules="definitionRules"
+        label-position="left"
+        label-width="120px"
+      >
+        <el-form-item label="类别" prop="type">
+          <el-select
+            v-model="definitionForm.type"
+            disabled
+            placeholder="请选择"
+          >
+            <el-option label="其他数据" value="其他数据" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="名称" prop="name">
+          <el-input
+            v-model="definitionForm.name"
+            placeholder="请输入数据大类名称(例如：市场日数据)"
+          />
+        </el-form-item>
+        <el-form-item label="数据细分名称1" prop="name2">
+          <el-input
+            v-model="definitionForm.name2"
+            placeholder="请输入数据细分名称(例如: 原油价格)"
+          />
+        </el-form-item>
+        <el-form-item label="数据细分名称2" prop="name3">
+          <el-input
+            v-model="definitionForm.name3"
+            placeholder="请输入数据细分名称(例如: 中海油报价)"
+          />
+        </el-form-item>
+        <el-form-item label="单位" prop="unit">
+          <el-input
+            v-model="definitionForm.unit"
+            placeholder="请输入单位，如：元/吨"
+          />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="definitionForm.status" placeholder="请选择">
+            <el-option label="正常" value="正常" />
+            <el-option label="停用" value="停用" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="显示顺序" prop="order">
+          <el-input
+            v-model="definitionForm.order"
+            type="number"
+            placeholder="请输入显示顺序"
+          />
+        </el-form-item>
+        <el-form-item label="描述" prop="description">
+          <el-input
+            v-model="definitionForm.description"
+            type="textarea"
+            placeholder="请输入描述"
+          />
+        </el-form-item>
+      </el-form>
+      <template v-slot:footer>
+        <span class="dialog-footer">
+          <el-button @click="definitionDialogVisible = false">取 消</el-button>
+          <el-button
+            type="primary"
+            :loading="submitDefinitionLoading"
+            @click="onSubmitDefinitionForm"
+          >
+            确 定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import importExcelDialog from "@/components/Dialogs/importExcelDialog.vue";
 import { ref, onMounted } from "vue";
 import { DataIndicesAPI } from "@/api/dataIndices";
 import { DataDefinitionAPI } from "@/api/dataIndices/dataDefinition";
 import * as echarts from "echarts";
 
 const chartRef = shallowRef<echarts.ECharts | null>();
+const treeLoading = ref(false);
+const uploadExcelUrl =
+  import.meta.env.VITE_APP_API_URL_DEV +
+  "/Api/Business/IntegratedData/GetExcelData";
 
-const data = ref([
-  {
-    label: "泛微",
-    children: [
-      {
-        label: "项目",
-        children: [
-          {
-            label: "#A001",
-            children: [
-              {
-                label: "#A001-01",
-              },
-              {
-                label: "#A001-02",
-              },
-            ],
-          },
-          {
-            label: "订单",
-            children: [
-              {
-                label: "#A002-01",
-              },
-              {
-                label: "#A002-02",
-              },
-            ],
-          },
-          {
-            label: "产品",
-            children: [
-              {
-                label: "#A003-01",
-              },
-              {
-                label: "#A003-02",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        label: "流程",
-        children: [
-          {
-            label: "#A004",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: "钉钉",
-    children: [
-      {
-        label: "合同流程",
-      },
-      {
-        label: "提货流程",
-      },
-      {
-        label: "卸货流程",
-      },
-      {
-        label: "付款流程",
-      },
-    ],
-  },
-  {
-    label: "库区ERP",
-    children: [
-      {
-        label: "卸船",
-        children: [
-          {
-            label: "卸船记录表",
-          },
-          {
-            label: "卸船作业流水表",
-          },
-        ],
-      },
-      {
-        label: "装车",
-        children: [
-          {
-            label: "装车作业表",
-          },
-          {
-            label: "月度作业流水表",
-          },
-        ],
-      },
-    ],
-  },
-]);
+/** 单个指标的页码 */
+const dataPagination = ref({
+  currentPage: 1,
+  pageSize: 10,
+  total: 0,
+});
+/** 单个指标数据表格加载状态 */
+const tableLoading = ref(false);
+/** 单个指标数据规则 */
+const singleDataRules = ref({
+  date: [{ required: true, message: "请选择日期", trigger: "blur" }],
+  value: [{ required: true, message: "请输入数据值", trigger: "blur" }],
+});
+const dataForm = ref<InstanceType<typeof ElForm> | null>(null);
+/** 单个指标数据表格提交按钮加载状态 */
+const singleDataFormSubmitLoading = ref(false);
+/** 选中的指标 */
+const activeIndex = ref<any>();
+/** 数据弹窗是否显示 */
+const dialogVisible = ref(false);
+/** 当前行 */
+const activeRow = ref<any>({
+  id: undefined,
+  no: undefined,
+  date: undefined,
+  value: undefined,
+});
+/** 导入弹窗ref */
+const importExcelDialogRef = ref<InstanceType<typeof importExcelDialog> | null>(
+  null
+);
+
+/** 新增定义表单 */
+const definitionForm = ref({
+  type: "其他数据",
+  name: undefined,
+  name2: undefined,
+  name3: undefined,
+  unit: undefined,
+  status: "正常",
+  order: 1,
+  description: undefined,
+});
+
+/** 新增定义表单规则 */
+const definitionRules = ref({
+  type: [{ required: true, message: "请选择类别", trigger: "blur" }],
+  name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+  unit: [{ required: true, message: "请输入单位", trigger: "blur" }],
+});
+
+/** 新增定义表单提交按钮加载状态 */
+const submitDefinitionLoading = ref(false);
+
+const definitionDialogVisible = ref(false);
+
+const definitionFormRef = ref<InstanceType<typeof ElForm> | null>(null);
+
+const data: Ref<any[]> = ref([]);
 
 const defaultProps = {
   children: "children",
@@ -234,48 +393,19 @@ const infoForm = ref({
   unit: undefined,
   /** 描述 */
   description: undefined,
+  /** 标识 */
+  no: undefined,
 });
 
-const latestData = ref([
-  {
-    name: "数据1",
-    value: "100",
-    unit: "单位1",
-    no: "123456",
-    createdAt: "2021-09-01",
-    createdBy: "管理员",
-  },
-  {
-    name: "数据2",
-    no: "123457",
-    value: "200",
-    unit: "单位2",
-    createdAt: "2021-09-02",
-    createdBy: "管理员",
-  },
-  {
-    name: "数据3",
-    no: "123458",
-    value: "300",
-    unit: "单位3",
-    createdAt: "2021-09-03",
-    createdBy: "管理员",
-  },
-  {
-    name: "数据4",
-    value: "400",
-    unit: "单位4",
-    createdAt: "2021-09-04",
-    createdBy: "管理员",
-  },
-]);
+const latestData: Ref<any[]> = ref([]);
 
 // 当前选中的节点
 const selectedNode = ref<any>();
 
 // 是否允许新增同级节点
 const notAllowedToAddPeer: ComputedRef<boolean> = computed(() => {
-  return !selectedNode.value || !selectedNode.value.parent;
+  // return !selectedNode.value || !selectedNode.value.parent;
+  return !selectedNode.value || selectedNode.value.children;
 });
 
 // 是否允许新增下级节点
@@ -283,12 +413,28 @@ const notAllowedToAddSub: ComputedRef<boolean> = computed(() => {
   return !selectedNode.value || !selectedNode.value.children;
 });
 
+/** 新增定义节点 */
+const handleAddNode = () => {
+  // 先将表单清空
+  definitionForm.value = {
+    type: "其他数据",
+    name: activeIndex.value.name,
+    name2: activeIndex.value.name2,
+    name3: undefined,
+    unit: undefined,
+    status: "正常",
+    order: 1,
+    description: undefined,
+  };
+  definitionDialogVisible.value = true;
+};
+
 const handleClear = () => {
   searchValue.value = "";
 };
 
 const handleInput = (value: string) => {
-  console.log(value);
+  /**筛选 */
 };
 
 const handleNodeClick = (data: any) => {
@@ -298,33 +444,247 @@ const handleNodeClick = (data: any) => {
   // DataDefinitionAPI.getDataDefinition(data.label).then((res) => {
   //   console.log(res);
   // });
-  initChart();
+  selectedNode.value = data;
+  if (data.children) return;
+  infoForm.value = {
+    id: data.id,
+    type: data["类型"],
+    status: data["状态"],
+    order: data["显示顺序"],
+    name: data["名称1"],
+    name2: data["名称2"],
+    name3: data["名称3"],
+    unit: data["单位"],
+    description: data["描述"],
+    no: data["标识"],
+  };
+  tableLoading.value = true;
+  activeIndex.value = unref(infoForm);
+  initActiveIndexData();
 };
 
-const initChart = () => {
+/** 单个指标的数据操作 */
+const handleAddRecord = () => {
+  // 弹窗新增数据
+  dialogVisible.value = true;
+};
+
+const handleEditRecord = (row: any) => {
+  // 弹窗编辑数据
+  activeRow.value = {
+    id: row.id,
+    date: row["时间"],
+    value: row["数据"],
+  };
+  dialogVisible.value = true;
+};
+
+const handleExportExcel = () => {
+  console.log("导出excel");
+};
+
+const handleGetExcelTemplate = (requestData?: any[]) => {
+  // 有activeIndex则获取对应的导入模板
+  // 无activeIndex则获取所有导入模板
+  const templateName =
+    activeIndex.value.name +
+    (activeIndex.value.name2 ? `-${activeIndex.value.name2}` : "") +
+    (activeIndex.value.name3 ? `-${activeIndex.value.name3}` : "") +
+    "导入模板.xlsx";
+  DataIndicesAPI.getImportTemplate([activeIndex.value.no])
+    .then((res: any) => {
+      const blob = new Blob([res.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${templateName}`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+    .catch((err) => {
+      console.error(err);
+      ElMessage.error("获取模板失败");
+    });
+};
+
+const handleImportExcel = () => {
+  importExcelDialogRef.value?.open();
+};
+
+const handleBatchDelete = () => {
+  console.log("批量删除");
+};
+
+const handleCancelEditData = () => {
+  dialogVisible.value = false;
+};
+
+const handleSubmitSingleData = () => {
+  dataForm.value?.validate(async (valid) => {
+    if (valid) {
+      singleDataFormSubmitLoading.value = true;
+      const params = {
+        id: activeRow.value.id,
+        标识: activeIndex.value.no,
+        时间: activeRow.value.date,
+        数据: activeRow.value.value,
+      };
+      if (activeRow.value.id) {
+        // 编辑
+        DataIndicesAPI.updateDataIndices(params)
+          .then((res: any) => {
+            console.log(res);
+            ElMessage.success("编辑成功");
+            dialogVisible.value = false;
+            initActiveIndexData();
+          })
+          .catch((err) => {
+            console.error(err);
+            ElMessage.error("编辑失败");
+          })
+          .finally(() => {
+            singleDataFormSubmitLoading.value = false;
+          });
+      } else {
+        // 新增
+        DataIndicesAPI.addDataIndicesInBatch([params])
+          .then((res: any) => {
+            console.log(res);
+            ElMessage.success("新增成功");
+            initActiveIndexData();
+            dialogVisible.value = false;
+          })
+          .catch((err: any) => {
+            console.error(err);
+            ElMessage.error("新增失败");
+          })
+          .finally(() => {
+            singleDataFormSubmitLoading.value = false;
+          });
+      }
+    }
+  });
+};
+
+const initActiveIndexData = () => {
+  if (!activeIndex.value) return;
+  tableLoading.value = true;
+  DataIndicesAPI.getDataIndicesList({
+    标识集合: [activeIndex.value.no],
+    页码: dataPagination.value.currentPage,
+    页容量: dataPagination.value.pageSize,
+  })
+    .then((res: any) => {
+      console.log(res);
+      latestData.value = res["当前记录"];
+      dataPagination.value.total = res["总记录数"];
+      initChart(unref(latestData));
+    })
+    .catch((err) => {
+      console.error(err);
+      ElMessage.error("获取数据失败");
+    })
+    .finally(() => {
+      tableLoading.value = false;
+    });
+};
+
+/** 批量写入数据 */
+const handleSubmitDataInBatch = (data: any) => {
+  // console.log(data);
+  importExcelDialogRef.value?.setSubmitLoading(true);
+  DataIndicesAPI.addDataIndicesInBatch(data)
+    .then((res: any) => {
+      ElMessage.success("导入成功");
+      importExcelDialogRef.value?.handleClose();
+      initActiveIndexData();
+    })
+    .catch((err) => {
+      console.error(err);
+      importExcelDialogRef.value?.setSubmitLoading(false);
+      ElMessage.error("导入失败");
+    });
+};
+
+const initChart = (data: any) => {
   chartRef.value?.clear();
   chartRef.value = echarts.init(document.getElementById("chart-container"));
+  /** 折线图 */
+  // data按照时间排序
+  data.sort((a: any, b: any) => {
+    return new Date(a["时间"]).getTime() - new Date(b["时间"]).getTime();
+  });
+  const dataName =
+    activeIndex.value.name +
+    (activeIndex.value.name2 ? `/${activeIndex.value.name2}` : "") +
+    (activeIndex.value.name3 ? `/${activeIndex.value.name3}` : "");
   const option = {
-    title: {
-      text: "ECharts 入门示例",
+    // title: {
+    //   text:
+    //     activeIndex.value.name +
+    //     (activeIndex.value.name2 ? `/${activeIndex.value.name2}` : "") +
+    //     (activeIndex.value.name3 ? `/${activeIndex.value.name3}` : ""),
+    // },
+    tooltip: {
+      trigger: "axis",
     },
-    tooltip: {},
     legend: {
-      data: ["销量"],
+      data: [dataName],
     },
     xAxis: {
-      data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+      type: "category",
+      data: data.map((item: any) => item["时间"]),
     },
-    yAxis: {},
+    yAxis: {
+      type: "value",
+      name: activeIndex.value.unit,
+    },
     series: [
       {
-        name: "销量",
-        type: "bar",
-        data: [5, 20, 36, 10, 10, 20],
+        name: dataName,
+        type: "line",
+        data: data.map((item: any) => item["数据"]),
       },
     ],
   };
   chartRef.value.setOption(option);
+};
+
+/** 新增定义 */
+const onSubmitDefinitionForm = () => {
+  submitDefinitionLoading.value = true;
+  definitionFormRef.value?.validate(async (valid) => {
+    if (!valid) {
+      submitDefinitionLoading.value = false;
+      return;
+    }
+    const params = {
+      类型: definitionForm.value.type,
+      名称1: definitionForm.value.name,
+      名称2: definitionForm.value.name2,
+      名称3: definitionForm.value.name3,
+      单位: definitionForm.value.unit,
+      状态: definitionForm.value.status,
+      显示顺序: definitionForm.value.order,
+      描述: definitionForm.value.description,
+    };
+    DataDefinitionAPI.addDataDefinition(params)
+      .then((res: any) => {
+        console.log(res);
+        ElMessage.success("新增成功");
+        definitionDialogVisible.value = false;
+        initMenuTreeData();
+      })
+      .catch((err) => {
+        console.error(err);
+        ElMessage.error("新增失败");
+      })
+      .finally(() => {
+        submitDefinitionLoading.value = false;
+      });
+  });
 };
 
 interface IDataItem {
@@ -332,6 +692,7 @@ interface IDataItem {
   名称1: string;
   名称2?: string;
   名称3?: string;
+  标识?: string;
 }
 /** 按名称1、名称2、名称3组织出树形结构(BFS) */
 function generateTreeData(data: IDataItem[]): any[] {
@@ -345,6 +706,7 @@ function generateTreeData(data: IDataItem[]): any[] {
     if (!typeMap.has(type)) {
       typeMap.set(type, {
         label: type,
+        id: "-1",
         children: [],
       });
       treeData.push(typeMap.get(type));
@@ -356,6 +718,7 @@ function generateTreeData(data: IDataItem[]): any[] {
     if (!name1Node) {
       typeNode.children.push({
         label: name1,
+        ...item,
         children: [],
       });
     }
@@ -369,6 +732,7 @@ function generateTreeData(data: IDataItem[]): any[] {
       typeNode.children[name1NodeIndex].children.push({
         label: name2,
         children: [],
+        ...item,
       });
     }
     const name2NodeIndex = typeNode.children[name1NodeIndex].children.findIndex(
@@ -380,20 +744,43 @@ function generateTreeData(data: IDataItem[]): any[] {
     if (!name3Node) {
       typeNode.children[name1NodeIndex].children[name2NodeIndex].children.push({
         label: name3,
+        ...item,
       });
     }
   }
+  console.log(treeData);
   return treeData;
 }
 
+const initMenuTreeData = () => {
+  treeLoading.value = true;
+  DataDefinitionAPI.getDataDefinitionList({
+    页码: 1,
+    页容量: 1000,
+  })
+    .then((res: any) => {
+      data.value = generateTreeData(res["当前记录"]);
+    })
+    .catch((err) => {
+      console.error(err);
+      ElMessage.error("获取数据定义失败");
+    })
+    .finally(() => {
+      treeLoading.value = false;
+    });
+};
+
 onMounted(() => {
   // 获取所有定义，按照定义显示左侧树形结构
-  // DataIndicesAPI.getAllDataIndices().then((res) => {
-  //   console.log(res);
-  // });
+  initMenuTreeData();
   // 先随便画个图
   // initChart();
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.op-block {
+  @apply flex justify-between;
+  margin-block: 10px;
+}
+</style>
