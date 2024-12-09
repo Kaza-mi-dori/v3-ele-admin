@@ -191,7 +191,11 @@
             >
               <el-card shadow="never" class="flex-y-center mb-2">
                 <div class="flex items-center">
-                  <svg-icon :icon-class="menu.iconClass" size="1.5em" />
+                  <svg-icon
+                    :icon-class="menu.iconClass"
+                    :class="menu.class"
+                    size="1.5em"
+                  />
                   <el-link
                     type="primary"
                     class="text-sm ml-2"
@@ -253,6 +257,7 @@ const myFavoMenu = ref([
     iconClass: "monitor",
     routeName: "Monitor",
     routeType: "outer",
+    class: "icon-monitor",
   },
   {
     name: "数据大屏",
@@ -271,6 +276,7 @@ const myFavoMenu = ref([
     iconClass: "table",
     routeName: "YearlyReportMng",
     routeType: "inner",
+    class: "icon-report",
   },
 ]);
 
@@ -426,5 +432,11 @@ onMounted(() => {
     z-index: 1;
     border: 0;
   }
+}
+.icon-monitor {
+  fill: #01a4ea;
+}
+.icon-report {
+  fill: #c055d3;
 }
 </style>
