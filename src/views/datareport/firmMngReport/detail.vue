@@ -428,6 +428,7 @@ const { id, editing } = toRefs(props);
 type YearlyReportDetailFormData =
   business.IAuditableEntity<business.ICompanyBusinessReport>;
 const yearlyReportDetailForm = ref({
+  /** */
   name: "永盛石化",
   year: "2021-01-01",
   income: 1000,
@@ -476,6 +477,178 @@ const yearlyReportDetailForm = ref({
   updatedBy: "",
   dataFrom: "",
   audited: false,
+});
+
+const realForm: Ref<any> = ref({
+  // 报表类型(年、月)
+  reportType: "year",
+  // 数据日期
+  dataDate: "",
+  /** 总体指标 */
+  // 当期利润
+  profit: 0,
+  // 当年累计利润(月度表)
+  cumulativeProfit: 0,
+  // 当期利润较上期增减
+  profitIncrease: 0,
+  // 当期利润环比涨幅
+  profitIncreaseRate: 0,
+  // 累计利润较上年增减
+  cumulativeProfitIncrease: 0,
+  // 累计利润同比增长率
+  cumulativeProfitIncreaseRate: 0,
+  // 当期(累计)利润目标完成率
+  profitFulfilledRate: 0,
+  // 当期(累计)营收目标完成率
+  incomeFulfilledRate: 0,
+  // 当期营业收入
+  revenue: 0,
+  // 当年累计营业收入(月度表)
+  cumulativeRevenue: 0,
+  // 当期营业收入较上期增减
+  revenueIncrease: 0,
+  // 当期营业收入环比涨幅
+  revenueIncreaseRate: 0,
+  // 累计营业收入较上年增减
+  cumulativeRevenueIncrease: 0,
+  // 累计营业收入同比增长率
+  cumulativeRevenueIncreaseRate: 0,
+  // 期间费用和税金及附加
+  expenses: 0,
+  // 期间费用和税金及附加较上期增减
+  expensesIncrease: 0,
+  /** 经营成果 */
+  // 当期销售量
+  salesVolume: 0,
+  // 当年累计销售量(月度表)
+  cumulativeSalesVolume: 0,
+  // 当期销售量较上期增减
+  salesVolumeIncrease: 0,
+  // 当期销售量环比涨幅
+  salesVolumeIncreaseRate: 0,
+  // 累计销售量较上年增减
+  cumulativeSalesVolumeIncrease: 0,
+  // 累计销售量同比增长率
+  cumulativeSalesVolumeIncreaseRate: 0,
+  // 当期固定成本总额
+  fixedCost: 0,
+  // 当期固定成本同比
+  fixedCostIncrease: 0,
+  // 当期固定成本环比
+  fixedCostIncreaseRate: 0,
+  // 累计固定成本总额
+  cumulativeFixedCost: 0,
+  // 累计固定成本同比
+  cumulativeFixedCostIncrease: 0,
+  // 累计固定成本环比
+  cumulativeFixedCostIncreaseRate: 0,
+  /** 分业务 */
+  subBusiness: [
+    {
+      // 业务名称
+      name: "",
+      // 当期利润
+      profit: 0,
+      // 当年累计利润(月度表)
+      cumulativeProfit: 0,
+      // 当期利润较上期增减
+      profitIncrease: 0,
+      // 当期利润环比涨幅
+      profitIncreaseRate: 0,
+      // 累计利润较上年增减
+      cumulativeProfitIncrease: 0,
+      // 累计利润同比增长率
+      cumulativeProfitIncreaseRate: 0,
+      // 当期营业收入
+      revenue: 0,
+      // 当年累计营业收入(月度表)
+      cumulativeRevenue: 0,
+      // 当期营业收入较上期增减
+      revenueIncrease: 0,
+      // 当期营业收入环比涨幅
+      revenueIncreaseRate: 0,
+      // 累计营业收入较上年增减
+      cumulativeRevenueIncrease: 0,
+      // 累计营业收入同比增长率
+      cumulativeRevenueIncreaseRate: 0,
+      // 当期销售均价
+      averagePrice: 0,
+      // 销售均价较上期增减
+      averagePriceIncrease: 0,
+      // 销售均价环比涨幅
+      averagePriceIncreaseRate: 0,
+      // 当期销售量
+      salesVolume: 0,
+      // 当年累计销售量(月度表)
+      cumulativeSalesVolume: 0,
+    },
+  ],
+  // 成本总额
+  cost: 0,
+  // 年度累计成本(月度表)
+  cumulativeCost: 0,
+  /** 产品生产指标情况 */
+  purchases: [
+    {
+      /** 具体商品 */
+      name: "",
+      /** 当期采购量 */
+      purchaseVolume: 0,
+      /** 当期采购均价 */
+      purchaseAveragePrice: 0,
+      /** 当期采购量较上期增减 */
+      purchaseVolumeIncrease: 0,
+      /** 当期采购均价较上期增减 */
+      purchaseAveragePriceIncrease: 0,
+      /** 当期采购量环比涨幅 */
+      purchaseVolumeIncreaseRate: 0,
+      /** 当期采购均价环比涨幅 */
+      purchaseAveragePriceIncreaseRate: 0,
+      /** 累计采购量 */
+      cumulativePurchaseVolume: 0,
+      /** 累计采购均价 */
+      cumulativePurchaseAveragePrice: 0,
+      /** 累计采购量较上年增减 */
+      cumulativePurchaseVolumeIncrease: 0,
+      /** 累计采购均价较上年增减 */
+      cumulativePurchaseAveragePriceIncrease: 0,
+      /** 累计采购量同比增长率 */
+      cumulativePurchaseVolumeIncreaseRate: 0,
+      /** 累计采购均价同比增长率 */
+      cumulativePurchaseAveragePriceIncreaseRate: 0,
+    },
+  ],
+  /** 销售指标情况 */
+  sales: [
+    {
+      /** 具体商品 */
+      name: "",
+      /** 当期销售量 */
+      salesVolume: 0,
+      /** 当期销售均价 */
+      salesAveragePrice: 0,
+      /** 当期销售量较上期增减 */
+      salesVolumeIncrease: 0,
+      /** 当期销售均价较上期增减 */
+      salesAveragePriceIncrease: 0,
+      /** 当期销售量环比涨幅 */
+      salesVolumeIncreaseRate: 0,
+      /** 当期销售均价环比涨幅 */
+      salesAveragePriceIncreaseRate: 0,
+      /** 累计销售量 */
+      cumulativeSalesVolume: 0,
+      /** 累计销售均价 */
+      cumulativeSalesAveragePrice: 0,
+      /** 累计销售量较上年增减 */
+      cumulativeSalesVolumeIncrease: 0,
+      /** 累计销售均价较上年增减 */
+      cumulativeSalesAveragePriceIncrease: 0,
+      /** 累计销售量同比增长率 */
+      cumulativeSalesVolumeIncreaseRate: 0,
+      /** 累计销售均价同比增长率 */
+      cumulativeSalesAveragePriceIncreaseRate: 0,
+    },
+  ],
 });
 
 const validateOn = ref(false);
