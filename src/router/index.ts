@@ -71,6 +71,84 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
     ],
   },
+  /**
+   * 此路由可能直接由能源一体化跳转故用独立路由守卫
+   * 仍然需要鉴权，先查看有无token, 没有的话查看是否有code
+   */
+  {
+    path: "/bigScreenBoard",
+    name: "BigScreenBoardNav",
+    component: () => import("@/views/bigscreen/index.vue"),
+    meta: {
+      title: "大屏看板",
+      icon: "fullscreen",
+      // hidden: true,
+    },
+    redirect: "/bigScreenBoard/index",
+    children: [
+      {
+        path: "index",
+        name: "BigScreenBoard",
+        component: () => import("@/views/bigscreen/index.vue"),
+        meta: {
+          title: "大屏看板",
+          icon: "el-icon-monitor",
+          hidden: true,
+        },
+      },
+      {
+        path: "business/:businessName",
+        name: "Business",
+        meta: {
+          hidden: true,
+        },
+        component: () =>
+          import("@/views/bigscreen/components/SecondPage/second-index.vue"),
+      },
+    ],
+  },
+  // {
+  //   path: "/business/:businessName",
+  //   name: "Business",
+  //   meta: {
+  //     hidden: true,
+  //   },
+  //   component: () =>
+  //     import("@/views/bigscreen/components/SecondPage/second-index.vue"),
+  // },
+  // 监控页独立放，避免被缩放影响
+  {
+    path: "/monitor",
+    name: "Monitor",
+    meta: {
+      title: "监控平台",
+      icon: "el-icon-monitor",
+    },
+    component: () =>
+      import("@/views/bigscreen/components/MonitorPage/index.vue"),
+  },
+  // 数据看板
+  {
+    path: "/dataBoard",
+    name: "DataBoard",
+    component: Layout,
+    meta: {
+      title: "数据看板",
+      icon: "el-icon-s-data",
+    },
+    redirect: "/marketData",
+    children: [
+      {
+        path: "marketData",
+        name: "MarketData",
+        component: () => import("@/views/databoard/index.vue"),
+        meta: {
+          title: "数据看板",
+          icon: "monitor",
+        },
+      },
+    ],
+  },
   {
     path: "/reportMng",
     name: "ReportMng",
@@ -145,7 +223,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: "台账管理",
-      icon: "el-icon-MessageBox",
+      icon: "document",
     },
     children: [
       {
@@ -222,52 +300,77 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-  /**
-   * 此路由可能直接由能源一体化跳转故用独立路由守卫
-   * 仍然需要鉴权，先查看有无token, 没有的话查看是否有code
-   */
-  {
-    path: "/bigScreenBoard",
-    name: "BigScreenBoard",
-    component: () => import("@/views/bigscreen/index.vue"),
-    meta: {
-      title: "大屏看板",
-      icon: "el-icon-coin",
-      hidden: true,
-    },
-    // redirect: "/bigScreenBoard/business",
-    children: [
-      {
-        path: "business/:businessName",
-        name: "Business",
-        component: () =>
-          import("@/views/bigscreen/components/SecondPage/second-index.vue"),
-      },
-    ],
-  },
-  // 监控页独立放，避免被缩放影响
-  {
-    path: "/monitor",
-    name: "Monitor",
-    meta: {
-      title: "监控页",
-      icon: "el-icon-monitor",
-    },
-    component: () =>
-      import("@/views/bigscreen/components/MonitorPage/index.vue"),
-  },
   // 开发环境后端登录页
   {
     path: "/devLogin",
     component: () => import("@/views/login/loginDev.vue"),
     meta: { hidden: true },
   },
+  // 综合管理2
+  {
+    path: "/otherMng",
+    name: "OtherMng",
+    component: Layout,
+    meta: {
+      title: "综合管理",
+      icon: "setting",
+    },
+    redirect: "/otherMng/mapElementMng",
+    children: [
+      {
+        path: "/sysMng/partnerMng",
+        name: "PartnerMng",
+        component: () => import("@/views/partner/index.vue"),
+        meta: {
+          title: "客商管理",
+          icon: "role",
+        },
+      },
+      {
+        path: "/sysMng/partnerDetail",
+        name: "PartnerDetail",
+        component: () => import("@/views/partner/detail.vue"),
+        meta: {
+          title: "客商详情",
+          icon: "el-icon-menu",
+          hidden: true,
+        },
+      },
+      {
+        path: "dataDefinitionMng",
+        name: "DataDefinitionMng",
+        component: () => import("@/views/otherConfig/dataDefinitionMng.vue"),
+        meta: {
+          title: "数据定义管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "mapElementMng",
+        name: "MapElementMng",
+        component: () => import("@/views/otherConfig/gsLocationMng.vue"),
+        meta: {
+          title: "地图元素管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "/sysMng/gsLocationConfig",
+        name: "GsLocationConfig",
+        component: () => import("@/views/otherConfig/gsLocationConfig.vue"),
+        meta: {
+          title: "地图配置",
+          icon: "el-icon-monitor",
+        },
+      },
+    ],
+  },
   // 开发环境系统管理
   {
     path: "/devSystemMng",
     component: Layout,
     meta: {
-      title: "系统管理2",
+      title: "系统管理",
       icon: "setting",
     },
     children: [
@@ -337,75 +440,71 @@ export const constantRoutes: RouteRecordRaw[] = [
       // todo 维护导入导出功能
     ],
   },
-  // 综合管理2
+  // {
+  //   path: "/customComponent",
+  //   name: "CustomComponent",
+  //   component: Layout,
+  //   meta: {
+  //     title: "自定义组件",
+  //     icon: "component",
+  //   },
+  //   children: [
+  //     {
+  //       path: "index",
+  //       name: "CustomComponentIndex",
+  //       component: () => import("@/components/CustomComponent/index.vue"),
+  //       meta: {
+  //         title: "自定义组件预览",
+  //         icon: "el-icon-coin",
+  //       },
+  //     },
+  //   ],
+  // },
+  // 系统管理(旧)
   {
-    path: "/otherMng",
-    name: "OtherMng",
+    path: "/system",
+    name: "System",
     component: Layout,
     meta: {
-      title: "综合管理2",
+      title: "系统管理",
       icon: "setting",
-    },
-    redirect: "/otherMng/mapElementMng",
-    children: [
-      {
-        path: "mapElementMng",
-        name: "MapElementMng",
-        component: () => import("@/views/otherConfig/gsLocationMng.vue"),
-        meta: {
-          title: "地图元素管理",
-          icon: "el-icon-coin",
-        },
-      },
-      {
-        path: "dataDefinitionMng",
-        name: "DataDefinitionMng",
-        component: () => import("@/views/otherConfig/dataDefinitionMng.vue"),
-        meta: {
-          title: "数据定义管理",
-          icon: "el-icon-coin",
-        },
-      },
-    ],
-  },
-  // 数据看板
-  {
-    path: "/dataBoard",
-    name: "DataBoard",
-    component: Layout,
-    meta: {
-      title: "数据看板",
-      icon: "el-icon-s-data",
-    },
-    redirect: "/marketData",
-    children: [
-      {
-        path: "marketData",
-        name: "MarketData",
-        component: () => import("@/views/databoard/index.vue"),
-        meta: {
-          title: "数据看板",
-          icon: "el-icon-coin",
-        },
-      },
-    ],
-  },
-  {
-    path: "/customComponent",
-    name: "CustomComponent",
-    component: Layout,
-    meta: {
-      title: "自定义组件",
-      icon: "component",
+      hidden: true,
     },
     children: [
       {
-        path: "index",
-        name: "CustomComponentIndex",
-        component: () => import("@/components/CustomComponent/index.vue"),
+        path: "user",
+        name: "User",
+        component: () => import("@/views/system/user/index.vue"),
         meta: {
-          title: "自定义组件预览",
-          icon: "el-icon-coin",
+          title: "用户管理",
+          icon: "user",
+        },
+      },
+      {
+        path: "dept",
+        name: "Dept",
+        component: () => import("@/views/system/dept/index.vue"),
+        meta: {
+          title: "部门管理",
+          icon: "tree",
+        },
+      },
+      {
+        path: "role",
+        name: "Role",
+        component: () => import("@/views/system/role/index.vue"),
+        meta: {
+          title: "角色管理",
+          icon: "role",
+        },
+      },
+      {
+        path: "menu",
+        name: "Menu",
+        component: () => import("@/views/system/menu/index.vue"),
+        meta: {
+          title: "菜单管理",
+          icon: "menu",
         },
       },
     ],

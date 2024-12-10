@@ -29,7 +29,7 @@
                   <span class="text-[16px] ml-1">{{ item.title }}</span>
                 </div>
               </template>
-              <template v-if="item.suffix" #suffix>/100</template>
+              <template v-if="item.suffix" #suffix>/0</template>
             </el-statistic>
           </div>
         </el-col>
@@ -153,7 +153,7 @@
             </div>
           </template>
 
-          <el-scrollbar height="400px">
+          <el-scrollbar v-if="notices.length > 0" height="400px">
             <div
               v-for="(item, index) in notices"
               :key="index"
@@ -171,6 +171,7 @@
               </el-link>
             </div>
           </el-scrollbar>
+          <el-empty v-else />
         </el-card>
       </el-col>
       <!-- 常用入口 -->
@@ -283,16 +284,16 @@ const myFavoMenu = ref([
 // 右上角数量
 const statisticData = ref([
   {
-    value: 99,
+    value: 0,
     iconClass: "message",
     title: "消息",
     key: "message",
   },
   {
-    value: 50,
+    value: 0,
     iconClass: "todo",
     title: "待办",
-    suffix: "/100",
+    suffix: "/0",
     key: "upcoming",
   },
   // {

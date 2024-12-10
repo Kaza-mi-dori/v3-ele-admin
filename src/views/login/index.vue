@@ -121,7 +121,7 @@
               />
             </div>
           </el-form-item>
-
+          <div>系统管理员：admin/123456</div>
           <div class="flex-x-between w-full py-1">
             <el-checkbox>
               {{ $t("login.rememberMe") }}
