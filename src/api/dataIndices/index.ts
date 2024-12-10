@@ -30,6 +30,17 @@ export const DataIndicesAPI = {
   },
 
   /**
+   * 获取数据指标列表
+   */
+  getAllDataIndicesList: (data: any) => {
+    return request2({
+      url: `${BASE_URL}/ListIntegratedData`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
    * 新增数据指标
    * @param data 新增数据指标信息(数组)
    */

@@ -11,7 +11,7 @@
         下级新增
       </el-button> -->
     </div>
-    <div class="flex">
+    <div class="flex w-full">
       <div class="bg-white p-10px shadow-coolGray-100 max-w-300px">
         <!-- <el-input
           v-model="searchValue"
@@ -31,8 +31,8 @@
           @node-click="handleNodeClick"
         />
       </div>
-      <div class="w-full">
-        <div class="info-card-level1 ml-20px">
+      <div class="flex-1 ml-4">
+        <div class="info-card-level1">
           <div class="__title">
             <span>定义信息</span>
           </div>
@@ -70,15 +70,18 @@
             </el-col>
           </el-form>
         </div>
-        <div class="info-card-level1 ml-20px">
+        <div class="info-card-level1">
           <div class="__title">
             <span>趋势图</span>
           </div>
-          <div class="__content" style="width: 100%; height: 400px">
+          <div
+            class="__content"
+            style="width: calc(100% - 20px); height: 400px"
+          >
             <div id="chart-container" style="width: 100%; height: 100%" />
           </div>
         </div>
-        <div class="info-card-level1 ml-20px">
+        <div class="info-card-level1">
           <div class="__title">
             <span>最近数据</span>
           </div>
@@ -102,8 +105,7 @@
                 </el-button>
                 <el-button
                   icon="Download"
-                  :disabled="!activeIndex"
-                  @click="() => handleGetExcelTemplate"
+                  @click="() => handleGetExcelTemplate()"
                 >
                   获取excel模板
                 </el-button>
@@ -158,6 +160,15 @@
               />
               <el-table-column prop="数据" label="数据值" align="center" />
             </el-table>
+            <el-pagination
+              v-model:current-page="dataPagination.currentPage"
+              v-model:page-size="dataPagination.pageSize"
+              class="mt-2 flex justify-end mb-4"
+              background
+              layout="total, prev, pager, next, jumper, sizes"
+              :total="dataPagination.total"
+              @current-change="handleDataPageChange"
+            />
           </div>
         </div>
       </div>
@@ -292,6 +303,36 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 选择要导入的数据指标 -->
+    <el-dialog
+      v-model="chooseDialogVisible"
+      title="选择要导入的数据指标"
+      width="50%"
+      center
+    >
+      <el-tree
+        ref="chooseImportTreeRef"
+        class="w-full"
+        default-expand-all
+        :data="data"
+        :props="defaultProps"
+        node-key="id"
+        show-checkbox
+        @check-change="handleChoiceCheckChange"
+      />
+      <template v-slot:footer>
+        <span class="dialog-footer">
+          <el-button @click="handleCloseConfirmImportDialog">取 消</el-button>
+          <el-button
+            type="primary"
+            :loading="confirmImportLoading"
+            @click="handleConfirmImportData"
+          >
+            确 定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -301,6 +342,7 @@ import { ref, onMounted } from "vue";
 import { DataIndicesAPI } from "@/api/dataIndices";
 import { DataDefinitionAPI } from "@/api/dataIndices/dataDefinition";
 import * as echarts from "echarts";
+import { l } from "vite/dist/node/types.d-aGj9QkWt";
 
 const chartRef = shallowRef<echarts.ECharts | null>();
 const treeLoading = ref(false);
@@ -339,6 +381,13 @@ const activeRow = ref<any>({
 const importExcelDialogRef = ref<InstanceType<typeof importExcelDialog> | null>(
   null
 );
+/** 选择导入指标弹窗是否显示 */
+const chooseDialogVisible = ref(false);
+/** 导入选择树ref */
+const chooseImportTreeRef = ref<InstanceType<typeof ElTree> | null>(null);
+/** 选择导入树选中的节点 */
+const checkedNodes = ref<any[]>([]);
+const confirmImportLoading = ref(false);
 
 /** 新增定义表单 */
 const definitionForm = ref({
@@ -398,6 +447,7 @@ const infoForm = ref({
 });
 
 const latestData: Ref<any[]> = ref([]);
+const allData: Ref<any[]> = ref([]);
 
 // 当前选中的节点
 const selectedNode = ref<any>();
@@ -460,6 +510,7 @@ const handleNodeClick = (data: any) => {
   };
   tableLoading.value = true;
   activeIndex.value = unref(infoForm);
+  dataPagination.value.currentPage = 1;
   initActiveIndexData();
 };
 
@@ -486,11 +537,16 @@ const handleExportExcel = () => {
 const handleGetExcelTemplate = (requestData?: any[]) => {
   // 有activeIndex则获取对应的导入模板
   // 无activeIndex则获取所有导入模板
+  if (!activeIndex.value) {
+    chooseDialogVisible.value = true;
+    return;
+  }
   const templateName =
     activeIndex.value.name +
     (activeIndex.value.name2 ? `-${activeIndex.value.name2}` : "") +
     (activeIndex.value.name3 ? `-${activeIndex.value.name3}` : "") +
     "导入模板.xlsx";
+  // console.log(templateName);
   DataIndicesAPI.getImportTemplate([activeIndex.value.no])
     .then((res: any) => {
       const blob = new Blob([res.data], {
@@ -571,16 +627,19 @@ const handleSubmitSingleData = () => {
 const initActiveIndexData = () => {
   if (!activeIndex.value) return;
   tableLoading.value = true;
-  DataIndicesAPI.getDataIndicesList({
+  DataIndicesAPI.getAllDataIndicesList({
     标识集合: [activeIndex.value.no],
     页码: dataPagination.value.currentPage,
     页容量: dataPagination.value.pageSize,
   })
     .then((res: any) => {
-      console.log(res);
-      latestData.value = res["当前记录"];
-      dataPagination.value.total = res["总记录数"];
-      initChart(unref(latestData));
+      allData.value = res;
+      dataPagination.value.total = allData.value.length;
+      latestData.value = allData.value.slice(
+        (dataPagination.value.currentPage - 1) * dataPagination.value.pageSize,
+        dataPagination.value.currentPage * dataPagination.value.pageSize
+      );
+      initChart(unref(allData));
     })
     .catch((err) => {
       console.error(err);
@@ -591,6 +650,16 @@ const initActiveIndexData = () => {
     });
 };
 
+/**
+ * 改变页码
+ */
+const handleDataPageChange = (val: number) => {
+  latestData.value = allData.value.slice(
+    (val - 1) * dataPagination.value.pageSize,
+    val * dataPagination.value.pageSize
+  );
+};
+
 /** 批量写入数据 */
 const handleSubmitDataInBatch = (data: any) => {
   // console.log(data);
@@ -599,6 +668,7 @@ const handleSubmitDataInBatch = (data: any) => {
     .then((res: any) => {
       ElMessage.success("导入成功");
       importExcelDialogRef.value?.handleClose();
+      dataPagination.value.currentPage = 1;
       initActiveIndexData();
     })
     .catch((err) => {
@@ -633,9 +703,22 @@ const initChart = (data: any) => {
     legend: {
       data: [dataName],
     },
+    // 绘图位置靠左
+    grid: {
+      left: "2%",
+      right: "4%",
+      bottom: "10%",
+      containLabel: true,
+    },
     xAxis: {
       type: "category",
       data: data.map((item: any) => item["时间"]),
+      // 只显示时间戳前10位
+      axisLabel: {
+        formatter: (value: string) => {
+          return value.slice(0, 10);
+        },
+      },
     },
     yAxis: {
       type: "value",
@@ -646,6 +729,25 @@ const initChart = (data: any) => {
         name: dataName,
         type: "line",
         data: data.map((item: any) => item["数据"]),
+        // 标出最高值、最低数据点
+        markPoint: {
+          data: [
+            { type: "max", name: "最大值" },
+            { type: "min", name: "最小值" },
+          ],
+        },
+      },
+    ],
+    // scale
+    dataZoom: [
+      {
+        type: "slider",
+        show: true,
+        xAxisIndex: [0],
+        // 控制位置
+        bottom: 5,
+        start: 0,
+        end: 100,
       },
     ],
   };
@@ -748,9 +850,57 @@ function generateTreeData(data: IDataItem[]): any[] {
       });
     }
   }
-  console.log(treeData);
+  // console.log(treeData);
   return treeData;
 }
+
+const handleCloseConfirmImportDialog = () => {
+  chooseImportTreeRef.value?.setCheckedKeys([]);
+  checkedNodes.value = [];
+  chooseDialogVisible.value = false;
+};
+
+/** 选择导入数据改变回调 */
+const handleChoiceCheckChange = (data: any) => {
+  // console.log(data);
+  checkedNodes.value = chooseImportTreeRef.value?.getCheckedNodes() as any[];
+};
+
+const handleConfirmImportData = () => {
+  // console.log("确认导入数据");
+  confirmImportLoading.value = true;
+  const templateName = "数据导入模板.xlsx";
+  // 去重一次
+  const checkedNodesSet = new Set();
+  checkedNodes.value.forEach((node) => {
+    if (node["标识"]) {
+      checkedNodesSet.add(node["标识"]);
+    }
+  });
+  const checkedNodesArr = Array.from(checkedNodesSet) as string[];
+  console.log(checkedNodesArr);
+  DataIndicesAPI.getImportTemplate(checkedNodesArr)
+    .then((res: any) => {
+      const blob = new Blob([res.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${templateName}`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      ElMessage.success("获取模板成功");
+      handleCloseConfirmImportDialog();
+    })
+    .catch((err) => {
+      console.error(err);
+      ElMessage.error("获取模板失败");
+    })
+    .finally(() => {
+      confirmImportLoading.value = false;
+    });
+};
 
 const initMenuTreeData = () => {
   treeLoading.value = true;

@@ -17,7 +17,10 @@ import Model1 from "@/views/bigscreen/components/FirstPage/Model1/index.vue";
 import Tab from "@/views/bigscreen/components/FirstPage/Tab/index.vue";
 import * as echarts from "echarts";
 import type { TabsPaneContext } from "element-plus";
+import { DataIndicesAPI } from "@/api/dataIndices";
+import { DataDefinitionNameToMarkMap } from "@/enums/DataDefinitionEnum";
 import { ref, onMounted } from "vue";
+import { s } from "vite/dist/node/types.d-aGj9QkWt";
 
 const YUANYOU = "YUANYOU";
 const HUAGONG = "HUAGONG";
@@ -96,10 +99,19 @@ const getDateOfOneMonth = () => {
 
 // 每个类别对应的数据系列
 const categoryMap = {
-  YUANYOU: ["原油"],
-  HUAGONG: ["化工产品A", "化工产品B", "化工产品C"],
+  YUANYOU: ["WTI日价", "布伦特日价"],
+  HUAGONG: ["丁二烯"],
   QICHAIYOU: ["#92汽油", "#95汽油", "#0柴油"],
 };
+
+const dataMap: Ref<Record<string, any>> = ref({
+  [categoryMap.YUANYOU[0]]: undefined,
+  [categoryMap.YUANYOU[1]]: undefined,
+  [categoryMap.HUAGONG[0]]: undefined,
+  [categoryMap.QICHAIYOU[0]]: undefined,
+  [categoryMap.QICHAIYOU[1]]: undefined,
+  [categoryMap.QICHAIYOU[2]]: undefined,
+});
 
 // 随机生成365天数据
 const getRandomDataOneYear = () => {
@@ -126,6 +138,7 @@ const getRandomDataOneMonth = () => {
 };
 
 const dataFilterOne = (data: DataRecord[]) => {
+  // console.log("data", data);
   return data.map((item) => {
     return {
       time: item.time,
@@ -137,12 +150,13 @@ const dataFilterOne = (data: DataRecord[]) => {
 const dataSeries: Ref<DataRecord[]> = ref([]);
 
 const handleClick = (tab: TabsPaneContext) => {
-  console.log(tab);
+  // console.log(tab);
   activeName.value = tab.paneName;
   dataSeries.value = allData.value[tab.paneName as string];
   initChartMiddle4();
 };
 
+/** 根据dataSeries.value 获取相应数据渲染图表 */
 const initChartMiddle4 = () => {
   chart.value?.clear();
   chart.value = echarts.init(
@@ -150,16 +164,10 @@ const initChartMiddle4 = () => {
   );
   // 根据数据渲染图表
   // 类目x轴
-  const xAxisData = getDateOfOneMonth();
+  const xAxisData = getDateOfOneYear();
+  // console.log(xAxisData);
   const series = categoryMap[activeName.value as keyof typeof categoryMap];
   const option = {
-    // title: {
-    //   text: "价格趋势图",
-    //   left: "center",
-    //   textStyle: {
-    //     color: "#fff",
-    //   },
-    // },
     tooltip: {
       trigger: "axis",
     },
@@ -195,8 +203,6 @@ const initChartMiddle4 = () => {
     },
     yAxis: {
       type: "value",
-      min: 200,
-      max: 600,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
@@ -217,15 +223,75 @@ const initChartMiddle4 = () => {
         name: item,
         type: "line",
         smooth: true,
-        data: getRandomDataOneMonth().map((item) => item.value),
+        data: dataMap.value[item] ? dataFilterOne(dataMap.value[item]) : [],
+        // markPoint: {
+        //   data: [
+        //     {
+        //       type: "max",
+        //       name: "最大值",
+        //     },
+        //     {
+        //       type: "min",
+        //       name: "最小值",
+        //     },
+        //   ],
+        // },
       };
     }),
   };
   chart.value.setOption(option);
 };
 
+const processChartData = (data: any) => {
+  for (const category in categoryMap as Record<string, string[]>) {
+    categoryMap[category as keyof typeof categoryMap].forEach(
+      (item: string) => {
+        // item: WTI日价
+        if (dataMap.value[item] === undefined) {
+          dataMap.value[item] = data
+            .filter(
+              (record: any) =>
+                record["标识"] === DataDefinitionNameToMarkMap[item]
+            )
+            .map((record: any) => {
+              return {
+                time: record["时间"].substring(5, 10),
+                value: record["数据"],
+              };
+            })
+            .sort((a: any, b: any) => {
+              return new Date(a.time).getTime() - new Date(b.time).getTime();
+            });
+        }
+      }
+    );
+  }
+};
+
+const initData = () => {
+  // dataSeries.value = allData.value[activeName.value as string];
+  const marks: any[] = [];
+  Object.values(DataDefinitionNameToMarkMap).forEach((item: any) => {
+    marks.push(item);
+  });
+  DataIndicesAPI.getAllDataIndicesList({
+    标识集合: marks,
+  })
+    .then((res: any) => {
+      processChartData(res);
+      // console.log(dataMap.value);
+      initChartMiddle4();
+    })
+    .catch((error: any) => {
+      console.error(error);
+    });
+};
+
 onMounted(() => {
-  initChartMiddle4();
+  // 获取数据后初始化图表
+  initData();
+  // initChartMiddle4();
+  // 监听窗口变化，重置图表
   window.addEventListener("resize", () => {
     try {
       chart.value?.resize();

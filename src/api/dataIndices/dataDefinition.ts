@@ -53,11 +53,11 @@ export const DataDefinitionAPI = {
    * 删除数据定义
    * @param data
    */
-  deleteDataDefinition: (data: any) => {
+  deleteDataDefinition: (id: number | string) => {
     return request2({
       url: `${BASE_URL}`,
       method: "delete",
-      data,
+      params: { id },
     });
   },
 };

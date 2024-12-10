@@ -52,11 +52,13 @@
       <el-table-column
         v-for="(value, key) of tableData[0]"
         :key="key"
-        :prop="value"
+        :prop="key"
         :label="key"
         sortable
       >
-        {{ value }}
+        <template v-slot="{ row }">
+          <span>{{ row[key] }}</span>
+        </template>
       </el-table-column>
     </el-table>
     <!-- 分页 -->
@@ -74,7 +76,9 @@
     <!-- 按钮 -->
     <div class="flex justify-end mt-4">
       <el-button @click="handleClose">取消</el-button>
-      <el-button type="primary" @click="handleSubmit">提交</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit">
+        提交
+      </el-button>
     </div>
   </el-dialog>
 </template>

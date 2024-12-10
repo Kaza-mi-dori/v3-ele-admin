@@ -113,12 +113,21 @@
           <span>{{ scope.row.名称3 || "-" }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="单位" label="单位" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.单位 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="标识" label="标识" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.标识 || "-" }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="描述" label="描述" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.描述 || "-" }}</span>
         </template>
       </el-table-column>
-
       <el-table-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
           <div class="w-full flex justify-evenly">
@@ -228,7 +237,7 @@ import { DataDefinitionAPI } from "@/api/dataIndices/dataDefinition";
 import { onMounted } from "vue";
 import { ref } from "vue";
 import type { Ref } from "vue";
-import { ElMessage, ElForm } from "element-plus";
+import { ElMessage, ElMessageBox, ElForm } from "element-plus";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -324,6 +333,20 @@ const handleAddRecord = () => {
 };
 const handleDeleteRecord = (row: any) => {
   // console.log("删除");
+  ElMessageBox.confirm("确定删除该记录吗？", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      DataDefinitionAPI.deleteDataDefinition(row.id).then(() => {
+        ElMessage.success("删除成功");
+        initTableData();
+      });
+    })
+    .catch(() => {
+      ElMessage.info("已取消删除");
+    });
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
