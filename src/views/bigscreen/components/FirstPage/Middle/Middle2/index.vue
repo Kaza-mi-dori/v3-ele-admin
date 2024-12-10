@@ -37,7 +37,7 @@
             width="200"
           >
             <template #reference>
-              <img height="20" :src="getIcon(item.iconName)" />
+              <img height="17" :src="getIcon(item.iconName)" />
             </template>
             <div class="pop-content">
               <div class="__title">
@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import oil from "@/views/bigscreen/img/oil.png";
 import gas from "@/views/bigscreen/img/oil2.png";
+import { GsLocationAPI } from "@/api/config/gsLocation";
 import { ref } from "vue";
 import { useTransition } from "@vueuse/core";
 
@@ -137,28 +138,51 @@ const getPos = (pos: number, base: number) => {
   return (pos / base) * 100 + "%";
 };
 
+/** 获取地图元素 */
+const initTableData = async () => {
+  const params = {
+    页码: 1,
+    页容量: 200,
+  };
+  const res: any = await GsLocationAPI.getMapElementList(params);
+  const table = res["当前记录"];
+  oilNum.value = table.filter((item: any) => item["类型"] === "加油站").length;
+  gasNum.value = table.filter((item: any) => item["类型"] === "油库").length;
+  const mapImg = document.querySelector(".map-img") as HTMLElement;
+  const height = parseFloat(window.getComputedStyle(mapImg).height);
+  const width = parseFloat(window.getComputedStyle(mapImg).width);
+  posItems.value = table.map((item: any) => {
+    const x = parseInt(item["坐标"]?.split(",")[0]);
+    const y = parseInt(item["坐标"]?.split(",")[1]);
+    return {
+      id: item["id"],
+      name: item["名称"],
+      desc: item["描述"],
+      iconName: item["类型"] === "加油站" ? "oil" : "gas",
+      x: (x / 1261) * width,
+      y: (y / 853) * height,
+    };
+  });
+};
+
 onMounted(() => {
   nextTick(() => {
     // 计算出mapImg的实际渲染高度与宽度
-    setTimeout(() => {
-      const mapImg = document.querySelector(".map-img") as HTMLElement;
-      const height = parseFloat(window.getComputedStyle(mapImg).height);
-      const width = parseFloat(window.getComputedStyle(mapImg).width);
-      posItems.value = mockPosItems.value.map((item) => {
-        return {
-          ...item,
-          x: (item.x / 1261) * width,
-          y: (item.y / 853) * height,
-          // xPercent: getPos(item.x, 1261),
-          // yPercent: getPos(item.y, 853),
-        };
-      });
-      console.log(
-        posItems.value.map(
-          (item) => "item.x: " + item.x + ", item.y: " + item.y
-        )
-      );
-    }, 500);
+    // setTimeout(() => {
+    //   const mapImg = document.querySelector(".map-img") as HTMLElement;
+    //   const height = parseFloat(window.getComputedStyle(mapImg).height);
+    //   const width = parseFloat(window.getComputedStyle(mapImg).width);
+    //   posItems.value = mockPosItems.value.map((item) => {
+    //     return {
+    //       ...item,
+    //       x: (item.x / 1261) * width,
+    //       y: (item.y / 853) * height,
+    //       // xPercent: getPos(item.x, 1261),
+    //       // yPercent: getPos(item.y, 853),
+    //     };
+    //   });
+    // }, 500);
+    initTableData();
   });
   // console.log(posItems.value);
   // nextTick(() => {
@@ -176,16 +200,16 @@ onMounted(() => {
   // });
 });
 
-const gasNum = ref(98);
-const oilNum = ref(98);
+const gasNum = ref(25);
+const oilNum = ref(3);
 
 const gasSource = ref(0);
 const oilSource = ref(0);
 const gasNumOutputValue = useTransition(gasSource, {
-  duration: 1500,
+  duration: 2000,
 });
 const oilNumOutputValue = useTransition(oilSource, {
-  duration: 1500,
+  duration: 2000,
 });
 gasSource.value = gasNum.value;
 oilSource.value = oilNum.value;
@@ -213,7 +237,7 @@ oilSource.value = oilNum.value;
 .total-box {
   display: flex;
   justify-content: flex-end;
-  height: 30px;
+  // height: 30px;
   margin-top: -35px;
   margin-right: -10px;
   .total-content {

@@ -115,9 +115,9 @@
     <el-pagination
       v-model:current-page="pagination.currentPage"
       v-model:page-size="pagination.pageSize"
-      class="mt-2 flex justify-end"
+      class="mt-2 pb-4 flex justify-end"
       background
-      layout="total, prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper, sizes"
       :total="pagination.total"
       @current-change="handleCurrentChange"
     />
@@ -225,6 +225,7 @@ const queryParams: {
 };
 const handleCurrentChange = (currentPage: number) => {
   pagination.value.currentPage = currentPage;
+  initTableData();
 };
 const handleViewDetail = (row: ItableData) => {
   console.log(row);
@@ -274,10 +275,10 @@ const handleConfirmFilter = (filter: any) => {
   queryParams.名称 = filter.名称;
   // queryParams.类型 = filter.type === "全部" ? undefined : filter.type;
   console.log(filter);
-  queryParams["类型集合"] = filter.type
-    ? filter.type === "全部"
+  queryParams["类型集合"] = filter.类型
+    ? filter.类型 === "全部"
       ? undefined
-      : [filter.type]
+      : [filter.类型]
     : undefined;
   initTableData();
 };
@@ -298,7 +299,7 @@ const initTableData = async () => {
   };
   const res: any = await GsLocationAPI.getMapElementList(params);
   tableData.value = res["当前记录"];
-  pagination.value.total = res["记录总数"];
+  pagination.value.total = +res["记录总数"];
   loading.value = false;
 };
 

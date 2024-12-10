@@ -183,6 +183,7 @@ const pagination: Ref<any> = ref({
 });
 const handleCurrentChange = (currentPage: number) => {
   pagination.value.currentPage = currentPage;
+  initTableData();
 };
 const handleViewDetail = (row: any) => {
   router.push({
@@ -266,7 +267,7 @@ const initTableData = async () => {
   try {
     const res = await BusinessFormAPI.getCompanyDescFormList(queryForm.value);
     tableData.value = res["当前记录"];
-    pagination.value.total = res["记录总数"];
+    pagination.value.total = +res["记录总数"];
   } catch (error) {
     console.error(error);
   } finally {

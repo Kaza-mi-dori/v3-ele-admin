@@ -137,7 +137,7 @@
     <el-pagination
       v-model:current-page="pagination.currentPage"
       v-model:page-size="pagination.pageSize"
-      class="mt-2 flex justify-end"
+      class="mt-2 pb-4 flex justify-end"
       background
       layout="total, prev, pager, next, jumper"
       :total="pagination.total"
@@ -289,6 +289,7 @@ const queryParams: {
 };
 const handleCurrentChange = (currentPage: number) => {
   pagination.value.currentPage = currentPage;
+  initTableData();
 };
 const handleViewDetail = (row: ItableData) => {
   console.log(row);
@@ -370,7 +371,7 @@ const initTableData = async () => {
   };
   const res: any = await DataDefinitionAPI.getDataDefinitionList(params);
   tableData.value = res["当前记录"];
-  pagination.value.total = res["记录总数"];
+  pagination.value.total = +res["记录总数"];
   loading.value = false;
 };
 

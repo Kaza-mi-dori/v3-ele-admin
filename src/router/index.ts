@@ -80,7 +80,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "BigScreenBoardNav",
     component: () => import("@/views/bigscreen/index.vue"),
     meta: {
-      title: "大屏看板",
+      title: "数据大屏",
       icon: "fullscreen",
       // hidden: true,
     },

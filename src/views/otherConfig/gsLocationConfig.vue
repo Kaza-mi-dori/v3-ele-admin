@@ -134,7 +134,7 @@
           >
             <el-popover placement="top-start" width="200">
               <template #reference>
-                <img height="25" :src="getIcon(child.iconName)" />
+                <img height="17" :src="getIcon(child.iconName)" />
               </template>
               <div class="pop-content">
                 <div class="__title">
@@ -155,7 +155,7 @@
         ref="iconEl"
         :src="currentIcon"
         class="absolute"
-        height="25"
+        height="17"
         :style="{
           left: currentPos.x + 'px',
           top: currentPos.y + 'px',
@@ -646,7 +646,7 @@ const initListData = async () => {
       id: item.id,
       label: item.名称,
       description: item.描述,
-      iconName: item.图标,
+      iconName: item.类型 === "加油站" ? "gas" : "oil",
       xOffSet: item.坐标 ? item.坐标.split(",")[0] : null,
       yOffSet: item.坐标 ? item.坐标.split(",")[1] : null,
     };
