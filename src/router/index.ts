@@ -105,6 +105,15 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () =>
           import("@/views/bigscreen/components/SecondPage/second-index.vue"),
       },
+      {
+        path: "thirdPage",
+        name: "ThirdPage",
+        meta: {
+          hidden: true,
+        },
+        component: () =>
+          import("@/views/bigscreen/components/ThirdPage/third-index.vue"),
+      },
     ],
   },
   // {
