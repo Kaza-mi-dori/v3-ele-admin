@@ -16,4 +16,5 @@ export * from "./modules/user";
 export * from "./modules/dict";
 export * from "./modules/user2";
 export * from "./modules/business";
+export * from "./modules/company";
 export { store };
