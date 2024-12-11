@@ -25,6 +25,7 @@ import ProgressBar from "@/views/bigscreen/components/FirstPage/ProgressBar/inde
 import * as echarts from "echarts";
 import type { TabsPaneContext } from "element-plus";
 import { ref, onMounted } from "vue";
+import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 
 const activeName = ref<number | string | undefined>("all");
 
@@ -59,98 +60,17 @@ interface DataRecord {
   finished: number;
 }
 
-const mockData = ref<MockDataRecord[]>([
-  {
-    category: "原油",
-    all: {
-      total: 1000,
-      finished: 800,
-    },
-    purchase: {
-      total: 500,
-      finished: 400,
-    },
-    sales: {
-      total: 500,
-      finished: 400,
-    },
-  },
-  {
-    category: "煤炭",
-    all: {
-      total: 1000,
-      finished: 800,
-    },
-    purchase: {
-      total: 500,
-      finished: 400,
-    },
-    sales: {
-      total: 500,
-      finished: 400,
-    },
-  },
-  {
-    category: "燃料油",
-    all: {
-      total: 1000,
-      finished: 800,
-    },
-    purchase: {
-      total: 500,
-      finished: 400,
-    },
-    sales: {
-      total: 500,
-      finished: 400,
-    },
-  },
-  {
-    category: "LNG",
-    all: {
-      total: 1000,
-      finished: 800,
-    },
-    purchase: {
-      total: 500,
-      finished: 400,
-    },
-    sales: {
-      total: 500,
-      finished: 400,
-    },
-  },
-  {
-    category: "化工产品",
-    all: {
-      total: 700,
-      finished: 400,
-    },
-    purchase: {
-      total: 500,
-      finished: 250,
-    },
-    sales: {
-      total: 200,
-      finished: 150,
-    },
-  },
-  {
-    category: "成品油",
-    all: {
-      total: 1000,
-      finished: 800,
-    },
-    purchase: {
-      total: 500,
-      finished: 400,
-    },
-    sales: {
-      total: 500,
-      finished: 400,
-    },
-  },
-]);
+const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
+  业务维度: undefined,
+  状态集合: undefined,
+  日期早于: undefined,
+  日期晚于: undefined,
+  id集合: undefined,
+  页码: 1,
+  页容量: 20,
+});
+
+const mockData = ref([]);
 
 const dataMap: Ref<Record<string, any>> = ref({});
 const dataSeries: Ref<DataRecord[]> = ref([]);
@@ -177,7 +97,63 @@ const dataFilterOne: (data: MockDataRecord[]) => Record<string, any> = (
   return result;
 };
 
+const convertToMockData = (resData: any[]) => {
+  const requiredCategories = [
+    "原油",
+    "煤炭",
+    "燃料油",
+    "LNG",
+    "化工产品",
+    "成品油",
+  ];
+  //筛选出需要的业态类型,并且按照指定顺序排列
+  return resData
+    .filter((item) => requiredCategories.includes(item["业态类型"]))
+    .sort(
+      (a, b) =>
+        requiredCategories.indexOf(a["业态类型"]) -
+        requiredCategories.indexOf(b["业态类型"])
+    )
+    .map((item) => {
+      return {
+        category: item["业态类型"],
+        all: {
+          total: item["累计合同总份数"] || 0,
+          finished: item["累计合同履行数"] || 0, // TODO 待确认
+        },
+        purchase: {
+          total: item["累计销售合同数"] || 0,
+          finished: item["累计销售合同履行数"] || 0,
+        },
+        sales: {
+          total: item["累计采购合同数"] || 0,
+          finished: item["累计采购合同履行数"] || 0,
+        },
+      };
+    });
+};
+
+const getData = async () => {
+  queryForm.value = {
+    页码: 1,
+    页容量: 1,
+    企业名称: "广投石化",
+    状态集合: ["有效"],
+  };
+  const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
+  let resData = res["当前记录"][0]["内容"]["详情"];
+
+  // 将API返回的 resData 转换为符合 mockData 结构的数据
+  mockData.value = convertToMockData(resData);
+  // 处理数据并生成 DataRecord 格式
+  dataMap.value = dataFilterOne(mockData.value);
+  nextTick(() => {
+    dataSeries.value = dataMap.value[activeName.value as string];
+  });
+};
+
 const initData = () => {
+  getData();
   // 先将数据处理为DataRecord格式
   dataMap.value = dataFilterOne(mockData.value);
   nextTick(() => {
