@@ -12,7 +12,7 @@
             <span>份报表</span>
           </span>
         </span>
-        <span class="__item">统计指标二</span>
+        <!-- <span class="__item">统计指标二</span> -->
       </div>
     </div>
     <!-- 筛选操作区 -->
@@ -67,24 +67,32 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column> -->
-      <el-table-column type="index" label="序号" width="60" align="center">
+      <!-- <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
             #{{ scope.$index + 1 }}
           </el-link>
         </template>
-      </el-table-column>
-      <el-table-column prop="name" label="报表时间" sortable>
+      </el-table-column> -->
+      <el-table-column
+        prop="name"
+        label="报表时间"
+        width="200"
+        sortable
+        align="center"
+      >
         <template v-slot="scope">
-          <span>{{ scope.row.日期 || "-" }}</span>
+          <el-link type="primary" @click="handleViewDetail(scope.row)">
+            {{ scope.row.日期 || "-" }}
+          </el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="业务维度" sortable>
+      <el-table-column prop="name" label="企业名称" sortable align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.业务维度 || "-" }}</span>
+          <span>{{ scope.row.企业名称 || "-" }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="number" label="状态" sortable>
+      <el-table-column prop="number" label="状态" sortable align="center">
         <template v-slot="scope">
           <span v-if="scope.row.状态 === '有效'" class="text-green-5">
             <!-- 打勾 -->
@@ -171,7 +179,7 @@ const router = useRouter();
 type IExampleData = business.IAuditableEntity<Partial<business.IGoods>>;
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
-  业务维度: undefined,
+  企业名称: undefined,
   状态集合: undefined,
   日期早于: undefined,
   日期晚于: undefined,
@@ -257,12 +265,20 @@ const handleDelete = (row: any) => {
     });
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
+  // {
+  //   label: "业务维度",
+  //   prop: "业务维度",
+  //   value: null,
+  //   options: ["成品油", "燃料油", "原油", "化工产品", "LNG", "煤炭"],
+  //   inputType: "select",
+  //   order: 1,
+  // },
   {
-    label: "业务维度",
-    prop: "业务维度",
+    label: "企业名称",
+    prop: "企业名称",
     value: null,
-    options: ["成品油", "燃料油", "原油", "化工产品", "LNG", "煤炭"],
-    inputType: "select",
+    selected: null,
+    inputType: "input",
     order: 1,
   },
   {

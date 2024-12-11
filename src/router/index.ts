@@ -168,6 +168,15 @@ export const constantRoutes: RouteRecordRaw[] = [
     },
     children: [
       {
+        path: "firmMngReportMng",
+        name: "FirmMngReportMng",
+        component: () => import("@/views/datareport/firmMngReport/index.vue"),
+        meta: {
+          title: "企业经营报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
         path: "yearlyReportMng",
         name: "YearlyReportMng",
         component: () => import("@/views/datareport/yearlyReport/index.vue"),
@@ -193,15 +202,6 @@ export const constantRoutes: RouteRecordRaw[] = [
           import("@/views/datareport/marketPriceReport/index.vue"),
         meta: {
           title: "市场价格报表管理",
-          icon: "el-icon-coin",
-        },
-      },
-      {
-        path: "firmMngReportMng",
-        name: "FirmMngReportMng",
-        component: () => import("@/views/datareport/firmMngReport/index.vue"),
-        meta: {
-          title: "企业经营报表管理",
           icon: "el-icon-coin",
         },
       },

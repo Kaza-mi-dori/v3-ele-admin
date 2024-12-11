@@ -346,7 +346,7 @@
             <el-table-column width="200" fixed="left">
               <template #header>
                 <span>
-                  具体产品
+                  业务板块
                   <span v-if="rules.businessType" class="text-red-5">*</span>
                 </span>
               </template>
