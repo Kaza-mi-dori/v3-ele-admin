@@ -20,7 +20,7 @@ import type { TabsPaneContext } from "element-plus";
 import { DataIndicesAPI } from "@/api/dataIndices";
 import { DataDefinitionNameToMarkMap } from "@/enums/DataDefinitionEnum";
 import { ref, onMounted } from "vue";
-import { s } from "vite/dist/node/types.d-aGj9QkWt";
+import { autoRetryWrapper } from "@/utils/asyncwork";
 
 const YUANYOU = "YUANYOU";
 const HUAGONG = "HUAGONG";
@@ -268,23 +268,36 @@ const processChartData = (data: any) => {
   }
 };
 
+/**
+ * 根据配置项，分别获取每个标识对应数据的当年数据
+ */
 const initData = () => {
   // dataSeries.value = allData.value[activeName.value as string];
-  const marks: any[] = [];
-  Object.values(DataDefinitionNameToMarkMap).forEach((item: any) => {
-    marks.push(item);
+  // const marks: any[] = [];
+  const fetchDataTask: any[] = [];
+  for (const category in categoryMap as Record<string, string[]>) {
+    // 对每个类别的标识进行获取数据后放到dataMap中
+    fetchDataTask.push(
+      ...categoryMap[category as keyof typeof categoryMap].map(
+        (item: string) => {
+          return autoRetryWrapper(
+            DataIndicesAPI.getDataIndicesList({
+              标识集合: [DataDefinitionNameToMarkMap[item]],
+              时间晚于: new Date().getFullYear() + "-01-01 00:00:00",
+              页码: 1,
+              页容量: 1000,
+            })
+          );
+        }
+      )
+    );
+    // console.log("fetchDataTask", fetchDataTask);
+  }
+  Promise.all(fetchDataTask).then((res) => {
+    const data = res.map((item: any) => item["当前记录"]);
+    processChartData(data.flat());
+    initChartMiddle4();
   });
-  DataIndicesAPI.getAllDataIndicesList({
-    标识集合: marks,
-  })
-    .then((res: any) => {
-      processChartData(res);
-      // console.log(dataMap.value);
-      initChartMiddle4();
-    })
-    .catch((error: any) => {
-      console.error(error);
-    });
 };
 
 onMounted(() => {

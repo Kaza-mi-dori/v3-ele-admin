@@ -40,7 +40,7 @@ const textArr = ref<string[]>([]);
 watch(
   () => props.data,
   (newVal) => {
-    console.log(newVal);
+    // console.log(newVal);
     const { total, finished } = newVal;
     barArr.value = [
       {
