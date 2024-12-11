@@ -28,9 +28,7 @@ export const businessStore = defineStore("business", () => {
             return;
           }
           const currentRecord = res["当前记录"];
-          console.log("currentRecord", currentRecord);
           businessInfo.value = currentRecord;
-          console.log("businessInfo3", businessInfo);
           resolve(currentRecord);
         })
         .catch((error) => {
