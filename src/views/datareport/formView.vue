@@ -143,7 +143,7 @@ const converToFrontendFormData = (type: string | null, data: any) => {
       const content =
         Array.isArray(data["内容"]["详情"]) &&
         data["内容"]["详情"].length > 0 &&
-        data["内容"]["详情"][0]; // TODO 改为遍历而不是只取第一个
+        data["内容"]["详情"][0];
       return {
         timeDimension: data["类型"],
         year: data["日期"],
@@ -289,33 +289,31 @@ const convertToBackendData = (type: string | null, data: any) => {
       result["类型"] = data.timeDimension;
       result["内容"] = {
         库存量: 0 || data.storage, // TODO 后端为数字但前端为数组
-        详情: [
-          {
-            业态类型: data.businessDimension,
-            数据日期: data.year,
-            利润金额: data.profit,
-            营收金额: data.income,
-            // 采购金额: data.purchaseAmount, // TODO 后端接口无
-            // 销售金额: data.salesAmount, // TODO 后端接口无
-            // 支出金额: data.outcome, // TODO 后端接口无
-            // 采购合同数: data.purchaseContractCount, // TODO 后端接口无
-            // 销售合同数: data.salesContractCount, // TODO 后端接口无
-            合同总份数: data.contractCount,
-            合同总金额: data.contractAmount,
-            // 采购合同份数: data.purchaseOrderCount, // TODO 后端接口无
-            // 销售合同份数: data.salesOrderCount, // TODO 后端接口无
-            合同履行数: data.contractFulfilledCount,
-            合同履行金额: 0, // TODO 后端接口有但前端页面无
-            风险合同数: data.riskContractCount,
-            结算金额: data.settlementAmount,
-            结算数量: data.settlementCount,
-            计划营收: data.planIncome,
-            计划利润: data.planProfit,
-            // 计划支出: data.planOutcome, // TODO 后端接口无
-            营收目标完成率: data.incomeFulfilledRate,
-            利润目标完成率: data.profitFulfilledRate,
-          },
-        ],
+        详情: data.details.map((detail: any) => ({
+          业态类型: data.businessDimension,
+          数据日期: data.year,
+          利润金额: detail.profit,
+          营收金额: detail.income,
+          // 采购金额: detail.purchaseAmount, // TODO 后端接口无
+          // 销售金额: detail.salesAmount, // TODO 后端接口无
+          // 支出金额: detail.outcome, // TODO 后端接口无
+          // 采购合同数: detail.purchaseContractCount, // TODO 后端接口无
+          // 销售合同数: detail.salesContractCount, // TODO 后端接口无
+          合同总份数: detail.contractCount,
+          合同总金额: detail.contractAmount,
+          // 采购合同份数: detail.purchaseOrderCount, // TODO 后端接口无
+          // 销售合同份数: detail.salesOrderCount, // TODO 后端接口无
+          合同履行数: detail.contractFulfilledCount,
+          合同履行金额: 0, // TODO 后端接口有但前端页面无
+          风险合同数: detail.riskContractCount,
+          结算金额: detail.settlementAmount,
+          结算数量: detail.settlementCount,
+          计划营收: detail.planIncome,
+          计划利润: detail.planProfit,
+          // 计划支出: detail.planOutcome, // TODO 后端接口无
+          营收目标完成率: detail.incomeFulfilledRate,
+          利润目标完成率: detail.profitFulfilledRate,
+        })),
       };
       // console.log("converted", result);
       return result;
