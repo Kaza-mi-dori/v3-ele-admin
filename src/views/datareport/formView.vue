@@ -161,7 +161,7 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         salesOrderCount: content["销售合同份数"],
         contractFulfilledCount: content["合同履行数"],
         riskContractCount: content["风险合同数"],
-        storage: 0 || data["库存量"], // TODO 后端为数字但前端为数组
+        // storage: 0 || data["库存量"], // TODO 后端为数字但前端为数组
         settlementAmount: content["结算金额"],
         settlementCount: content["结算数量"],
         planIncome: content["计划营收"],
@@ -288,7 +288,7 @@ const convertToBackendData = (type: string | null, data: any) => {
       result["业务维度"] = data.businessDimension;
       result["类型"] = data.timeDimension;
       result["内容"] = {
-        库存量: 0 || data.storage, // TODO 后端为数字但前端为数组
+        // 库存量: 0 || data.storage, // TODO 后端为数字但前端为数组
         详情: [
           {
             业态类型: data.businessDimension,
