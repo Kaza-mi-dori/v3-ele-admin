@@ -48,6 +48,7 @@ import greenBg from "@/views/bigscreen/img/green_bg.png";
 import redBg from "@/views/bigscreen/img/red_bg.png";
 import { h, ref, shallowRef } from "vue";
 import { useTransition } from "@vueuse/core";
+import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 
 // 定义背景图片数组
 const backgroundImages = [yellowBg, blueBg, greenBg, redBg];
@@ -62,6 +63,17 @@ defineProps({
     default: true,
   },
 });
+
+const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
+  业务维度: undefined,
+  状态集合: undefined,
+  日期早于: undefined,
+  日期晚于: undefined,
+  id集合: undefined,
+  页码: 1,
+  页容量: 20,
+});
+
 const timeCondition = ref("");
 const customPrefix = shallowRef({
   render() {
@@ -69,52 +81,70 @@ const customPrefix = shallowRef({
   },
 });
 // 定义合同数据
-const contractData = ref([
-  {
-    label: "合同总金额",
-    value: "355480",
-    unit: "万元",
-  },
-  {
-    label: "合同总数",
-    value: "2460",
-    unit: "份",
-  },
-  {
-    label: "采购合同",
-    value: "980",
-    unit: "份",
-  },
-  {
-    label: "销售合同",
-    value: "1480",
-    unit: "份",
-  },
-]);
+let contractData = ref({});
+
+const initData = async () => {
+  queryForm.value = {
+    页码: 1,
+    页容量: 1,
+    企业名称: "广投石化",
+    状态集合: ["有效"],
+  };
+  const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
+  let resData = res["当前记录"][0]["内容"]["详情"];
+  contractData.value = [
+    { label: "合同总金额", value: 0, unit: "万元" },
+    { label: "合同总数", value: 0, unit: "份" },
+    { label: "采购合同", value: 0, unit: "份" },
+    { label: "销售合同", value: 0, unit: "份" },
+  ];
+  resData.forEach((item: any) => {
+    contractData.value.forEach((contractItem, index) => {
+      if (contractItem.label === "合同总金额") {
+        contractItem.value += Number(item["累计合同履行金额"]) || 0;
+      } else if (contractItem.label === "合同总数") {
+        contractItem.value += Number(item["累计合同总份数"]) || 0;
+      } else if (contractItem.label === "采购合同") {
+        contractItem.value += Number(item["累计采购合同数"]) || 0;
+      } else if (contractItem.label === "销售合同") {
+        contractItem.value += Number(item["累计销售合同数"]) || 0;
+      }
+    });
+  });
+
+  // 更新 outputValues
+  updateOutputValues();
+};
 
 const outputValues = ref([]);
 
-contractData.value.forEach((item) => {
-  const source = ref(0); // 初始值为 0
-  const decimalPlaces = item.value.toString().includes(".")
-    ? item.value.toString().split(".")[1].length
-    : 0; // 获取小数位数
+const updateOutputValues = () => {
+  outputValues.value = contractData.value.map((item) => {
+    const source = ref(0); // 初始值为 0
+    const decimalPlaces = item.value.toString().includes(".")
+      ? item.value.toString().split(".")[1].length
+      : 0; // 获取小数位数
 
-  const output = useTransition(source, {
-    duration: 2000, // 动画持续时间
-  });
-
-  // 使用 Intl.NumberFormat 添加分隔符，并保持小数位数
-  const formattedOutput = computed(() => {
-    const numberFormatter = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: decimalPlaces,
-      maximumFractionDigits: decimalPlaces,
+    const output = useTransition(source, {
+      duration: 2000, // 动画持续时间
     });
-    return numberFormatter.format(output.value);
-  });
 
-  source.value = Number(item.value); // 设置目标值
-  outputValues.value.push(formattedOutput); // 存储格式化后的值
+    // 使用 Intl.NumberFormat 添加分隔符，并保持小数位数
+    const formattedOutput = computed(() => {
+      const numberFormatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: decimalPlaces,
+        maximumFractionDigits: decimalPlaces,
+      });
+      return numberFormatter.format(output.value);
+    });
+
+    source.value = Number(item.value); // 设置目标值
+    return formattedOutput;
+  });
+};
+
+onMounted(() => {
+  initData();
 });
 </script>
 
