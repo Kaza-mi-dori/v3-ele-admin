@@ -248,7 +248,7 @@ const BusinessFormAPI = {
    * @param companyId 企业ID
    * @returns 企业经营报表详情
    */
-  getCompanyReportForm(companyId: number) {
+  getCompanyReportForm(companyId: number | string) {
     return request2<any, any>({
       url: `${BUSINESS_FORM_BASE_URL}/CorporateOperationsReportShow`,
       method: "get",

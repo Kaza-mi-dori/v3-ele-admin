@@ -85,6 +85,7 @@ import { ElMessage } from "element-plus";
 
 import { ref, onMounted, shallowRef } from "vue";
 import { useRoute } from "vue-router";
+import { set } from "nprogress";
 
 const route = useRoute();
 const router = useRouter();
@@ -215,6 +216,40 @@ const converToFrontendFormData = (type: string | null, data: any) => {
       // 企业经营报表
       return {
         // 转换数据
+        year: data["日期"],
+        firmName: data["企业名称"],
+        firmType: data["企业类型"],
+        details: data["内容"]["详情"].map((item: any) => {
+          return {
+            businessType: item["业态类型"],
+            dataDate: item["数据日期"],
+            storage: item["库存量"],
+            bargain: item["成交量"],
+            profit: item["当期利润金额"],
+            revenue: item["当期营收金额"],
+            planProfit: item["当期计划利润"],
+            planRevenue: item["当期计划营收"],
+            purchaseAmount: item["当期采购金额"],
+            salesAmount: item["当期销售金额"],
+            purchaseCount: item["当期采购量"],
+            salesCount: item["当期销售量"],
+            settlementAmount: item["当期结算金额"],
+            settlementCount: item["当期结算数量"],
+            contractCount: item["累计合同总份数"],
+            contractFulfilledCount: item["累计合同履行数"],
+            contractFulfilledAmount: item["累计合同履行金额"],
+            riskContractCount: item["累计风险合同数"],
+            contractAmount: item["累计合同总金额"],
+            purchaseContractFulfilledCount: item["累计采购合同履行数"],
+            salesContractFulfilledCount: item["累计销售合同履行数"],
+            purchaseContractCount: item["累计采购合同数"],
+            salesContractCount: item["累计销售合同数"],
+            storageContractCount: item["累计仓储合同数"],
+            otherContractCount: item["累计其他合同数"],
+            incomeFulfilledRate: item["累计营收目标完成率"],
+            profitFulfilledRate: item["累计利润目标完成率"],
+          };
+        }),
       };
     case "firmReport":
       return {
@@ -374,27 +409,40 @@ const convertToBackendData = (type: string | null, data: any) => {
       return result;
     case "firmMngReport":
       result["日期"] = data.year;
-      result["企业类型"] = data.name;
+      result["企业名称"] = data.firmName;
+      result["企业类型"] = data.firmType;
       result["内容"] = {
-        利润金额: data.profit,
-        营收金额: data.income,
-        采购金额: data.purchaseAmount,
-        销售金额: data.salesAmount,
-        采购合同数: data.purchaseContractCount,
-        销售合同数: data.salesContractCount,
-        合同总份数: data.contractCount,
-        合同总金额: data.contractAmount,
-        采购合同份数: data.purchaseOrderCount,
-        销售合同份数: data.salesOrderCount,
-        合同履行数: data.contractFulfilledCount,
-        风险合同数: data.riskContractCount,
-        库存量: data.storage,
-        结算金额: data.settlementAmount,
-        结算数量: data.settlementCount,
-        计划营收: data.planIncome,
-        计划利润: data.planProfit,
-        营收目标完成率: data.incomeFulfilledRate,
-        利润目标完成率: data.profitFulfilledRate,
+        详情: data.details.map((item: any) => {
+          return {
+            业态类型: item.businessType,
+            数据日期: item.dataDate,
+            库存量: item.storage,
+            成交量: item.bargain,
+            当期利润金额: item.profit,
+            当期营收金额: item.revenue,
+            当期计划利润: item.planProfit,
+            当期计划营收: item.planRevenue,
+            当期采购金额: item.purchaseAmount,
+            当期销售金额: item.salesAmount,
+            当期采购量: item.purchaseCount,
+            当期销售量: item.salesCount,
+            当期结算金额: item.settlementAmount,
+            当期结算数量: item.settlementCount,
+            累计合同总份数: item.contractCount,
+            累计合同履行数: item.contractFulfilledCount,
+            累计合同履行金额: item.contractFulfilledAmount,
+            累计风险合同数: item.riskContractCount,
+            累计合同总金额: item.contractAmount,
+            累计采购合同履行数: item.purchaseContractFulfilledCount,
+            累计销售合同履行数: item.salesContractFulfilledCount,
+            累计采购合同数: item.purchaseContractCount,
+            累计销售合同数: item.salesContractCount,
+            累计仓储合同数: item.storageContractCount,
+            累计其他合同数: item.otherContractCount,
+            累计营收目标完成率: item.incomeFulfilledRate,
+            累计利润目标完成率: item.profitFulfilledRate,
+          };
+        }),
       };
       return result;
     case "firmReport":
@@ -728,6 +776,21 @@ const initForm = () => {
     case marketPriceReportDetailForm:
       break;
     case firmMngReportDetailForm:
+      if (route.query.id) {
+        BusinessFormAPI.getCompanyReportForm(route.query.id as string).then(
+          (data) => {
+            if (formRef.value) {
+              const form = formRef.value as any;
+              form.setFormValue(
+                converToFrontendFormData(
+                  route.query.type as Nullable<string>,
+                  data
+                )
+              );
+            }
+          }
+        );
+      }
       break;
     case firmReportDetailForm:
       if (route.query.id) {
