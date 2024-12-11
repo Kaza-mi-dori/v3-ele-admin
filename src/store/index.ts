@@ -15,4 +15,5 @@ export * from "./modules/tags-view";
 export * from "./modules/user";
 export * from "./modules/dict";
 export * from "./modules/user2";
+export * from "./modules/business";
 export { store };
