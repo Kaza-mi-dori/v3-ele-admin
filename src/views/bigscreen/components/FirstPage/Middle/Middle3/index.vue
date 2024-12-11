@@ -28,9 +28,17 @@ import crudeOilIcon from "../../../../img/crude_oil.png";
 import chemicalProductIcon from "../../../../img/chemical_product.png";
 
 import { ref } from "vue";
-import { businessStore } from "@/store";
+import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 
-const businessstore = businessStore();
+const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
+  业务维度: undefined,
+  状态集合: undefined,
+  日期早于: undefined,
+  日期晚于: undefined,
+  id集合: undefined,
+  页码: 1,
+  页容量: 20,
+});
 
 const titleArr = ref([
   {
@@ -47,20 +55,7 @@ const titleArr = ref([
   },
 ]);
 
-const totalData = ref([
-  {
-    revenue: "3587652",
-    profit: "3587652",
-  },
-  {
-    revenue: "3587652",
-    profit: "3587652",
-  },
-  {
-    revenue: "3587652",
-    profit: "3587652",
-  },
-]);
+let totalData = ref([]);
 
 const formatNumber = (num: number | string): string => {
   if (Number(num) > 10000) {
@@ -69,6 +64,48 @@ const formatNumber = (num: number | string): string => {
     return num.toString(); // 直接返回原始数字，不格式化
   }
 };
+
+const initData = async () => {
+  queryForm.value = {
+    页码: 1,
+    页容量: 1,
+    企业名称: "广投石化",
+    状态集合: ["有效"],
+  };
+  const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
+  let resData = res["当前记录"][0]["内容"]["详情"];
+
+  // 遍历 titleArr，找到对应的业态类型并赋值
+  const mappedData = titleArr.value.map((titleItem) => {
+    // 根据业态类型查找匹配的项
+    const matchingItem = resData.find(
+      (item) => item["业态类型"] === titleItem.title
+    );
+
+    // 如果找到了匹配项，则返回利润和营收的对象
+    if (matchingItem) {
+      return {
+        title: titleItem.title,
+        revenue: matchingItem["当期营收金额"],
+        profit: matchingItem["当期利润金额"],
+      };
+    }
+
+    // 如果没有找到匹配项，返回默认的空数据
+    return {
+      title: titleItem.title,
+      revenue: "0",
+      profit: "0",
+    };
+  });
+
+  // 将映射后的数据赋值给 totalData
+  totalData.value = mappedData;
+};
+
+onMounted(() => {
+  initData();
+});
 </script>
 
 <style lang="scss" scoped>
