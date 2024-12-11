@@ -28,7 +28,9 @@ import crudeOilIcon from "../../../../img/crude_oil.png";
 import chemicalProductIcon from "../../../../img/chemical_product.png";
 
 import { ref } from "vue";
+import { businessStore } from "@/store";
 
+const businessstore = businessStore();
 const titleArr = ref([
   {
     title: "成品油",

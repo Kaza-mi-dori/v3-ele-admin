@@ -36,6 +36,9 @@ import ScreenIndexContent from "./index-content.vue";
 import { ref, computed } from "vue";
 import router from "@/router";
 import { businessTypes, navItem } from "./components/constants";
+import { businessStore } from "@/store";
+
+const businessstore = businessStore();
 
 const businessTypeArr = ref<navItem[]>(businessTypes);
 
@@ -98,6 +101,7 @@ const initScale = () => {
 };
 
 onMounted(() => {
+  businessstore.getBusinessReportFormList(businessstore.queryForm);
   // window.addEventListener("resize", () => {
   //   initScale();
   // });
