@@ -100,7 +100,7 @@ const getDateOfOneMonth = () => {
 // 每个类别对应的数据系列
 const categoryMap = {
   YUANYOU: ["WTI日价", "布伦特日价"],
-  HUAGONG: ["丁二烯"],
+  HUAGONG: ["乙烯焦油华南价"],
   QICHAIYOU: ["#92汽油", "#95汽油", "#0柴油"],
 };
 

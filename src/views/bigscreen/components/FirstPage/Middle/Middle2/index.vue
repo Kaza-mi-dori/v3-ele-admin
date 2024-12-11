@@ -53,16 +53,93 @@
     </div>
     <div v-if="showTotalNum" class="total-box">
       <div class="total-content">
-        <div class="content1">
+        <el-popover
+          popper-class="dark-popper"
+          placement="top-start"
+          width="200"
+        >
+          <template #reference>
+            <div class="content1">
+              <div class="title">油库</div>
+              <div class="num">
+                <el-statistic :value="gasNumOutputValue" />
+              </div>
+            </div>
+          </template>
+          <div class="total-pop-content">
+            <div class="__desc">
+              <div
+                v-for="item in posItems.filter(
+                  (item) => item['type'] === '油库'
+                )"
+                :key="item.id"
+              >
+                <div class="__title">
+                  <span>{{ item.name }}</span>
+                </div>
+                <div class="__desc">
+                  <span>{{ item.desc }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </el-popover>
+        <el-popover
+          popper-class="dark-popper"
+          placement="top-start"
+          width="500"
+        >
+          <template #reference>
+            <div class="content2">
+              <div class="title">加油站</div>
+              <div class="num">
+                <el-statistic :value="oilNumOutputValue" />
+              </div>
+            </div>
+          </template>
+          <div class="total-pop-content">
+            <div class="__desc">
+              <div
+                v-for="item in posItems.filter(
+                  (item) => item['type'] === '加油站'
+                )"
+                :key="item.id"
+              >
+                <div class="__desc flex justify-between">
+                  <span class="text-blue">{{ item.name }}</span>
+                  <div>
+                    <span
+                      :class="{
+                        'text-amber': item.status1 === '自建',
+                        'text-green': item.status1 === '租赁',
+                        'text-purple': item.status1 === '加盟',
+                      }"
+                    >
+                      {{ item.status1 }}|
+                    </span>
+                    <span v-if="item.status2">{{ item.status2 }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </el-popover>
+        <!-- <div class="content1">
           <div class="title">油库</div>
           <div class="num">
             <el-statistic :value="gasNumOutputValue" />
           </div>
-        </div>
-        <div class="content2">
+        </div> -->
+        <!-- <div class="content2">
           <div class="title">加油站</div>
           <div class="num">
             <el-statistic :value="oilNumOutputValue" />
+          </div>
+        </div> -->
+        <div class="content3">
+          <div class="title">运油船</div>
+          <div class="num">
+            <el-statistic :value="boatNumOutputValue" />
           </div>
         </div>
       </div>
@@ -76,6 +153,7 @@ import gas from "@/views/bigscreen/img/oil2.png";
 import { GsLocationAPI } from "@/api/config/gsLocation";
 import { ref } from "vue";
 import { useTransition } from "@vueuse/core";
+import { stat } from "fs";
 
 defineProps({
   showTotalNum: {
@@ -94,6 +172,8 @@ interface posItem {
   xPercent?: string;
   yPercent?: string;
   type?: string;
+  status1?: string;
+  status2?: string;
 }
 
 const mockPosItems: Ref<posItem[]> = ref([
@@ -158,9 +238,12 @@ const initTableData = async () => {
       id: item["id"],
       name: item["名称"],
       desc: item["描述"],
+      type: item["类型"],
       iconName: item["类型"] === "加油站" ? "oil" : "gas",
       x: (x / 1261) * width,
       y: (y / 853) * height,
+      status1: item["描述"].split("，")[0],
+      status2: item["描述"].split("，")[1] || "",
     };
   });
 };
@@ -182,7 +265,9 @@ onMounted(() => {
     //     };
     //   });
     // }, 500);
-    initTableData();
+    setTimeout(() => {
+      initTableData();
+    }, 1000);
   });
   // console.log(posItems.value);
   // nextTick(() => {
@@ -202,17 +287,23 @@ onMounted(() => {
 
 const gasNum = ref(25);
 const oilNum = ref(3);
+const boatNum = ref(0);
 
 const gasSource = ref(0);
 const oilSource = ref(0);
+const boatSource = ref(0);
 const gasNumOutputValue = useTransition(gasSource, {
   duration: 2000,
 });
 const oilNumOutputValue = useTransition(oilSource, {
   duration: 2000,
 });
+const boatNumOutputValue = useTransition(boatSource, {
+  duration: 2000,
+});
 gasSource.value = gasNum.value;
 oilSource.value = oilNum.value;
+boatSource.value = boatNum.value;
 </script>
 
 <style lang="scss" scoped>
@@ -237,6 +328,8 @@ oilSource.value = oilNum.value;
 .total-box {
   display: flex;
   justify-content: flex-end;
+  position: relative;
+  z-index: 100;
   // height: 30px;
   margin-top: -35px;
   margin-right: -10px;
@@ -251,10 +344,13 @@ oilSource.value = oilNum.value;
     font-size: 14px;
   }
   .content1,
-  .content2 {
+  .content2,
+  .content3 {
     display: flex;
+    cursor: pointer;
   }
-  .content2 {
+  .content2,
+  .content3 {
     margin-left: 15px;
   }
   .num {
@@ -270,6 +366,21 @@ oilSource.value = oilNum.value;
 }
 
 .pop-content {
+  background-color: #303133;
+  border-color: #303133;
+  .__title {
+    @apply lh-normal border-b-1 border-b-dark-1;
+    color: #55a2f0;
+    font-size: 18px;
+  }
+  .__desc {
+    @apply text-sm;
+    // 文字颜色改为比较护眼的暗色
+    color: #c0c4cc;
+  }
+}
+
+.total-pop-content {
   background-color: #303133;
   border-color: #303133;
   .__title {
