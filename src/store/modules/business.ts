@@ -1,5 +1,6 @@
 import { store } from "@/store";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { ref, computed } from "vue";
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -12,8 +13,8 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
 });
 
 export const businessStore = defineStore("business", () => {
-  let businessInfo = {};
-
+  const businessInfo = ref([]);
+  const businessInfoValue = computed(() => businessInfo.value);
   /**
    * 获取业态报表列表
    *
@@ -28,7 +29,7 @@ export const businessStore = defineStore("business", () => {
           }
           const currentRecord = res["当前记录"];
           console.log("currentRecord", currentRecord);
-          businessInfo = currentRecord;
+          businessInfo.value = currentRecord;
           console.log("businessInfo3", businessInfo);
           resolve(currentRecord);
         })
@@ -41,6 +42,7 @@ export const businessStore = defineStore("business", () => {
   return {
     queryForm,
     businessInfo,
+    businessInfoValue,
     getBusinessReportFormList,
   };
 });

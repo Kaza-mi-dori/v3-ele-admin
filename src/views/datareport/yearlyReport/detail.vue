@@ -39,7 +39,7 @@
         >
           <el-row class="w-full">
             <el-col :span="8">
-              <el-form-item label="时间维度" prop="timeDimension">
+              <el-form-item label="维度" prop="timeDimension">
                 <el-select
                   v-if="editing"
                   v-model="yearlyReportDetailForm.timeDimension"
@@ -64,13 +64,45 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="业务维度" prop="businessDimension">
+              <el-form-item label="时间" prop="year">
+                <template v-if="editing">
+                  <el-date-picker
+                    v-if="
+                      editing && yearlyReportDetailForm.timeDimension === '年'
+                    "
+                    v-model="yearlyReportDetailForm.year"
+                    style="width: 100%"
+                    type="year"
+                    value-format="YYYY-01-01"
+                  />
+                  <el-date-picker
+                    v-else-if="
+                      editing && yearlyReportDetailForm.timeDimension === '月'
+                    "
+                    v-model="yearlyReportDetailForm.year"
+                    type="month"
+                    style="width: 100%"
+                    value-format="YYYY-MM-01"
+                  />
+                  <el-date-picker
+                    v-else
+                    v-model="yearlyReportDetailForm.year"
+                    type="date"
+                    style="width: 100%"
+                    value-format="YYYY-MM-DD"
+                  />
+                </template>
+                <span v-else>{{ yearlyReportDetailForm.year }}</span>
+              </el-form-item>
+            </el-col>
+            <!-- 业务维度 -->
+            <el-col :span="8">
+              <el-form-item label="业务板块" prop="businessDimension">
                 <el-select
                   v-if="editing"
                   v-model="yearlyReportDetailForm.businessDimension"
-                  placeholder="请选择报表反映的业务维度"
+                  placeholder="请选择报表反映的业务板块"
                 >
-                  <!-- 成品油、原料油、化工产品、其他 -->
                   <el-option
                     v-for="(value, key) in BusinessEnumMap"
                     :key="key"
@@ -79,7 +111,10 @@
                   />
                 </el-select>
                 <span v-else>
-                  {{ yearlyReportDetailForm.businessDimension }}
+                  {{
+                    BusinessEnumMap[yearlyReportDetailForm.businessDimension] ||
+                    "未选择"
+                  }}
                 </span>
               </el-form-item>
             </el-col>
@@ -101,36 +136,7 @@
           class="w-full g-form-1"
           :model="yearlyReportDetailForm"
         >
-          <el-row class="w-full">
-            <el-col :span="8">
-              <el-form-item label="时间" prop="year">
-                <template v-if="editing">
-                  <el-date-picker
-                    v-if="
-                      editing && yearlyReportDetailForm.timeDimension === '年'
-                    "
-                    v-model="yearlyReportDetailForm.year"
-                    type="year"
-                    value-format="YYYY-01-01"
-                  />
-                  <el-date-picker
-                    v-else-if="
-                      editing && yearlyReportDetailForm.timeDimension === '月'
-                    "
-                    v-model="yearlyReportDetailForm.year"
-                    type="month"
-                    value-format="YYYY-MM-01"
-                  />
-                  <el-date-picker
-                    v-else
-                    v-model="yearlyReportDetailForm.year"
-                    type="date"
-                    value-format="YYYY-MM-DD"
-                  />
-                </template>
-                <span v-else>{{ yearlyReportDetailForm.year }}</span>
-              </el-form-item>
-            </el-col>
+          <!-- <el-row class="w-full">
             <el-col :span="8">
               <el-form-item label="利润(万元)" prop="profit">
                 <el-input
@@ -327,11 +333,454 @@
                 </span>
               </el-form-item>
             </el-col>
-          </el-row>
+          </el-row> -->
+          <!-- 以上数据改为表格形式，一行对应一个表单 -->
+          <el-table
+            :data="yearlyReportDetailForm.content"
+            stripe
+            border
+            :scrollbar-always-on="true"
+          >
+            <el-table-column width="200" fixed="left">
+              <template #header>
+                <span>
+                  具体产品
+                  <span v-if="rules.profit" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.profit'"
+                  :rules="rules.product"
+                >
+                  <el-input v-if="editing" v-model="row.product" />
+                  <span v-else>{{ row.product }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  当期利润(万元)
+                  <span v-if="rules.profit" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.profit'"
+                  :rules="rules.profit"
+                >
+                  <el-input v-if="editing" v-model="row.profit" type="number" />
+                  <span v-else>{{ row.profit }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  当期营收(万元)
+                  <span v-if="rules.revenue" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.income'"
+                  :rules="rules.revenue"
+                >
+                  <el-input v-if="editing" v-model="row.income" type="number" />
+                  <span v-else>{{ row.income }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column width="150">
+              <template #header>
+                <span>
+                  支出(万元)
+                  <span v-if="rules.cost" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.outcome'"
+                  :rules="rules.cost"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.outcome"
+                    type="number"
+                  />
+                  <span v-else>{{ row.outcome }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column> -->
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  当期采购金额(万元)
+                  <span v-if="rules.purchaseAmount" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.purchaseAmount'"
+                  :rules="rules.purchaseAmount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.purchaseAmount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.purchaseAmount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  当期销售金额(万元)
+                  <span v-if="rules.salesAmount" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.salesAmount'"
+                  :rules="rules.salesAmount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.salesAmount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.salesAmount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  累计签订合同数(份)
+                  <span v-if="rules.contractCount" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.contractCount'"
+                  :rules="rules.contractCount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.contractCount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.contractCount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  已履行合同数量(份)
+                  <span v-if="rules.contractFulfilledCount" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.contractFulfilledCount'"
+                  :rules="rules.contractFulfilledCount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.contractFulfilledCount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.contractFulfilledCount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  风险合同数量(份)
+                  <span v-if="rules.riskContractCount" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.riskContractCount'"
+                  :rules="rules.riskContractCount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.riskContractCount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.riskContractCount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  采购合同数量(份)
+                  <span v-if="rules.purchaseContractCount" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.purchaseContractCount'"
+                  :rules="rules.purchaseContractCount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.purchaseContractCount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.purchaseContractCount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  销售合同数量(份)
+                  <span v-if="rules.salesContractCount" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.salesContractCount'"
+                  :rules="rules.salesContractCount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.salesContractCount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.salesContractCount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  采购订单数量(份)
+                  <span v-if="rules.purchaseOrderCount" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.purchaseOrderCount'"
+                  :rules="rules.purchaseOrderCount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.purchaseOrderCount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.purchaseOrderCount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  销售订单数量(份)
+                  <span v-if="rules.salesOrderCount" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.salesOrderCount'"
+                  :rules="rules.salesOrderCount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.salesOrderCount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.salesOrderCount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  结算数量(吨)
+                  <span v-if="rules.settlementCount" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.settlementCount'"
+                  :rules="rules.settlementCount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.settlementCount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.settlementCount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  结算金额(万元)
+                  <span v-if="rules.settlementAmount" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.settlementAmount'"
+                  :rules="rules.settlementAmount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.settlementAmount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.settlementAmount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  计划营收(万元)
+                  <span v-if="rules.planIncome" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.planIncome'"
+                  :rules="rules.planIncome"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.planIncome"
+                    type="number"
+                  />
+                  <span v-else>{{ row.planIncome }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  计划支出(万元)
+                  <span v-if="rules.planOutcome" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.planOutcome'"
+                  :rules="rules.planOutcome"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.planOutcome"
+                    type="number"
+                  />
+                  <span v-else>{{ row.planOutcome }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  计划利润(万元)
+                  <span v-if="rules.planProfit" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.planProfit'"
+                  :rules="rules.planProfit"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.planProfit"
+                    type="number"
+                  />
+                  <span v-else>{{ row.planProfit }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  营收目标完成率(%)
+                  <span v-if="rules.incomeFulfilledRate" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.incomeFulfilledRate'"
+                  :rules="rules.incomeFulfilledRate"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.incomeFulfilledRate"
+                    type="number"
+                  />
+                  <span v-else>{{ row.incomeFulfilledRate }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  利润目标完成率(%)
+                  <span v-if="rules.profitFulfilledRate" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'content.' + $index + '.profitFulfilledRate'"
+                  :rules="rules.profitFulfilledRate"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.profitFulfilledRate"
+                    type="number"
+                  />
+                  <span v-else>{{ row.profitFulfilledRate }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-form>
+        <div class="w-full">
+          <el-button
+            v-if="editing"
+            icon="plus"
+            size="small"
+            class="w-full g-button-1"
+            @click="handleAddSubRecord"
+          >
+            新增
+          </el-button>
+        </div>
       </div>
     </div>
-    <div class="info-card-level1">
+    <!-- <div class="info-card-level1">
       <div class="__title">
         <span>库存信息</span>
       </div>
@@ -381,7 +830,6 @@
             </el-table-column>
           </el-table>
           <div class="w-full">
-            <!-- 新增按钮 -->
             <el-button
               v-if="editing"
               icon="plus"
@@ -394,7 +842,7 @@
           </div>
         </el-form>
       </div>
-    </div>
+    </div> -->
     <div v-if="!editing" class="info-card-level1">
       <div class="__title">
         <span>维护信息</span>
@@ -451,8 +899,8 @@ import { ref, unref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useManualRefHistory } from "@vueuse/core";
 import { type FormInstance } from "element-plus";
-import { BusinessEnum, BusinessEnumMap } from "@/enums/BusinessEnum";
 import { timeDimensionFtoBMap } from "@/enums/OptionLabelEnum";
+import { BusinessEnumMap } from "@/enums/BusinessEnum";
 import BusinessFormAPI from "@/api/businessForm";
 import business from "@/types/business";
 
@@ -497,52 +945,55 @@ const { id, editing } = toRefs(props);
  */
 type YearlyReportDetailFormData =
   business.IAuditableEntity<business.IYearlyBusinessReport>;
-const yearlyReportDetailForm = ref<
-  business.IAuditableEntity<business.IYearlyBusinessReport>
->({
+const yearlyReportDetailForm: Ref<any> = ref({
   year: "2021",
   timeDimension: "年",
   businessDimension: "成品油",
-  income: 1000,
-  outcome: 2000,
-  profit: 1000,
-  purchaseAmount: 1000,
-  salesAmount: 2000,
-  contractAmount: 1000,
-  contractCount: 1000,
-  contractFulfilledCount: 2000,
-  riskContractCount: 1000,
-  purchaseContractCount: 2000,
-  salesContractCount: 1000,
-  purchaseOrderCount: 2000,
-  salesOrderCount: 1000,
-  storage: [
+  content: [
     {
-      warehouse: "仓库1",
-      name: "产品1",
-      amount: 1000,
-      unit: "吨",
-    },
-    {
-      warehouse: "仓库2",
-      name: "产品2",
-      amount: 2000,
-      unit: "吨",
-    },
-    {
-      warehouse: "在途",
-      name: "产品3",
-      amount: 3000,
-      unit: "吨",
+      name: "成品油",
+      profit: 1000,
+      income: 1000,
+      outcome: 2000,
+      purchaseAmount: 1000,
+      salesAmount: 2000,
+      contractAmount: 1000,
+      contractCount: 1000,
+      contractFulfilledCount: 2000,
+      riskContractCount: 1000,
+      purchaseContractCount: 2000,
+      salesContractCount: 1000,
+      purchaseOrderCount: 2000,
+      salesOrderCount: 1000,
+      // storage: [
+      //   {
+      //     warehouse: "仓库1",
+      //     name: "产品1",
+      //     amount: 1000,
+      //     unit: "吨",
+      //   },
+      //   {
+      //     warehouse: "仓库2",
+      //     name: "产品2",
+      //     amount: 2000,
+      //     unit: "吨",
+      //   },
+      //   {
+      //     warehouse: "在途",
+      //     name: "产品3",
+      //     amount: 3000,
+      //     unit: "吨",
+      //   },
+      // ],
+      settlementCount: 1000,
+      settlementAmount: 2000,
+      planIncome: 1000,
+      planOutcome: 2000,
+      planProfit: 1000,
+      incomeFulfilledRate: 1000,
+      profitFulfilledRate: 2000,
     },
   ],
-  settlementCount: 1000,
-  settlementAmount: 2000,
-  planIncome: 1000,
-  planOutcome: 2000,
-  planProfit: 1000,
-  incomeFulfilledRate: 1000,
-  profitFulfilledRate: 2000,
   createdAt: "",
   createdBy: "",
   updatedAt: "",
@@ -553,6 +1004,7 @@ const yearlyReportDetailForm = ref<
 
 const validateOn = ref(false);
 const rules: Ref<GenericRecord> = ref({
+  product: [{ required: true, message: "请输入产品名称", trigger: "blur" }],
   year: [{ required: true, message: "请输入报表时间", trigger: "blur" }],
   profit: [{ required: true, message: "请输入利润", trigger: "blur" }],
   revenue: [{ required: true, message: "请输入收入", trigger: "blur" }],
@@ -560,12 +1012,39 @@ const rules: Ref<GenericRecord> = ref({
 });
 
 /** 新增库存信息 */
-const handleAddStorage = () => {
-  yearlyReportDetailForm.value.storage.push({
-    warehouse: "",
+// const handleAddStorage = () => {
+//   yearlyReportDetailForm.value.storage.push({
+//     warehouse: "",
+//     name: "",
+//     amount: 0,
+//     unit: "",
+//   });
+// };
+
+/** 新增次级记录 */
+const handleAddSubRecord = () => {
+  yearlyReportDetailForm.value.content.push({
     name: "",
-    amount: 0,
-    unit: "",
+    product: "",
+    profit: 0,
+    income: 0,
+    outcome: 0,
+    purchaseAmount: 0,
+    salesAmount: 0,
+    contractCount: 0,
+    contractFulfilledCount: 0,
+    riskContractCount: 0,
+    purchaseContractCount: 0,
+    salesContractCount: 0,
+    purchaseOrderCount: 0,
+    salesOrderCount: 0,
+    settlementCount: 0,
+    settlementAmount: 0,
+    planIncome: 0,
+    planOutcome: 0,
+    planProfit: 0,
+    incomeFulfilledRate: 0,
+    profitFulfilledRate: 0,
   });
 };
 
@@ -668,47 +1147,30 @@ const generateRandomData = () => {
     timeDimension: "年",
     businessDimension: "成品油",
     year: Math.floor(Math.random() * 10) + 2010 + "-01-01",
-    income: Math.floor(Math.random() * 1000) + 1000,
-    outcome: Math.floor(Math.random() * 1000) + 1000,
-    profit: Math.floor(Math.random() * 1000) + 1000,
-    purchaseAmount: Math.floor(Math.random() * 1000) + 1000,
-    salesAmount: 2000,
-    contractCount: 1000,
-    contractAmount: 1000,
-    contractFulfilledCount: 2000,
-    riskContractCount: 1000,
-    purchaseContractCount: 2000,
-    salesContractCount: 1000,
-    purchaseOrderCount: 2000,
-    salesOrderCount: 1000,
-    storage: undefined,
-    // storage: [
-    //   {
-    //     warehouse: "仓库1",
-    //     name: "产品1",
-    //     amount: 1000,
-    //     unit: "吨",
-    //   },
-    //   {
-    //     warehouse: "仓库2",
-    //     name: "产品2",
-    //     amount: 2000,
-    //     unit: "吨",
-    //   },
-    //   {
-    //     warehouse: "在途",
-    //     name: "产品3",
-    //     amount: 3000,
-    //     unit: "吨",
-    //   },
-    // ],
-    settlementCount: 1000,
-    settlementAmount: 2000,
-    planIncome: 1000,
-    planOutcome: 2000,
-    planProfit: 1000,
-    incomeFulfilledRate: 1000,
-    profitFulfilledRate: 2000,
+    content: [
+      {
+        name: "成品油",
+        profit: Math.floor(Math.random() * 1000),
+        income: Math.floor(Math.random() * 1000),
+        outcome: Math.floor(Math.random() * 1000),
+        purchaseAmount: Math.floor(Math.random() * 1000),
+        salesAmount: Math.floor(Math.random() * 1000),
+        contractCount: Math.floor(Math.random() * 1000),
+        contractFulfilledCount: Math.floor(Math.random() * 1000),
+        riskContractCount: Math.floor(Math.random() * 1000),
+        purchaseContractCount: Math.floor(Math.random() * 1000),
+        salesContractCount: Math.floor(Math.random() * 1000),
+        purchaseOrderCount: Math.floor(Math.random() * 1000),
+        salesOrderCount: Math.floor(Math.random() * 1000),
+        settlementCount: Math.floor(Math.random() * 1000),
+        settlementAmount: Math.floor(Math.random() * 1000),
+        planIncome: Math.floor(Math.random() * 1000),
+        planOutcome: Math.floor(Math.random() * 1000),
+        planProfit: Math.floor(Math.random() * 1000),
+        incomeFulfilledRate: Math.floor(Math.random() * 1000),
+        profitFulfilledRate: Math.floor(Math.random() * 1000),
+      },
+    ],
     createdAt: "",
     createdBy: "",
     updatedAt: "",
@@ -739,4 +1201,13 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.el-table__cell) {
+  .el-form-item {
+    margin: 0;
+  }
+  .el-form-item__content > .el-form-item__error {
+    position: static !important;
+  }
+}
+</style>

@@ -11,7 +11,8 @@ import { usePermissionStore, useUserStore } from "@/store";
 export function setupPermission() {
   // 白名单路由
   const whiteList = ["/login"];
-
+  // 外链路由，如果是外链则打开新页面
+  const externalLink = ["/bigScreenBoard/index"];
   router.beforeEach(async (to, from, next) => {
     // console.log("beforeEach", to, from);
     NProgress.start();
@@ -35,7 +36,20 @@ export function setupPermission() {
             if (title) {
               to.meta.title = title;
             }
-            next();
+            // 如果是外链则打开新页面并跳转相应路由
+            if (externalLink.includes(to.path)) {
+              // 避免重复打开同一个外链
+              if (from.path !== "/" && from.path !== to.path) {
+                const fullPath = router.resolve(to).href;
+                window.open(fullPath, "_blank");
+                next(false);
+              } else {
+                next();
+              }
+            } else {
+              next();
+            }
+            // next();
           }
         } else {
           try {
