@@ -2,7 +2,7 @@
   <div class="middle1-box">
     <img class="middle1-bg" src="../../../img/tag2.png" alt="" />
     <div class="content-wrapper">
-      <div class="content-box" v-for="(item, index) in totalData" :key="index">
+      <div v-for="(item, index) in totalData" :key="index" class="content-box">
         <div class="content-item">
           <div class="title-box">
             <img class="title-icon" :src="titleArr[index].icon" />
@@ -11,12 +11,12 @@
           <div class="annual-total">
             <div>年度累计</div>
             <div class="year-num">{{ formatNumber(item.year) }}</div>
-            <div>万元</div>
+            <div>{{ item.yearUnit || "万元" }}</div>
           </div>
           <div class="monthly-total">
             <div>本月累计</div>
             <div class="month-num">{{ formatNumber(item.month) }}</div>
-            <div>万元</div>
+            <div>{{ item.monthUnit || "万元" }}</div>
           </div>
         </div>
       </div>
@@ -32,12 +32,16 @@ import incomeIcon from "../../../img/income.png";
 import { ref, defineProps } from "vue";
 
 // 接收父组件传入的数据
-defineProps({
+const props = defineProps({
   totalData: {
-    type: Array,
+    type: Array<any>,
     required: true,
     default: () => [],
   },
+});
+
+watchEffect(() => {
+  console.log("totalData", props.totalData);
 });
 
 const titleArr = ref([

@@ -55,27 +55,95 @@ import Right2 from "./components/FirstPage/Right/right2.vue";
 import Right3 from "./components/FirstPage/Right/right3.vue";
 import Right4 from "./components/FirstPage/Right/right4.vue";
 import Middle4 from "../bigscreen/components/FirstPage/Middle/Middle4/index.vue";
-
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import BusinessFormAPI, { BusinessReportQuery } from "@/api/businessForm";
 
 const totalData = ref([
   {
     year: "25438",
     month: "25438",
+    monthUnit: "万元",
+    yearUnit: "亿元",
   },
   {
     year: "25438",
     month: "25438",
+    monthUnit: "万元",
+    yearUnit: "亿元",
   },
   {
     year: "25438",
     month: "25438",
+    monthUnit: "万元",
+    yearUnit: "亿元",
   },
   {
     year: "25438",
     month: "25438",
+    monthUnit: "万元",
+    yearUnit: "亿元",
   },
 ]);
+
+const initData = async () => {
+  const params = {
+    页码: 1,
+    页容量: 1,
+    企业名称: "广投石化",
+    状态集合: ["有效"],
+  };
+  const res: any = await BusinessFormAPI.getCompanyReportFormList(params);
+  let resData = res["当前记录"]?.[0]?.["内容"]?.["详情"] || [];
+
+  const matchingItem = resData.find((item: any) => item["业态类型"] === "总体");
+  // console.log("matchingItem", matchingItem);
+
+  if (matchingItem) {
+    const {
+      当期采购金额,
+      当期销售金额,
+      当期营收金额,
+      当期利润金额,
+      累计采购金额,
+      累计销售金额,
+      累计营收金额,
+      累计利润金额,
+    } = matchingItem; // 解构赋值
+    totalData.value = [
+      /** 采购、销售、 营收、利润*/
+      {
+        year: (parseFloat(累计采购金额 || 0) / 10000).toFixed(2),
+        month: 当期采购金额,
+        monthUnit: "万元",
+        yearUnit: "亿元",
+      },
+      {
+        year: (parseFloat(累计销售金额 || 0) / 10000).toFixed(2),
+        month: 当期销售金额,
+        monthUnit: "万元",
+        yearUnit: "亿元",
+      },
+      {
+        year: (parseFloat(累计营收金额 || 0) / 10000).toFixed(2),
+        month: 当期营收金额,
+        monthUnit: "万元",
+        yearUnit: "亿元",
+      },
+      {
+        year: (parseFloat(累计利润金额 || 0) / 10000).toFixed(2),
+        month: 当期利润金额,
+        monthUnit: "万元",
+        yearUnit: "亿元",
+      },
+    ];
+  }
+  // console.log("oilData", oilData.value);
+};
+
+onMounted(() => {
+  // 初始化数据
+  initData();
+});
 </script>
 
 <style lang="scss" scoped>

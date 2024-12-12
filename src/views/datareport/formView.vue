@@ -224,7 +224,7 @@ const converToFrontendFormData = (type: string | null, data: any) => {
             businessType: item["业态类型"],
             dataDate: item["数据日期"],
             storage: item["库存量"],
-            bargain: item["成交量"],
+            bargain: item["交易量"],
             profit: item["当期利润金额"],
             revenue: item["当期营收金额"],
             planProfit: item["当期计划利润"],
@@ -248,6 +248,10 @@ const converToFrontendFormData = (type: string | null, data: any) => {
             otherContractCount: item["累计其他合同数"],
             incomeFulfilledRate: item["累计营收目标完成率"],
             profitFulfilledRate: item["累计利润目标完成率"],
+            accumulatedRevenue: item["累计营收金额"],
+            accumulatedProfit: item["累计利润金额"],
+            accumulatedPurchaseAmount: item["累计采购金额"],
+            accumulatedSalesAmount: item["累计销售金额"],
           };
         }),
       };
@@ -417,7 +421,7 @@ const convertToBackendData = (type: string | null, data: any) => {
             业态类型: item.businessType,
             数据日期: item.dataDate,
             库存量: item.storage,
-            成交量: item.bargain,
+            交易量: item.bargain,
             当期利润金额: item.profit,
             当期营收金额: item.revenue,
             当期计划利润: item.planProfit,
@@ -441,6 +445,10 @@ const convertToBackendData = (type: string | null, data: any) => {
             累计其他合同数: item.otherContractCount,
             累计营收目标完成率: item.incomeFulfilledRate,
             累计利润目标完成率: item.profitFulfilledRate,
+            累计营收金额: item.accumulatedRevenue,
+            累计利润金额: item.accumulatedProfit,
+            累计采购金额: item.accumulatedPurchaseAmount,
+            累计销售金额: item.accumulatedSalesAmount,
           };
         }),
       };

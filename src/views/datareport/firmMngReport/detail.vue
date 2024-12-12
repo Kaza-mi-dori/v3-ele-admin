@@ -398,25 +398,102 @@
                 </el-form-item>
               </template>
             </el-table-column>
-            <!-- 计划营收 -->
+            <!-- 累计营收金额 -->
             <el-table-column width="150">
               <template #header>
                 <span>
-                  计划营收(万元)
-                  <span v-if="rules.planRevenue" class="text-red-5">*</span>
+                  累计营收金额(万元)
+                  <span v-if="rules.accumulatedRevenue" class="text-red-5">
+                    *
+                  </span>
                 </span>
               </template>
               <template v-slot="{ row, $index }">
                 <el-form-item
-                  :prop="'details.' + $index + '.planRevenue'"
-                  :rules="rules.planRevenue"
+                  :prop="'details.' + $index + '.accumulatedRevenue'"
+                  :rules="rules.accumulatedRevenue"
                 >
                   <el-input
                     v-if="editing"
-                    v-model="row.planRevenue"
+                    v-model="row.accumulatedRevenue"
                     type="number"
                   />
-                  <span v-else>{{ row.planRevenue }}</span>
+                  <span v-else>{{ row.accumulatedRevenue }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <!-- 累计利润金额 -->
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  累计利润金额(万元)
+                  <span v-if="rules.accumulatedProfit" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'details.' + $index + '.accumulatedProfit'"
+                  :rules="rules.accumulatedProfit"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.accumulatedProfit"
+                    type="number"
+                  />
+                  <span v-else>{{ row.accumulatedProfit }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <!-- 累计采购金额 -->
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  累计采购金额(万元)
+                  <span
+                    v-if="rules.accumulatedPurchaseAmount"
+                    class="text-red-5"
+                  >
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'details.' + $index + '.accumulatedPurchaseAmount'"
+                  :rules="rules.accumulatedPurchaseAmount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.accumulatedPurchaseAmount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.accumulatedPurchaseAmount }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <!-- 累计销售金额 -->
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  累计销售金额(万元)
+                  <span v-if="rules.accumulatedSalesAmount" class="text-red-5">
+                    *
+                  </span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'details.' + $index + '.accumulatedSalesAmount'"
+                  :rules="rules.accumulatedSalesAmount"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.accumulatedSalesAmount"
+                    type="number"
+                  />
+                  <span v-else>{{ row.accumulatedSalesAmount }}</span>
                 </el-form-item>
               </template>
             </el-table-column>
@@ -439,6 +516,28 @@
                     type="number"
                   />
                   <span v-else>{{ row.planProfit }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <!-- 计划营收 -->
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  计划营收(万元)
+                  <span v-if="rules.planRevenue" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'details.' + $index + '.planRevenue'"
+                  :rules="rules.planRevenue"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.planRevenue"
+                    type="number"
+                  />
+                  <span v-else>{{ row.planRevenue }}</span>
                 </el-form-item>
               </template>
             </el-table-column>
@@ -514,7 +613,7 @@
             <el-table-column width="150">
               <template #header>
                 <span>
-                  当期采购量(万元)
+                  当期采购量(吨)
                   <span v-if="rules.purchaseAmount" class="text-red-5">*</span>
                 </span>
               </template>
@@ -595,6 +694,51 @@
                 </el-form-item>
               </template>
             </el-table-column>
+            <!-- 交易量 -->
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  交易量(吨)
+                  <span v-if="rules.bargain" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'details.' + $index + '.bargain'"
+                  :rules="rules.bargain"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.bargain"
+                    type="number"
+                  />
+                  <span v-else>{{ row.bargain }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <!-- 库存量 -->
+            <el-table-column width="150">
+              <template #header>
+                <span>
+                  库存量(吨)
+                  <span v-if="rules.storage" class="text-red-5">*</span>
+                </span>
+              </template>
+              <template v-slot="{ row, $index }">
+                <el-form-item
+                  :prop="'details.' + $index + '.storage'"
+                  :rules="rules.storage"
+                >
+                  <el-input
+                    v-if="editing"
+                    v-model="row.storage"
+                    type="number"
+                  />
+                  <span v-else>{{ row.storage }}</span>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <!--  -->
             <!-- 累计采购合同 -->
             <el-table-column width="150">
               <template #header>
@@ -620,7 +764,7 @@
               </template>
             </el-table-column>
             <!-- 已执行采购合同数 -->
-            <el-table-column width="200">
+            <el-table-column width="220">
               <template #header>
                 <span>
                   已执行采购合同数(份)
@@ -924,7 +1068,7 @@
                 </el-form-item>
               </template>
             </el-table-column>
-            <el-table-column width="150">
+            <!-- <el-table-column width="150">
               <template #header>
                 <span>
                   计划利润(万元)
@@ -990,7 +1134,7 @@
                   <span v-else>{{ row.profitFulfilledRate }}</span>
                 </el-form-item>
               </template>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
         </el-form>
         <div class="w-full">
@@ -1111,6 +1255,14 @@ const yearlyReportDetailForm = ref({
     purchaseAmount: 0, // 当期采购金额
     salesCount: 0, // 当期销售量
     salesAmount: 0, // 当期销售金额
+    /** 累计营收金额 */
+    accumulatedRevenue: 0,
+    /** 累计利润 */
+    accumulatedProfit: 0,
+    /** 累计采购金额 */
+    accumulatedPurchaseAmount: 0,
+    /** 累计销售金额 */
+    accumulatedSalesAmount: 0,
     /**当期结算金额 */
     settlementAmount: 0,
     /**当期结算数量 */

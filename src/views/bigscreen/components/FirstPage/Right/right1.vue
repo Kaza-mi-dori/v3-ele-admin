@@ -3,7 +3,7 @@
     <div class="__left">
       <Item1
         style="margin: 0 auto"
-        :amount="oilData.oilBargain"
+        :amount="oilData.oilStorage"
         title="成品油库存"
         :iconUrl="inventory"
       />
@@ -59,10 +59,12 @@ const initData = async () => {
   console.log("matchingItem", matchingItem);
 
   if (matchingItem) {
-    const { 库存量, 当期销售量 } = matchingItem; // 解构赋值
+    const { 库存量, 当期销售量, 当期采购量 } = matchingItem; // 解构赋值
     oilData.value = {
       oilStorage: 库存量,
-      oilBargain: 当期销售量,
+      oilBargain: (
+        parseFloat(当期销售量 || 0) + parseFloat(当期采购量 || 0)
+      ).toFixed(0),
     };
   }
   console.log("oilData", oilData.value);
