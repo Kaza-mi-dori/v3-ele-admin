@@ -48,8 +48,10 @@ const initData = async () => {
     企业名称: "广投石化",
     状态集合: ["有效"],
   };
-  const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
-  let resData = res["当前记录"][0]["内容"]["详情"];
+  const res: any = await BusinessFormAPI.getCompanyReportFormList(
+    queryForm.value
+  );
+  let resData = res["当前记录"]?.[0]?.["内容"]?.["详情"] || [];
 
   const matchingItem = resData.find(
     (item: any) => item["业态类型"] === "成品油"

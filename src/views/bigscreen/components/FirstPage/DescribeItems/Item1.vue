@@ -45,12 +45,20 @@ const animatedAmount = useTransition(source, {
   duration: 1500,
 });
 
-// 将字符串转换为数字
-source.value = parseInt(props.amount, 10);
-// 确保转换后的值不会是 NaN
-if (isNaN(source.value)) {
-  source.value = 0;
-}
+watch(
+  () => props.amount,
+  (val) => {
+    // 将字符串转换为数字
+    source.value = parseInt(val, 10);
+    // 确保转换后的值不会是 NaN
+    if (isNaN(source.value)) {
+      source.value = 0;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 </script>
 
 <style lang="scss" scoped>

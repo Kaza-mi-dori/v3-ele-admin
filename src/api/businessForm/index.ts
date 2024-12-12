@@ -673,6 +673,8 @@ export interface BusinessReportQuery {
   日期早于: string;
   /** 日期晚于 */
   日期晚于: string;
+  /** 企业名称 */
+  企业名称: string;
 }
 
 export interface MarketQuotationReportQuery {
