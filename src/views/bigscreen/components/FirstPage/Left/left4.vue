@@ -62,18 +62,26 @@ const initChartMiddle4 = async () => {
   chart.value.clear();
   // 获取数据
   await initData();
-  const categories: string[] = [];
-  const data: number[] = [];
-
+  // 固定的业态类型顺序
+  const fixedCategories = [
+    "原油",
+    "化工产品",
+    "燃料油",
+    "成品油",
+    "LNG",
+    "煤炭",
+  ];
+  const data: number[] = new Array(fixedCategories.length).fill(0); // 初始化数据数组
+  // 遍历 resData，根据业态类型找到对应的合同数
   resData.value.forEach((item) => {
-    // 业态类型对应横坐标
-    categories.push(item["业态类型"]);
-
-    // 根据当前激活的标签页选择对应的合同数
-    if (activeName.value === PURCHASE) {
-      data.push(item["累计采购合同数"]);
-    } else if (activeName.value === SELL) {
-      data.push(item["累计销售合同数"]);
+    const index = fixedCategories.indexOf(item["业态类型"]);
+    if (index !== -1) {
+      // 根据当前激活的标签页选择对应的合同数
+      if (activeName.value === PURCHASE) {
+        data[index] = item["累计采购合同数"];
+      } else if (activeName.value === SELL) {
+        data[index] = item["累计销售合同数"];
+      }
     }
   });
 
@@ -98,7 +106,7 @@ const initChartMiddle4 = async () => {
     },
     xAxis: {
       type: "category",
-      data: categories,
+      data: fixedCategories, // 使用固定的业态类型顺序
       axisLine: {
         lineStyle: {
           color: "#27518D",
@@ -134,7 +142,7 @@ const initChartMiddle4 = async () => {
         type: "bar",
         barWidth: "30%",
         barGap: "40%", // 柱体间距
-        data: data,
+        data: data, // 使用构建号的数据数组
         itemStyle: {
           color: (params: any) => {
             const color =
