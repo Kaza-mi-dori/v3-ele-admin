@@ -15,9 +15,12 @@ import * as echarts from "echarts";
 import type { TabsPaneContext } from "element-plus";
 import { ref, onMounted } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { useRouter } from "vue-router";
 
 const PURCHASE = "PURCHASE";
 const SELL = "SELL";
+
+const router = useRouter();
 
 const activeName = ref<number | string | undefined>(PURCHASE);
 
@@ -39,6 +42,17 @@ const handleClick = (tab: TabsPaneContext) => {
   initChartMiddle4();
 };
 
+const clickBarCb = (params: any) => {
+  // params.name为柱状图的类别名称，也是业态类型
+  router.push({
+    name: "ContractList",
+    query: {
+      module: "contract",
+      businessType: params.name,
+    },
+  });
+};
+
 let resData = ref([]);
 const initData = async () => {
   queryForm.value = {
@@ -47,8 +61,10 @@ const initData = async () => {
     企业名称: "广投石化",
     状态集合: ["有效"],
   };
-  const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
-  resData.value = res["当前记录"][0]["内容"]["详情"];
+  const res: any = await BusinessFormAPI.getCompanyReportFormList(
+    queryForm.value
+  );
+  resData.value = res["当前记录"]?.[0]?.["内容"]?.["详情"] || [];
 };
 
 const initChartMiddle4 = async () => {
@@ -57,6 +73,8 @@ const initChartMiddle4 = async () => {
     chart.value = echarts.init(
       document.getElementById("chart-left-4") as HTMLDivElement
     );
+    // 绑定事件
+    chart.value.on("click", "series.bar", clickBarCb);
   }
   // 清空图表
   chart.value.clear();

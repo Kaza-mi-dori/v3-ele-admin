@@ -19,10 +19,16 @@ const getRandomCategoryData = (categories: string[]) => {
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 
+const clickBarCb = (params: any) => {
+  console.log(params);
+};
+
 const initChartMiddle4 = () => {
-  chart.value = echarts.init(
-    document.getElementById("chart2-left-3") as HTMLDivElement
-  );
+  if (!chart.value) {
+    chart.value = echarts.init(
+      document.getElementById("chart2-left-3") as HTMLDivElement
+    );
+  }
   chart.value.clear();
   const data = getRandomCategoryData(categoryMap);
 
@@ -65,6 +71,7 @@ const initChartMiddle4 = () => {
       type: "value",
       name: "单位：份",
       nameTextStyle: {
+        // 显示
         color: "#5099E3",
         fontSize: 15,
       },

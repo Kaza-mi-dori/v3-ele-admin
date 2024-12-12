@@ -335,7 +335,7 @@
           </el-row> -->
           <!-- 以上数据改为表格形式，一行对应一个表单 -->
           <div class="mt-4 mb-4">
-            <el-button @click="generateRandomTableData">生成随机数据</el-button>
+            <el-button @click="generateRandomTableData">生成测试数据</el-button>
           </div>
           <el-table
             :data="yearlyReportDetailForm.details"

@@ -1,83 +1,57 @@
 <template>
-  <div class="bg-view-img2">
-    <img style="position: absolute; top: 0" height="100vh" />
-    <div class="bg-view1__header">
-      <div class="back-btn" @click="goBack">
-        <img src="../../img/back_icon.png" alt="" />
-        <span>返回</span>
-      </div>
-      <div class="title">
-        <div class="__title--text">{{ title }}</div>
+  <div class="third-content">
+    <div class="content-header">
+      <div class="title-bg-container">
+        <img class="title-bg" src="../../../img/tit.png" alt="" />
+        <div class="header-left">{{ moduleName }}统计</div>
+        <div class="header-right">
+          <el-input
+            v-model="inputValue"
+            size="large"
+            style="width: 250px"
+            class="input-field"
+            placeholder="请输入"
+            clearable
+          />
+          <el-button type="primary" size="large" class="search-button">
+            搜索
+          </el-button>
+          <el-button plain size="large" class="reset-button">重置</el-button>
+        </div>
       </div>
     </div>
-    <div class="bg-view1__body">
-      <!-- <div class="breadcrumb-box">
-        <img src="../../img/home.png" alt="" />
-        <span class="breadcrumb-title">您所在的位置：</span>
-        <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
-          <el-breadcrumb-item>标题标题</el-breadcrumb-item>
-          <el-breadcrumb-item>标题标题</el-breadcrumb-item>
-          <el-breadcrumb-item>标题标题</el-breadcrumb-item>
-        </el-breadcrumb>
-      </div> -->
-      <!-- <div class="third-content">
-        <div class="content-header">
-          <div class="title-bg-container">
-            <img class="title-bg" src="../../img/tit.png" alt="" />
-            <div class="header-left">{{ moduleName }}统计</div>
-            <div class="header-right">
-              <el-input
-                v-model="inputValue"
-                size="large"
-                style="width: 250px"
-                class="input-field"
-                placeholder="请输入"
-                clearable
-              />
-              <el-button type="primary" size="large" class="search-button">
-                搜索
-              </el-button>
-              <el-button plain size="large" class="reset-button">
-                重置
-              </el-button>
-            </div>
-          </div>
-        </div>
-        <div class="content-middle">
-          <div id="chart3-1" style="width: 80%; height: 300px; margin: auto" />
-        </div>
-        <div class="content-form">
-          <el-table
-            stripe
-            :data="
-              tableData.slice(
-                (currentPage - 1) * pageSize,
-                currentPage * pageSize
-              )
-            "
-            style="width: 100%"
-            height="480"
-          >
-            <el-table-column label="月份" prop="month" />
-            <el-table-column label="计划经营收入" prop="planned" />
-            <el-table-column label="实际经营收入" prop="actual" />
-          </el-table>
-          <el-pagination
-            v-model:current-page="currentPage"
-            v-model:page-size="pageSize"
-            :page-sizes="pageSizes"
-            :size="size"
-            background
-            layout="total, sizes, prev, pager, next"
-            style="margin-top: 10px; display: flex; justify-content: center"
-            :total="tableData.length"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          />
-        </div>
-      </div> -->
-      <router-view />
+    <div class="content-middle">
+      <div id="chart3-1" style="width: 80%; height: 300px; margin: auto" />
+    </div>
+    <div class="content-form">
+      <el-table
+        stripe
+        :data="
+          tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+        "
+        style="width: 100%"
+        height="480"
+        @current-change="handleCurrentChange"
+      >
+        <el-table-column label="签订时间" prop="签订日期" />
+        <el-table-column label="合同类型" prop="合同类型" />
+        <el-table-column label="合同编号" prop="合同编号" />
+        <el-table-column label="合同名称" prop="合同名称" />
+        <el-table-column label="合同金额" prop="合同金额" />
+        <el-table-column label="相对方" prop="相对人名称" />
+      </el-table>
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="pageSizes"
+        :size="size"
+        background
+        layout="total, sizes, prev, pager, next"
+        style="margin-top: 10px; display: flex; justify-content: center"
+        :total="tableData.length"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
   </div>
 </template>
@@ -121,11 +95,53 @@ const months = [
 
 // 随机生成收入数据
 const getRandomData = () => {
-  return months.map((month, index) => ({
-    month: month,
-    planned: Math.floor(Math.random() * 101), // 计划经营收入
-    actual: Math.floor(Math.random() * 101), // 实际经营收入
-  }));
+  // return months.map((month, index) => ({
+  //   month: month,
+  //   planned: Math.floor(Math.random() * 101), // 计划经营收入
+  //   actual: Math.floor(Math.random() * 101), // 实际经营收入
+  // }));
+  return [
+    {
+      签订日期: "2021-01-01",
+      合同类型: "销售",
+      合同编号: "HT20210101",
+      合同名称: "销售合同",
+      合同金额: "10000",
+      相对人名称: "测试公司A",
+    },
+    {
+      签订日期: "2021-02-01",
+      合同类型: "采购",
+      合同编号: "HT20210201",
+      合同名称: "采购合同",
+      合同金额: "20000",
+      相对人名称: "测试公司B",
+    },
+    {
+      签订日期: "2021-03-01",
+      合同类型: "运输",
+      合同编号: "HT20210301",
+      合同名称: "运输合同",
+      合同金额: "30000",
+      相对人名称: "测试公司C",
+    },
+    {
+      签订日期: "2021-04-01",
+      合同类型: "仓储",
+      合同编号: "HT20210401",
+      合同名称: "仓储合同",
+      合同金额: "40000",
+      相对人名称: "测试公司D",
+    },
+    {
+      签订日期: "2021-05-01",
+      合同类型: "装卸",
+      合同编号: "HT20210501",
+      合同名称: "装卸合同",
+      合同金额: "50000",
+      相对人名称: "孙七",
+    },
+  ];
 };
 
 // 填充表格数据
@@ -138,91 +154,62 @@ const tableData = ref(chartData);
 const chart = shallowRef<echarts.ECharts | null>(null);
 
 const initChart = () => {
-  chart.value = echarts.init(
-    document.getElementById("chart3-1") as HTMLDivElement
-  );
+  if (!chart.value) {
+    chart.value = echarts.init(
+      document.getElementById("chart3-1") as HTMLDivElement
+    );
+  }
   chart.value.clear();
 
+  // 饼状图
+
   const option = {
+    title: {
+      text: "合同类型分布",
+      left: "center",
+      top: 20,
+      textStyle: {
+        color: "#fff",
+      },
+    },
     tooltip: {
-      trigger: "axis",
-      axisPointer: { type: "shadow" },
+      trigger: "item",
+      formatter: "{a} <br/>{b} : {c} ({d}%)",
     },
     legend: {
-      data: ["计划经营收入", "实际经营收入"],
+      orient: "vertical",
+      left: "left",
+      data: ["销售", "采购", "运输", "仓储", "装卸"],
       textStyle: {
-        color: "#5099E3",
-      },
-    },
-    grid: {
-      left: "3%",
-      right: "4%",
-      bottom: "1%",
-      containLabel: true,
-    },
-    xAxis: {
-      type: "category",
-      data: months,
-      axisLine: {
-        lineStyle: {
-          color: "#27518D",
-        },
-      },
-      axisLabel: {
-        fontSize: 15,
-        color: "#5099E3",
-      },
-    },
-    yAxis: {
-      type: "value",
-      name: "单位：万元",
-      nameTextStyle: {
-        color: "#5099E3",
-        fontSize: 15,
-      },
-      nameGap: 20,
-      axisLine: {
-        show: true, // 显示坐标轴线
-        lineStyle: {
-          color: "#27518D",
-        },
-      },
-      splitLine: {
-        show: true, // 显示分割线
-        lineStyle: {
-          type: "dashed", // 虚线
-          color: "#27518D",
-        },
-      },
-      axisLabel: {
-        fontSize: 16,
-        color: "#5099E3",
+        color: "#fff",
       },
     },
     series: [
       {
-        name: "计划经营收入",
-        type: "bar",
-        data: chartData.map((item) => item.planned),
-        itemStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: "#25DDA7" },
-            { offset: 1, color: "#249E55" },
-          ]),
+        name: "合同类型",
+        type: "pie",
+        radius: "55%",
+        center: ["50%", "60%"],
+        data: [
+          { value: 335, name: "销售" },
+          { value: 310, name: "采购" },
+          { value: 234, name: "运输" },
+          { value: 135, name: "仓储" },
+          { value: 1548, name: "装卸" },
+        ],
+        label: {
+          show: true,
+          // 颜色暗些
+          color: "#eee",
+          fontSize: 16,
         },
-        barWidth: "25%",
-      },
-      {
-        name: "实际经营收入",
-        type: "bar",
-        data: chartData.map((item) => item.actual),
-        itemStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: "#f2b678" },
-            { offset: 1, color: "#f18c32" },
-          ]),
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: "rgba(0, 0, 0, 0.5)",
+          },
         },
-        barWidth: "25%",
       },
     ],
   };
@@ -234,10 +221,10 @@ const goBack = () => {
 };
 
 onMounted(() => {
-  // initChart();
-  // window.addEventListener("resize", () => {
-  //   chart.value?.resize();
-  // });
+  initChart();
+  window.addEventListener("resize", () => {
+    chart.value?.resize();
+  });
 });
 
 const currentPage = ref(1); //当前页
@@ -465,6 +452,25 @@ const handleCurrentChange = (val: number) => {
   border-bottom: none;
 }
 
+:deep(.el-pagination.is-background .el-pagination__sizes) {
+  .el-select {
+    .el-select__wrapper {
+      background-color: transparent;
+      .el-select__placeholder {
+        color: #fefefe;
+      }
+    }
+  }
+}
+
+:deep(.el-pagination.is-background .btn-prev, ) {
+  background-color: #272a9b !important;
+}
+
+:deep(.el-pagination.is-background .btn-next) {
+  background-color: #272a9b !important;
+}
+
 :deep(.el-pagination.is-background .el-pager li.is-active) {
   background-color: #272a9b;
   color: #fefefe;
@@ -475,7 +481,7 @@ const handleCurrentChange = (val: number) => {
 }
 
 :deep(.el-pagination.is-background .el-pager li) {
-  background-color: #030542;
+  background-color: transparent;
   border: 1px solid #4e6ab2;
   color: #fefefe;
 }
@@ -483,4 +489,11 @@ const handleCurrentChange = (val: number) => {
 :deep(.el-pager li.is-active, .el-pager li:hover) {
   color: #272a9b;
 }
+
+// :deep(.el-table) {
+//   // 高亮当前行的背景色为#1c1e57
+//   .el-table__body tr.current-row {
+//     background-color: #1c1e57 !important;
+//   }
+// }
 </style>

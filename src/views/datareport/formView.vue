@@ -26,7 +26,7 @@
         class="g-button-1"
         @click="handleGenerateRandomData"
       >
-        生成随机数据
+        生成测试数据
       </el-button>
       <!-- DEV_ONLY -->
       <el-button
