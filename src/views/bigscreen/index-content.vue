@@ -55,93 +55,94 @@ import Right2 from "./components/FirstPage/Right/right2.vue";
 import Right3 from "./components/FirstPage/Right/right3.vue";
 import Right4 from "./components/FirstPage/Right/right4.vue";
 import Middle4 from "../bigscreen/components/FirstPage/Middle/Middle4/index.vue";
-import { onMounted, ref } from "vue";
-import BusinessFormAPI, { BusinessReportQuery } from "@/api/businessForm";
 
-const totalData = ref([
-  {
-    year: "25438",
-    month: "25438",
-    monthUnit: "万元",
-    yearUnit: "亿元",
-  },
-  {
-    year: "25438",
-    month: "25438",
-    monthUnit: "万元",
-    yearUnit: "亿元",
-  },
-  {
-    year: "25438",
-    month: "25438",
-    monthUnit: "万元",
-    yearUnit: "亿元",
-  },
-  {
-    year: "25438",
-    month: "25438",
-    monthUnit: "万元",
-    yearUnit: "亿元",
-  },
+import { ref } from "vue";
+import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+
+const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
+  业务维度: undefined,
+  状态集合: undefined,
+  日期早于: undefined,
+  日期晚于: undefined,
+  id集合: undefined,
+  页码: 1,
+  页容量: 20,
+});
+
+let totalData = ref([
+  { title: "累计采购", year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
+  { title: "累计销售", year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
+  { title: "累计营收", year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
+  { title: "累计利润", year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
 ]);
 
 const initData = async () => {
-  const params = {
+  queryForm.value = {
     页码: 1,
     页容量: 1,
     企业名称: "广投石化",
     状态集合: ["有效"],
   };
-  const res: any = await BusinessFormAPI.getCompanyReportFormList(params);
-  let resData = res["当前记录"]?.[0]?.["内容"]?.["详情"] || [];
+  const res: any = await BusinessFormAPI.getCompanyReportFormList(
+    queryForm.value
+  );
+  let resData = (res["当前记录"]?.[0]?.["内容"]?.["详情"] || []).filter(
+    (item: any) => item["业态类型"] === "总体"
+  );
+  const totals = {
+    累计采购: { year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
+    累计销售: { year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
+    累计营收: { year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
+    累计利润: { year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
+  };
 
-  const matchingItem = resData.find((item: any) => item["业态类型"] === "总体");
-  // console.log("matchingItem", matchingItem);
+  resData.forEach((item: any) => {
+    totals["累计采购"].year += Number(item.累计采购金额) || 0;
+    totals["累计采购"].month += Number(item.当期采购金额) || 0;
 
-  if (matchingItem) {
-    const {
-      当期采购金额,
-      当期销售金额,
-      当期营收金额,
-      当期利润金额,
-      累计采购金额,
-      累计销售金额,
-      累计营收金额,
-      累计利润金额,
-    } = matchingItem; // 解构赋值
-    totalData.value = [
-      /** 采购、销售、 营收、利润*/
-      {
-        year: (parseFloat(累计采购金额 || 0) / 10000).toFixed(2),
-        month: 当期采购金额,
-        monthUnit: "万元",
-        yearUnit: "亿元",
-      },
-      {
-        year: (parseFloat(累计销售金额 || 0) / 10000).toFixed(2),
-        month: 当期销售金额,
-        monthUnit: "万元",
-        yearUnit: "亿元",
-      },
-      {
-        year: (parseFloat(累计营收金额 || 0) / 10000).toFixed(2),
-        month: 当期营收金额,
-        monthUnit: "万元",
-        yearUnit: "亿元",
-      },
-      {
-        year: (parseFloat(累计利润金额 || 0) / 10000).toFixed(2),
-        month: 当期利润金额,
-        monthUnit: "万元",
-        yearUnit: "亿元",
-      },
-    ];
-  }
-  // console.log("oilData", oilData.value);
+    totals["累计销售"].year += Number(item.累计销售金额) || 0;
+    totals["累计销售"].month += Number(item.当期销售金额) || 0;
+
+    totals["累计营收"].year += Number(item.累计营收金额) || 0;
+    totals["累计营收"].month += Number(item.当期营收金额) || 0;
+
+    totals["累计利润"].year += Number(item.累计利润金额) || 0;
+    totals["累计利润"].month += Number(item.当期利润金额) || 0;
+  });
+
+  totalData.value = [
+    {
+      title: "累计采购",
+      year: (totals["累计采购"].year / 10000).toFixed(2),
+      month: totals["累计采购"].month,
+      monthUnit: "万元",
+      yearUnit: "亿元",
+    },
+    {
+      title: "累计销售",
+      year: (totals["累计销售"].year / 10000).toFixed(2),
+      month: totals["累计销售"].month,
+      monthUnit: "万元",
+      yearUnit: "亿元",
+    },
+    {
+      title: "累计营收",
+      year: (totals["累计营收"].year / 10000).toFixed(2),
+      month: totals["累计营收"].month,
+      monthUnit: "万元",
+      yearUnit: "亿元",
+    },
+    {
+      title: "累计利润",
+      year: (totals["累计利润"].year / 10000).toFixed(2),
+      month: totals["累计利润"].month,
+      monthUnit: "万元",
+      yearUnit: "亿元",
+    },
+  ];
 };
 
 onMounted(() => {
-  // 初始化数据
   initData();
 });
 </script>

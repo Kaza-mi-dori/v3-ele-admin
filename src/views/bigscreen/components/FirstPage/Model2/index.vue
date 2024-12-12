@@ -40,10 +40,6 @@ const props = defineProps({
   },
 });
 
-watchEffect(() => {
-  console.log("totalData", props.totalData);
-});
-
 const titleArr = ref([
   {
     title: "累计采购",

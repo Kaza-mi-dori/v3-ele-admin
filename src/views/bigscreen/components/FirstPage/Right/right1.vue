@@ -56,7 +56,7 @@ const initData = async () => {
   const matchingItem = resData.find(
     (item: any) => item["业态类型"] === "成品油"
   );
-  console.log("matchingItem", matchingItem);
+  // console.log("matchingItem", matchingItem);
 
   if (matchingItem) {
     const { 库存量, 当期销售量, 当期采购量 } = matchingItem; // 解构赋值
@@ -67,7 +67,7 @@ const initData = async () => {
       ).toFixed(0),
     };
   }
-  console.log("oilData", oilData.value);
+  // console.log("oilData", oilData.value);
 };
 
 onMounted(() => {

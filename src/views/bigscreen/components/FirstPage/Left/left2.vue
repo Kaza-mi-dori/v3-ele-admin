@@ -126,7 +126,7 @@ const updateOutputValues = () => {
       : 0; // 获取小数位数
 
     const output = useTransition(source, {
-      duration: 2000, // 动画持续时间
+      duration: 1000, // 动画持续时间
     });
 
     // 使用 Intl.NumberFormat 添加分隔符，并保持小数位数
