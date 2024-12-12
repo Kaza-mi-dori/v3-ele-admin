@@ -13,6 +13,8 @@
               type="date"
               placeholder="请选择"
               size="small"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD"
               style="width: 100px"
               :prefix-icon="customPrefix"
               class="custom-date-picker"
@@ -92,24 +94,33 @@ const initData = async () => {
   };
   const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
   let resData = res["当前记录"][0]["内容"]["详情"];
+
+  // 如果选择了日期，则过滤数据
+  if (timeCondition.value) {
+    resData = resData.filter(
+      (item) => item["数据日期"] === timeCondition.value
+    );
+  }
+
   contractData.value = [
     { label: "合同总金额", value: 0, unit: "万元" },
     { label: "合同总数", value: 0, unit: "份" },
     { label: "采购合同", value: 0, unit: "份" },
     { label: "销售合同", value: 0, unit: "份" },
   ];
-  resData.forEach((item: any) => {
-    contractData.value.forEach((contractItem, index) => {
-      if (contractItem.label === "合同总金额") {
-        contractItem.value += Number(item["累计合同履行金额"]) || 0;
-      } else if (contractItem.label === "合同总数") {
-        contractItem.value += Number(item["累计合同总份数"]) || 0;
-      } else if (contractItem.label === "采购合同") {
-        contractItem.value += Number(item["累计采购合同数"]) || 0;
-      } else if (contractItem.label === "销售合同") {
-        contractItem.value += Number(item["累计销售合同数"]) || 0;
-      }
-    });
+
+  const matchingItem = resData.find((item: any) => item["业态类型"] === "总体");
+
+  contractData.value.forEach((contractItem, index) => {
+    if (contractItem.label === "合同总金额") {
+      contractItem.value = Number(matchingItem["累计合同履行金额"]) || 0;
+    } else if (contractItem.label === "合同总数") {
+      contractItem.value = Number(matchingItem["累计合同总份数"]) || 0;
+    } else if (contractItem.label === "采购合同") {
+      contractItem.value = Number(matchingItem["累计采购合同数"]) || 0;
+    } else if (contractItem.label === "销售合同") {
+      contractItem.value = Number(matchingItem["累计销售合同数"]) || 0;
+    }
   });
 
   // 更新 outputValues
@@ -142,6 +153,11 @@ const updateOutputValues = () => {
     return formattedOutput;
   });
 };
+
+// 监听 timeCondition 的变化
+watch(timeCondition, (newValue, oldValue) => {
+  initData(); // 当时间条件变化时重新初始化数据
+});
 
 onMounted(() => {
   initData();

@@ -33,7 +33,7 @@ const props = withDefaults(
     amountColor: "rgb(16,253,254)",
     titleColor: "white",
     title: "标题",
-    amount: "数量",
+    amount: "0",
     iconWidth: 50,
     iconHeight: 50,
     height: 100,

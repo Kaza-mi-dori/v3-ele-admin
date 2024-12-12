@@ -100,16 +100,15 @@ const initData = async () => {
     totals["累计采购"].year += Number(item.累计采购金额) || 0;
     totals["累计采购"].month += Number(item.当期采购金额) || 0;
 
-    totals["累计销售"].year += Number(item.累计销售金额) || 0;
-    totals["累计销售"].month += Number(item.当期销售金额) || 0;
+    totals["累计销售"].year = Number(item.累计销售金额) || 0;
+    totals["累计销售"].month = Number(item.当期销售金额) || 0;
 
-    totals["累计营收"].year += Number(item.累计营收金额) || 0;
-    totals["累计营收"].month += Number(item.当期营收金额) || 0;
+    totals["累计营收"].year = Number(item.累计营收金额) || 0;
+    totals["累计营收"].month = Number(item.当期营收金额) || 0;
 
-    totals["累计利润"].year += Number(item.累计利润金额) || 0;
-    totals["累计利润"].month += Number(item.当期利润金额) || 0;
+    totals["累计利润"].year = Number(item.累计利润金额) || 0;
+    totals["累计利润"].month = Number(item.当期利润金额) || 0;
   });
-
   totalData.value = [
     {
       title: "累计采购",

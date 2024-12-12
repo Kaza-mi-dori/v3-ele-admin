@@ -66,6 +66,8 @@ const initData = async () => {
         parseFloat(当期销售量 || 0) + parseFloat(当期采购量 || 0)
       ).toFixed(0),
     };
+    // 深拷贝
+    oilData.value = JSON.parse(JSON.stringify(oilData.value));
   }
   // console.log("oilData", oilData.value);
 };
