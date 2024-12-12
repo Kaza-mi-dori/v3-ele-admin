@@ -93,19 +93,19 @@ const initData = async () => {
     "累计利润": { year: 0, month: 0 },
   };
 
-  resData.forEach((item) => {
-    totals["累计采购"].year += Number(item.累计采购金额) || 0;
-    totals["累计采购"].month += Number(item.当期采购金额) || 0;
+  const matchingItem = resData.find((item: any) => item["业态类型"] === "总体");
 
-    totals["累计销售"].year += Number(item.累计销售金额) || 0;
-    totals["累计销售"].month += Number(item.当期销售金额) || 0;
+  totals["累计采购"].year = Number(matchingItem.累计采购金额) || 0;
+  totals["累计采购"].month = Number(matchingItem.当期采购金额) || 0;
 
-    totals["累计营收"].year += Number(item.累计营收金额) || 0;
-    totals["累计营收"].month += Number(item.当期营收金额) || 0;
+  totals["累计销售"].year = Number(matchingItem.累计销售金额) || 0;
+  totals["累计销售"].month = Number(matchingItem.当期销售金额) || 0;
 
-    totals["累计利润"].year += Number(item.累计利润金额) || 0;
-    totals["累计利润"].month += Number(item.当期利润金额) || 0;
-  });
+  totals["累计营收"].year = Number(matchingItem.累计营收金额) || 0;
+  totals["累计营收"].month = Number(matchingItem.当期营收金额) || 0;
+
+  totals["累计利润"].year = Number(matchingItem.累计利润金额) || 0;
+  totals["累计利润"].month = Number(matchingItem.当期利润金额) || 0;
 
   totalData.value = [
     {
