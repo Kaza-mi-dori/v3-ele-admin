@@ -108,18 +108,19 @@ const initData = async () => {
     { label: "采购合同", value: 0, unit: "份" },
     { label: "销售合同", value: 0, unit: "份" },
   ];
-  resData.forEach((item: any) => {
-    contractData.value.forEach((contractItem, index) => {
-      if (contractItem.label === "合同总金额") {
-        contractItem.value += Number(item["累计合同履行金额"]) || 0;
-      } else if (contractItem.label === "合同总数") {
-        contractItem.value += Number(item["累计合同总份数"]) || 0;
-      } else if (contractItem.label === "采购合同") {
-        contractItem.value += Number(item["累计采购合同数"]) || 0;
-      } else if (contractItem.label === "销售合同") {
-        contractItem.value += Number(item["累计销售合同数"]) || 0;
-      }
-    });
+
+  const matchingItem = resData.find((item: any) => item["业态类型"] === "总体");
+
+  contractData.value.forEach((contractItem, index) => {
+    if (contractItem.label === "合同总金额") {
+      contractItem.value = Number(matchingItem["累计合同履行金额"]) || 0;
+    } else if (contractItem.label === "合同总数") {
+      contractItem.value = Number(matchingItem["累计合同总份数"]) || 0;
+    } else if (contractItem.label === "采购合同") {
+      contractItem.value = Number(matchingItem["累计采购合同数"]) || 0;
+    } else if (contractItem.label === "销售合同") {
+      contractItem.value = Number(matchingItem["累计销售合同数"]) || 0;
+    }
   });
 
   // 更新 outputValues
