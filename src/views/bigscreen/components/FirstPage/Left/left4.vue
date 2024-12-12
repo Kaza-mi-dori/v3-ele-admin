@@ -14,6 +14,7 @@ import Tab from "@/views/bigscreen/components/FirstPage/Tab/index.vue";
 import * as echarts from "echarts";
 import type { TabsPaneContext } from "element-plus";
 import { ref, onMounted } from "vue";
+import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 
 const PURCHASE = "PURCHASE";
 const SELL = "SELL";
@@ -22,16 +23,15 @@ const activeName = ref<number | string | undefined>(PURCHASE);
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 
-// 每个类别对应的数据系列
-const categoryMap = {
-  PURCHASE: ["原油", "化工产品", "燃料油", "成品油", "LNG", "煤炭"],
-  SELL: ["原油", "化工产品", "燃料油", "成品油", "LNG", "煤炭"],
-};
-
-// 随机生成分类数量数据
-const getRandomCategoryData = (categories: string[]) => {
-  return categories.map(() => Math.floor(Math.random() * 101)); // 随机生成0-100之间的值
-};
+const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
+  业务维度: undefined,
+  状态集合: undefined,
+  日期早于: undefined,
+  日期晚于: undefined,
+  id集合: undefined,
+  页码: 1,
+  页容量: 20,
+});
 
 const handleClick = (tab: TabsPaneContext) => {
   console.log(tab);
@@ -39,13 +39,43 @@ const handleClick = (tab: TabsPaneContext) => {
   initChartMiddle4();
 };
 
-const initChartMiddle4 = () => {
-  chart.value = echarts.init(
-    document.getElementById("chart-left-4") as HTMLDivElement
-  );
+let resData = ref([]);
+const initData = async () => {
+  queryForm.value = {
+    页码: 1,
+    页容量: 1,
+    企业名称: "广投石化",
+    状态集合: ["有效"],
+  };
+  const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
+  resData.value = res["当前记录"][0]["内容"]["详情"];
+};
+
+const initChartMiddle4 = async () => {
+  // 确保图表实例被正确初始化
+  if (!chart.value) {
+    chart.value = echarts.init(
+      document.getElementById("chart-left-4") as HTMLDivElement
+    );
+  }
+  // 清空图表
   chart.value.clear();
-  const categories = categoryMap[activeName.value as keyof typeof categoryMap];
-  const data = getRandomCategoryData(categories);
+  // 获取数据
+  await initData();
+  const categories: string[] = [];
+  const data: number[] = [];
+
+  resData.value.forEach((item) => {
+    // 业态类型对应横坐标
+    categories.push(item["业态类型"]);
+
+    // 根据当前激活的标签页选择对应的合同数
+    if (activeName.value === PURCHASE) {
+      data.push(item["累计采购合同数"]);
+    } else if (activeName.value === SELL) {
+      data.push(item["累计销售合同数"]);
+    }
+  });
 
   const gradientColors = [
     { start: "#f2b678", end: "#f18c32" },
