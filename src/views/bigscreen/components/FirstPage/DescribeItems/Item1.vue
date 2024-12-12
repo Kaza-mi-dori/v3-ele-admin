@@ -33,7 +33,7 @@ const props = withDefaults(
     amountColor: "rgb(16,253,254)",
     titleColor: "white",
     title: "标题",
-    amount: "数量",
+    amount: "0",
     iconWidth: 50,
     iconHeight: 50,
     height: 100,
@@ -46,11 +46,8 @@ const animatedAmount = useTransition(source, {
 });
 
 // 将字符串转换为数字
-source.value = parseInt(props.amount, 10);
-// 确保转换后的值不会是 NaN
-if (isNaN(source.value)) {
-  source.value = 0;
-}
+const parsedAmount = parseInt(props.amount, 10);
+source.value = isNaN(parsedAmount) ? 0 : parsedAmount;
 </script>
 
 <style lang="scss" scoped>

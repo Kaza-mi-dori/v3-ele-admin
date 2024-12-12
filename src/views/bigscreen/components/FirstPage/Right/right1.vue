@@ -59,11 +59,12 @@ const initData = async () => {
   if (matchingItem) {
     const { 库存量, 当期销售量 } = matchingItem; // 解构赋值
     oilData.value = {
-      oilStorage: 库存量,
-      oilBargain: 当期销售量,
+      oilStorage: 库存量 || "0",
+      oilBargain: 当期销售量 || "0",
     };
+    // 深拷贝
+    oilData.value = JSON.parse(JSON.stringify(oilData.value));
   }
-  console.log("oilData", oilData.value);
 };
 
 onMounted(() => {
