@@ -47,3 +47,22 @@ export const CurrencyEnumMap = {
   [CurrencyEnum.AUD]: "澳元",
   [CurrencyEnum.CAD]: "加元",
 };
+
+/** 地图元素枚举 */
+export const enum MapElementEnum {
+  /** 加油站 */
+  GAS_STATION = "gas_station",
+  /** 油库 */
+  OIL_DEPOT = "oil_depot",
+  /** 运油船 */
+  OIL_SHIP = "oil_ship",
+  /** 油车 */
+  OIL_CAR = "oil_car",
+}
+
+export const MapElementEnumMap = {
+  [MapElementEnum.GAS_STATION]: "加油站",
+  [MapElementEnum.OIL_DEPOT]: "油库",
+  [MapElementEnum.OIL_SHIP]: "运油船",
+  [MapElementEnum.OIL_CAR]: "油车",
+};

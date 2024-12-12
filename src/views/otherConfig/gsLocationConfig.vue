@@ -219,6 +219,7 @@ import oil from "@/views/bigscreen/img/oil.png";
 import gas from "@/views/bigscreen/img/oil2.png";
 import * as echarts from "echarts";
 import "echarts/extension/bmap/bmap";
+import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
 import { ElMessage } from "element-plus";
 import { GsLocationAPI } from "@/api/config/gsLocation";
 import { FormInstance } from "element-plus";
@@ -263,12 +264,17 @@ const submitItemLoading = ref(false);
 const gsListdata = ref([
   {
     id: 1,
-    label: "加油站",
+    label: MapElementEnumMap[MapElementEnum.GAS_STATION],
     children: [],
   },
   {
     id: 2,
-    label: "油库",
+    label: MapElementEnumMap[MapElementEnum.OIL_DEPOT],
+    children: [],
+  },
+  {
+    id: 3,
+    label: MapElementEnumMap[MapElementEnum.OIL_SHIP],
     children: [],
   },
 ]);
@@ -289,6 +295,7 @@ const chartDOM = ref<HTMLElement | null>(null);
 interface CurrentItem {
   id: number;
   label: string;
+  type: string;
   description: string;
   iconName?: string;
   xOffSet?: number | null;
@@ -324,8 +331,9 @@ const isMouseInIcon = ref(false);
 // 范围大小
 const iconRange = 16;
 
-const GAS_ENUM_VALUE = 1;
-const STORAGE_ENUM_VALUE = 2;
+const GAS_ENUM_VALUE = MapElementEnumMap[MapElementEnum.GAS_STATION];
+const STORAGE_ENUM_VALUE = MapElementEnumMap[MapElementEnum.OIL_DEPOT];
+const BOAT_ENUM_VALUE = MapElementEnumMap[MapElementEnum.OIL_SHIP];
 
 /**
  * @description: 鼠标进入地图，判断是否为修改位置状态，如果是则将图标位置设置为当前鼠标位置，否则不做任何操作
@@ -492,7 +500,7 @@ const onSubmitChangeCurrentItemForm = async () => {
   const submitData: BackEndFormType = {
     id: currentItem.value?.id as number,
     名称: currentItem.value?.label as string,
-    类型: currentItem.value?.iconName === "gas" ? "加油站" : "油库",
+    类型: currentItem.value?.type as string,
     描述: currentItem.value?.description as string,
     坐标: `${currentItem.value?.xOffSet},${currentItem.value?.yOffSet}`,
     图标: currentItem.value?.iconName as string,
@@ -522,7 +530,7 @@ const onSubmitItemForm = () => {
       const submitData = {
         id: itemForm.value.id,
         名称: itemForm.value.name,
-        类型: itemForm.value.type === GAS_ENUM_VALUE ? "加油站" : "油库",
+        类型: itemForm.value.type,
         描述: itemForm.value.description,
         坐标: `${itemForm.value.xOffSet},${itemForm.value.yOffSet}`,
         图标: itemForm.value.type === GAS_ENUM_VALUE ? "gas" : "oil",
@@ -533,11 +541,19 @@ const onSubmitItemForm = () => {
       op(submitData)
         .then((res) => {
           submitItemLoading.value = false;
-          const type = itemForm.value.type;
+          const type =
+            itemForm.value.type === GAS_ENUM_VALUE
+              ? 1
+              : itemForm.value.type === STORAGE_ENUM_VALUE
+                ? 2
+                : 3;
           const item = {
             // type保证为1或2
-            id: gsListdata.value[type - 1].children.length + 1,
+            id:
+              itemForm.value.id ||
+              gsListdata.value[type - 1].children.length + 1,
             label: itemForm.value.name as unknown as string,
+            type: itemForm.value.type,
             description: itemForm.value.description as unknown as string,
             iconName: type === GAS_ENUM_VALUE ? "gas" : "oil",
             xOffSet: itemForm.value.xOffSet,
@@ -641,11 +657,12 @@ const initListData = async () => {
   }
   for (let i = 0; i < list.length; i++) {
     const item = list[i];
-    const type = item.类型 === "加油站" ? 1 : 2;
+    const type = item.类型 === "加油站" ? 1 : item.类型 === "油库" ? 2 : 3;
     const newItem = {
       id: item.id,
       label: item.名称,
       description: item.描述,
+      type: item.类型,
       iconName: item.类型 === "加油站" ? "gas" : "oil",
       xOffSet: item.坐标 ? item.坐标.split(",")[0] : null,
       yOffSet: item.坐标 ? item.坐标.split(",")[1] : null,
@@ -684,7 +701,7 @@ onMounted(() => {
     }
   }
   .item-detail {
-    @apply bg-white pl-20px pr-20px pt-10px shadow-coolGray-100 relative;
+    @apply bg-white w-200px pl-20px pr-20px pt-10px shadow-coolGray-100 relative;
   }
 }
 

@@ -129,6 +129,7 @@
           <el-select v-model="itemForm.type" placeholder="请选择">
             <el-option label="加油站" :value="GAS_ENUM_VALUE" />
             <el-option label="油库" :value="STORAGE_ENUM_VALUE" />
+            <el-option label="运油船" :value="BOAT_ENUM_VALUE" />
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
@@ -178,7 +179,7 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { ElMessage, ElForm } from "element-plus";
 import { useRouter } from "vue-router";
-import { id } from "element-plus/es/locale";
+import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
 
 const router = useRouter();
 
@@ -214,8 +215,9 @@ const rules = ref({
   description: [{ required: true, message: "请输入描述", trigger: "blur" }],
 });
 const submitItemLoading = ref(false);
-const GAS_ENUM_VALUE = 1;
-const STORAGE_ENUM_VALUE = 2;
+const GAS_ENUM_VALUE = MapElementEnumMap[MapElementEnum.GAS_STATION];
+const STORAGE_ENUM_VALUE = MapElementEnumMap[MapElementEnum.OIL_DEPOT];
+const BOAT_ENUM_VALUE = MapElementEnumMap[MapElementEnum.OIL_SHIP];
 const queryParams: {
   名称: string | undefined;
   类型集合: number[] | undefined;
@@ -234,7 +236,7 @@ const handleUpdateDetail = (row: any) => {
   dialogVisible.value = true;
   itemForm.value = {
     id: row.id,
-    type: row.类型 === "加油站" ? GAS_ENUM_VALUE : STORAGE_ENUM_VALUE,
+    type: row.类型,
     name: row.名称,
     description: row.描述,
     location: row.坐标,
@@ -243,7 +245,7 @@ const handleUpdateDetail = (row: any) => {
 const handleAddRecord = () => {
   itemForm.value = {
     id: null,
-    type: null,
+    type: undefined,
     name: "",
     description: "",
     location: "",
@@ -252,13 +254,27 @@ const handleAddRecord = () => {
 };
 const handleDeleteRecord = (row: any) => {
   // console.log("删除");
+  ElMessageBox.confirm("此操作将永久删除该节点, 是否继续?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      GsLocationAPI.deleteMapElement(row.id).then(() => {
+        ElMessage.success("删除成功");
+        initTableData();
+      });
+    })
+    .catch(() => {
+      ElMessage.info("已取消删除");
+    });
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
     label: "类型",
     prop: "类型",
     value: null,
-    options: ["全部", "油库", "加油站"],
+    options: ["全部", "油库", "加油站", "运油船"],
     inputType: "select",
     order: 1,
   },
@@ -312,7 +328,7 @@ const onSubmitItemForm = async () => {
         名称: itemForm.value.name,
         描述: itemForm.value.description,
         坐标: itemForm.value.location,
-        类型: itemForm.value.type === GAS_ENUM_VALUE ? "加油站" : "油库",
+        类型: itemForm.value.type,
       };
       const op = itemForm.value.id
         ? GsLocationAPI.updateMapElement
@@ -325,7 +341,7 @@ const onSubmitItemForm = async () => {
       itemForm.value = {
         id: null,
         location: "",
-        type: null,
+        type: undefined,
         name: "",
         description: "",
       };

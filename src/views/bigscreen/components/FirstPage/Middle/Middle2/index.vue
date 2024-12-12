@@ -124,6 +124,35 @@
             </div>
           </div>
         </el-popover>
+        <el-popover
+          popper-class="dark-popper"
+          placement="top-start"
+          width="500"
+        >
+          <template #reference>
+            <div class="content3">
+              <div class="title">运油船</div>
+              <div class="num">
+                <el-statistic :value="boatNumOutputValue" />
+              </div>
+            </div>
+          </template>
+          <div class="total-pop-content">
+            <div class="__desc">
+              <div
+                v-for="item in posItems.filter(
+                  (item) => item['type'] === '运油船'
+                )"
+                :key="item.id"
+              >
+                <div class="__desc flex justify-between">
+                  <span class="text-blue">{{ item.name }}</span>
+                  <span class="text-green">{{ item.desc }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </el-popover>
         <!-- <div class="content1">
           <div class="title">油库</div>
           <div class="num">
@@ -136,12 +165,12 @@
             <el-statistic :value="oilNumOutputValue" />
           </div>
         </div> -->
-        <div class="content3">
+        <!-- <div class="content3">
           <div class="title">运油船</div>
           <div class="num">
             <el-statistic :value="boatNumOutputValue" />
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -153,7 +182,6 @@ import gas from "@/views/bigscreen/img/oil2.png";
 import { GsLocationAPI } from "@/api/config/gsLocation";
 import { ref } from "vue";
 import { useTransition } from "@vueuse/core";
-import { stat } from "fs";
 
 defineProps({
   showTotalNum: {
@@ -226,8 +254,13 @@ const initTableData = async () => {
   };
   const res: any = await GsLocationAPI.getMapElementList(params);
   const table = res["当前记录"];
-  oilNum.value = table.filter((item: any) => item["类型"] === "加油站").length;
-  gasNum.value = table.filter((item: any) => item["类型"] === "油库").length;
+  oilSource.value = table.filter(
+    (item: any) => item["类型"] === "加油站"
+  ).length;
+  gasSource.value = table.filter((item: any) => item["类型"] === "油库").length;
+  boatSource.value = table.filter(
+    (item: any) => item["类型"] === "运油船"
+  ).length;
   const mapImg = document.querySelector(".map-img") as HTMLElement;
   const height = parseFloat(window.getComputedStyle(mapImg).height);
   const width = parseFloat(window.getComputedStyle(mapImg).width);
@@ -285,25 +318,25 @@ onMounted(() => {
   // });
 });
 
-const gasNum = ref(25);
-const oilNum = ref(3);
-const boatNum = ref(0);
+// const gasNum = ref(25);
+// const oilNum = ref(3);
+// const boatNum = ref(0);
 
 const gasSource = ref(0);
 const oilSource = ref(0);
 const boatSource = ref(0);
 const gasNumOutputValue = useTransition(gasSource, {
-  duration: 2000,
+  duration: 1000,
 });
 const oilNumOutputValue = useTransition(oilSource, {
-  duration: 2000,
+  duration: 1000,
 });
 const boatNumOutputValue = useTransition(boatSource, {
-  duration: 2000,
+  duration: 1000,
 });
-gasSource.value = gasNum.value;
-oilSource.value = oilNum.value;
-boatSource.value = boatNum.value;
+// gasSource.value = gasNum.value;
+// oilSource.value = oilNum.value;
+// boatSource.value = boatNum.value;
 </script>
 
 <style lang="scss" scoped>
