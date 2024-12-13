@@ -24,6 +24,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @resetFilter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -32,8 +33,8 @@
         <el-button type="primary" @click="handleAddRecord">新增</el-button>
       </div>
       <div>
-        <el-button icon="ArrowUp">导出excel</el-button>
-        <el-button icon="ArrowDown">导入excel</el-button>
+        <el-button icon="ArrowUp" disabled>导出excel</el-button>
+        <el-button icon="ArrowDown" disabled>导入excel</el-button>
         <el-popover
           v-model:visible.sync="popoverVisible"
           placement="bottom"
@@ -46,7 +47,7 @@
           <el-checkbox-group v-model="checkedColumns">
             <el-checkbox label="来源" />
             <el-checkbox label="名称" />
-            <el-checkbox label="合同单号" />
+            <el-checkbox label="合同编号" />
             <el-checkbox label="合同类型" />
             <el-checkbox label="合同类别" />
             <el-checkbox label="状态" />
@@ -57,7 +58,7 @@
             <el-checkbox label="税率" />
             <el-checkbox label="税额" />
             <el-checkbox label="币种" />
-            <el-checkbox label="合作伙伴" />
+            <el-checkbox label="合同相对方" />
             <el-checkbox label="说明" />
           </el-checkbox-group>
         </el-popover>
@@ -98,76 +99,99 @@
     >
       <el-table-column
         v-if="checkedColumns.includes('来源')"
-        key="dataFrom"
-        prop="dataFrom"
-        label="来源"
+        key="数据源"
+        prop="数据源"
+        label="数据来源"
         width="150"
         sortable
+        align="center"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.dataFrom }}</span>
+          <span>{{ scope.row.数据源 }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="checkedColumns.includes('名称')"
-        key="name"
-        prop="name"
-        label="名称"
+        key="合同名称"
+        prop="合同名称"
+        label="合同名称"
         width="150"
         sortable
+        align="center"
       >
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
-            {{ scope.row.name }}
+            {{ scope.row.合同名称 || "-" }}
           </el-link>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="checkedColumns.includes('合同单号')"
-        key="no"
-        prop="no"
-        label="合同单号"
+        v-if="checkedColumns.includes('合同编号')"
+        key="合同编号"
+        prop="合同编号"
+        label="合同编号"
         width="150"
         sortable
+        align="center"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.no }}</span>
+          <span>{{ scope.row.合同编号 }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="checkedColumns.includes('合同类型')"
-        key="type"
-        prop="type"
+        key="合同类型"
+        prop="合同类型"
         label="合同类型"
         width="150"
         sortable
+        align="center"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.type }}</span>
+          <span>{{ scope.row.合同类型 }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="checkedColumns.includes('合同类别')"
         key="category"
         prop="category"
         label="合同类别"
         width="150"
-        sortable
+        sortable align="center"
       >
         <template v-slot="scope">
           <span>{{ scope.row.category }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
-        v-if="checkedColumns.includes('状态')"
-        key="status"
-        prop="status"
+        prop="number"
         label="状态"
-        width="150"
         sortable
+        align="center"
+        width="150"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.status }}</span>
+          <span v-if="scope.row.状态 === '有效'" class="text-green-5">
+            <!-- 打勾 -->
+            <el-icon>
+              <Check />
+            </el-icon>
+            已审核
+          </span>
+          <span v-else-if="scope.row.状态 === '无效'" class="text-red-5">
+            <!-- 打叉 -->
+            <el-icon>
+              <Close />
+            </el-icon>
+            无效
+          </span>
+          <span v-else class="text-gray-5">
+            <!-- 问号 -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+            未审核
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -177,23 +201,24 @@
         label="签订日期"
         width="150"
         sortable
+        align="center"
       >
         <template v-slot="scope">
           <span>{{ scope.row.date }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="checkedColumns.includes('是否审核')"
         key="audited"
         prop="audited"
         label="是否审核"
         width="150"
-        sortable
+        sortable align="center"
       >
         <template v-slot="scope">
           <span>{{ scope.row.audited ? "是" : "否" }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="checkedColumns.includes('有履约风险')"
         key="isRisk"
@@ -216,18 +241,18 @@
       </el-table-column>
       <el-table-column
         v-if="checkedColumns.includes('金额')"
-        key="amount"
-        prop="amount"
-        label="金额(万元)"
-        width="120"
+        key="含税金额"
+        prop="含税金额"
+        label="含税金额(万元)"
+        width="150"
         align="right"
         sortable
       >
         <template v-slot="scope">
-          <span>{{ scope.row.amount }}</span>
+          <span>{{ scope.row.含税金额 }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="checkedColumns.includes('税率')"
         key="tax"
         prop="tax"
@@ -238,8 +263,8 @@
         <template v-slot="scope">
           <span>{{ scope.row.tax }}</span>
         </template>
-      </el-table-column>
-      <el-table-column
+      </el-table-column> -->
+      <!-- <el-table-column
         v-if="checkedColumns.includes('税额')"
         key="taxAmount"
         prop="taxAmount"
@@ -262,17 +287,18 @@
         <template v-slot="scope">
           <span>{{ scope.row.currency }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
-        v-if="checkedColumns.includes('合作伙伴')"
-        key="partner"
-        prop="partner"
-        label="合作伙伴"
-        width="150"
+        v-if="checkedColumns.includes('合同相对方')"
+        key="合同相对方"
+        prop="相对人名称"
+        label="合同相对方"
+        min-width="200"
         sortable
+        align="center"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.partner }}</span>
+          <span>{{ scope.row.相对人名称 }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -282,6 +308,7 @@
         label="说明"
         width="150"
         sortable
+        align="center"
       >
         <template v-slot="scope">
           <span>{{ scope.row.description }}</span>
@@ -294,6 +321,20 @@
               详情
             </el-button>
             <el-button type="text">编辑</el-button> -->
+            <el-link
+              v-if="scope.row['状态'] !== '有效'"
+              type="primary"
+              @click="handleAudit(scope.row)"
+            >
+              审核
+            </el-link>
+            <el-link
+              v-if="scope.row['状态'] === '有效'"
+              type="primary"
+              @click="handleResetAudit(scope.row)"
+            >
+              设为无效
+            </el-link>
             <el-link type="danger" @click="handleDelete(scope.row)">
               删除
             </el-link>
@@ -321,10 +362,12 @@ import SearchBar from "@/components/CustomComponent/SearchBar.vue";
 import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
 import BusinessStandbookAPI from "@/api/businessStandBook";
+import { handleDeleteRow, handleAuditRow } from "@/hooks/useTableOp";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { toThousands } from "@/utils";
 import { useRouter } from "vue-router";
+import { on } from "events";
 
 const router = useRouter();
 
@@ -332,7 +375,7 @@ const popoverVisible: Ref<boolean> = ref(false);
 const checkedColumns: Ref<string[]> = ref([
   "来源",
   "名称",
-  "合同单号",
+  "合同编号",
   "合同类型",
   "合同类别",
   "状态",
@@ -340,7 +383,7 @@ const checkedColumns: Ref<string[]> = ref([
   "是否审核",
   "有履约风险",
   "金额",
-  "合作伙伴",
+  "合同相对方",
   "说明",
 ]);
 
@@ -356,7 +399,7 @@ type IExampleData = business.IAuditableEntity<business.IContract>;
     taxAmount: number; // 税额
     description: string; // 说明
     currency: string; // 币种
-    partner: string; // 合作伙伴(相对人)
+    partner: string; // 合同相对方(相对人)
     status: string; // 合同状态
     date: string; // 签订日期
     from: string; // 合同信息来源，如：泛微、钉钉
@@ -365,89 +408,37 @@ type IExampleData = business.IAuditableEntity<business.IContract>;
  */
 
 const loading: Ref<boolean> = ref(false);
-const exampleData: Ref<IExampleData[]> = ref([
-  {
-    id: "1",
-    name: "合同一",
-    no: "123456789",
-    date: "2022-01-01",
-    type: "采购",
-    status: "待审核",
-    dataFrom: "泛微系统",
-    audited: true,
-    category: "成品油-车单销售合同", // 数据字典加以规范
-    tax: 0.06,
-    taxAmount: 1000,
-    amount: toThousands(10000000),
-    currency: "CNY",
-    partner: "供应商1",
-    isRisk: true,
-    description: "这是合同一的说明",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-02",
-    createdBy: "管理员",
-    updatedBy: "管理员",
-  },
-  {
-    id: "2",
-    name: "合同二",
-    no: "987654321",
-    date: "2022-01-02",
-    type: "销售",
-    status: "已审核",
-    dataFrom: "泛微系统",
-    audited: true,
-    category: "原油-原油销售合同", // 数据字典加以规范
-    tax: 0.06,
-    taxAmount: 1000,
-    amount: 10000,
-    isRisk: false,
-    currency: "CNY",
-    partner: "供应商2",
-    description: "这是合同二的说明",
-    createdAt: "2021-09-03",
-    updatedAt: "2021-09-04",
-    createdBy: "管理员",
-    updatedBy: "管理员",
-  },
-  {
-    id: "3",
-    name: "合同三",
-    no: "123456789",
-    date: "2022-01-03",
-    type: "采购",
-    status: "待审核",
-    dataFrom: "钉钉",
-    audited: false,
-    category: "化工产品-化工产品采购合同", // 数据字典加以规范
-    tax: 0.06,
-    taxAmount: 1000,
-    amount: 10000,
-    isRisk: false,
-    currency: "CNY",
-    partner: "供应商3",
-    description: "这是合同三的说明",
-    createdAt: "2021-09-05",
-    updatedAt: "2021-09-06",
-    createdBy: "管理员",
-    updatedBy: "管理员",
-  },
-]);
+const exampleData: Ref<IExampleData[]> = ref([]);
+const queryForm: Ref<any> = ref({
+  状态集合: undefined,
+  数据源集合: undefined,
+  日期早于: undefined,
+  日期晚于: undefined,
+  页码: 1,
+  页容量: 10,
+});
 const pagination: Ref<any> = ref({
   total: 100,
   pageSizes: [10, 20, 30, 40, 50],
   pageSize: 10,
   currentPage: 1,
 });
-const riskAmount = ref(1);
+const riskAmount = ref(0);
 
 /** 表格操作回调 */
 const handleCurrentChange = (currentPage: number) => {
   pagination.value.currentPage = currentPage;
   initTableData();
 };
+
 const handleViewDetail = (row: IExampleData) => {
-  console.log(row);
+  router.push({
+    name: "ReportForm",
+    query: {
+      type: "contractDetail",
+      id: row.id,
+    },
+  });
 };
 const handleAddRecord = () => {
   router.push({
@@ -457,26 +448,45 @@ const handleAddRecord = () => {
     },
   });
 };
+
+const handleResetFilter = () => {
+  queryForm.value = {
+    业务维度: undefined,
+    状态集合: undefined,
+    日期早于: undefined,
+    日期晚于: undefined,
+    id集合: undefined,
+    页码: 1,
+    页容量: 20,
+  };
+  pagination.value.currentPage = 1;
+  initTableData();
+};
+
+const handleAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessStandbookAPI.editContractLedgerRecord,
+    "状态",
+    "有效",
+    initTableData
+  );
+};
+
+const handleResetAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessStandbookAPI.editContractLedgerRecord,
+    "状态",
+    "无效",
+    initTableData
+  );
+};
+
 const handleDelete = (row: IExampleData) => {
-  // 确认是否删除
-  ElMessageBox.confirm("确定删除该记录吗？", "提示", {
-    type: "warning",
-  })
-    .then(() => {
-      loading.value = true;
-      BusinessStandbookAPI.deleteContractLedgerRecord(row.id)
-        .then(() => {
-          loading.value = false;
-          ElMessage.success("删除成功");
-        })
-        .catch((err) => {
-          loading.value = false;
-          ElMessage.error("删除失败" + err);
-        });
-    })
-    .catch(() => {
-      ElMessage.info("已取消删除");
-    });
+  handleDeleteRow(row, BusinessStandbookAPI.deleteContractLedgerRecord, () => {
+    initTableData();
+  });
 };
 const tableRowCustom = ({ row, rowIndex }: any) => {
   return row.isRisk ? "danger-row" : "";
@@ -492,7 +502,7 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
   {
     label: "状态",
-    prop: "status",
+    prop: "状态",
     value: null,
     options: ["全部", "待审核", "已审核"],
     inputType: "select",
@@ -505,24 +515,62 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
     inputType: "daterange",
     order: 3,
   },
-  {
-    label: "合同单号",
-    prop: "number",
-    value: null,
-    selected: null,
-    inputType: "input",
-  },
+  // {
+  //   label: "合同编号",
+  //   prop: "number",
+  //   value: null,
+  //   selected: null,
+  //   inputType: "input",
+  // },
   {
     label: "数据来源",
-    prop: "dataFrom",
+    prop: "数据源",
     value: null,
     options: ["全部", "泛微系统", "钉钉", "其他"],
     inputType: "select",
   },
 ]);
 const handleConfirmFilter = (filter: any) => {
-  console.log(filter);
+  const params = {
+    页码: pagination.value.currentPage,
+    页容量: pagination.value.pageSize,
+    ...filter,
+  };
+  if (params["daterange"]) {
+    params["日期早于"] = params["daterange"][1];
+    params["日期晚于"] = params["daterange"][0];
+    delete params["daterange"];
+  }
+  params["状态集合"] = params["状态"]
+    ? params["状态"] === "全部"
+      ? undefined
+      : [params["状态"]]
+    : undefined;
+  queryForm.value = params;
+  initTableData();
 };
+
+const initTableData = () => {
+  loading.value = true;
+  BusinessStandbookAPI.getContractLedgerRecordList({
+    page: pagination.value.currentPage,
+    pageSize: pagination.value.pageSize,
+    ...queryForm.value,
+  })
+    .then((res: any) => {
+      exampleData.value = res["当前记录"];
+      pagination.value.total = +res["记录总数"];
+      loading.value = false;
+    })
+    .catch((err) => {
+      console.error(err);
+      loading.value = false;
+    });
+};
+
+onMounted(() => {
+  initTableData();
+});
 </script>
 
 <style lang="scss" scoped>

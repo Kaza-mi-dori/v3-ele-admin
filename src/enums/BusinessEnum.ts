@@ -66,3 +66,56 @@ export const MapElementEnumMap = {
   [MapElementEnum.OIL_SHIP]: "运油船",
   [MapElementEnum.OIL_CAR]: "油车",
 };
+
+/** 我方公司枚举 */
+export const enum OurCompanyEnum {
+  /** 广投石化 */
+  GTSHC = "广投石化",
+  /** 广东分公司 */
+  GDFGS = "广投石化广东分公司",
+  /** 广投石化舟山 */
+  GTSHC_ZS = "广投石化舟山",
+  /** 永盛仓储 */
+  YSCC = "永盛仓储",
+  /** 永盛石化 */
+  YSSHC = "永盛石化",
+}
+
+export const OurCompanyEnumMap = {
+  [OurCompanyEnum.GTSHC]: "广投石化",
+  [OurCompanyEnum.GDFGS]: "广东分公司",
+  [OurCompanyEnum.GTSHC_ZS]: "广投石化舟山",
+  [OurCompanyEnum.YSCC]: "永盛仓储",
+  [OurCompanyEnum.YSSHC]: "永盛石化",
+};
+
+// 全称map
+export const OurCompanyFullNameMap = {
+  [OurCompanyEnum.GTSHC]: "广西广投石化有限公司",
+  [OurCompanyEnum.GDFGS]: "广西广投石化有限公司广东分公司",
+  [OurCompanyEnum.GTSHC_ZS]: "广投石化(舟山)有限公司",
+  [OurCompanyEnum.YSCC]: "广西永盛仓储有限公司",
+  [OurCompanyEnum.YSSHC]: "广西永盛石油化工有限公司",
+};
+
+/** 合同类型枚举 */
+export const enum ContractTypeEnum {
+  /** 采购合同 */
+  PURCHASE = "采购合同",
+  /** 销售合同 */
+  SALE = "销售合同",
+  /** 运输合同 */
+  TRANSPORT = "运输合同",
+  /** 仓储合同 */
+  STORAGE = "仓储合同",
+  /** 其他合同 */
+  OTHER = "其他合同",
+}
+
+export const ContractTypeEnumMap = {
+  [ContractTypeEnum.PURCHASE]: "采购合同",
+  [ContractTypeEnum.SALE]: "销售合同",
+  [ContractTypeEnum.TRANSPORT]: "运输合同",
+  [ContractTypeEnum.STORAGE]: "仓储合同",
+  [ContractTypeEnum.OTHER]: "其他合同",
+};

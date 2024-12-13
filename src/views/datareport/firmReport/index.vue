@@ -66,26 +66,48 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column> -->
-      <el-table-column type="index" label="序号" width="60" align="center">
+      <!-- <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
             #{{ scope.$index + 1 }}
           </el-link>
         </template>
-      </el-table-column>
-      <el-table-column prop="name" label="报表时间" sortable>
+      </el-table-column> -->
+      <el-table-column prop="name" label="报表时间" sortable align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.日期 || "-" }}</span>
+          <el-link type="primary" @click="handleViewDetail(scope.row)">
+            {{ scope.row.日期 || "-" }}
+          </el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="业务维度" sortable>
+      <el-table-column prop="name" label="企业名称" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.业务维度 || "-" }}</span>
+          <span>{{ scope.row.企业名称 || "-" }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="number" label="状态" sortable>
+      <el-table-column prop="number" label="状态" sortable align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.状态 }}</span>
+          <span v-if="scope.row.状态 === '有效'" class="text-green-5">
+            <!-- 打勾 -->
+            <el-icon>
+              <Check />
+            </el-icon>
+            已审核
+          </span>
+          <span v-else-if="scope.row.状态 === '无效'" class="text-red-5">
+            <!-- 打叉 -->
+            <el-icon>
+              <Close />
+            </el-icon>
+            无效
+          </span>
+          <span v-else class="text-gray-5">
+            <!-- 问号 -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+            未审核
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="200">
@@ -97,6 +119,20 @@
             <el-link type="primary" @click="handleViewDetail(scope.row)">
               编辑
             </el-link> -->
+            <el-link
+              v-if="scope.row['状态'] !== '有效'"
+              type="primary"
+              @click="handleAudit(scope.row)"
+            >
+              审核
+            </el-link>
+            <el-link
+              v-if="scope.row['状态'] === '有效'"
+              type="primary"
+              @click="handleResetAudit(scope.row)"
+            >
+              设为无效
+            </el-link>
             <el-link type="danger" @click="handleDelete(scope.row)">
               删除
             </el-link>
@@ -127,6 +163,7 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { onMounted } from "vue";
 
@@ -220,6 +257,27 @@ const handleDelete = (row: any) => {
       ElMessage.info("已取消删除");
     });
 };
+
+const handleAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessFormAPI.editCompanyDescForm,
+    "状态",
+    "有效",
+    initTableData
+  );
+};
+
+const handleResetAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessFormAPI.editCompanyDescForm,
+    "状态",
+    "无效",
+    initTableData
+  );
+};
+
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
     label: "业务维度",
@@ -265,7 +323,9 @@ const handleConfirmFilter = (value: any) => {
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res = await BusinessFormAPI.getCompanyDescFormList(queryForm.value);
+    const res: any = await BusinessFormAPI.getCompanyDescFormList(
+      queryForm.value
+    );
     tableData.value = res["当前记录"];
     pagination.value.total = +res["记录总数"];
   } catch (error) {

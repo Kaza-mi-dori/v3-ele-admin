@@ -86,6 +86,8 @@ import { ElMessage } from "element-plus";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRoute } from "vue-router";
 import { set } from "nprogress";
+import { sign } from "crypto";
+import { number } from "echarts";
 
 const route = useRoute();
 const router = useRouter();
@@ -295,6 +297,17 @@ const converToFrontendFormData = (type: string | null, data: any) => {
     case "contractDetail":
       return {
         // 转换数据
+        name: data["合同名称"],
+        number: data["合同编号"],
+        source: data["数据源"],
+        signTime: data["签订日期"],
+        type: data["合同类型"],
+        amount: data["含税金额"],
+        partner: data["相对人名称"],
+        otherDesc: data["备注"],
+        desc: data["内容"]?.["合同说明"],
+        expire: data["内容"]?.["履约期限"],
+        isRisk: data["内容"]?.["是否风险合同"],
       };
     case "orderDetail":
       return {
@@ -486,10 +499,20 @@ const convertToBackendData = (type: string | null, data: any) => {
         // 转换数据
       };
     case "contractDetail":
-      return {
-        ...data,
-        // 转换数据
+      result["数据源"] = data.source;
+      result["签订日期"] = data.signTime;
+      result["合同名称"] = data.name;
+      result["合同编号"] = data.number;
+      result["合同类型"] = data.type;
+      result["含税金额"] = data.amount;
+      result["相对人名称"] = data.partner;
+      result["备注"] = data.otherDesc;
+      result["内容"] = {
+        合同说明: data.desc,
+        履约期限: data.expire,
+        是否风险合同: data.isRisk,
       };
+      return result;
     case "orderDetail":
       return {
         ...data,
@@ -694,7 +717,23 @@ const submitForm = async () => {
     //   BusinessFormAPI.savePartnerDetail(submitData);
     //   break;
     case "contractDetail":
-      // BusinessFormAPI.saveContractDetail(submitData);
+      const opContractDetail = route.query.id
+        ? BusinessStandbookAPI.editContractLedgerRecord
+        : BusinessStandbookAPI.addContractLedgerRecord;
+      opContractDetail(realDataToSubmit).then(() => {
+        isEditing.value = false;
+        if (!route.query.id) {
+          // 跳转到列表页
+          ElMessage.success("提交成功, 正在跳转到列表页");
+          setTimeout(() => {
+            router.push({
+              name: "ContractLedgerMng",
+            });
+          }, 500);
+        } else {
+          ElMessage.success("提交成功");
+        }
+      });
       break;
     case "orderDetail":
       // BusinessFormAPI.saveOrderDetail(submitData);
@@ -824,6 +863,22 @@ const initForm = () => {
     case partnerDetailForm:
       break;
     case contractDetailForm:
+      if (route.query.id) {
+        BusinessStandbookAPI.getContractLedgerRecord(
+          route.query.id as string
+        ).then((data) => {
+          if (formRef.value) {
+            const form = formRef.value as any;
+            console.log("contract", data, form);
+            form.setFormValue(
+              converToFrontendFormData(
+                route.query.type as Nullable<string>,
+                data
+              )
+            );
+          }
+        });
+      }
       break;
     case orderDetailForm:
       break;

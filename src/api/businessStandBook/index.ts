@@ -37,12 +37,12 @@ const BusinessStandbookAPI = {
    * @returns 合同展示台账记录详情
    * @throws
    */
-  getContractLedgerRecord(companyId: number) {
+  getContractLedgerRecord(id: number | string) {
     return request2<any, any>({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow`,
       method: "get",
       params: {
-        id: companyId,
+        id,
       },
     });
   },
@@ -71,7 +71,7 @@ const BusinessStandbookAPI = {
    */
   getContractLedgerRecordList(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow/Query`,
       method: "post",
       data,
     });

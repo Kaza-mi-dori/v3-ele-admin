@@ -19,6 +19,42 @@
     </div> -->
     <div class="info-card-level1">
       <div class="__title">
+        <span>来源信息</span>
+      </div>
+      <div class="__content">
+        <el-form
+          ref="formRef"
+          label-position="top"
+          label-width="100px"
+          inline
+          :rules="rules"
+          class="w-full g-form-1"
+          :model="firmReportDetailForm"
+        >
+          <el-row class="w-full">
+            <el-col :span="8">
+              <el-form-item prop="source">
+                <el-select
+                  v-if="editing"
+                  v-model="firmReportDetailForm.source"
+                  placeholder="请选择数据来源"
+                >
+                  <el-option
+                    v-for="(value, key, index) in DatasourceEnumMap"
+                    :key="key"
+                    disabled
+                    :label="value"
+                    :value="value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+    </div>
+    <div class="info-card-level1">
+      <div class="__title">
         <span>报表信息</span>
       </div>
       <div class="__content">
@@ -33,49 +69,138 @@
         >
           <el-row class="w-full">
             <el-col :span="8">
-              <el-form-item label="年份" prop="year">
-                <el-date-picker
-                  v-if="editing"
-                  v-model="firmReportDetailForm.year"
-                  type="year"
-                  value-format="YYYY-MM-DD"
-                  placeholder="选择年份"
-                />
-                <span v-else>
-                  {{ firmReportDetailForm.year.substring(0, 4) }}
-                </span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="企业名称" prop="year">
+              <el-form-item label="合同名称" prop="name">
                 <el-input
                   v-if="editing"
                   v-model="firmReportDetailForm.name"
-                  placeholder="请输入企业名称"
+                  placeholder="请输入合同名称"
                 />
                 <span v-else>{{ firmReportDetailForm.name }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="企业介绍">
+              <el-form-item label="合同编号" prop="number">
+                <el-input
+                  v-if="editing"
+                  v-model="firmReportDetailForm.number"
+                  placeholder="请输入合同编号"
+                />
+                <span v-else>{{ firmReportDetailForm.number }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="我方名称" prop="self">
+                <el-select
+                  v-if="editing"
+                  v-model="firmReportDetailForm.self"
+                  placeholder="请选择我方名称"
+                >
+                  <el-option
+                    v-for="(value, key, index) in OurCompanyEnumMap"
+                    :key="key"
+                    :label="value"
+                    :value="value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <!-- 我方全称 -->
+            <el-col :span="8">
+              <el-form-item label="我方全称" prop="self">
+                <el-input
+                  v-if="editing"
+                  :value="OurCompanyFullNameMap[firmReportDetailForm.self]"
+                  placeholder="请输入我方全称"
+                  disabled
+                />
+                <span v-else>
+                  {{ OurCompanyFullNameMap[firmReportDetailForm.self] }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="对方名称" prop="partner">
+                <el-input
+                  v-if="editing"
+                  v-model="firmReportDetailForm.partner"
+                  data-id="partner"
+                  placeholder="请输入对方名称"
+                />
+                <span v-else>{{ firmReportDetailForm.partner }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同类型" prop="type">
+                <el-select
+                  v-if="editing"
+                  v-model="firmReportDetailForm.type"
+                  placeholder="请选择合同类型"
+                >
+                  <el-option
+                    v-for="(value, key, index) in ContractTypeEnumMap"
+                    :key="key"
+                    :label="value"
+                    :value="value"
+                  />
+                </el-select>
+                <span v-else>{{ firmReportDetailForm.type }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同总金额(含税)" prop="amount">
+                <el-input
+                  v-if="editing"
+                  v-model="firmReportDetailForm.amount"
+                  placeholder="请输入合同总金额(含税)"
+                />
+                <span v-else>{{ firmReportDetailForm.amount }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同签订时间" prop="signTime">
+                <date-picker
+                  v-if="editing"
+                  v-model="firmReportDetailForm.signTime"
+                  style="width: 100%"
+                  valueFormat="YYYY-MM-DD"
+                  placeholder="请选择合同签订时间"
+                />
+                <span v-else>{{ firmReportDetailForm.signTime }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同履约期限" prop="performancePeriod">
+                <date-picker
+                  v-if="editing"
+                  v-model="firmReportDetailForm.performancePeriod"
+                  style="width: 100%"
+                  valueFormat="YYYY-MM-DD"
+                  placeholder="请选择履约期限"
+                />
+                <span v-else>{{ firmReportDetailForm.performancePeriod }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="合同说明" prop="description">
                 <el-input
                   v-if="editing"
                   v-model="firmReportDetailForm.description"
-                  placeholder="请输入企业介绍"
+                  type="textarea"
+                  placeholder="请输入合同说明"
                 />
                 <span v-else>{{ firmReportDetailForm.description }}</span>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item label="企业资产">
+            <!-- <el-col :span="8">
+              <el-form-item label="合同其他描述" prop="other">
                 <el-input
                   v-if="editing"
-                  v-model="firmReportDetailForm.asset"
-                  placeholder="请输入企业资产"
+                  v-model="firmReportDetailForm.other"
+                  placeholder="请输入合同其他描述"
                 />
-                <span v-else>{{ firmReportDetailForm.asset }}</span>
+                <span v-else>{{ firmReportDetailForm.other }}</span>
               </el-form-item>
-            </el-col>
+            </el-col> -->
           </el-row>
         </el-form>
       </div>
@@ -109,12 +234,19 @@
 </template>
 
 <script setup lang="ts">
+import datePicker from "@/components/ElBasicPlus/datePicker.vue";
 import upload from "@/components/ElBasicPlus/upload.vue";
 import pdfPNG from "@/assets/icons/pdf.png";
 import ExcelPNG from "@/assets/icons/excel.png";
 import WordPNG from "@/assets/icons/WORD.png";
 import ZipSVG from "@/assets/icons/zip.svg";
-
+import { DatasourceEnum, DatasourceEnumMap } from "@/enums/DatasourceEnum";
+import {
+  OurCompanyEnum,
+  OurCompanyEnumMap,
+  OurCompanyFullNameMap,
+  ContractTypeEnumMap,
+} from "@/enums/BusinessEnum";
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
 import { FormInstance } from "element-plus";
@@ -134,16 +266,42 @@ const { id, editing } = toRefs(props);
 const formRef = ref<Nullable<FormInstance>>(null);
 
 const firmReportDetailForm = ref({
-  name: "广投石化",
-  year: "2024-01-01",
-  description: "广投石化有限公司",
-  asset: "1000",
+  /** 数据来源 */
+  source: DatasourceEnumMap[DatasourceEnum.OTHER],
+  /** 合同名称 */
+  name: undefined,
+  /** 我方名称 */
+  self: undefined,
+  /** 相对方名称 */
+  partner: undefined,
+  /** 合同编号 */
+  number: undefined,
+  /** 合同类型 */
+  type: undefined,
+  /** 合同说明 */
+  description: undefined,
+  /** 合同总金额(含税) */
+  amount: undefined,
+  /** 合同签订时间 */
+  signTime: undefined,
+  // /** 合同其他描述 */
+  otherDesc: undefined,
+  /** 履约期限 */
+  performancePeriod: undefined,
+  /** 附件 */
   attachment: [],
 });
 
 const rules: Ref<GenericRecord> = ref({
-  name: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
-  year: [{ required: true, message: "请选择年份", trigger: "blur" }],
+  source: [{ required: true, message: "请选择数据来源", trigger: "change" }],
+  name: [{ required: true, message: "请输入合同名称", trigger: "change" }],
+  self: [{ required: true, message: "请选择我方名称", trigger: "change" }],
+  partner: [{ required: true, message: "请输入对方名称", trigger: "change" }],
+  number: [{ required: true, message: "请输入合同编号", trigger: "change" }],
+  type: [{ required: true, message: "请选择合同类型", trigger: "change" }],
+  amount: [
+    { required: true, message: "请输入合同总金额(含税)", trigger: "change" },
+  ],
 });
 
 const allSelected = ref(false);
@@ -214,6 +372,7 @@ const getFormValue = () => {
 };
 const setFormValue = (value: any) => {
   if (value) {
+    // console.log("setFormValue", value);
     saveForm();
     firmReportDetailForm.value = value;
   }
@@ -222,13 +381,26 @@ const validateForm = () => {
   return formRef.value?.validate();
 };
 
+// 取消类型验证
 const generateRandomData = () => {
   firmReportDetailForm.value = {
+    source: DatasourceEnumMap[DatasourceEnum.OTHER],
     name: "广投石化",
-    year: "2024",
-    description: "广投石化有限公司",
-    asset: "1000",
-    attachment: [],
+    self: OurCompanyEnumMap[OurCompanyEnum.GTSHC],
+    partner: "广州石化",
+    number: "HT2022001",
+    type: "销售合同",
+    description: "这是一个合同说明",
+    amount: "1000000",
+    signTime: "2022-01-01",
+    other: "这是一个合同其他描述",
+    attachment: [
+      {
+        name: "合同附件1.pdf",
+        url: "http://www.baidu.com",
+        type: "pdf",
+      },
+    ],
   };
 };
 
