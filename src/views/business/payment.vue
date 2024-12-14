@@ -5,8 +5,13 @@
     <div class="title-block">
       <div class="__title">款项台账</div>
       <div class="__stat">
-        <span class="__item">你有</span>
-        <span class="__item">统计指标一</span>
+        <span class="__item">当前有</span>
+        <span class="__item">
+          <span class="text-blue-5 inline-block ml-1 mr-1">
+            {{ pagination.total }}
+          </span>
+          条记录
+        </span>
         <span class="__item">统计指标二</span>
       </div>
     </div>
@@ -16,6 +21,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @reset-filter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -52,7 +58,7 @@
       stripe
       border
       class="w-full"
-      :data="exampleData"
+      :data="tableData"
       element-loading-text="拼命加载中"
       :header-cell-style="{
         'background-color': sassvariables['custom-table-header-background'],
@@ -65,19 +71,33 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" sortable>
+      <!-- <el-table-column prop="name" label="名称" sortable>
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
             {{ scope.row.name }}
           </el-link>
         </template>
-      </el-table-column>
-      <el-table-column prop="dataFrom" label="款项来源" width="150" sortable>
+      </el-table-column> -->
+      <el-table-column
+        prop="dataFrom"
+        label="款项编号"
+        width="150"
+        sortable
+        align="center"
+      >
         <template v-slot="scope">
-          <span>{{ scope.row.dataFrom }}</span>
+          <el-link type="primary" @click="handleViewDetail(scope.row)">
+            {{ scope.row.款项编号 }}
+          </el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="orderNo" label="款项订单" width="150" sortable>
+      <el-table-column
+        prop="orderNo"
+        label="款项订单"
+        align="center"
+        width="150"
+        sortable
+      >
         <template v-slot="scope">
           <!-- <span>{{ scope.row.orderNo }}</span> -->
           <el-link
@@ -85,34 +105,69 @@
             type="primary"
             @click="handleViewOrderDetail(scope.row)"
           >
-            {{ scope.row.orderNo }}
+            {{ scope.row.订单编号 }}
           </el-link>
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column prop="no" label="款项编号" width="150" sortable>
-        <template v-slot="scope">
-          <span>{{ scope.row.no }}</span>
-        </template>
-      </el-table-column>
       <el-table-column prop="type" label="款项类别" width="150" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.category }}</span>
+          <span>{{ scope.row.款项类型 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="款项类型" width="150" sortable>
+      <!-- <el-table-column prop="type" label="款项类型" width="150" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.type }}</span>
         </template>
-      </el-table-column>
-      <el-table-column prop="description" label="款项说明" width="150" sortable>
+      </el-table-column> -->
+      <!-- 款项时间 -->
+      <el-table-column prop="date" label="款项时间" width="150" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.description }}</span>
+          <span>{{ scope.row.内容.款项时间 || "-" }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态" width="150" sortable>
+      <!-- 款型状态 -->
+      <el-table-column prop="status" label="款项状态" width="150" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.status }}</span>
+          <span>{{ scope.row.内容.款项状态 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <!-- 金额 -->
+      <el-table-column prop="amount" label="金额" width="150" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.内容.款项金额 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <!-- 备注 -->
+      <el-table-column prop="remark" label="款项说明" sortable>
+        <template v-slot="scope">
+          <span>{{ scope.row.内容.款项说明 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <!-- 数据状态 -->
+      <el-table-column prop="status" label="数据状态" width="150" sortable>
+        <template v-slot="scope">
+          <span v-if="scope.row.状态 === '有效'" class="text-green-5">
+            <!-- 打勾 -->
+            <el-icon>
+              <Check />
+            </el-icon>
+            已审核
+          </span>
+          <span v-else-if="scope.row.状态 === '无效'" class="text-red-5">
+            <!-- 打叉 -->
+            <el-icon>
+              <Close />
+            </el-icon>
+            无效
+          </span>
+          <span v-else class="text-gray-5">
+            <!-- 问号 -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+            未审核
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right">
@@ -122,6 +177,20 @@
               详情
             </el-button>
             <el-button type="text">编辑</el-button> -->
+            <el-link
+              v-if="scope.row['状态'] !== '有效'"
+              type="primary"
+              @click="handleAudit(scope.row)"
+            >
+              审核
+            </el-link>
+            <el-link
+              v-if="scope.row['状态'] === '有效'"
+              type="primary"
+              @click="handleResetAudit(scope.row)"
+            >
+              设为无效
+            </el-link>
             <el-link type="danger" @click="handleDelete(scope.row)">
               删除
             </el-link>
@@ -148,7 +217,9 @@ import Filter from "@/components/Business/filter.vue";
 import SearchBar from "@/components/CustomComponent/SearchBar.vue";
 import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
-import { ref } from "vue";
+import BusinessStandbookAPI from "@/api/businessStandBook";
+import { handleDeleteRow, handleAuditRow } from "@/hooks/useTableOp";
+import { ref, onMounted } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -156,41 +227,16 @@ const router = useRouter();
 
 type IExampleData = business.IAuditableEntity<Partial<business.IPayment>>;
 
+const queryForm: Ref<any> = ref({
+  id集合: undefined,
+  数据源集合: undefined,
+  状态集合: undefined,
+  日期晚于: undefined,
+  日期早于: undefined,
+});
+
 const loading: Ref<boolean> = ref(false);
-const exampleData: Ref<IExampleData[]> = ref([
-  {
-    name: "款项1",
-    from: "供应商1",
-    no: "123456",
-    orderNo: "654321",
-    category: "款项类别1",
-    type: "付款",
-    status: "已结款",
-    description: "订单654321第2次回款",
-    audited: true,
-    dataFrom: "数据来源1",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-02",
-    createdBy: "管理员",
-    updatedBy: "管理员",
-  },
-  {
-    name: "款项2",
-    from: "供应商2",
-    no: "654321",
-    orderNo: "123456",
-    type: "回款",
-    category: "款项类别2",
-    status: "已结款",
-    description: "订单123456第1次回款",
-    audited: false,
-    dataFrom: "数据来源2",
-    createdAt: "2021-09-03",
-    updatedAt: "2021-09-04",
-    createdBy: "管理员",
-    updatedBy: "管理员",
-  },
-]);
+const tableData: Ref<any[]> = ref([]);
 const pagination: Ref<any> = ref({
   total: 100,
   pageSizes: [10, 20, 30, 40, 50],
@@ -202,13 +248,41 @@ const handleCurrentChange = (currentPage: number) => {
   initTableData();
 };
 const handleViewDetail = (row: IExampleData) => {
-  console.log(row);
+  router.push({
+    name: "ReportForm",
+    query: {
+      type: "paymentDetail",
+      id: row.id,
+    },
+  });
 };
 const handleViewOrderDetail = (row: IExampleData) => {
   console.log(row);
 };
+const handleAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessStandbookAPI.editPaymentLedgerRecord,
+    "状态",
+    "有效",
+    initTableData
+  );
+};
+
+const handleResetAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessStandbookAPI.editPaymentLedgerRecord,
+    "状态",
+    "无效",
+    initTableData
+  );
+};
+
 const handleDelete = (row: IExampleData) => {
-  console.log(row);
+  handleDeleteRow(row, BusinessStandbookAPI.deletePaymentLedgerRecord, () => {
+    initTableData();
+  });
 };
 const handleAddRecord = () => {
   router.push({
@@ -223,13 +297,13 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
     label: "款项类型",
     prop: "type",
     value: null,
-    options: ["全部", "采购", "销售"],
+    options: ["全部", "付款", "回款"],
     inputType: "select",
     order: 1,
   },
   {
     label: "状态",
-    prop: "status",
+    prop: "状态",
     value: null,
     options: ["全部", "待审核", "已审核"],
     inputType: "select",
@@ -237,23 +311,79 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
   {
     label: "日期",
-    prop: "date",
-    value: null,
-    selected: null,
-    inputType: "date",
+    prop: "daterange",
+    value: [null, null],
+    inputType: "daterange",
     order: 3,
   },
-  {
-    label: "订单编号",
-    prop: "number",
-    value: null,
-    selected: null,
-    inputType: "input",
-  },
+  // {
+  //   label: "日期",
+  //   prop: "date",
+  //   value: null,
+  //   selected: null,
+  //   inputType: "date",
+  //   order: 3,
+  // },
+  // {
+  //   label: "订单编号",
+  //   prop: "number",
+  //   value: null,
+  //   selected: null,
+  //   inputType: "input",
+  // },
 ]);
 const handleConfirmFilter = (filter: any) => {
-  console.log(filter);
+  const params = {
+    页码: pagination.value.currentPage,
+    页容量: pagination.value.pageSize,
+    ...filter,
+  };
+  if (params["daterange"]) {
+    params["日期早于"] = params["daterange"][1];
+    params["日期晚于"] = params["daterange"][0];
+    delete params["daterange"];
+  }
+  params["状态集合"] = params["状态"]
+    ? params["状态"] === "全部"
+      ? undefined
+      : [params["状态"]]
+    : undefined;
+  queryForm.value = params;
+  initTableData();
 };
+
+const handleResetFilter = () => {
+  queryForm.value = {
+    id集合: undefined,
+    数据源集合: undefined,
+    状态集合: undefined,
+    日期晚于: undefined,
+    日期早于: undefined,
+  };
+  initTableData();
+};
+
+const initTableData = () => {
+  loading.value = true;
+  BusinessStandbookAPI.getPaymentLedgerRecordList({
+    ...queryForm.value,
+    页码: pagination.value.currentPage,
+    页容量: pagination.value.pageSize,
+  })
+    .then((res: any) => {
+      tableData.value = res["当前记录"];
+      pagination.value.total = +res["记录总数"];
+      loading.value = false;
+    })
+    .catch((err: any) => {
+      ElMessage.error(err);
+      loading.value = false;
+    });
+};
+
+onMounted(() => {
+  initTableData();
+});
 </script>
 
 <style lang="scss" scoped>

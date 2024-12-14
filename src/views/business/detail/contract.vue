@@ -43,7 +43,7 @@
                     v-for="(value, key, index) in DatasourceEnumMap"
                     :key="key"
                     disabled
-                    :label="value"
+                    :label="key"
                     :value="value"
                   />
                 </el-select>

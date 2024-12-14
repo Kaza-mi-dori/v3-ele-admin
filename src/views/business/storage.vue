@@ -6,7 +6,7 @@
     <div class="g-title-block">
       <div class="__title">库存台账</div>
       <div class="__stat">
-        <span class="__item">你有</span>
+        <span class="__item">当前有</span>
         <span class="__item">统计指标一</span>
         <span class="__item">统计指标二</span>
       </div>

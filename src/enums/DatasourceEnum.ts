@@ -20,7 +20,7 @@ export const enum DatasourceEnum {
    * 其他
    * @description 其他，包括手填、导入
    */
-  OTHER = "其他",
+  OTHER = "其他(手填、导入)",
 }
 
 export const DatasourceEnumMap = {

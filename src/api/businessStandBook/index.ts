@@ -326,7 +326,7 @@ const BusinessStandbookAPI = {
    * @param companyId 企业ID
    * @returns 款项台账记录详情
    */
-  getPaymentLedgerRecord(companyId: number) {
+  getPaymentLedgerRecord(companyId: number | string) {
     return request2<any, any>({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow`,
       method: "get",
@@ -358,7 +358,7 @@ const BusinessStandbookAPI = {
    */
   getPaymentLedgerRecordList(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow/Query`,
       method: "post",
       data,
     });

@@ -319,6 +319,27 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
     ],
   },
+  // 数据源管理
+  {
+    path: "/dataSourceMng",
+    name: "DataSourceMng",
+    component: Layout,
+    meta: {
+      title: "采集数据管理",
+      icon: "el-icon-s-data",
+    },
+    children: [
+      {
+        path: "dataSource",
+        name: "DataSource",
+        component: () => import("@/views/datasource/ysOilStorage/index.vue"),
+        meta: {
+          title: "永盛油库库存",
+          icon: "el-icon-coin",
+        },
+      },
+    ],
+  },
   // 开发环境后端登录页
   {
     path: "/devLogin",

@@ -7,15 +7,17 @@
       <div class="__stat">
         <span class="__item">共有</span>
         <span class="__item">
-          <span class="inline-block ml-1 mr-1">{{ pagination.total }}</span>
-          条合同记录,
+          <span class="text-blue-5 inline-block ml-1 mr-1">
+            {{ pagination.total }}
+          </span>
+          条合同记录
         </span>
-        <span class="__item">
+        <!-- <span class="__item">
           <span class="text-red-5 inline-block ml-1 mr-1">
             {{ riskAmount }}
           </span>
-          条合同可能存在风险
-        </span>
+          ,条合同可能存在风险
+        </span> -->
       </div>
     </div>
     <!-- 筛选操作区 -->

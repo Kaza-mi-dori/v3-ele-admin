@@ -72,15 +72,16 @@ export const handleAuditRow = (
   callback: () => void
 ) => {
   // 确认是否审核
-  ElMessageBox.confirm(
-    "确定审核该记录吗？(审核后该记录将变为有效状态)",
-    "提示",
-    {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      type: "warning",
-    }
-  )
+  const message =
+    row.状态 === "有效"
+      ? "确定将该记录审核状态重置为无效吗？(审核后该记录将变为无效状态)"
+      : "确定审核该记录吗？(审核后该记录将变为有效状态)";
+
+  ElMessageBox.confirm(message, "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
     .then(() => {
       // 审核数据, 全量更新审核字段
       api({ ...row, [auditedProp]: auditedValue }).then(() => {

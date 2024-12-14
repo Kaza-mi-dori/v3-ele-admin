@@ -77,17 +77,14 @@ import settlementDetailForm from "@/views/business/detail/settlement.vue";
 import storageDetailForm from "@/views/business/detail/storage.vue";
 import safetyDetailForm from "@/views/business/detail/safety.vue";
 import goodsDetailForm from "@/views/business/detail/goods.vue";
+import paymentDetailForm from "@/views/business/detail/payment.vue";
 import singlePartnerDetailForm from "@/views/business/detail/partner.vue";
-
 import BusinessFormAPI from "@/api/businessForm";
 import BusinessStandbookAPI from "@/api/businessStandBook";
 import { ElMessage } from "element-plus";
 
 import { ref, onMounted, shallowRef } from "vue";
 import { useRoute } from "vue-router";
-import { set } from "nprogress";
-import { sign } from "crypto";
-import { number } from "echarts";
 
 const route = useRoute();
 const router = useRouter();
@@ -118,6 +115,7 @@ const reportTypes = [
   { value: "storageDetail", label: "库存详情" },
   { value: "safetyDetail", label: "安全详情" },
   { value: "goodsDetail", label: "商品详情" },
+  { value: "paymentDetail", label: "款项详情" },
   { value: "singlePartnerDetail", label: "合作伙伴展示报表" },
 ];
 
@@ -324,6 +322,21 @@ const converToFrontendFormData = (type: string | null, data: any) => {
     case "safetyDetail":
       return {
         // 转换数据
+      };
+    case "paymentDetail":
+      return {
+        // 转换数据
+        数据源: data["数据源"],
+        日期: data["日期"],
+        状态: data["状态"],
+        款项编号: data["款项编号"],
+        订单编号: data["订单编号"],
+        备注: data["备注"],
+        款项金额: data["内容"]["款项金额"],
+        款项类型: data["内容"]["款项类型"],
+        款项时间: data["内容"]["款项时间"],
+        款项说明: data["内容"]["款项说明"],
+        款项状态: data["内容"]["款项状态"],
       };
     case "goodsDetail":
       return {
@@ -533,6 +546,21 @@ const convertToBackendData = (type: string | null, data: any) => {
         ...data,
         // 转换数据
       };
+    case "paymentDetail":
+      result["数据源"] = data["数据源"];
+      result["日期"] = data["日期"];
+      result["状态"] = data["状态"];
+      result["款项编号"] = data["款项编号"];
+      result["订单编号"] = data["订单编号"];
+      result["备注"] = data["备注"];
+      result["内容"] = {
+        款项金额: data["款项金额"],
+        款项类型: data["款项类型"],
+        款项时间: data["款项时间"],
+        款项说明: data["款项说明"],
+        款项状态: data["款项状态"],
+      };
+      return result;
     case "goodsDetail":
       return {
         ...data,
@@ -747,6 +775,33 @@ const submitForm = async () => {
     case "safetyDetail":
       // BusinessFormAPI.saveSafetyDetail(submitData);
       break;
+    case "paymentDetail":
+      const opPaymentDetail = route.query.id
+        ? BusinessStandbookAPI.editPaymentLedgerRecord
+        : BusinessStandbookAPI.addPaymentLedgerRecord;
+      opPaymentDetail(realDataToSubmit)
+        .then(() => {
+          isEditing.value = false;
+          if (!route.query.id) {
+            // 跳转到列表页
+            ElMessage.success("提交成功, 正在跳转到列表页");
+            setTimeout(() => {
+              router.push({
+                name: "PaymentLedgerMng",
+              });
+            }, 500);
+          } else {
+            ElMessage.success("提交成功");
+          }
+        })
+        .catch((err) => {
+          isEditing.value = false;
+          ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
+        });
+      break;
     case "goodsDetail":
       // BusinessFormAPI.saveGoodsDetail(submitData);
       break;
@@ -888,6 +943,24 @@ const initForm = () => {
       break;
     case safetyDetailForm:
       break;
+    case paymentDetailForm:
+      if (route.query.id) {
+        BusinessStandbookAPI.getPaymentLedgerRecord(
+          route.query.id as string
+        ).then((data) => {
+          if (formRef.value) {
+            const form = formRef.value as any;
+            form.setFormValue(
+              converToFrontendFormData(
+                route.query.type as Nullable<string>,
+                data
+              )
+            );
+          }
+        });
+      }
+
+      break;
     case goodsDetailForm:
       break;
     case singlePartnerDetailForm:
@@ -930,6 +1003,8 @@ watch(
       currentComponent.value = goodsDetailForm;
     } else if (value === "singlePartnerDetail") {
       currentComponent.value = singlePartnerDetailForm;
+    } else if (value === "paymentDetail") {
+      currentComponent.value = paymentDetailForm;
     }
   },
   { immediate: true }
@@ -964,6 +1039,8 @@ watch(
       currentComponent.value = safetyDetailForm;
     } else if (value === "goodsDetail") {
       currentComponent.value = goodsDetailForm;
+    } else if (value === "paymentDetail") {
+      currentComponent.value = paymentDetailForm;
     } else if (value === "singlePartnerDetail") {
       currentComponent.value = singlePartnerDetailForm;
     }
