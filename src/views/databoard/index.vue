@@ -909,7 +909,14 @@ const initMenuTreeData = () => {
     页容量: 1000,
   })
     .then((res: any) => {
-      data.value = generateTreeData(res["当前记录"]);
+      data.value = generateTreeData(
+        res["当前记录"].sort((a: any, b: any) => {
+          if (a["显示顺序"] && b["显示顺序"]) {
+            return +a["显示顺序"] - +b["显示顺序"];
+          }
+          return a["名称3"] > b["名称3"] ? 1 : -1;
+        })
+      );
     })
     .catch((err) => {
       console.error(err);
