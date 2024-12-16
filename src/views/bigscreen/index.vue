@@ -118,10 +118,25 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+// ::-webkit-scrollbar {
+//   width: 6px;
+//   height: 6px;
+// }
+// ::-webkit-scrollbar-thumb {
+//   border-radius: 10px;
+//   -webkit-box-shadow: inset 0 0 5px #7dbaef;
+//   background: #7dbaef;
+// }
+// ::-webkit-scrollbar-track {
+//   -webkit-box-shadow: inset 0 0 5px #7dbaef;
+//   border-radius: 10px;
+//   background: transparent;
+// }
 .bg-view {
   // min-width: 1750px;
   // min-height: 900px;
   // height: 1080px;
+  // height: 100%;
   width: 1920px;
   font-size: 12px;
   color: #bfbfbf;
@@ -129,7 +144,8 @@ onMounted(() => {
   line-height: 1.5715;
   font-feature-settings: "tnum";
   width: 100vw;
-  // height: 100vh;
+  height: 100%;
+  overflow: scroll;
   font-family:
     PingFangSC,
     Microsoft YaHei,
