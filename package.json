@@ -1,5 +1,5 @@
 {
-  "name": "数据采集及可视化平台",
+  "name": "v3-element-admin",
   "version": "2.18.4",
   "private": true,
   "type": "module",
@@ -46,6 +46,8 @@
   "dependencies": {
     "@bpmn-io/properties-panel": "^3.25.0",
     "@element-plus/icons-vue": "^2.3.1",
+    "@logicflow/core": "^2.0.10",
+    "@logicflow/extension": "^2.0.14",
     "@stomp/stompjs": "^7.0.0",
     "@vueuse/core": "^10.11.1",
     "@wangeditor/editor": "^5.1.23",
@@ -68,6 +70,7 @@
     "pinia": "^2.2.4",
     "qs": "^6.13.0",
     "sortablejs": "^1.15.3",
+    "v3-element-admin": "file:",
     "vue": "^3.5.11",
     "vue-draggable-next": "^2.2.1",
     "vue-i18n": "9.9.1",

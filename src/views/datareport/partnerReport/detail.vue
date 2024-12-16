@@ -27,13 +27,13 @@
         >
           <el-row class="w-full">
             <el-col :span="8">
-              <el-form-item label="年度" prop="year">
+              <el-form-item label="数据时间" prop="year">
                 <el-date-picker
                   v-if="editing"
                   v-model="yearlyReportDetailForm.year"
                   type="year"
                   value-format="YYYY-MM-DD"
-                  placeholder="选择年度"
+                  placeholder="选择数据时间"
                 />
                 <span v-else>{{ yearlyReportDetailForm.year }}</span>
               </el-form-item>

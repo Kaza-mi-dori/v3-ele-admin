@@ -28,13 +28,13 @@
     <div class="op-block">
       <el-button type="primary" @click="handleAddRecord">新增数据</el-button>
       <div>
-        <el-button icon="ArrowUp" @click="handleExportExcel">
+        <el-button icon="ArrowUp" disabled @click="handleExportExcel">
           导出excel
         </el-button>
-        <el-button icon="Download" @click="handleGetExcelTemplate">
+        <el-button icon="Download" disabled @click="handleGetExcelTemplate">
           获取excel模板
         </el-button>
-        <el-button icon="ArrowDown" @click="handleImportExcel">
+        <el-button icon="ArrowDown" disabled @click="handleImportExcel">
           导入excel
         </el-button>
         <el-dropdown trigger="click" class="ml-4">
@@ -74,21 +74,29 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column> -->
-      <el-table-column type="index" label="序号" width="60" align="center">
+      <!-- <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
             #{{ scope.$index + 1 }}
           </el-link>
         </template>
-      </el-table-column>
-      <el-table-column prop="name" label="报表时间" sortable>
+      </el-table-column> -->
+      <el-table-column prop="name" label="报表时间" sortable align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.日期 || "-" }}</span>
+          <el-link type="primary" @click="handleViewDetail(scope.row)">
+            <span>{{ scope.row.日期 || "-" }}</span>
+          </el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="报表主体" sortable>
+      <el-table-column prop="name" label="报表主体" sortable align="center">
         <template v-slot="scope">
           <span>{{ scope.row.伙伴名称 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <!-- 贸易额 -->
+      <el-table-column prop="name" label="贸易额(万元)" sortable align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.累计贸易额 || "-" }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="状态" label="状态" sortable align="center">
@@ -191,7 +199,7 @@ const uploadHeaders = {
 
 type IExampleData = business.IAuditableEntity<Partial<business.IGoods>>;
 
-const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
+const queryForm: Ref<any & PageQueryDev> = ref({
   业务维度: undefined,
   状态集合: undefined,
   日期早于: undefined,
@@ -293,13 +301,29 @@ const handleResetAudit = (row: any) => {
 };
 
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
+  // {
+  //   label: "业务维度",
+  //   prop: "业务维度",
+  //   value: null,
+  //   options: ["成品油", "燃料油", "原油", "化工产品", "LNG", "煤炭"],
+  //   inputType: "select",
+  //   order: 1,
+  // },
   {
-    label: "业务维度",
-    prop: "业务维度",
-    value: null,
-    options: ["成品油", "燃料油", "原油", "化工产品", "LNG", "煤炭"],
-    inputType: "select",
+    label: "报表时间",
+    prop: "时间跨度",
+    value: [null, new Date()],
+    selected: null,
+    inputType: "daterange",
     order: 1,
+  },
+  {
+    label: "伙伴名称",
+    prop: "伙伴名称",
+    value: null,
+    selected: null,
+    inputType: "input",
+    order: 2,
   },
   {
     label: "状态",
@@ -307,14 +331,6 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
     value: null,
     options: ["全部", "有效", "无效"],
     inputType: "select",
-    order: 2,
-  },
-  {
-    label: "时间跨度",
-    prop: "时间跨度",
-    value: [null, new Date()],
-    selected: null,
-    inputType: "daterange",
     order: 3,
   },
 ]);
@@ -336,7 +352,7 @@ const handleConfirmFilter = (value: any) => {
 
 const handleResetFilter = () => {
   queryForm.value = {
-    业务维度: undefined,
+    伙伴名称: undefined,
     状态集合: undefined,
     日期早于: undefined,
     日期晚于: undefined,
@@ -351,9 +367,11 @@ const handleResetFilter = () => {
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res: any = await BusinessFormAPI.getTradePartnersReportFormList(
-      queryForm.value
-    );
+    const res: any = await BusinessFormAPI.getTradePartnersReportFormList({
+      ...queryForm.value,
+      页码: pagination.value.currentPage,
+      页容量: pagination.value.pageSize,
+    });
     tableData.value = res["当前记录"];
     pagination.value.total = +res["记录总数"];
   } catch (error) {
@@ -364,7 +382,7 @@ const initTableData = async () => {
 };
 
 const handleExportExcel = () => {
-  console.log("导出excel");
+  // console.log("导出excel");
   BusinessFormAPI.exportTradePartnersReportForm({
     日期: undefined,
   }).then((res: any) => {
