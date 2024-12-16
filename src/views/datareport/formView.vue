@@ -82,7 +82,7 @@ import singlePartnerDetailForm from "@/views/business/detail/partner.vue";
 import BusinessFormAPI from "@/api/businessForm";
 import BusinessStandbookAPI from "@/api/businessStandBook";
 import { ElMessage } from "element-plus";
-
+import { stringToArray, arrayToString } from "@/utils";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRoute } from "vue-router";
 
@@ -354,9 +354,9 @@ const converToFrontendFormData = (type: string | null, data: any) => {
       return {
         客商名称: data["客商名称"],
         数据源: data["数据源"],
-        客商类型: data["客商类型"],
+        客商类型: stringToArray(data["客商类型"]),
         准入状态: data["准入状态"],
-        评价: data["评价"],
+        评价: +data["评价"],
         备注: data["备注"],
         履约风险合同数: data["内容"]["履约风险合同数"],
         累计贸易额: data["内容"]["累计贸易额"],
@@ -581,7 +581,8 @@ const convertToBackendData = (type: string | null, data: any) => {
       result["日期"] = data["日期"];
       result["数据源"] = data["数据源"];
       result["客商名称"] = data["客商名称"];
-      result["客商类型"] = data["客商类型"];
+      // 客商类型在前端是数组，要转化为字符串
+      result["客商类型"] = arrayToString(data["客商类型"]);
       result["准入状态"] = data["准入状态"];
       result["评价"] = data["评价"];
       result["备注"] = data["备注"];
@@ -975,6 +976,21 @@ const initForm = () => {
     case goodsDetailForm:
       break;
     case singlePartnerDetailForm:
+      if (route.query.id) {
+        BusinessStandbookAPI.getCustomerAndSupplierLedgerRecord(
+          route.query.id as string
+        ).then((data) => {
+          if (formRef.value) {
+            const form = formRef.value as any;
+            form.setFormValue(
+              converToFrontendFormData(
+                route.query.type as Nullable<string>,
+                data
+              )
+            );
+          }
+        });
+      }
       break;
     default:
       break;

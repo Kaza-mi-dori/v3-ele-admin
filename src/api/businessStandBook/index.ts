@@ -136,7 +136,7 @@ const BusinessStandbookAPI = {
    * @param companyId 企业ID
    * @returns 客商台账记录详情
    */
-  getCustomerAndSupplierLedgerRecord(companyId: number) {
+  getCustomerAndSupplierLedgerRecord(companyId: number | string) {
     return request2<any, any>({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/CustomerAndSupplierLedgerShow`,
       method: "get",
@@ -168,7 +168,7 @@ const BusinessStandbookAPI = {
    */
   getCustomerAndSupplierLedgerRecordList(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/CustomerAndSupplierLedgerShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/CustomerAndSupplierLedgerShow/Query`,
       method: "post",
       data,
     });

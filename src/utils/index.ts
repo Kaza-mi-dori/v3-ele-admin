@@ -65,3 +65,21 @@ export function deepUnref(value: any) {
 export function toThousands(num: number) {
   return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, "$1,");
 }
+
+/**
+ * 数组转化为字符串
+ */
+export function arrayToString(arr?: any[] | string, separator = ",") {
+  if (!arr) return "";
+  if (typeof arr === "string") return arr;
+  return arr.join(separator);
+}
+
+/**
+ * 字符串转化为数组
+ */
+export function stringToArray(str?: string | string[], separator = ",") {
+  if (!str) return [];
+  if (Array.isArray(str)) return str;
+  return str.split(separator);
+}

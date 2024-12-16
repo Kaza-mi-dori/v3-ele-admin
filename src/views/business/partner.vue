@@ -7,10 +7,12 @@
       <div class="__stat">
         <span class="__item">当前有</span>
         <span class="__item">
-          <span class="inline-block ml-1 mr-1">{{ pagination.total }}</span>
+          <span class="inline-block ml-1 mr-1 text-blue-5">
+            {{ pagination.total }}
+          </span>
           条客商记录
         </span>
-        <span class="__item">统计指标二</span>
+        <!-- <span class="__item">统计指标二</span> -->
       </div>
     </div>
     <!-- 筛选操作区 -->
@@ -19,6 +21,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @reset-filter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -64,37 +67,86 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column> -->
-      <el-table-column type="index" label="序号" width="60" align="center">
+      <!-- <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
             #{{ scope.$index + 1 }}
           </el-link>
         </template>
-      </el-table-column>
-      <el-table-column prop="name" label="报表时间" sortable>
+      </el-table-column> -->
+      <!-- 客商名称 -->
+      <el-table-column prop="name" label="客商名称" sortable align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.日期 || "-" }}</span>
+          <el-link type="primary" @click="handleViewDetail(scope.row)">
+            <span>{{ scope.row.客商名称 }}</span>
+          </el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="业务维度" sortable>
+      <!--  客商类型 -->
+      <el-table-column prop="type" label="客商类型" sortable align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.业务维度 || "-" }}</span>
+          <span>{{ arrayToString(scope.row.客商类型) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="number" label="状态" sortable>
+      <!-- 年度评分 -->
+      <el-table-column prop="score" label="年度评分" sortable align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.状态 }}</span>
+          <el-rate v-model="scope.row.评价" disabled show-score />
+        </template>
+      </el-table-column>
+      <!-- 准入状态 -->
+      <el-table-column prop="status" label="准入状态" sortable align="center">
+        <template v-slot="scope">
+          <el-tag
+            :type="scope.row.准入状态 === '有效' ? 'success' : 'danger'"
+            size="small"
+          >
+            {{ scope.row.准入状态 }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="number" label="数据状态" sortable align="center">
+        <template v-slot="scope">
+          <span v-if="scope.row.状态 === '有效'" class="text-green-5">
+            <!-- 打勾 -->
+            <el-icon>
+              <Check />
+            </el-icon>
+            已审核
+          </span>
+          <span v-else-if="scope.row.状态 === '无效'" class="text-red-5">
+            <!-- 打叉 -->
+            <el-icon>
+              <Close />
+            </el-icon>
+            无效
+          </span>
+          <span v-else class="text-gray-5">
+            <!-- 问号 -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+            未审核
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="200">
         <template v-slot="scope">
           <div class="flex w-full justify-evenly">
-            <!-- <el-link type="primary" @click="handleViewDetail(scope.row)">
-              详情
+            <el-link
+              v-if="scope.row['状态'] !== '有效'"
+              type="primary"
+              @click="handleAudit(scope.row)"
+            >
+              审核
             </el-link>
-            <el-link type="primary" @click="handleViewDetail(scope.row)">
-              编辑
-            </el-link> -->
+            <el-link
+              v-if="scope.row['状态'] === '有效'"
+              type="primary"
+              @click="handleResetAudit(scope.row)"
+            >
+              设为无效
+            </el-link>
             <el-link type="danger" @click="handleDelete(scope.row)">
               删除
             </el-link>
@@ -128,7 +180,9 @@ import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import BusinessStandbookAPI, {
   type CustomerAndSupplierQuery,
 } from "@/api/businessStandBook";
+import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
+import { arrayToString } from "@/utils";
 import { onMounted } from "vue";
 
 const router = useRouter();
@@ -191,47 +245,34 @@ const handleViewDetail = (row: any) => {
     name: "ReportForm",
     query: {
       id: row.id,
-      type: "firmReport",
+      type: "singlePartnerDetail",
     },
   });
 };
 const handleDelete = (row: any) => {
-  // 确认是否删除
-  ElMessageBox.confirm("确定删除该记录吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(() => {
-      // 判断是否为有效数据，如果是则不允许删除(提示)
-      if (row.audited) {
-        ElMessageBox.alert("已审核数据请联系管理员删除", "提示", {
-          confirmButtonText: "确定",
-          type: "warning",
-        });
-        return;
-      }
-      // 删除操作
-      BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecord(row.id).then(
-        () => {
-          initTableData();
-        }
-      );
-    })
-    .catch(() => {
-      // 取消删除
-      ElMessage.info("已取消删除");
-    });
+  handleDeleteRow(
+    row,
+    BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecord,
+    initTableData
+  );
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
-  {
-    label: "业务维度",
-    prop: "业务维度",
-    value: null,
-    options: ["成品油", "燃料油", "原油", "化工产品", "LNG", "煤炭"],
-    inputType: "select",
-    order: 1,
-  },
+  // {
+  //   label: "业务维度",
+  //   prop: "业务维度",
+  //   value: null,
+  //   options: ["成品油", "燃料油", "原油", "化工产品", "LNG", "煤炭"],
+  //   inputType: "select",
+  //   order: 1,
+  // },
+  // {
+  //   label: "准入状态",
+  //   prop: "业务维度",
+  //   value: null,
+  //   options: ["成品油", "燃料油", "原油", "化工产品", "LNG", "煤炭"],
+  //   inputType: "select",
+  //   order: 1,
+  // },
   {
     label: "状态",
     prop: "状态集合",
@@ -258,10 +299,43 @@ const handleConfirmFilter = (value: any) => {
   initTableData();
 };
 
+const handleResetFilter = () => {
+  queryForm.value = {
+    数据源集合: undefined,
+    状态集合: undefined,
+    日期早于: undefined,
+    日期晚于: undefined,
+    id集合: undefined,
+    页码: 1,
+    页容量: 20,
+  };
+  initTableData();
+};
+
+const handleAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessStandbookAPI.editCustomerAndSupplierLedgerRecord,
+    "状态",
+    "有效",
+    initTableData
+  );
+};
+
+const handleResetAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessStandbookAPI.editCustomerAndSupplierLedgerRecord,
+    "状态",
+    "无效",
+    initTableData
+  );
+};
+
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res =
+    const res: any =
       await BusinessStandbookAPI.getCustomerAndSupplierLedgerRecordList(
         queryForm.value
       );

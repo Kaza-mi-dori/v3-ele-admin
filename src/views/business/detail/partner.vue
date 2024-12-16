@@ -33,35 +33,54 @@
         >
           <el-row class="w-full">
             <el-col :span="8">
-              <el-form-item label="数据日期" prop="日期">
-                <el-date-picker
-                  v-if="editing"
-                  v-model="firmReportDetailForm.日期"
-                  value-format="YYYY-MM-DD"
-                  placeholder="选择数据日期"
-                />
-                <span v-else>
-                  {{ firmReportDetailForm.日期 }}
-                </span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
               <el-form-item label="数据源" prop="数据源">
                 <el-select
                   v-if="editing"
                   v-model="firmReportDetailForm.数据源"
-                  placeholder="请选择数据源"
+                  placeholder="请选择数据来源"
                 >
                   <el-option
-                    v-for="(value, label) in DatasourceEnumMap"
-                    :key="value"
-                    :label="label"
+                    v-for="(value, key, index) in DatasourceEnumMap"
+                    :key="key"
+                    disabled
+                    :label="key"
                     :value="value"
                   />
                 </el-select>
                 <span v-else>{{ firmReportDetailForm.数据源 }}</span>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="数据日期" prop="日期">
+                <date-picker
+                  v-if="editing"
+                  v-model="firmReportDetailForm.日期"
+                  type="date"
+                  value-format="YYYY-MM-DD"
+                  placeholder="请选择日期"
+                />
+                <span v-else>{{ firmReportDetailForm.日期 }}</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+    </div>
+    <div class="info-card-level1">
+      <div class="__title">
+        <span>报表信息</span>
+      </div>
+      <div class="__content">
+        <el-form
+          ref="formRef"
+          label-position="top"
+          label-width="100px"
+          inline
+          :rules="rules"
+          class="w-full g-form-1"
+          :model="firmReportDetailForm"
+        >
+          <el-row class="w-full">
             <el-col :span="8">
               <el-form-item label="客商名称" prop="客商名称">
                 <el-input
@@ -74,12 +93,22 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="客商类型" prop="客商类型">
-                <el-input
+                <el-select
                   v-if="editing"
                   v-model="firmReportDetailForm.客商类型"
-                  placeholder="请输入客商类型"
-                />
-                <span v-else>{{ firmReportDetailForm.客商类型 }}</span>
+                  placeholder="请选择客商类型"
+                  multiple
+                >
+                  <el-option
+                    v-for="value in ['供应商', '客户']"
+                    :key="value"
+                    :label="value"
+                    :value="value"
+                  />
+                </el-select>
+                <span v-else>
+                  {{ arrayToString(firmReportDetailForm.客商类型) }}
+                </span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -101,12 +130,21 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="评价" prop="评价">
-                <el-input
+                <!-- <el-input
                   v-if="editing"
                   v-model="firmReportDetailForm.评价"
                   placeholder="请输入评价"
                 />
-                <span v-else>{{ firmReportDetailForm.评价 }}</span>
+                <span v-else>{{ firmReportDetailForm.评价 }}</span> -->
+                <!-- 打星 -->
+                <el-rate
+                  v-model="firmReportDetailForm.评价"
+                  :disabled="!editing"
+                  show-score
+                  allow-half
+                  text-color="#ff9900"
+                  :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -234,6 +272,7 @@ import { FormInstance } from "element-plus";
 import business from "@/types/business";
 import { type CustomerAndSupplierLedgerRecordForm } from "@/api/businessStandBook";
 import { DatasourceEnumMap } from "@/enums/DatasourceEnum";
+import { arrayToString, stringToArray } from "@/utils";
 
 const props = defineProps({
   id: {
@@ -250,8 +289,8 @@ const { id, editing } = toRefs(props);
 const formRef = ref<Nullable<FormInstance>>(null);
 
 const firmReportDetailForm: any = ref({
-  id: 0,
-  数据源: "",
+  id: undefined,
+  数据源: "其他",
   日期: "",
   状态: "",
   客商名称: "",
@@ -270,9 +309,11 @@ const firmReportDetailForm: any = ref({
 });
 
 const rules: Ref<GenericRecord> = ref({
+  数据源: [{ required: true, message: "请选择数据来源", trigger: "blur" }],
   客商名称: [
     { required: true, message: "请输入客商企业名称", trigger: "blur" },
   ],
+  客商类型: [{ required: true, message: "请选择客商类型", trigger: "blur" }],
   日期: [{ required: true, message: "请选择日期", trigger: "blur" }],
 });
 
@@ -354,6 +395,7 @@ const validateForm = () => {
 
 const generateRandomData = () => {
   firmReportDetailForm.value = {
+    数据源: "其他",
     客商名称: "广投石化",
     客商类型: "供应商",
     准入状态: "已准入",
@@ -363,7 +405,6 @@ const generateRandomData = () => {
     累计贸易额: 1000000,
     累计签订合同数: 100,
     未履约合同数: 5,
-    数据源: "其他",
     创建者: "管理员",
     创建时间: "2021-01-01",
     修改者: "管理员",
