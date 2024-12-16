@@ -435,7 +435,7 @@ export const UserAPI_2 = {
   /**
    * 获取用户表单详情
    */
-  getFormData(userId: number) {
+  getFormData(userId: number | string) {
     return request2<any, any>({
       url: `${USER_BASE_URL_2}/System/User`,
       method: "get",
@@ -485,5 +485,24 @@ export const UserAPI_2 = {
       method: "put",
       params: { id: id, password: password },
     });
+  },
+
+  // 直接获取用户详情
+  getUserDetail(id: number | string) {
+    return new Promise((resolve, reject) => {
+      UserAPI_2.getFormData(id)
+        .then((res) => {
+          resolve(res);
+        })
+        .catch((err) => {
+          console.log(err);
+          reject("");
+        });
+    });
+    // return request2({
+    //   url: `${USER_BASE_URL_2}/System/User`,
+    //   method: "get",
+    //   params: { id: id },
+    // });
   },
 };

@@ -298,14 +298,22 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         name: data["合同名称"],
         number: data["合同编号"],
         source: data["数据源"],
-        signTime: data["签订日期"],
+        signTime: data["签署日期"],
         type: data["合同类型"],
         amount: data["含税金额"],
+        self: data["我方名称"],
         partner: data["相对人名称"],
         otherDesc: data["备注"],
-        desc: data["内容"]?.["合同说明"],
-        expire: data["内容"]?.["履约期限"],
+        description: data["内容"]?.["合同说明"],
+        expired: data["内容"]?.["履约期限"],
         isRisk: data["内容"]?.["是否风险合同"],
+        fulfilledAmount: data["内容"]?.["已履行金额"],
+        fulfilledCount: data["内容"]?.["已履约数量"],
+        createdAt: data["创建时间"],
+        createdBy: data["创建者"],
+        updatedAt: data["修改时间"],
+        updatedBy: data["修改者"],
+        audited: data["状态"],
       };
     case "orderDetail":
       return {
@@ -513,16 +521,19 @@ const convertToBackendData = (type: string | null, data: any) => {
       };
     case "contractDetail":
       result["数据源"] = data.source;
-      result["签订日期"] = data.signTime;
+      result["签署日期"] = data.signTime;
       result["合同名称"] = data.name;
       result["合同编号"] = data.number;
       result["合同类型"] = data.type;
       result["含税金额"] = data.amount;
+      result["我方名称"] = data.self; // TODO 后端接口有但前端页面无
       result["相对人名称"] = data.partner;
       result["备注"] = data.otherDesc;
       result["内容"] = {
-        合同说明: data.desc,
-        履约期限: data.expire,
+        合同说明: data.description,
+        履约期限: data.expired,
+        已履行金额: 0, // TODO 后端接口有但前端页面无
+        已履约数量: 0, // TODO 后端接口有但前端页面无
         是否风险合同: data.isRisk,
       };
       return result;

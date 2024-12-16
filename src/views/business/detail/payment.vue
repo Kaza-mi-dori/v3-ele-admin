@@ -340,7 +340,7 @@ const generateRandomData = () => {
   paymentDetailForm.value = {
     数据源: "其他",
     日期: "2021-09-01",
-    状态: "有效",
+    状态: undefined,
     款项编号: "20210901001",
     订单编号: "20210901001",
     备注: "备注",

@@ -53,13 +53,14 @@
             <el-checkbox label="合同类型" />
             <el-checkbox label="合同类别" />
             <el-checkbox label="状态" />
-            <el-checkbox label="签订日期" />
+            <el-checkbox label="履约期限" />
             <el-checkbox label="是否审核" />
             <el-checkbox label="有履约风险" />
             <el-checkbox label="金额" />
             <el-checkbox label="税率" />
             <el-checkbox label="税额" />
             <el-checkbox label="币种" />
+            <el-checkbox label="我方名称" />
             <el-checkbox label="合同相对方" />
             <el-checkbox label="说明" />
           </el-checkbox-group>
@@ -197,16 +198,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="checkedColumns.includes('签订日期')"
+        v-if="checkedColumns.includes('履约期限')"
         key="date"
         prop="date"
-        label="签订日期"
+        label="履约期限"
         width="150"
         sortable
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.date }}</span>
+          <span>{{ (scope.row.内容 && scope.row.内容.履约期限) || "-" }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -291,6 +292,19 @@
         </template>
       </el-table-column> -->
       <el-table-column
+        v-if="checkedColumns.includes('我方名称')"
+        key="我方名称"
+        prop="我方名称"
+        label="我方名称"
+        min-width="200"
+        sortable
+        align="center"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.我方名称 || "-" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="checkedColumns.includes('合同相对方')"
         key="合同相对方"
         prop="相对人名称"
@@ -307,13 +321,13 @@
         v-if="checkedColumns.includes('说明')"
         key="description"
         prop="description"
-        label="说明"
-        width="150"
+        label="合同说明"
         sortable
         align="center"
+        min-width="150"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.description }}</span>
+          <span>{{ scope.row.内容 ? scope.row.内容.合同说明 : "-" }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right">
@@ -381,7 +395,7 @@ const checkedColumns: Ref<string[]> = ref([
   "合同类型",
   "合同类别",
   "状态",
-  "签订日期",
+  "履约期限",
   "是否审核",
   "有履约风险",
   "金额",

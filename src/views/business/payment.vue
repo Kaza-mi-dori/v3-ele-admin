@@ -30,8 +30,8 @@
         <el-button type="primary" @click="handleAddRecord">新增</el-button>
       </div>
       <div>
-        <el-button icon="ArrowUp">导出excel</el-button>
-        <el-button icon="ArrowDown">导入excel</el-button>
+        <el-button icon="ArrowUp" disabled>导出excel</el-button>
+        <el-button icon="ArrowDown" disabled>导入excel</el-button>
         <el-dropdown class="ml-2">
           <el-button>
             更多功能
@@ -110,9 +110,32 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="款项类别" width="150" sortable>
+      <el-table-column
+        prop="type"
+        label="款项类别"
+        width="150"
+        sortable
+        align="center"
+      >
         <template v-slot="scope">
-          <span>{{ scope.row.款项类型 }}</span>
+          <div class="flex items-center justify-center">
+            <span>
+              {{ (scope.row.内容 && scope.row.内容.款项类型) || "-" }}
+            </span>
+            <!-- 付款为向上红箭头，回款为向下绿箭头 -->
+            <el-icon
+              v-if="scope.row.内容 && scope.row.内容.款项类型 === '付款'"
+              class="text-red-5"
+            >
+              <Top />
+            </el-icon>
+            <el-icon
+              v-else-if="scope.row.内容 && scope.row.内容.款项类型 === '回款'"
+              class="text-green-5"
+            >
+              <Bottom />
+            </el-icon>
+          </div>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="type" label="款项类型" width="150" sortable>

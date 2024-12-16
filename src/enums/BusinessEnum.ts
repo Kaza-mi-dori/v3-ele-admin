@@ -83,7 +83,7 @@ export const enum OurCompanyEnum {
 
 export const OurCompanyEnumMap = {
   [OurCompanyEnum.GTSHC]: "广投石化",
-  [OurCompanyEnum.GDFGS]: "广东分公司",
+  [OurCompanyEnum.GDFGS]: "广投石化广东分公司",
   [OurCompanyEnum.GTSHC_ZS]: "广投石化舟山",
   [OurCompanyEnum.YSCC]: "永盛仓储",
   [OurCompanyEnum.YSSHC]: "永盛石化",

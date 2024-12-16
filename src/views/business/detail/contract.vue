@@ -47,6 +47,7 @@
                     :value="value"
                   />
                 </el-select>
+                <span v-else>{{ firmReportDetailForm.source }}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -102,6 +103,9 @@
                     :value="value"
                   />
                 </el-select>
+                <span v-else>
+                  {{ OurCompanyEnumMap[firmReportDetailForm.self] }}
+                </span>
               </el-form-item>
             </el-col>
             <!-- 我方全称 -->
@@ -169,15 +173,15 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="合同履约期限" prop="performancePeriod">
+              <el-form-item label="合同履约期限" prop="expired">
                 <date-picker
                   v-if="editing"
-                  v-model="firmReportDetailForm.performancePeriod"
+                  v-model="firmReportDetailForm.expired"
                   style="width: 100%"
                   valueFormat="YYYY-MM-DD"
                   placeholder="请选择履约期限"
                 />
-                <span v-else>{{ firmReportDetailForm.performancePeriod }}</span>
+                <span v-else>{{ firmReportDetailForm.expired }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -229,6 +233,47 @@
       <div class="__title">
         <span>维护信息</span>
       </div>
+      <el-form
+        label-position="top"
+        label-width="100px"
+        inline
+        :rules="rules"
+        class="w-full g-form-1"
+        :model="firmReportDetailForm"
+      >
+        <el-row class="w-full">
+          <el-col :span="8">
+            <el-form-item label="创建时间" prop="createdAt">
+              <span>{{ firmReportDetailForm.createdAt }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="创建人" prop="createdBy">
+              <span>{{ firmReportDetailForm.createdBy }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="更新时间" prop="updatedAt">
+              <span>{{ firmReportDetailForm.updatedAt }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="更新人" prop="updatedBy">
+              <span>{{ firmReportDetailForm.updatedBy }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="数据来源" prop="dataFrom">
+              <span>{{ firmReportDetailForm.dataFrom }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="是否审核" prop="audited">
+              <span>{{ firmReportDetailForm.audited ? "是" : "否" }}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
     </div>
   </div>
 </template>
@@ -287,7 +332,7 @@ const firmReportDetailForm = ref({
   // /** 合同其他描述 */
   otherDesc: undefined,
   /** 履约期限 */
-  performancePeriod: undefined,
+  expired: undefined,
   /** 附件 */
   attachment: [],
 });
@@ -301,6 +346,24 @@ const rules: Ref<GenericRecord> = ref({
   type: [{ required: true, message: "请选择合同类型", trigger: "change" }],
   amount: [
     { required: true, message: "请输入合同总金额(含税)", trigger: "change" },
+  ],
+  expired: [
+    {
+      // 如果填写了合同履约期限，则必须填写合同签订时间，且合同签订时间不能晚于合同履约期限
+      validator: (rule: any, value: any, callback: any) => {
+        if (value && !firmReportDetailForm.value.signTime) {
+          callback(new Error("请填写合同签订时间"));
+        } else if (
+          value &&
+          firmReportDetailForm.value.signTime &&
+          new Date(value) < new Date(firmReportDetailForm.value.signTime)
+        ) {
+          callback(new Error("合同履约期限不能早于合同签订时间"));
+        } else {
+          callback();
+        }
+      },
+    },
   ],
 });
 
