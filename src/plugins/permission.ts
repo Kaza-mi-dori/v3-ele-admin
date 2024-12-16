@@ -38,8 +38,15 @@ export function setupPermission() {
             }
             // 如果是外链则打开新页面并跳转相应路由
             if (externalLink.includes(to.path)) {
-              // 避免重复打开同一个外链
-              if (from.path !== "/" && from.path !== to.path) {
+              // 避免重复打开同一个外链 && 如果同是外链则不打开新页面
+              if (
+                from.path !== "/" &&
+                from.path !== to.path &&
+                !(
+                  from.path.includes("bigScreenBoard") &&
+                  to.path.includes("bigScreenBoard")
+                )
+              ) {
                 const fullPath = router.resolve(to).href;
                 window.open(fullPath, "_blank");
                 next(false);

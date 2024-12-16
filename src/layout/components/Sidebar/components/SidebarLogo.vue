@@ -4,7 +4,8 @@
       <router-link :key="+collapse" class="wh-full flex-center" to="/">
         <img :src="logo" class="w20px h20px" />
         <span v-if="!collapse" class="title">
-          {{ defaultSettings.title }}
+          <!-- {{ defaultSettings.title }} -->
+          数据采集及可视化平台
         </span>
       </router-link>
     </transition>
