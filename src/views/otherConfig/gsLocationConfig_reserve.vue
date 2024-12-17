@@ -103,7 +103,77 @@
         <span class="text-xl color-coolgray">详情区</span>
       </div> -->
     </div>
-    <Map style="width: calc(100% - 300px); height: 100%; z-index: 0" />
+    <div class="map-block">
+      <div
+        id="mapbox"
+        class="map"
+        @click="handleMapClick"
+        @mousemove.stop="handleMouseOver"
+        @mouseleave.stop="handleMouseLeave"
+      >
+        <!-- <span>地图</span> -->
+        <span v-if="isMouseWithInMap">
+          当前坐标: ({{ currentPos.x }}, {{ currentPos.y }})
+        </span>
+        <span v-if="isPositionEdit && isMouseWithInMap" class="color-red">
+          请点击想要放置的位置以完成位置修改
+        </span>
+        <!-- 图标，如果有相对坐标与图标则显示 -->
+        <div v-for="item in positions" :key="item.id">
+          <div
+            v-for="child in item"
+            :key="child.id"
+            class="absolute"
+            :style="{
+              left: child.xOffSet + 'px',
+              top: child.yOffSet + 'px',
+              zIndex: 100,
+            }"
+            @mouseenter="handleMouseEnterIcon"
+            @mouseleave="handleMouseLeaveIcon"
+          >
+            <el-popover placement="top-start" width="200">
+              <template #reference>
+                <img height="17" :src="getIcon(child.iconName)" />
+              </template>
+              <div class="pop-content">
+                <div class="__title">
+                  <span>{{ child.label }}</span>
+                </div>
+                <div class="__desc">
+                  <span>{{ child.description }}</span>
+                </div>
+              </div>
+            </el-popover>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="h-20px" /> -->
+      <!-- <div id="chart1" ref="chartDOM" style="height: 600px" /> -->
+      <img
+        v-if="isPositionEdit && isMouseWithInMap"
+        ref="iconEl"
+        :src="currentIcon"
+        class="absolute"
+        height="17"
+        :style="{
+          left: currentPos.x + 'px',
+          top: currentPos.y + 'px',
+          pointerEvents: 'none',
+        }"
+        @mousemove.stop
+        @mouseover.stop
+        @mouseleave.stop
+        @mouseenter.stop
+      />
+      <!-- <img
+        v-if="isPositionEdit && isMouseWithInMap"
+        ref="iconEl"
+        :src="currentIcon"
+        class="absolute"
+        :style="{ left: currentPos.x + 'px', top: currentPos.y + 'px' }"
+      /> -->
+    </div>
     <!-- 新增弹窗 -->
     <el-dialog v-model="dialogVisible" title="新增配置点" width="30%" center>
       <el-form ref="itemFormRef" :model="itemForm" :rules="rules">
@@ -154,7 +224,6 @@ import { ElMessage } from "element-plus";
 import { GsLocationAPI } from "@/api/config/gsLocation";
 import { FormInstance } from "element-plus";
 import { ref, onMounted, nextTick } from "vue";
-import Map from "@/views/bigscreen/components/FirstPage/Map/index.vue";
 
 interface ItemFormType {
   id: number | string | undefined;

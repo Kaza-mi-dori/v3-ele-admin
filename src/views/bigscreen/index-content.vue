@@ -1,7 +1,7 @@
 <template>
   <div class="bg-view-body">
     <div class="c-space" />
-    <div class="b-left">
+    <div class="b-left" style="z-index: 1">
       <Left1 />
       <div class="b-space" />
       <Left2 class="left2" title="合同总数与金额" />
@@ -11,7 +11,7 @@
       <Left4 />
     </div>
     <div class="c-space" />
-    <div class="b-middle">
+    <div class="b-middle" style="z-index: 1">
       <div class="middle-item">
         <Model2 class="middle1" :totalData="totalData" />
       </div>
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="c-space" />
-    <div class="b-right">
+    <div class="b-right" style="z-index: 1">
       <Right1 />
       <div class="b-space" />
       <Right2 />
@@ -55,6 +55,7 @@ import Right2 from "./components/FirstPage/Right/right2.vue";
 import Right3 from "./components/FirstPage/Right/right3.vue";
 import Right4 from "./components/FirstPage/Right/right4.vue";
 import Middle4 from "../bigscreen/components/FirstPage/Middle/Middle4/index.vue";
+import Map from "./components/FirstPage/Map/index.vue";
 
 import { ref } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
@@ -150,6 +151,7 @@ onMounted(() => {
 .bg-view-body {
   flex: 1;
   display: flex;
+  position: relative;
   width: 100%;
   // height如果设为100%会导致左右定高，不设则会根据内容撑开
   // 定高可以自适应一屏，但是会使得中间地图无法保持比例，进而导致相对坐标不准确

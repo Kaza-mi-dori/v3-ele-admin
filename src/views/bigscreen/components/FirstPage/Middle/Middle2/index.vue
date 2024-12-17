@@ -1,7 +1,6 @@
 <template>
   <div class="middle2-box">
-    <div class="map-box" :class="{ center: !showTotalNum }">
-      <!-- <img class="map-img" src="../../../../img/country_map_bg.png" alt="" /> -->
+    <!-- <div class="map-box" :class="{ center: !showTotalNum }">
       <div
         style="
           margin: 0 auto;
@@ -153,26 +152,8 @@
             </div>
           </div>
         </el-popover>
-        <!-- <div class="content1">
-          <div class="title">油库</div>
-          <div class="num">
-            <el-statistic :value="gasNumOutputValue" />
-          </div>
-        </div> -->
-        <!-- <div class="content2">
-          <div class="title">加油站</div>
-          <div class="num">
-            <el-statistic :value="oilNumOutputValue" />
-          </div>
-        </div> -->
-        <!-- <div class="content3">
-          <div class="title">运油船</div>
-          <div class="num">
-            <el-statistic :value="boatNumOutputValue" />
-          </div>
-        </div> -->
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

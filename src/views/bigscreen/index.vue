@@ -7,8 +7,18 @@
           <div class="__title--text">广投石化驾驶舱</div>
         </div>
       </div>
-      <div class="bg-view__body">
-        <ScreenIndexContent />
+      <div class="bg-view__body" style="position: relative">
+        <ScreenIndexContent style="pointer-events: none; z-index: 1" />
+        <!-- <Map
+          style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+          "
+        /> -->
       </div>
     </div>
     <router-view v-else />
@@ -20,6 +30,7 @@ import ScreenIndexContent from "./index-content.vue";
 import { ref, computed } from "vue";
 import router from "@/router";
 import { businessStore, companyStore } from "@/store";
+// import Map from "./components/FirstPage/Map/index.vue";
 
 const businessstore = businessStore();
 const companystore = companyStore();
@@ -50,15 +61,15 @@ const initScale = () => {
 
   const scale = windowHeight / originalHeight;
   document.body.style.zoom = scale + "";
-  document.styleSheets[document.styleSheets.length - 1].insertRule(
-    "canvas { zoom: " + 1 / scale + " !important; }"
-  );
-  document.styleSheets[document.styleSheets.length - 1].insertRule(
-    "canvas { transform: scale(" + scale + ") !important; }"
-  );
-  document.styleSheets[document.styleSheets.length - 1].insertRule(
-    "canvas { transform-origin: 0 0 !important; }"
-  );
+  // document.styleSheets[document.styleSheets.length - 1].insertRule(
+  //   "canvas { zoom: " + 1 / scale + " !important; }"
+  // );
+  // document.styleSheets[document.styleSheets.length - 1].insertRule(
+  //   "canvas { transform: scale(" + scale + ") !important; }"
+  // );
+  // document.styleSheets[document.styleSheets.length - 1].insertRule(
+  //   "canvas { transform-origin: 0 0 !important; }"
+  // );
 };
 
 onMounted(() => {
@@ -168,7 +179,8 @@ onMounted(() => {
   // height: calc(100% - 66px);
   // overflow-y: auto; /* 纵向滚动条 */
   overflow-y: hidden;
-  margin: 20px 0;
+  // margin: 20px 0;
+  padding: 20px 0;
   ::-webkit-scrollbar {
     display: none;
   }
