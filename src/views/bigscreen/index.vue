@@ -90,15 +90,15 @@ const initScale = () => {
 
   const scale = windowHeight / originalHeight;
   document.body.style.zoom = scale + "";
-  document.styleSheets[document.styleSheets.length - 1].insertRule(
-    "canvas { zoom: " + 1 / scale + " !important; }"
-  );
-  document.styleSheets[document.styleSheets.length - 1].insertRule(
-    "canvas { transform: scale(" + scale + ") !important; }"
-  );
-  document.styleSheets[document.styleSheets.length - 1].insertRule(
-    "canvas { transform-origin: 0 0 !important; }"
-  );
+  // document.styleSheets[document.styleSheets.length - 1].insertRule(
+  //   "canvas { zoom: " + 1 / scale + " !important; }"
+  // );
+  // document.styleSheets[document.styleSheets.length - 1].insertRule(
+  //   "canvas { transform: scale(" + scale + ") !important; }"
+  // );
+  // document.styleSheets[document.styleSheets.length - 1].insertRule(
+  //   "canvas { transform-origin: 0 0 !important; }"
+  // );
 };
 
 onMounted(() => {
