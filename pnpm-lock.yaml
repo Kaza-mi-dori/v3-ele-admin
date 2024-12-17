@@ -86,6 +86,9 @@ importers:
       sortablejs:
         specifier: ^1.15.3
         version: 1.15.3
+      tlbs-map-vue:
+        specifier: ^1.2.1
+        version: 1.2.1(vue@3.5.12(typescript@5.5.4))
       v3-element-admin:
         specifier: 'file:'
         version: file:(@lezer/common@1.2.3)(diff-match-patch@1.0.5)(typescript@5.5.4)
@@ -4242,6 +4245,16 @@ packages:
   tinyglobby@0.2.9:
     resolution: {integrity: sha512-8or1+BGEdk1Zkkw2ii16qSS7uVrQJPre5A9o/XkWPATkk23FZh/15BKFxPnlTy6vkljZxLqYCzzBMj30ZrSvjw==}
     engines: {node: '>=12.0.0'}
+
+  tlbs-map-vue@1.2.1:
+    resolution: {integrity: sha512-9HJPXoJT/6cysUbsn//4qI0IrDdY+PDBKyVbKwDsIMhLdeAi12ZF1S6/a9tVW05RKet13oN5njCKJaj5yvYJKQ==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.9
+      vue: ^2.6.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
 
   tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
@@ -9007,6 +9020,12 @@ snapshots:
       fdir: 6.4.0(picomatch@4.0.2)
       picomatch: 4.0.2
 
+  tlbs-map-vue@1.2.1(vue@3.5.12(typescript@5.5.4)):
+    dependencies:
+      fs-extra: 10.1.0
+      vue: 3.5.12(typescript@5.5.4)
+      vue-demi: 0.14.10(vue@3.5.12(typescript@5.5.4))
+
   tmp@0.0.33:
     dependencies:
       os-tmpdir: 1.0.2
@@ -9294,6 +9313,7 @@ snapshots:
       '@bpmn-io/properties-panel': 3.25.0(@lezer/common@1.2.3)
       '@element-plus/icons-vue': 2.3.1(vue@3.5.12(typescript@5.5.4))
       '@logicflow/core': 2.0.10
+      '@logicflow/extension': 2.0.14(@logicflow/core@2.0.10)
       '@stomp/stompjs': 7.0.0
       '@vueuse/core': 10.11.1(vue@3.5.12(typescript@5.5.4))
       '@wangeditor/editor': 5.1.23
