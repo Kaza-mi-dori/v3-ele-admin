@@ -1,5 +1,6 @@
 <template>
   <div class="middle2-box">
+    <center-map />
     <!-- <div class="map-box" :class="{ center: !showTotalNum }">
       <div
         style="
@@ -163,6 +164,7 @@ import gas from "@/views/bigscreen/img/oil2.png";
 import { GsLocationAPI } from "@/api/config/gsLocation";
 import { ref } from "vue";
 import { useTransition } from "@vueuse/core";
+import CenterMap from "../../../../components/Common/map.vue";
 
 defineProps({
   showTotalNum: {
@@ -324,7 +326,7 @@ const boatNumOutputValue = useTransition(boatSource, {
 .middle2-box {
   @apply w-full h-full;
   text-align: center;
-  padding: 10px;
+  // padding: 10px;
 }
 .map-box {
   position: relative;

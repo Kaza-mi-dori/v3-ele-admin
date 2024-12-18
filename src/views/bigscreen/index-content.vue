@@ -17,8 +17,7 @@
       </div>
       <div class="b-space" />
       <div class="middle-item flex-grow">
-        <!-- <Middle2 class="middle2" /> -->
-        <CenterMap class="middle2" />
+        <Middle2 class="middle2" />
       </div>
       <div class="b-space" />
       <div class="middle-item" style="margin-bottom: 10px">
@@ -50,7 +49,6 @@ import Left4 from "./components/FirstPage/Left/left4.vue";
 import Left3 from "./components/FirstPage/Left/left3.vue";
 import Model2 from "./components/FirstPage/Model2/index.vue";
 import Middle2 from "./components/FirstPage/Middle/Middle2/index.vue";
-import CenterMap from "./components/Common/map.vue";
 import Middle3 from "./components/FirstPage/Middle/Middle3/index.vue";
 import Right1 from "./components/FirstPage/Right/right1.vue";
 import Right2 from "./components/FirstPage/Right/right2.vue";
