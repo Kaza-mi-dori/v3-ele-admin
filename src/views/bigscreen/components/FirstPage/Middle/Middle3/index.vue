@@ -53,6 +53,10 @@ const titleArr = ref([
     title: "化工产品",
     icon: chemicalProductIcon,
   },
+  {
+    title: "燃料油",
+    icon: chemicalProductIcon,
+  },
 ]);
 
 let totalData = ref([]);
