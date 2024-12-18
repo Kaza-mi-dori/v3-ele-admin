@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="bg-view__body" style="position: relative">
-        <ScreenIndexContent style="pointer-events: none; z-index: 1" />
+        <ScreenIndexContent style="z-index: 1" />
         <!-- <Map
           style="
             position: absolute;
