@@ -67,6 +67,13 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           rewrite: (path) =>
             path.replace(new RegExp("^" + env.VITE_APP_BASE_API_DEV), ""),
         },
+        // 代理目标地址：https://apis.map.qq.com/ws，简单的反向代理，不做路径重写
+        "/tmap-api": {
+          target: "https://apis.map.qq.com",
+          changeOrigin: true,
+          // 重写路径，将 /tmap-api 开头的请求路径去掉 /tmap-api
+          rewrite: (path) => path.replace(/^\/tmap-api/, ""),
+        },
       },
     },
     plugins: [

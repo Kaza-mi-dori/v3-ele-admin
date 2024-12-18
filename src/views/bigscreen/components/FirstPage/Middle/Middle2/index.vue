@@ -279,9 +279,9 @@ onMounted(() => {
     //     };
     //   });
     // }, 500);
-    setTimeout(() => {
-      initTableData();
-    }, 1000);
+    // setTimeout(() => {
+    //   initTableData();
+    // }, 1000);
   });
   // console.log(posItems.value);
   // nextTick(() => {

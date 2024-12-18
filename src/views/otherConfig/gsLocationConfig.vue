@@ -103,7 +103,12 @@
         <span class="text-xl color-coolgray">详情区</span>
       </div> -->
     </div>
-    <Map style="width: calc(100% - 300px); height: 100%; z-index: 0" />
+    <Map
+      ref="mapRef"
+      :markers="gsMarkerList"
+      style="width: calc(100% - 300px); height: 600px; z-index: 0"
+      @click-geo="onClickGeo"
+    />
     <!-- 新增弹窗 -->
     <el-dialog v-model="dialogVisible" title="新增配置点" width="30%" center>
       <el-form ref="itemFormRef" :model="itemForm" :rules="rules">
@@ -139,6 +144,43 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 修改地址抽屉，根据地址查询经纬度 -->
+    <el-drawer v-model="drawerVisible" title="修改地址" size="30%">
+      <el-form
+        ref="addressFormRef"
+        v-loading="searchLoading"
+        :model="addressForm"
+        :rules="addressRules"
+      >
+        <el-form-item label="地址" prop="address">
+          <el-input
+            v-model="addressForm.address"
+            placeholder="请输入地图上的完整地址，否则无法正确转换"
+            @blur="onAddressBlur"
+            @keyup.enter="onAddressBlur"
+          />
+        </el-form-item>
+        <!-- 经纬度，自动查询 -->
+        <el-form-item label="经度(-180~180)">
+          <el-input v-model="addressForm.lng" />
+        </el-form-item>
+        <el-form-item label="纬度(-90~90)">
+          <el-input v-model="addressForm.lat" />
+        </el-form-item>
+      </el-form>
+      <template v-slot:footer>
+        <span class="dialog-footer">
+          <el-button @click="drawerVisible = false">取 消</el-button>
+          <el-button
+            type="primary"
+            :loading="submitAddressLoading"
+            @click="onSubmitAddressForm"
+          >
+            确 定
+          </el-button>
+        </span>
+      </template>
+    </el-drawer>
   </div>
 </template>
 
@@ -152,9 +194,11 @@ import "echarts/extension/bmap/bmap";
 import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
 import { ElMessage } from "element-plus";
 import { GsLocationAPI } from "@/api/config/gsLocation";
+import { getGeoCode } from "@/api/thirdSystem/tmap";
 import { FormInstance } from "element-plus";
 import { ref, onMounted, nextTick } from "vue";
 import Map from "@/views/bigscreen/components/FirstPage/Map/index.vue";
+import { on } from "events";
 
 interface ItemFormType {
   id: number | string | undefined;
@@ -191,6 +235,20 @@ const rules = {
   type: [{ required: true, message: "请选择类别", trigger: "change" }],
 };
 const submitItemLoading = ref(false);
+// 修改地址抽屉
+const drawerVisible = ref(false);
+const addressForm = ref({
+  address: undefined,
+  lng: 0,
+  lat: 0,
+});
+const submitAddressLoading = ref(false);
+const addressRules = {
+  address: [{ required: true, message: "请输入地址", trigger: "blur" }],
+};
+const addressFormRef = ref<Nullable<FormInstance>>(null);
+const searchLoading = ref(false); // 查询经纬度loading
+const mapRef = ref<Nullable<any>>(null);
 
 const gsListdata = ref([
   {
@@ -209,6 +267,9 @@ const gsListdata = ref([
     children: [],
   },
 ]);
+
+/** 给腾讯地图显示 */
+const gsMarkerList = ref<any[]>([]);
 
 const positions = computed(() => {
   return gsListdata.value.map((item) => {
@@ -348,10 +409,11 @@ const handleMapClick = () => {
  * @param {*}
  */
 const handleStartChangePos = () => {
-  // isPositionEdit.value = true;
-  if (!isPositionEdit.value) {
-    isPositionEdit.value = true;
-  }
+  // // isPositionEdit.value = true;
+  // if (!isPositionEdit.value) {
+  //   isPositionEdit.value = true;
+  // }
+  drawerVisible.value = true;
 };
 
 /**
@@ -422,6 +484,31 @@ const addStorage = () => {
   });
 };
 
+const getGeoCodeThrottled = useThrottleFn(getGeoCode, 2000);
+
+/** 在地址确定时查询经纬度，要做限流 */
+const onAddressBlur = async () => {
+  // 查询经纬度
+  if (!addressForm.value.address) {
+    return;
+  }
+  searchLoading.value = true;
+  const res = await getGeoCodeThrottled(addressForm.value.address);
+  if (res) {
+    if (res.result && res.result.location) {
+      ElMessage.success("查询经纬度成功，已自动填入");
+      addressForm.value.lng = res.result.location.lng;
+      addressForm.value.lat = res.result.location.lat;
+      mapRef.value?.setCenter(res.result.location.lat, res.result.location.lng);
+      mapRef.value?.setZoom(10);
+      mapRef.value?.setMarker(res.result.location.lat, res.result.location.lng);
+    } else {
+      ElMessage.error("未查询到经纬度, 请检查地址是否正确");
+    }
+  }
+  searchLoading.value = false;
+};
+
 /** 修改坐标提交 */
 const onSubmitChangeCurrentItemForm = async () => {
   // 提交表单
@@ -444,6 +531,33 @@ const onSubmitChangeCurrentItemForm = async () => {
     })
     .catch((err) => {
       currentItemLoading.value = false;
+      ElMessage.error("修改失败");
+    });
+};
+
+/**修改地址 */
+const onSubmitAddressForm = () => {
+  // 提交表单
+  // console.log(itemForm.value);
+  // 添加到gsListdata中
+  submitAddressLoading.value = true;
+  const submitData = {
+    id: currentItem.value?.id,
+    名称: currentItem.value?.label,
+    类型: currentItem.value?.type,
+    描述: currentItem.value?.description,
+    坐标: `${addressForm.value.lng},${addressForm.value.lat}`,
+    图标: currentItem.value?.iconName,
+  };
+  GsLocationAPI.updateMapElement(submitData)
+    .then((res) => {
+      submitAddressLoading.value = false;
+      ElMessage.success("修改成功");
+      drawerVisible.value = false;
+      initListData();
+    })
+    .catch((err) => {
+      submitAddressLoading.value = false;
       ElMessage.error("修改失败");
     });
 };
@@ -543,37 +657,9 @@ const handleDeleteItem = (id: number | string) => {
     });
 };
 
-const initChart = () => {
-  const myChart = echarts.init(chartDOM.value as HTMLDivElement);
-  const option = {
-    geo: {
-      map: "china",
-      roam: false,
-      zoom: 1.5,
-      regions: [
-        {
-          name: "广西壮族自治区",
-          itemStyle: {
-            borderColor: "rgba(0, 10, 52, 0)",
-          },
-        },
-      ],
-    },
-    series: [
-      {
-        type: "scatter",
-        symbol: "image://" + gas,
-        coordinateSystem: "geo",
-        data: [{ name: "永盛石化", value: [104.114129, 37.550339] }],
-        symbolSize: 40,
-        label: {
-          show: false,
-          formatter: "{b}",
-        },
-      },
-    ],
-  };
-  myChart.setOption(option);
+// 点击标记后回调
+const onClickGeo = (pos: any) => {
+  const { x, y } = pos;
 };
 
 const initListData = async () => {
@@ -599,6 +685,11 @@ const initListData = async () => {
       yOffSet: item.坐标 ? item.坐标.split(",")[1] : null,
     };
     gsListdata.value[type - 1].children.push(newItem);
+    gsMarkerList.value.push({
+      ...newItem,
+      lng: item.坐标 ? item.坐标.split(",")[0] : null,
+      lat: item.坐标 ? item.坐标.split(",")[1] : null,
+    });
   }
   // initChart();
 };

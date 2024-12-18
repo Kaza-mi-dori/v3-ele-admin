@@ -11,12 +11,12 @@
       <Left4 />
     </div>
     <div class="c-space" />
-    <div class="b-middle" style="z-index: 1">
+    <div class="b-middle" style="pointer-events: none; z-index: 1">
       <div class="middle-item">
         <Model2 class="middle1" :totalData="totalData" />
       </div>
       <div class="b-space" />
-      <div class="middle-item flex-grow">
+      <div class="middle-item flex-grow" style="pointer-events: none">
         <Middle2 class="middle2" />
       </div>
       <div class="b-space" />
@@ -156,6 +156,7 @@ onMounted(() => {
   // height如果设为100%会导致左右定高，不设则会根据内容撑开
   // 定高可以自适应一屏，但是会使得中间地图无法保持比例，进而导致相对坐标不准确
   height: 100%;
+  // padding-bottom: 20px;
   .b-left,
   .b-middle,
   .b-right {

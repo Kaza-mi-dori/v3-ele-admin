@@ -62,6 +62,9 @@ importers:
       exceljs:
         specifier: ^4.4.0
         version: 4.4.0
+      js-md5:
+        specifier: ^0.8.3
+        version: 0.8.3
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -3017,6 +3020,9 @@ packages:
 
   js-base64@2.6.4:
     resolution: {integrity: sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==}
+
+  js-md5@0.8.3:
+    resolution: {integrity: sha512-qR0HB5uP6wCuRMrWPTrkMaev7MJZwJuuw4fnwAzRgP4J4/F8RwtodOKpGp4XpqsLBFzzgqIO42efFAyz2Et6KQ==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -7756,6 +7762,8 @@ snapshots:
 
   js-base64@2.6.4: {}
 
+  js-md5@0.8.3: {}
+
   js-tokens@4.0.0: {}
 
   js-tokens@9.0.0: {}
@@ -9336,6 +9344,7 @@ snapshots:
       pinia: 2.2.4(typescript@5.5.4)(vue@3.5.12(typescript@5.5.4))
       qs: 6.13.0
       sortablejs: 1.15.3
+      tlbs-map-vue: 1.2.1(vue@3.5.12(typescript@5.5.4))
       vue: 3.5.12(typescript@5.5.4)
       vue-draggable-next: 2.2.1(sortablejs@1.15.3)(vue@3.5.12(typescript@5.5.4))
       vue-i18n: 9.9.1(vue@3.5.12(typescript@5.5.4))

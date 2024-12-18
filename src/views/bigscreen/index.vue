@@ -7,18 +7,26 @@
           <div class="__title--text">广投石化驾驶舱</div>
         </div>
       </div>
-      <div class="bg-view__body" style="position: relative">
-        <ScreenIndexContent style="pointer-events: none; z-index: 1" />
-        <!-- <Map
-          style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-          "
-        /> -->
+      <div class="bg-view__body">
+        <ScreenIndexContent
+          style="position: relative"
+          @wheel.capture="onWheelContent"
+        >
+          <Map
+            id="bigscreenmap"
+            ref="mapRef"
+            :markers="gsMarkerList"
+            style="
+              position: absolute;
+              pointer-events: auto;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 0;
+            "
+          />
+        </ScreenIndexContent>
       </div>
     </div>
     <router-view v-else />
@@ -30,10 +38,61 @@ import ScreenIndexContent from "./index-content.vue";
 import { ref, computed } from "vue";
 import router from "@/router";
 import { businessStore, companyStore } from "@/store";
-// import Map from "./components/FirstPage/Map/index.vue";
+import Map from "./components/FirstPage/Map/index.vue";
+import { GsLocationAPI } from "@/api/config/gsLocation";
+import { on } from "events";
 
 const businessstore = businessStore();
 const companystore = companyStore();
+
+/** 地图ref */
+const mapRef = ref<any>();
+/** 地图显示标注点 */
+const gsMarkerList = ref<any[]>([]);
+
+const getGsMarkerList = async () => {
+  const res: any = await GsLocationAPI.getAllMapElement();
+  const list = res["当前记录"];
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i];
+    const newItem = {
+      id: item.id,
+      label: item.名称,
+      description: item.描述,
+      type: item.类型,
+      iconName: item.类型 === "加油站" ? "gas" : "oil",
+      xOffSet: item.坐标 ? item.坐标.split(",")[0] : null,
+      yOffSet: item.坐标 ? item.坐标.split(",")[1] : null,
+    };
+    gsMarkerList.value.push({
+      ...newItem,
+      lng: item.坐标 ? item.坐标.split(",")[0] : null,
+      lat: item.坐标 ? item.坐标.split(",")[1] : null,
+    });
+  }
+};
+
+// 如果是点击事件、滚轮事件，判断实际触发事件的元素，如果是地图，则阻止事件冒泡
+const onClickContent = (e: MouseEvent) => {
+  console.log(e.currentTarget, e.target);
+  // 如果包含了middle2这个类，则由地图响应，否则由内容响应
+  if (
+    e.target instanceof HTMLElement &&
+    e.target.classList.contains("middle2")
+  ) {
+    // 阻止事件冒泡
+    e.stopPropagation();
+  } else {
+    console.log("点击了内容");
+  }
+};
+
+const onWheelContent = (e: Event) => {
+  // 父元素不响应这个事件，由子元素响应
+  console.log(e.target, e.currentTarget);
+  e.stopPropagation();
+  // 当前会被z-index为1的元素响应, 要实现其不响应滚轮事件
+};
 
 // 根据路由决定显示内容
 const showOtherContent = computed(() => {
@@ -45,7 +104,8 @@ const initScale = () => {
   // const originalHeight = 1080;
   // 渲染后读取容器的高度
   const bgContainer = ref<HTMLElement | null>(null);
-  const originalHeight = bgContainer.value?.offsetHeight || 1080;
+  // +40是因为有padding，否则会有滚动条
+  const originalHeight = (bgContainer.value?.offsetHeight || 1080) + 40;
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const containerElement = document.getElementById("bg-container");
@@ -72,12 +132,21 @@ const initScale = () => {
   // );
 };
 
-onMounted(() => {
+onUnmounted(() => {
+  // const dom = document.getElementById("bigscreenmap");
+  // dom?.removeEventListener("wheel", onWheelContent);
+  // window.removeEventListener("wheel", onWheelContent);
+});
+
+onMounted(async () => {
   businessstore.getBusinessReportFormList(businessstore.queryForm);
   companystore.getCompanyReportFormList(companystore.queryForm2);
+  await getGsMarkerList();
+  // console.log("gsMarkerList", gsMarkerList.value);
   // window.addEventListener("resize", () => {
   //   initScale();
   // });
+  // window.addEventListener("wheel", onWheelContent);
   nextTick(() => {
     initScale();
     // 让所有echarts图表自适应
@@ -116,7 +185,7 @@ onMounted(() => {
   font-feature-settings: "tnum";
   width: 100vw;
   height: 100%;
-  overflow: scroll;
+  overflow: hidden;
   font-family:
     PingFangSC,
     Microsoft YaHei,
