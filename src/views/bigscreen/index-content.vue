@@ -142,6 +142,22 @@ const initData = async () => {
   ];
 };
 
+// 加载腾讯地图api
+const initTMapApi = () => {
+  const script = document.createElement("script");
+  script.src =
+    "https://map.qq.com/api/js?v=2.exp&key=4TYBZ-V2WCQ-IKX52-BEW3F-SDCA6-7DFMN";
+  script.onload = () => {
+    console.log("腾讯地图api加载完成");
+  };
+  script.async = true;
+  document.body.appendChild(script);
+};
+
+// onBeforeMount(() => {
+//   initTMapApi();
+// });
+
 onMounted(() => {
   initData();
 });

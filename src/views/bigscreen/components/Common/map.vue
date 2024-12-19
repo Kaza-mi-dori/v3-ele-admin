@@ -10,20 +10,79 @@
     }"
     class="map-container"
   >
-    <tlbs-multi-marker
+    <!-- <tlbs-multi-marker
+      ref="multiMarker"
       :geometries="geometries"
       :styles="styles"
       :options="options"
-      @click="onClickGeo"
-    />
-    <el-popover
+      @click="onClickGeo1"
+    /> -->
+    <tlbs-dom-overlay
+      v-for="(item, index) in geometries"
+      :key="index"
+      :position="{
+        lat: item.position.lat,
+        lng: item.position.lng,
+      }"
+      @click="onClickGeo1"
+    >
+      <!-- <img
+        :src="item.type === '油库' ? oil : item.type === '运油船' ? boat : ''"
+        :style="{
+          width: '20px',
+          height: '30px',
+          cursor: 'pointer',
+        }"
+      /> -->
+      <div :style="{ cursor: 'pointer', textAlign: 'center' }">
+        <img
+          :src="
+            item.styleId === 'gasStation'
+              ? oil
+              : item.styleId === 'oilDepot'
+                ? gas
+                : boat
+          "
+          :style="{
+            width: '20px',
+            height: '30px',
+          }"
+        />
+        <el-popover
+          popper-class="dark-popper"
+          placement="top"
+          width="200"
+          trigger="hover"
+        >
+          <div class="pop-content">
+            <div class="__title">
+              <span>{{ item.properties && item.properties.label }}</span>
+            </div>
+            <div class="__desc">
+              <span>{{ item.properties && item.properties.description }}</span>
+            </div>
+          </div>
+          <template v-slot:reference>
+            <div
+              style="
+                color: #ffd700;
+                font-size: 14px;
+                transform: translateY(-14px);
+              "
+            >
+              {{ item.properties && item.properties.label }}
+            </div>
+          </template>
+        </el-popover>
+      </div>
+    </tlbs-dom-overlay>
+    <!-- <el-popover
       v-model:visible="windowVisible"
       popper-class="dark-popper"
       placement="top"
       width="200"
       trigger="click"
     >
-      <!-- 内容 -->
       <div class="pop-content">
         <div class="__title">
           <span>{{ activeItem && activeItem.label }}</span>
@@ -41,7 +100,7 @@
           }"
         />
       </template>
-    </el-popover>
+    </el-popover> -->
   </tlbs-map>
 </template>
 
@@ -51,6 +110,7 @@ import boat from "@/views/bigscreen/img/boat2.png";
 import oil from "@/views/bigscreen/img/oil_medium.png";
 import gas from "@/views/bigscreen/img/oil2_medium.png";
 import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
+import { getDistrict } from "@/api/thirdSystem/tmap";
 
 const props = defineProps({
   /** 标记点 */
@@ -62,16 +122,21 @@ const props = defineProps({
 
 const emit = defineEmits(["clickGeo"]);
 
-const map = ref<any>(null);
+const mapContainer = ref<any>(null);
+const multiMarker = ref<any>(null);
 // lat是纬度，lng是经度
 // 中国内陆中心点经纬度：lat: 35, lng: 105
 // const center = ref({ lat: 35, lng: 105 });
 // 广西经纬度：lat: 39.91799, lng: 116.397027
 const center = ref({ lat: 22.8226, lng: 108.3734508 });
+// zoom小于3时，应该展示聚合
 const zoom = ref(5);
-const onClick = (e: Event) => {
-  console.log(e);
-};
+const position1 = ref({ lat: 39.91799, lng: 116.397027 });
+const offset1 = ref({ x: 0, y: -30 });
+// const onClick = (e: Event) => {
+//   console.log(e);
+// };
+const styleId = "style1";
 const control = {
   scale: {},
   zoom: {
@@ -150,7 +215,7 @@ const setZoom = (value: number) => {
   zoom.value = value;
 };
 
-const onClickGeo = (e: any) => {
+const onClickGeo1 = (e: any) => {
   console.log("ClickGeo!", e);
   const { geometry } = e;
   if (!geometry) return;
@@ -211,7 +276,26 @@ watch(
   }
 );
 
-const styleId = "style1";
+/**
+ * 获取广西、广东、浙江行政区划数据，用于地图展示
+ */
+const getDistrictData = async () => {
+  const res = await getDistrict("广西,广东,浙江");
+  console.log(res);
+};
+
+onMounted(() => {
+  // getDistrictData();
+  setTimeout(() => {
+    // 寻找class为logo-text的元素
+    const logoText = document.querySelector(".logo-text") as HTMLElement;
+    // console.log(logoText);
+    // 如果找到了，则找其父元素，并隐藏
+    if (logoText && logoText.parentElement) {
+      logoText.parentElement.style.display = "none";
+    }
+  }, 1000);
+});
 
 defineExpose({
   setCenter,
