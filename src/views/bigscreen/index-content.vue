@@ -11,12 +11,12 @@
       <Left4 />
     </div>
     <div class="c-space" />
-    <div class="b-middle" style="pointer-events: none; z-index: 1">
+    <div class="b-middle">
       <div class="middle-item">
         <Model2 class="middle1" :totalData="totalData" />
       </div>
       <div class="b-space" />
-      <div class="middle-item flex-grow" style="pointer-events: none">
+      <div class="middle-item flex-grow">
         <Middle2 class="middle2" />
       </div>
       <div class="b-space" />

@@ -342,7 +342,6 @@ import { ref, onMounted } from "vue";
 import { DataIndicesAPI } from "@/api/dataIndices";
 import { DataDefinitionAPI } from "@/api/dataIndices/dataDefinition";
 import * as echarts from "echarts";
-import { l } from "vite/dist/node/types.d-aGj9QkWt";
 
 const chartRef = shallowRef<echarts.ECharts | null>();
 const treeLoading = ref(false);

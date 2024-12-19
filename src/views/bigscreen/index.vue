@@ -8,11 +8,8 @@
         </div>
       </div>
       <div class="bg-view__body">
-        <ScreenIndexContent
-          style="position: relative"
-          @wheel.capture="onWheelContent"
-        >
-          <Map
+        <ScreenIndexContent style="position: relative">
+          <!-- <Map
             id="bigscreenmap"
             ref="mapRef"
             :markers="gsMarkerList"
@@ -25,7 +22,7 @@
               height: 100%;
               z-index: 0;
             "
-          />
+          /> -->
         </ScreenIndexContent>
       </div>
     </div>
@@ -142,7 +139,6 @@ onMounted(async () => {
   businessstore.getBusinessReportFormList(businessstore.queryForm);
   companystore.getCompanyReportFormList(companystore.queryForm2);
   await getGsMarkerList();
-  // console.log("gsMarkerList", gsMarkerList.value);
   // window.addEventListener("resize", () => {
   //   initScale();
   // });

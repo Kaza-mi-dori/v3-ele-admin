@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { Map } from "@tencent/tlbs";
+// import { Map } from "@tencent/tlbs";
 import { ref } from "vue";
 import boat from "@/views/bigscreen/img/boat2.png";
 import oil from "@/views/bigscreen/img/oil_medium.png";
@@ -68,7 +68,7 @@ const props = defineProps({
 
 const emit = defineEmits(["clickGeo"]);
 
-const map = ref<Map | null>(null);
+const map = ref<any>(null);
 // lat是纬度，lng是经度
 // 广西经纬度：lat: 39.91799, lng: 116.397027
 const center = ref({ lat: 22.8226, lng: 108.3734508 });
@@ -183,14 +183,12 @@ const onClickGeo = (e: any) => {
       default:
         console.log("default");
     }
-    // console.log(e);
-    // 在相应坐标显示气泡
     windowCenter.value = geometry.position;
     windowVisible.value = true;
     windowX.value = x;
     windowY.value = y;
     activeItem.value = geometry.properties;
-    // 将x,y坐标emit出去
+    // 将x,y坐标emit出去，适配父组件显示的逻辑
     // emit("clickGeo", { x, y });
   }
 };
@@ -209,7 +207,7 @@ defineExpose({
 watch(
   () => props.markers,
   (newVal) => {
-    console.log("markers,", newVal);
+    // console.log("markers,", newVal);
     geometries.value.length = 0;
     newVal.forEach((item: any) => {
       if (!item.lat || !item.lng) return;

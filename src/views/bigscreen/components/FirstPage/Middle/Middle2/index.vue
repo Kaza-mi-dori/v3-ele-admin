@@ -1,6 +1,6 @@
 <template>
   <div class="middle2-box">
-    <center-map />
+    <center-map :markers="gsMarkerList" />
     <!-- <div class="map-box" :class="{ center: !showTotalNum }">
       <div
         style="
@@ -187,32 +187,8 @@ interface posItem {
   status2?: string;
 }
 
-const mockPosItems: Ref<posItem[]> = ref([
-  {
-    id: 1,
-    name: "钦州油库",
-    desc: "永盛石化自建油库，含仓储租赁等业务",
-    iconName: "gas",
-    x: 749,
-    y: 683,
-  },
-  {
-    id: 2,
-    name: "东莞油库",
-    desc: "东莞油库",
-    iconName: "gas",
-    x: 805,
-    y: 671,
-  },
-  {
-    id: 3,
-    name: "五合加油站",
-    desc: "五合加油站",
-    iconName: "oil",
-    x: 730,
-    y: 655,
-  },
-]);
+/** 地图元素 */
+const gsMarkerList = ref<any[]>([]);
 
 const posItems: Ref<posItem[]> = ref([]);
 
@@ -231,74 +207,63 @@ const getPos = (pos: number, base: number) => {
 
 /** 获取地图元素 */
 const initTableData = async () => {
-  const params = {
-    页码: 1,
-    页容量: 200,
-  };
-  const res: any = await GsLocationAPI.getMapElementList(params);
-  const table = res["当前记录"];
-  oilSource.value = table.filter(
-    (item: any) => item["类型"] === "加油站"
-  ).length;
-  gasSource.value = table.filter((item: any) => item["类型"] === "油库").length;
-  boatSource.value = table.filter(
-    (item: any) => item["类型"] === "运油船"
-  ).length;
-  const mapImg = document.querySelector(".map-img") as HTMLElement;
-  const height = parseFloat(window.getComputedStyle(mapImg).height);
-  const width = parseFloat(window.getComputedStyle(mapImg).width);
-  posItems.value = table.map((item: any) => {
-    const x = parseInt(item["坐标"]?.split(",")[0]);
-    const y = parseInt(item["坐标"]?.split(",")[1]);
-    return {
-      id: item["id"],
-      name: item["名称"],
-      desc: item["描述"],
-      type: item["类型"],
-      iconName: item["类型"] === "加油站" ? "oil" : "gas",
-      x: (x / 1261) * width,
-      y: (y / 853) * height,
-      status1: item["描述"].split("，")[0],
-      status2: item["描述"].split("，")[1] || "",
+  // const params = {
+  //   页码: 1,
+  //   页容量: 200,
+  // };
+  // const res: any = await GsLocationAPI.getMapElementList(params);
+  // const table = res["当前记录"];
+  // oilSource.value = table.filter(
+  //   (item: any) => item["类型"] === "加油站"
+  // ).length;
+  // gasSource.value = table.filter((item: any) => item["类型"] === "油库").length;
+  // boatSource.value = table.filter(
+  //   (item: any) => item["类型"] === "运油船"
+  // ).length;
+  // const mapImg = document.querySelector(".map-img") as HTMLElement;
+  // const height = parseFloat(window.getComputedStyle(mapImg).height);
+  // const width = parseFloat(window.getComputedStyle(mapImg).width);
+  // posItems.value = table.map((item: any) => {
+  //   const x = parseInt(item["坐标"]?.split(",")[0]);
+  //   const y = parseInt(item["坐标"]?.split(",")[1]);
+  //   return {
+  //     id: item["id"],
+  //     name: item["名称"],
+  //     desc: item["描述"],
+  //     type: item["类型"],
+  //     iconName: item["类型"] === "加油站" ? "oil" : "gas",
+  //     x: (x / 1261) * width,
+  //     y: (y / 853) * height,
+  //     status1: item["描述"].split("，")[0],
+  //     status2: item["描述"].split("，")[1] || "",
+  //   };
+  // });
+  const res: any = await GsLocationAPI.getAllMapElement();
+  const list = res["当前记录"];
+
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i];
+    const newItem = {
+      id: item.id,
+      label: item.名称,
+      description: item.描述,
+      type: item.类型,
+      iconName: item.类型 === "加油站" ? "gas" : "oil",
+      xOffSet: item.坐标 ? item.坐标.split(",")[0] : null,
+      yOffSet: item.坐标 ? item.坐标.split(",")[1] : null,
     };
-  });
+    gsMarkerList.value.push({
+      ...newItem,
+      lng: item.坐标 ? item.坐标.split(",")[0] : null,
+      lat: item.坐标 ? item.坐标.split(",")[1] : null,
+    });
+  }
 };
 
 onMounted(() => {
   nextTick(() => {
-    // 计算出mapImg的实际渲染高度与宽度
-    // setTimeout(() => {
-    //   const mapImg = document.querySelector(".map-img") as HTMLElement;
-    //   const height = parseFloat(window.getComputedStyle(mapImg).height);
-    //   const width = parseFloat(window.getComputedStyle(mapImg).width);
-    //   posItems.value = mockPosItems.value.map((item) => {
-    //     return {
-    //       ...item,
-    //       x: (item.x / 1261) * width,
-    //       y: (item.y / 853) * height,
-    //       // xPercent: getPos(item.x, 1261),
-    //       // yPercent: getPos(item.y, 853),
-    //     };
-    //   });
-    // }, 500);
-    // setTimeout(() => {
-    //   initTableData();
-    // }, 1000);
+    initTableData();
   });
-  // console.log(posItems.value);
-  // nextTick(() => {
-  //   // 计算出mapbox的高度，这个高度是和父元素一样的，是外部的flex布局控制的
-  //   // 然后根据这个高度与比例，计算出map-img的宽度
-  //   const mapBox = document.querySelector(".map-box");
-  //   const mapImg = document.querySelector(".map-img");
-  //   if (mapBox && mapImg) {
-  //     console.log(mapBox.clientHeight);
-  //     const mapBoxHeight = window.getComputedStyle(mapBox).height;
-  //     console.log(mapBoxHeight);
-  //     const mapImgWidth = (1261 / 853) * parseInt(mapBoxHeight);
-  //     mapImg.setAttribute("width", mapImgWidth + "px");
-  //   }
-  // });
 });
 
 // const gasNum = ref(25);
