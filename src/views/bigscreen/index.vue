@@ -101,8 +101,8 @@ const initScale = () => {
   // const originalHeight = 1080;
   // 渲染后读取容器的高度
   const bgContainer = ref<HTMLElement | null>(null);
-  // +40是因为有padding，否则会有滚动条
-  const originalHeight = (bgContainer.value?.offsetHeight || 1080) + 40;
+  // +20是因为有padding，否则会有滚动条
+  const originalHeight = (bgContainer.value?.offsetHeight || 1080) + 0;
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const containerElement = document.getElementById("bg-container");
@@ -245,7 +245,7 @@ onMounted(async () => {
   // overflow-y: auto; /* 纵向滚动条 */
   overflow-y: hidden;
   // margin: 20px 0;
-  padding: 20px 0;
+  padding-top: 20px;
   ::-webkit-scrollbar {
     display: none;
   }

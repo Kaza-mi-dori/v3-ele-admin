@@ -165,7 +165,6 @@ import { GsLocationAPI } from "@/api/config/gsLocation";
 import { ref } from "vue";
 import { useTransition } from "@vueuse/core";
 import CenterMap from "../../../../components/Common/map.vue";
-
 defineProps({
   showTotalNum: {
     type: Boolean,
@@ -261,9 +260,7 @@ const initTableData = async () => {
 };
 
 onMounted(() => {
-  nextTick(() => {
-    initTableData();
-  });
+  initTableData();
 });
 
 // const gasNum = ref(25);

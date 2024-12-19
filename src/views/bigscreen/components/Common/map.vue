@@ -62,14 +62,12 @@ const props = defineProps({
 
 const emit = defineEmits(["clickGeo"]);
 
-const map = ref(null);
+const map = ref<any>(null);
 // lat是纬度，lng是经度
 // 中国内陆中心点经纬度：lat: 35, lng: 105
 // const center = ref({ lat: 35, lng: 105 });
 // 广西经纬度：lat: 39.91799, lng: 116.397027
 const center = ref({ lat: 22.8226, lng: 108.3734508 });
-// 地图宽度、高度
-const size = ref({ width: 800, height: 600 });
 const zoom = ref(5);
 const onClick = (e: Event) => {
   console.log(e);
@@ -153,6 +151,7 @@ const setZoom = (value: number) => {
 };
 
 const onClickGeo = (e: any) => {
+  console.log("ClickGeo!", e);
   const { geometry } = e;
   if (!geometry) return;
   const { x, y } = e.point;
@@ -184,7 +183,6 @@ const onClickGeo = (e: any) => {
 watch(
   () => props.markers,
   (newVal) => {
-    console.log("new", newVal);
     geometries.value.length = 0;
     newVal.forEach((item: any) => {
       if (!item.lat || !item.lng) return;
@@ -226,5 +224,19 @@ defineExpose({
 .map-container {
   width: 100%;
   position: relative;
+}
+.pop-content {
+  background-color: #303133;
+  border-color: #303133;
+  .__title {
+    @apply lh-normal border-b-1 border-b-dark-1;
+    color: #55a2f0;
+    font-size: 18px;
+  }
+  .__desc {
+    @apply text-sm;
+    // 文字颜色改为比较护眼的暗色
+    color: #c0c4cc;
+  }
 }
 </style>

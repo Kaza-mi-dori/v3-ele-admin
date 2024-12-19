@@ -41,6 +41,7 @@
       </div>
       <template v-slot:reference>
         <div
+          data-index="1"
           :style="{
             position: 'absolute',
             top: windowY + 'px',
@@ -165,7 +166,7 @@ const setZoom = (value: number) => {
 };
 
 const onClickGeo = (e: any) => {
-  console.log("onClickGeo", e);
+  // console.log("onClickGeo", e);
   const { geometry } = e;
   if (!geometry) return;
   const { x, y } = e.point;
