@@ -127,9 +127,12 @@
       <el-form ref="itemFormRef" :model="itemForm" :rules="rules">
         <el-form-item label="类别" prop="type">
           <el-select v-model="itemForm.type" placeholder="请选择">
-            <el-option label="加油站" :value="GAS_ENUM_VALUE" />
-            <el-option label="油库" :value="STORAGE_ENUM_VALUE" />
-            <el-option label="运油船" :value="BOAT_ENUM_VALUE" />
+            <el-option
+              v-for="(value, key) of MapElementEnumMap"
+              :key="key"
+              :label="value"
+              :value="value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
@@ -274,7 +277,7 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
     label: "类型",
     prop: "类型",
     value: null,
-    options: ["全部", "油库", "加油站", "运油船"],
+    options: Object.values(MapElementEnumMap),
     inputType: "select",
     order: 1,
   },

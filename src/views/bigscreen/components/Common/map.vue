@@ -41,7 +41,9 @@
               ? oil
               : item.styleId === 'oilDepot'
                 ? gas
-                : boat
+                : item.styleId === 'organization'
+                  ? enterprise
+                  : boat
           "
           :style="{
             width: '20px',
@@ -64,11 +66,13 @@
           </div>
           <template v-slot:reference>
             <div
-              style="
-                color: #ffd700;
-                font-size: 14px;
-                transform: translateY(-14px);
-              "
+              :class="{
+                'gas-station': item.styleId === 'gasStation',
+                'oil-depot': item.styleId === 'oilDepot',
+                organization: item.styleId === 'organization',
+                'charging-station': item.styleId === 'chargingStation',
+              }"
+              style="font-size: 14px; transform: translateY(-14px)"
             >
               {{ item.properties && item.properties.label }}
             </div>
@@ -109,6 +113,7 @@ import { ref } from "vue";
 import boat from "@/views/bigscreen/img/boat2.png";
 import oil from "@/views/bigscreen/img/oil_medium.png";
 import gas from "@/views/bigscreen/img/oil2_medium.png";
+import enterprise from "@/views/bigscreen/img/enterprise.png";
 import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
 import { getDistrict } from "@/api/thirdSystem/tmap";
 
@@ -189,6 +194,15 @@ const styles = {
     src: boat,
     anchor: { x: 10, y: 30 },
   },
+  // 组织结构marker
+  organization: {
+    width: 20,
+    height: 30,
+    direction: "top",
+    color: "#FFFFFF",
+    size: 18,
+    anchor: { x: 10, y: 30 },
+  },
 };
 const options = {
   minZoom: 1,
@@ -251,19 +265,34 @@ watch(
     geometries.value.length = 0;
     newVal.forEach((item: any) => {
       if (!item.lat || !item.lng) return;
-      // 1219 当前只标注油库与油船
-      if (item.type !== "油库" && item.type !== "运油船") return;
+      // 1219 当前只标注油库\油船\组织结构
+      if (
+        item.type !== MapElementEnumMap[MapElementEnum.OIL_DEPOT] &&
+        item.type !== MapElementEnumMap[MapElementEnum.OIL_SHIP] &&
+        item.type !== MapElementEnumMap[MapElementEnum.ORGANIZATION]
+      )
+        return;
       const lat = +item.lat;
       const lng = +item.lng;
       if (isNaN(lat) || isNaN(lng)) return;
       if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return;
+      let styleId = "chargingStation";
+      switch (item.type) {
+        case MapElementEnumMap[MapElementEnum.ORGANIZATION]:
+          styleId = "organization";
+          break;
+        case MapElementEnumMap[MapElementEnum.OIL_DEPOT]:
+          styleId = "oilDepot";
+          break;
+        case MapElementEnumMap[MapElementEnum.OIL_SHIP]:
+          styleId = "chargingStation";
+          break;
+        case MapElementEnumMap[MapElementEnum.GAS_STATION]:
+          styleId = "gasStation";
+          break;
+      }
       geometries.value.push({
-        styleId:
-          item.type === MapElementEnumMap[MapElementEnum.GAS_STATION]
-            ? "gasStation"
-            : item.type === MapElementEnumMap[MapElementEnum.OIL_DEPOT]
-              ? "oilDepot"
-              : "chargingStation",
+        styleId: styleId,
         position: { lat, lng },
         properties: item,
         content: item.label,
@@ -297,6 +326,22 @@ onMounted(() => {
   }, 1000);
 });
 
+watch(
+  () => mapContainer.value?.$el,
+  (newVal) => {
+    if (newVal && newVal.$el) {
+      const canvasDom = newVal.$el.querySelector("canvas");
+      if (canvasDom) {
+        canvasDom.classList.add("no-zoom");
+      }
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+
 defineExpose({
   setCenter,
   setZoom,
@@ -322,5 +367,17 @@ defineExpose({
     // 文字颜色改为比较护眼的暗色
     color: #c0c4cc;
   }
+}
+.gas-station {
+  color: #ff4500;
+}
+.oil-depot {
+  color: #ffd700;
+}
+.organization {
+  color: #ffffff;
+}
+.charging-station {
+  color: #dc8148;
 }
 </style>

@@ -123,6 +123,9 @@ importers:
       '@types/codemirror':
         specifier: ^5.60.15
         version: 5.60.15
+      '@types/js-md5':
+        specifier: ^0.7.2
+        version: 0.7.2
       '@types/lodash':
         specifier: ^4.17.10
         version: 4.17.10
@@ -1071,6 +1074,9 @@ packages:
 
   '@types/event-emitter@0.3.5':
     resolution: {integrity: sha512-zx2/Gg0Eg7gwEiOIIh5w9TrhKKTeQh7CPCOPNc0el4pLSwzebA8SmnHwZs2dWlLONvyulykSwGSQxQHLhjGLvQ==}
+
+  '@types/js-md5@0.7.2':
+    resolution: {integrity: sha512-IwcFIov1JbiEToo3DgrVEwkMUR1BVlVyLjk245AzGHyyOlyddDFIeSIZO+WlhTortOa4P1PdCS8cDrTl7RW1HA==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -5420,6 +5426,8 @@ snapshots:
 
   '@types/event-emitter@0.3.5': {}
 
+  '@types/js-md5@0.7.2': {}
+
   '@types/json-schema@7.0.15': {}
 
   '@types/lodash-es@4.17.12':
@@ -9336,6 +9344,7 @@ snapshots:
       echarts: 5.5.1
       element-plus: 2.8.5(vue@3.5.12(typescript@5.5.4))
       exceljs: 4.4.0
+      js-md5: 0.8.3
       lodash-es: 4.17.21
       mpegts.js: 1.7.3
       nprogress: 0.2.0

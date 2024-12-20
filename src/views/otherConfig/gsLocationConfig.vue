@@ -114,8 +114,12 @@
       <el-form ref="itemFormRef" :model="itemForm" :rules="rules">
         <el-form-item label="类别" prop="type">
           <el-select v-model="itemForm.type" placeholder="请选择">
-            <el-option label="加油站" :value="GAS_ENUM_VALUE" />
-            <el-option label="油库" :value="STORAGE_ENUM_VALUE" />
+            <el-option
+              v-for="(value, key) of MapElementEnumMap"
+              :key="key"
+              :label="value"
+              :value="value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
@@ -170,7 +174,7 @@
       </el-form>
       <template v-slot:footer>
         <span class="dialog-footer">
-          <el-button @click="drawerVisible = false">取 消</el-button>
+          <el-button @click="onCancelAddressDialog">取 消</el-button>
           <el-button
             type="primary"
             :loading="submitAddressLoading"
@@ -204,7 +208,7 @@ interface ItemFormType {
   id: number | string | undefined;
   name: string | undefined;
   description: string | undefined;
-  type: number | undefined;
+  type: number | undefined | string;
   xOffSet: number | undefined;
   yOffSet: number | undefined;
 }
@@ -253,7 +257,7 @@ const mapRef = ref<Nullable<any>>(null);
 const gsListdata = ref([
   {
     id: 1,
-    label: MapElementEnumMap[MapElementEnum.GAS_STATION],
+    label: MapElementEnumMap[MapElementEnum.ORGANIZATION],
     children: [],
   },
   {
@@ -263,7 +267,17 @@ const gsListdata = ref([
   },
   {
     id: 3,
+    label: MapElementEnumMap[MapElementEnum.GAS_STATION],
+    children: [],
+  },
+  {
+    id: 4,
     label: MapElementEnumMap[MapElementEnum.OIL_SHIP],
+    children: [],
+  },
+  {
+    id: 5,
+    label: "其他",
     children: [],
   },
 ]);
@@ -535,6 +549,13 @@ const onSubmitChangeCurrentItemForm = async () => {
     });
 };
 
+/**
+ * 取消修改
+ */
+const onCancelAddressDialog = () => {
+  drawerVisible.value = false;
+};
+
 /**修改地址 */
 const onSubmitAddressForm = () => {
   // 提交表单
@@ -553,6 +574,12 @@ const onSubmitAddressForm = () => {
     .then((res) => {
       submitAddressLoading.value = false;
       ElMessage.success("修改成功");
+      // 清除表单
+      addressForm.value = {
+        address: undefined,
+        lng: 0,
+        lat: 0,
+      };
       drawerVisible.value = false;
       initListData();
     })
@@ -586,25 +613,38 @@ const onSubmitItemForm = () => {
       op(submitData)
         .then((res) => {
           submitItemLoading.value = false;
-          const type =
-            itemForm.value.type === GAS_ENUM_VALUE
-              ? 1
-              : itemForm.value.type === STORAGE_ENUM_VALUE
-                ? 2
-                : 3;
+          let index = 4;
+          switch (itemForm.value.type) {
+            case MapElementEnumMap[MapElementEnum.ORGANIZATION]:
+              index = 0;
+              break;
+            case MapElementEnumMap[MapElementEnum.OIL_DEPOT]:
+              index = 1;
+              break;
+            case MapElementEnumMap[MapElementEnum.GAS_STATION]:
+              index = 2;
+              break;
+            case MapElementEnumMap[MapElementEnum.OIL_SHIP]:
+              index = 3;
+              break;
+            default:
+              break;
+          }
           const item = {
-            // type保证为1或2
             id:
-              itemForm.value.id ||
-              gsListdata.value[type - 1].children.length + 1,
+              itemForm.value.id || gsListdata.value[index].children.length + 1,
             label: itemForm.value.name as unknown as string,
             type: itemForm.value.type,
             description: itemForm.value.description as unknown as string,
-            iconName: type === GAS_ENUM_VALUE ? "gas" : "oil",
+            iconName:
+              itemForm.value.type ===
+              MapElementEnumMap[MapElementEnum.GAS_STATION]
+                ? "gas"
+                : "oil",
             xOffSet: itemForm.value.xOffSet,
             yOffSet: itemForm.value.yOffSet,
           };
-          gsListdata.value[type - 1].children.push(item);
+          gsListdata.value[index].children.push(item);
           // 重置表单
           itemForm.value = {
             id: undefined,
@@ -674,7 +714,23 @@ const initListData = async () => {
   }
   for (let i = 0; i < list.length; i++) {
     const item = list[i];
-    const type = item.类型 === "加油站" ? 1 : item.类型 === "油库" ? 2 : 3;
+    let index = 4;
+    switch (item.类型) {
+      case MapElementEnumMap[MapElementEnum.ORGANIZATION]:
+        index = 0;
+        break;
+      case MapElementEnumMap[MapElementEnum.OIL_DEPOT]:
+        index = 1;
+        break;
+      case MapElementEnumMap[MapElementEnum.GAS_STATION]:
+        index = 2;
+        break;
+      case MapElementEnumMap[MapElementEnum.OIL_SHIP]:
+        index = 3;
+        break;
+      default:
+        break;
+    }
     const newItem = {
       id: item.id,
       label: item.名称,
@@ -684,12 +740,16 @@ const initListData = async () => {
       xOffSet: item.坐标 ? item.坐标.split(",")[0] : null,
       yOffSet: item.坐标 ? item.坐标.split(",")[1] : null,
     };
-    gsListdata.value[type - 1].children.push(newItem);
+    gsListdata.value[index].children.push(newItem);
     gsMarkerList.value.push({
       ...newItem,
       lng: item.坐标 ? item.坐标.split(",")[0] : null,
       lat: item.坐标 ? item.坐标.split(",")[1] : null,
     });
+  }
+  // 同时要消除详情区
+  if (currentItem.value?.id) {
+    currentItem.value = null;
   }
   // initChart();
 };
