@@ -12,10 +12,10 @@
     </div>
     <div class="c-space" />
     <div class="b-middle">
-      <div class="middle-item">
+      <!-- <div class="middle-item">
         <Model2 class="middle1" :totalData="totalData" />
       </div>
-      <div class="b-space" />
+      <div class="b-space" /> -->
       <div class="middle-item flex-grow">
         <Middle2 class="middle2" />
       </div>
