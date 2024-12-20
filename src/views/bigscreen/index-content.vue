@@ -190,7 +190,7 @@ onMounted(() => {
     position: relative;
     .middle-item {
       display: flex;
-      flex: 1;
+      // flex: 1;
       align-items: center;
       justify-content: center;
     }
