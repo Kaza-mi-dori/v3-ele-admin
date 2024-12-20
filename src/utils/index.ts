@@ -44,17 +44,10 @@ export function isExternal(path: string) {
 /**
  * 深度unref
  */
-export function deepUnref(value: any) {
+export function deepUnref(value: any): any {
   if (Array.isArray(value)) {
     return value.map((item) => deepUnref(item));
-  } else if (value && typeof value === "object") {
-    const unrefObject = {};
-    for (const key in value) {
-      if (value.hasOwnProperty(key)) {
-        unrefObject[key] = deepUnref(unref(value[key]));
-      }
-    }
-    return unrefObject;
+  } else {
   }
   return unref(value);
 }

@@ -58,6 +58,8 @@ export const enum MapElementEnum {
   OIL_SHIP = "oil_ship",
   /** 油车 */
   OIL_CAR = "oil_car",
+  /** 组织机构 */
+  ORGANIZATION = "organization",
 }
 
 export const MapElementEnumMap = {
@@ -65,6 +67,7 @@ export const MapElementEnumMap = {
   [MapElementEnum.OIL_DEPOT]: "油库",
   [MapElementEnum.OIL_SHIP]: "运油船",
   [MapElementEnum.OIL_CAR]: "油车",
+  [MapElementEnum.ORGANIZATION]: "组织机构",
 };
 
 /** 我方公司枚举 */

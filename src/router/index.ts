@@ -367,6 +367,15 @@ export const constantRoutes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "/sysMng/employeesMng",
+        name: "EmployeesMng",
+        component: () => import("@/views/system/hr/employee.vue"),
+        meta: {
+          title: "员工花名册",
+          icon: "role",
+        },
+      },
+      {
         path: "/sysMng/partnerDetail",
         name: "PartnerDetail",
         component: () => import("@/views/partner/detail.vue"),
