@@ -352,7 +352,8 @@ defineExpose({
 <style lang="scss" scoped>
 .map-container {
   width: 100%;
-  position: relative;
+  height: 100%;
+  position: absolute;
 }
 .pop-content {
   background-color: #303133;

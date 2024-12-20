@@ -288,6 +288,7 @@ const boatNumOutputValue = useTransition(boatSource, {
 .middle2-box {
   @apply w-full h-full;
   text-align: center;
+  position: relative;
   // padding: 10px;
 }
 .map-box {
