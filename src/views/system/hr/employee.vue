@@ -121,6 +121,13 @@
               >
                 导出
               </el-button>
+              <el-button
+                type="default"
+                icon="document"
+                @click="handleDownloadImportExcelTemplate"
+              >
+                获取导入模板
+              </el-button>
             </div>
           </div>
 
@@ -392,6 +399,7 @@ import { type UserForm_2 } from "@/api/system/user";
 import DeptAPI from "@/api/system/dept";
 import RoleAPI, { RoleAPI2 } from "@/api/system/role";
 import { DeptAPI2 } from "@/api/system/dept";
+import { HR_API } from "@/api/hr";
 import { getTreeFromLeftRightTreeNodes } from "@/utils/datastruct";
 import DeptTreeDev from "./components/DeptTreeDev.vue";
 import UserImport from "./components/UserImport.vue";
@@ -432,6 +440,25 @@ const dialog = reactive({
 
 // 导入弹窗显示状态
 const importDialogVisible = ref(false);
+
+// 获取导入模板
+async function handleDownloadImportExcelTemplate() {
+  const res: any = await HR_API.getImportTemplate();
+  if (res) {
+    const blob = new Blob([res.data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.style.display = "none";
+    link.href = url;
+    link.setAttribute("download", "员工花名册导入模板.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
+  }
+}
 
 // 用户表单数据
 const formData = reactive<

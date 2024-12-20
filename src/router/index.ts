@@ -376,6 +376,15 @@ export const constantRoutes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "/sysMng/orgsMng",
+        name: "OrgsMng",
+        component: () => import("@/views/system/hr/org.vue"),
+        meta: {
+          title: "组织架构管理 ",
+          icon: "role",
+        },
+      },
+      {
         path: "/sysMng/partnerDetail",
         name: "PartnerDetail",
         component: () => import("@/views/partner/detail.vue"),
