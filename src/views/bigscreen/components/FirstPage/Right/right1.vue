@@ -4,7 +4,7 @@
       <Item1
         style="margin: 0 auto"
         :amount="oilData.oilStorage"
-        title="成品油库存"
+        title="成品油库存量"
         :iconUrl="inventory"
       />
     </div>
