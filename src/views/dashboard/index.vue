@@ -213,7 +213,6 @@
     </el-row>
 
     <NoticeDetail ref="noticeDetailRef" />
-    <left5 />
   </div>
 </template>
 
@@ -224,7 +223,6 @@ defineOptions({
 });
 
 import VisitTrend from "./components/VisitTrend.vue";
-import left5 from "../bigscreen/components/FirstPage/Left/left5.vue";
 
 import WebSocketManager from "@/utils/websocket";
 import router from "@/router";

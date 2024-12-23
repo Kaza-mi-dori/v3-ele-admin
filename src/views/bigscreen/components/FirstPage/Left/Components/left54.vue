@@ -34,12 +34,12 @@ function initChart() {
       left: 0,
       right: 0,
       top: 30,
-      bottom: 0,
+      bottom: 30,
     },
     series: [
       {
         type: "pie",
-        radius: "35%",
+        radius: "40%",
         avoidLabelOverlap: false,
         label: {
           show: true,

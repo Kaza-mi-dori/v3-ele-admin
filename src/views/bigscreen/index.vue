@@ -250,7 +250,7 @@ onMounted(async () => {
   // overflow-y: auto; /* 纵向滚动条 */
   overflow-y: hidden;
   // margin: 20px 0;
-  padding: 20px 0;
+  padding: 20px 0 10px 0;
   ::-webkit-scrollbar {
     display: none;
   }

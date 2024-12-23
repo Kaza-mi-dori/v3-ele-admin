@@ -58,17 +58,31 @@ function initChart() {
       type: "value",
       name: "单位:亿元",
       nameTextStyle: {
-        color: "#FFF",
+        color: "#5099E3",
       },
       axisLabel: {
-        color: "#FFF",
+        fontSize: 14,
+        color: "#5099E3",
+      },
+      axisLine: {
+        show: true, // 显示坐标轴线
+        lineStyle: {
+          color: "#27518D",
+        },
+      },
+      splitLine: {
+        show: true, // 显示分割线
+        lineStyle: {
+          type: "dashed", // 虚线
+          color: "#27518D",
+        },
       },
     },
     xAxis: {
       type: "category",
       data: data.value.map((item) => item.title),
       axisLabel: {
-        color: "#FFF",
+        color: "#5099E3",
       },
     },
     series: [
