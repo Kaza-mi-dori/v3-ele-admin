@@ -34,7 +34,7 @@
       <div class="b-space" />
       <Right2 />
       <div class="b-space" />
-      <Right3 />
+      <right3New />
       <div class="b-space" />
       <Right4 />
     </div>
@@ -52,7 +52,7 @@ import Middle2 from "./components/FirstPage/Middle/Middle2/index.vue";
 import Middle3 from "./components/FirstPage/Middle/Middle3/index.vue";
 import Right1 from "./components/FirstPage/Right/right1.vue";
 import Right2 from "./components/FirstPage/Right/right2.vue";
-import Right3 from "./components/FirstPage/Right/right3.vue";
+import right3New from "./components/FirstPage/Right/right3-new.vue";
 import Right4 from "./components/FirstPage/Right/right4.vue";
 import Middle4 from "../bigscreen/components/FirstPage/Middle/Middle4/index.vue";
 import Map from "./components/FirstPage/Map/index.vue";
