@@ -21,9 +21,10 @@ const queryForm2: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   状态集合: ["有效"],
 });
 
+let companyInfo = ref([]);
+let companyInfoValue = computed(() => companyInfo.value);
+
 export const companyStore = defineStore("company", () => {
-  const companyInfo = ref([]);
-  const companyInfoValue = computed(() => companyInfo.value);
   /**
    * 获取企业报表列表
    *
