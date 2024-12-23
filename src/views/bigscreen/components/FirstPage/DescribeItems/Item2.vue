@@ -115,6 +115,14 @@ function initChart() {
 
 onMounted(() => {
   initChart();
+  // 监听窗口变化，重置图表
+  window.addEventListener("resize", () => {
+    try {
+      chartRef.value?.resize();
+    } catch (e) {
+      console.log(e);
+    }
+  });
 });
 </script>
 

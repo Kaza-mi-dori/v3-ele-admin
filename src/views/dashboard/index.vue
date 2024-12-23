@@ -213,7 +213,7 @@
     </el-row>
 
     <NoticeDetail ref="noticeDetailRef" />
-    <Item2 :target="3680" :fulfilled="2680" :yoy="-32" />
+    <left5 />
   </div>
 </template>
 
@@ -224,7 +224,7 @@ defineOptions({
 });
 
 import VisitTrend from "./components/VisitTrend.vue";
-import Item2 from "../bigscreen/components/FirstPage/DescribeItems/Item2.vue";
+import left5 from "../bigscreen/components/FirstPage/Left/left5.vue";
 
 import WebSocketManager from "@/utils/websocket";
 import router from "@/router";
