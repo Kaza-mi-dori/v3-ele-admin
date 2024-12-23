@@ -17,6 +17,24 @@ export interface EmployeeDTO {
   备注: string;
 }
 
+export interface OrgForm {
+  id: string | number;
+  上级id: string | number | undefined;
+  类型: string;
+  状态: string;
+  名称: string;
+  地址: string;
+  备注: string;
+}
+
+export interface OrgQuery {
+  id集合: string[];
+  上级id集合: string[];
+  类型集合: string[];
+  状态集合: string[];
+  名称: string;
+}
+
 export const HR_API = {
   /*
    * 获取员工列表
@@ -65,10 +83,12 @@ export const HR_API = {
   /**
    * 获取导入模板
    */
-  getImportTemplate: () => {
+  getImportTemplate: (desc?: string) => {
     return request2({
       url: `${HR_BASE_URL}/GetExcelImportTemplate`,
       method: "get",
+      params: { 说明文本: desc || "" },
+      responseType: "arraybuffer",
     });
   },
 
@@ -80,7 +100,6 @@ export const HR_API = {
       url: `${HR_BASE_URL}/ReadFromExcel`,
       method: "post",
       data,
-      responseType: "arraybuffer",
     });
   },
 
@@ -90,6 +109,17 @@ export const HR_API = {
   batchAddOrUpdate: (data: any) => {
     return request2({
       url: `${HR_BASE_URL}/AddOrChangeBatch`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 新增部门
+   */
+  addOrg: (data: any) => {
+    return request2({
+      url: `${HR_ORG_BASE_URL}`,
       method: "post",
       data,
     });
@@ -109,10 +139,11 @@ export const HR_API = {
   /**
    * 获取部门列表
    */
-  getOrgList: () => {
+  getOrgList: (data: any) => {
     return request2({
       url: `${HR_ORG_BASE_URL}/Query`,
       method: "post",
+      data,
     });
   },
 

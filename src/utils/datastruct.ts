@@ -43,3 +43,41 @@ export function getTreeFromLeftRightTreeNodes(
   }
   return root.children;
 }
+
+/**
+ * 从平铺的节点数组构建树
+ * @param flatNodes
+ * @param idProp
+ * @param parentIdProp
+ * @returns
+ * @example
+ **/
+export function getTreeFromFlatNodes(
+  flatNodes: any[],
+  idProp: string,
+  parentIdProp: string
+) {
+  const idMap = new Map();
+  const root = {
+    children: [],
+    [idProp]: 0,
+  };
+  for (let i = 0; i < flatNodes.length; i++) {
+    const node = flatNodes[i];
+    idMap.set(node[idProp], node);
+  }
+  for (let i = 0; i < flatNodes.length; i++) {
+    const node = flatNodes[i];
+    const parentId = node[parentIdProp];
+    const parent = idMap.get(parentId);
+    if (parent) {
+      if (!parent.children) {
+        parent.children = [];
+      }
+      parent.children.push(node);
+    } else {
+      root.children.push(node);
+    }
+  }
+  return root.children;
+}
