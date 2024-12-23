@@ -141,7 +141,7 @@ const getData = async () => {
     状态集合: ["有效"],
   };
   const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
-  let resData = res["当前记录"][0]["内容"]["详情"];
+  let resData = res["当前记录"]?.[0]?.["内容"]?.["详情"] || [];
 
   // 将API返回的 resData 转换为符合 mockData 结构的数据
   mockData.value = convertToMockData(resData);

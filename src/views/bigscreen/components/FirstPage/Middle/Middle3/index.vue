@@ -77,7 +77,7 @@ const initData = async () => {
     状态集合: ["有效"],
   };
   const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
-  let resData = res["当前记录"][0]["内容"]["详情"];
+  let resData = res["当前记录"]?.[0]?.["内容"]?.["详情"] || [];
 
   // 遍历 titleArr，找到对应的业态类型并赋值
   const mappedData = titleArr.value.map((titleItem) => {

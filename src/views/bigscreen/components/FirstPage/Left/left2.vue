@@ -93,7 +93,7 @@ const initData = async () => {
     状态集合: ["有效"],
   };
   const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
-  let resData = res["当前记录"][0]["内容"]["详情"];
+  let resData = res["当前记录"]?.[0]?.["内容"]?.["详情"] || [];
 
   // 如果选择了日期，则过滤数据
   if (timeCondition.value) {

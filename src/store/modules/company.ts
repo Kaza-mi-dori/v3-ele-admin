@@ -36,7 +36,7 @@ export const companyStore = defineStore("company", () => {
             reject("Please try again.");
             return;
           }
-          const currentRecord = res["当前记录"][0]["内容"]["详情"];
+          const currentRecord = res["当前记录"]?.[0]?.["内容"]?.["详情"] || [];
           companyInfo.value = currentRecord;
           resolve(currentRecord);
         })
