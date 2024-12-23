@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import Left1 from "./components/FirstPage/Left/left1.vue";
-import Left2 from "./components/FirstPage/Left/left2.vue";
+import Left2 from "./components/FirstPage/Left/left2_new.vue";
 import Left4 from "./components/FirstPage/Left/left4.vue";
 import Left3 from "./components/FirstPage/Left/left3.vue";
 import Model2 from "./components/FirstPage/Model2/index.vue";
