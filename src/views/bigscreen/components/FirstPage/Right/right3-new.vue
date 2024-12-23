@@ -4,7 +4,7 @@
       <el-tab-pane label="营收" name="REVENUE" />
       <el-tab-pane label="利润" name="PROFIT" />
     </Tab>
-    <div id="chart-right-3-new" style="height: 180px; margin-top: -10px" />
+    <div id="chart-right-3-new" style="height: 100%; margin-top: -30px" />
   </Model1>
 </template>
 
@@ -173,8 +173,8 @@ const initChartRight3 = async () => {
     series: [
       {
         type: "bar",
-        barWidth: "30%",
-        barGap: "40%", // 柱体间距
+        barWidth: "50%",
+        barGap: "10%", // 柱体间距
         data: currentData, // 柱状图的值: 根据选中的页签显示对应的数据
         itemStyle: {
           color: (params: any) => {
