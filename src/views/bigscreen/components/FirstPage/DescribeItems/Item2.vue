@@ -33,7 +33,12 @@
           <span class="__number">{{ props.target }}亿元</span>
         </div>
       </div>
-      <div ref="graphRef" style="height: 100%" class="__right" />
+      <div class="__right">
+        <div ref="graphRef" style="height: 80%" />
+        <div class="text">
+          <span>完成率</span>
+        </div>
+      </div>
     </div>
     <div class="__footer" />
   </div>
@@ -163,16 +168,25 @@ $number-color-1: #fffe95;
     width: 100%;
     flex: 1;
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
     background-image: url("@/views/bigscreen/img/left_box1_center.png");
     background-size: 100% 100%;
     .__left {
       text-align: center;
+      .text1 {
+        margin-bottom: 10px;
+      }
     }
     .__right {
       width: 50%;
       height: 150px;
+      .text {
+        text-align: center;
+        font-size: 14px;
+        color: #66a8cb;
+        margin-top: -5px;
+      }
     }
   }
   .__footer {
