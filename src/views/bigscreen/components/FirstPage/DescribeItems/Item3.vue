@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="box" @click="handleClick">
     <div class="box__icon">
       <img :src="props.iconUrl" alt="" />
     </div>
@@ -19,7 +19,10 @@
 <script setup lang="ts">
 import { ref, computed, withDefaults, defineProps } from "vue";
 import { useTransition } from "@vueuse/core";
+import { businessTypes2 } from "../../constants";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const props = withDefaults(
   defineProps<{
     title?: string;
@@ -49,6 +52,20 @@ const animatedAmount = useTransition(source, {
   duration: 1500,
 });
 
+function handleClick() {
+  const businessName = businessTypes2.find(
+    (item) => item.label === props.title
+  )?.name;
+  if (!businessName) {
+    return;
+  }
+  const route = router.resolve({
+    name: "Business",
+    params: { businessName },
+  });
+  window.open(route.href, "_blank");
+}
+
 watch(
   () => props.amount,
   (val) => {
@@ -73,9 +90,10 @@ $number-color: #2abfff;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 20px 10px;
   background-image: url("@/views/bigscreen/img/product_box.png");
   background-size: 100% 100%;
+  cursor: pointer;
   .box__icon {
     width: 30px;
     height: 30px;
@@ -95,23 +113,23 @@ $number-color: #2abfff;
       Arial,
       sans-serif !important;
     .box__title {
-      font-size: 16px;
+      font-size: 1.2rem;
       color: $title-text-color-bright;
     }
     .box__amount {
       display: flex;
       align-items: baseline;
-      font-size: 1rem;
+      font-size: 1.2rem;
       color: $number-color;
       .__desc {
         margin-right: 10px;
         color: $title-text-color;
-        font-size: 0.8rem;
+        font-size: 1rem;
       }
       .__unit {
         margin-left: 10px;
         color: $title-text-color;
-        font-size: 0.8rem;
+        font-size: 1rem;
       }
     }
   }
