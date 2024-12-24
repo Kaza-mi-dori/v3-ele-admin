@@ -83,7 +83,7 @@ function initChart() {
         color: "#5099E3",
       },
       axisLabel: {
-        fontSize: 14,
+        fontSize: 15,
         color: "#5099E3",
       },
       axisLine: {
@@ -105,6 +105,7 @@ function initChart() {
       data: data.value.map((item) => item.title),
       axisLabel: {
         color: "#5099E3",
+        fontSize: 15,
       },
     },
     series: [
