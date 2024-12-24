@@ -110,7 +110,7 @@ function initChart() {
           ]),
         ],
         label: {
-          position: ["50%", "35%"],
+          position: ["50%", "50%"],
           formatter: function () {
             return `${fulfilledPercent.value}%`;
           },
