@@ -145,7 +145,7 @@ const initData = async () => {
     {
       title: "累计采购",
       bgImg: block1,
-      yearTotal: (totals["累计采购"].yearTotal / 10000).toFixed(2),
+      yearTotal: Number((totals["累计采购"].yearTotal / 10000).toFixed(2)),
       monthTotal: totals["累计采购"].monthTotal,
       monthUnit: "万元",
       yearUnit: "亿元",
@@ -153,7 +153,7 @@ const initData = async () => {
     {
       title: "累计销售",
       bgImg: block2,
-      yearTotal: (totals["累计销售"].yearTotal / 10000).toFixed(2),
+      yearTotal: Number((totals["累计销售"].yearTotal / 10000).toFixed(2)),
       monthTotal: totals["累计销售"].monthTotal,
       monthUnit: "万元",
       yearUnit: "亿元",
@@ -161,7 +161,7 @@ const initData = async () => {
     {
       title: "累计毛利率",
       bgImg: block3,
-      yearTotal: (totals["累计毛利率"].yearTotal / 10000).toFixed(2),
+      yearTotal: Number((totals["累计毛利率"].yearTotal / 10000).toFixed(2)),
       monthTotal: totals["累计毛利率"].monthTotal,
       monthUnit: "%",
       yearUnit: "%",
@@ -169,7 +169,7 @@ const initData = async () => {
     {
       title: "累计营收",
       bgImg: block4,
-      yearTotal: (totals["累计营收"].yearTotal / 10000).toFixed(2),
+      yearTotal: Number((totals["累计营收"].yearTotal / 10000).toFixed(2)),
       monthTotal: totals["累计营收"].monthTotal,
       monthUnit: "万元",
       yearUnit: "亿元",
@@ -177,7 +177,7 @@ const initData = async () => {
     {
       title: "累计利润",
       bgImg: block5,
-      yearTotal: (totals["累计利润"].yearTotal / 10000).toFixed(2),
+      yearTotal: Number((totals["累计利润"].yearTotal / 10000).toFixed(2)),
       monthTotal: totals["累计利润"].monthTotal,
       monthUnit: "万元",
       yearUnit: "亿元",
