@@ -144,6 +144,7 @@
         <el-form-item label="描述" prop="description">
           <el-input
             v-model="itemForm.description"
+            type="textarea"
             placeholder="请输入描述, 大屏上将显示这里的内容"
           />
         </el-form-item>

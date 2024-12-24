@@ -39,8 +39,8 @@ function initChart() {
     series: [
       {
         type: "pie",
-        radius: "40%",
-        avoidLabelOverlap: false,
+        radius: "50%",
+        avoidLabelOverlap: true,
         label: {
           show: true,
           textStyle: {

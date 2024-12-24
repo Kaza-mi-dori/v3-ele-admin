@@ -26,14 +26,6 @@
       }"
       @click="onClickGeo1"
     >
-      <!-- <img
-        :src="item.type === '油库' ? oil : item.type === '运油船' ? boat : ''"
-        :style="{
-          width: '20px',
-          height: '30px',
-          cursor: 'pointer',
-        }"
-      /> -->
       <div :style="{ cursor: 'pointer', textAlign: 'center' }">
         <img
           :src="
@@ -61,7 +53,7 @@
               <span>{{ item.properties && item.properties.label }}</span>
             </div>
             <div class="__desc">
-              <span>{{ item.properties && item.properties.description }}</span>
+              {{ item.properties && item.properties.description }}
             </div>
           </div>
           <template v-slot:reference>
@@ -105,6 +97,22 @@
         />
       </template>
     </el-popover> -->
+    <!-- 切换开关 -->
+    <el-switch
+      v-model="showOilDepot"
+      active-color="#13ce66"
+      inactive-color="#fff"
+      active-text="油库"
+      inactive-text="油站"
+      style="
+        position: absolute;
+        font-size: 16px;
+        z-index: 1001;
+        bottom: 0;
+        right: 50%;
+      "
+      @change="onToggleOilDepot"
+    />
   </tlbs-map>
 </template>
 
@@ -116,6 +124,7 @@ import gas from "@/views/bigscreen/img/oil2_medium.png";
 import enterprise from "@/views/bigscreen/img/enterprise.png";
 import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
 import { getDistrict } from "@/api/thirdSystem/tmap";
+import { all } from "axios";
 
 const props = defineProps({
   /** 标记点 */
@@ -127,6 +136,7 @@ const props = defineProps({
 
 const emit = defineEmits(["clickGeo"]);
 
+const showOilDepot = ref(true); // 默认显示油库
 const mapContainer = ref<any>(null);
 const multiMarker = ref<any>(null);
 // lat是纬度，lng是经度
@@ -152,6 +162,7 @@ const control = {
 //   { styleId: "marker", position: { lat: 39.91799, lng: 116.397027 } },
 // ];
 const geometries = ref<any[]>([]);
+const allGeometries = ref<any[]>([]); // 所有的点
 const styles = {
   marker: {
     width: 20,
@@ -164,7 +175,7 @@ const styles = {
     height: 30,
     src: oil,
     // 浅红色
-    color: "#FF4500",
+    color: "#FFD700",
     // size: 12,
     direction: "bottom",
     // direction: "top",
@@ -230,7 +241,7 @@ const setZoom = (value: number) => {
 };
 
 const onClickGeo1 = (e: any) => {
-  console.log("ClickGeo!", e);
+  // console.log("ClickGeo!", e);
   const { geometry } = e;
   if (!geometry) return;
   const { x, y } = e.point;
@@ -259,19 +270,35 @@ const onClickGeo1 = (e: any) => {
   }
 };
 
+function onToggleOilDepot() {
+  geometries.value = allGeometries.value.filter((item) => {
+    if (showOilDepot.value) {
+      return (
+        item.styleId === "oilDepot" ||
+        item.styleId === "chargingStation" ||
+        item.styleId === "organization"
+      );
+    } else {
+      return item.styleId === "gasStation";
+    }
+  });
+  console.log(geometries.value.length);
+}
+
 watch(
   () => props.markers,
   (newVal) => {
-    geometries.value.length = 0;
+    // geometries.value.length = 0;
+    allGeometries.value = [];
     newVal.forEach((item: any) => {
       if (!item.lat || !item.lng) return;
-      // 1219 当前只标注油库\油船\组织结构
-      if (
-        item.type !== MapElementEnumMap[MapElementEnum.OIL_DEPOT] &&
-        item.type !== MapElementEnumMap[MapElementEnum.OIL_SHIP] &&
-        item.type !== MapElementEnumMap[MapElementEnum.ORGANIZATION]
-      )
-        return;
+      // // 1219 当前只标注油库\油船\组织结构
+      // if (
+      //   item.type !== MapElementEnumMap[MapElementEnum.OIL_DEPOT] &&
+      //   item.type !== MapElementEnumMap[MapElementEnum.OIL_SHIP] &&
+      //   item.type !== MapElementEnumMap[MapElementEnum.ORGANIZATION]
+      // )
+      //   return;
       const lat = +item.lat;
       const lng = +item.lng;
       if (isNaN(lat) || isNaN(lng)) return;
@@ -291,12 +318,13 @@ watch(
           styleId = "gasStation";
           break;
       }
-      geometries.value.push({
+      allGeometries.value.push({
         styleId: styleId,
         position: { lat, lng },
         properties: item,
         content: item.label,
       });
+      onToggleOilDepot();
     });
   },
   {
@@ -322,6 +350,15 @@ onMounted(() => {
     // 如果找到了，则找其父元素，并隐藏
     if (logoText && logoText.parentElement) {
       logoText.parentElement.style.display = "none";
+    }
+    // 寻找class为tmap-zoom-control的元素
+    const zoomControl = document.querySelector(
+      ".tmap-zoom-control"
+    ) as HTMLElement;
+    // console.log(zoomControl);
+    // 如果找到了，则找其父元素，并隐藏
+    if (zoomControl && zoomControl.parentElement) {
+      zoomControl.parentElement.style.display = "none";
     }
   }, 1000);
 });
@@ -367,10 +404,11 @@ defineExpose({
     @apply text-sm;
     // 文字颜色改为比较护眼的暗色
     color: #c0c4cc;
+    white-space: pre-line;
   }
 }
 .gas-station {
-  color: #ff4500;
+  color: #ffd700;
 }
 .oil-depot {
   color: #ffd700;

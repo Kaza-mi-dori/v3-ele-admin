@@ -35,12 +35,12 @@ import Item3 from "@/views/bigscreen/components/FirstPage/DescribeItems/Item3.vu
 async function initChart() {}
 
 const data = ref<any[]>([
-  { title: "成品油(年)", value: 100, unit: "万吨", iconUrl: icon1 },
-  { title: "化工产品(年)", value: 50, unit: "万吨", iconUrl: icon2 },
-  { title: "原油(年)", value: 100, unit: "万吨", iconUrl: icon3 },
-  { title: "LNG(年)", value: 50, unit: "万吨", iconUrl: icon4 },
-  { title: "煤炭(年)", value: 100, unit: "万吨", iconUrl: icon5 },
-  { title: "燃料油(年)", value: 50, unit: "万吨", iconUrl: icon6 },
+  { title: "成品油", value: 100, unit: "万吨", iconUrl: icon1 },
+  { title: "化工产品", value: 50, unit: "万吨", iconUrl: icon2 },
+  { title: "原油", value: 100, unit: "万吨", iconUrl: icon3 },
+  { title: "LNG", value: 50, unit: "万吨", iconUrl: icon4 },
+  { title: "煤炭", value: 100, unit: "万吨", iconUrl: icon5 },
+  { title: "燃料油", value: 50, unit: "万吨", iconUrl: icon6 },
 ]);
 
 onMounted(() => {

@@ -118,6 +118,7 @@ function initChart() {
           color: sassvariables["bigscreen-primary-color-1"],
         },
         waveAnimation: true, // 启用水波动画
+        animationEasingUpdate: "cubicOut", // 波动动画的缓动效果
         amplitude: 10, // 增加波动幅度，让水波效果更明显
         phase: 1, // 设置波浪初始偏移，实现水波从左向右滚动的效果
       },

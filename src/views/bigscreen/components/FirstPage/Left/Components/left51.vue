@@ -59,6 +59,7 @@ function initChart() {
     tooltip: {
       trigger: "axis",
     },
+    barWidth: "15%",
     color: [
       sassvariables["bigscreen-primary-color-2"],
       sassvariables["bigscreen-primary-color-1"],
@@ -81,9 +82,11 @@ function initChart() {
       name: "单位:亿元",
       nameTextStyle: {
         color: "#5099E3",
+        fontWeight: "bold",
       },
       axisLabel: {
-        fontSize: 15,
+        fontSize: 14,
+        fontWeight: "bold",
         color: "#5099E3",
       },
       axisLine: {
@@ -104,8 +107,9 @@ function initChart() {
       type: "category",
       data: data.value.map((item) => item.title),
       axisLabel: {
-        color: "#5099E3",
-        fontSize: 15,
+        color: "#fff",
+        fontSize: 14,
+        fontWeight: "bold",
       },
     },
     series: [

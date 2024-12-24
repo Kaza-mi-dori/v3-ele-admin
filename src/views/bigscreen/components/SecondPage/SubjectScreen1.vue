@@ -121,10 +121,10 @@ const totalData = ref([
 .bg-view-body > .c-space:last-child {
   width: 15px;
 }
-.model1 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+// .model1 {
+//   flex: 1;
+//   display: flex;
+//   flex-direction: column;
+//   height: 100%;
+// }
 </style>

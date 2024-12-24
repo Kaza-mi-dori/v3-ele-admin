@@ -34,11 +34,11 @@
     <div class="b-right" style="z-index: 1">
       <Right1 />
       <div class="b-space" />
-      <Right2 />
+      <Right2 style="flex: 0.6" />
       <div class="b-space" />
-      <right3New />
+      <right3New style="flex: 0.8" />
       <div class="b-space" />
-      <Right4 />
+      <Right4 style="flex: 0.6" />
     </div>
     <div class="c-space" />
   </div>
@@ -137,7 +137,7 @@ const initTMapApi = () => {
   height: 100%;
 }
 .left2 {
-  flex: 0.5;
+  flex: 0.75;
 }
 .left3 {
   flex: 0.8;

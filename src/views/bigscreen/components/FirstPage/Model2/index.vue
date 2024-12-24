@@ -9,12 +9,12 @@
             <div>{{ titleArr[index].title }}</div>
           </div>
           <div class="annual-total">
-            <div>年度累计</div>
+            <div class="scale">年度累计</div>
             <div class="year-num">{{ formatNumber(item.year) }}</div>
             <div>{{ item.yearUnit || "万元" }}</div>
           </div>
           <div class="monthly-total">
-            <div>本月累计</div>
+            <div class="scale">本月累计</div>
             <div class="month-num">{{ formatNumber(item.month) }}</div>
             <div>{{ item.monthUnit || "万元" }}</div>
           </div>

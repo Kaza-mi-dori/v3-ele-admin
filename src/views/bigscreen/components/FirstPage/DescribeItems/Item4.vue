@@ -7,12 +7,12 @@
         <div>{{ props.title }}</div>
       </div>
       <div class="annual-total">
-        <div>年度累计</div>
+        <div class="scale">年</div>
         <div class="year-num">{{ formatNumber(props.yearTotal) }}</div>
         <div>{{ props.yearUnit || "万元" }}</div>
       </div>
       <div class="monthly-total">
-        <div>本月累计</div>
+        <div class="scale">月</div>
         <div class="month-num">{{ formatNumber(props.monthTotal) }}</div>
         <div>{{ props.monthUnit || "万元" }}</div>
       </div>
@@ -77,9 +77,31 @@ const formatNumber = (num: number | string): string => {
   }
   .annual-total {
     margin-top: 5px;
+    .scale {
+      margin-right: 5px;
+      &::after {
+        // 下划线
+        content: "";
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: #ffffff;
+      }
+    }
   }
   .monthly-total {
     margin-top: 3px;
+    .scale {
+      margin-right: 5px;
+      &::after {
+        // 下划线
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color: #ffffff;
+      }
+    }
   }
   .title-box {
     display: flex;

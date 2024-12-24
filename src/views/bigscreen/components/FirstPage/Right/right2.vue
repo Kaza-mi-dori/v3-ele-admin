@@ -8,6 +8,10 @@
           padding-top: 10px;
           padding-right: 20px;
           padding-left: 20px;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
         "
       >
         <div
