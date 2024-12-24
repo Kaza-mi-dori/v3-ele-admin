@@ -33,7 +33,12 @@
           <span class="__number">{{ props.target }}亿元</span>
         </div>
       </div>
-      <div ref="graphRef" style="height: 100%" class="__right" />
+      <div class="__right">
+        <div ref="graphRef" style="height: 80%" />
+        <div class="text">
+          <span>完成率</span>
+        </div>
+      </div>
     </div>
     <div class="__footer" />
   </div>
@@ -98,7 +103,12 @@ function initChart() {
           shadowColor: "rgba(0, 0, 0, 0.4)",
           shadowBlur: 20,
         },
-        color: ["#EB8A00"],
+        color: [
+          new echarts.graphic.LinearGradient(0, 0, 1, 1, [
+            { offset: 0, color: "#EB8A00" },
+            { offset: 0.8, color: "#D65305" },
+          ]),
+        ],
         label: {
           position: ["50%", "50%"],
           formatter: function () {
@@ -107,6 +117,9 @@ function initChart() {
           fontSize: 16,
           color: sassvariables["bigscreen-primary-color-1"],
         },
+        waveAnimation: true, // 启用水波动画
+        amplitude: 10, // 增加波动幅度，让水波效果更明显
+        phase: 1, // 设置波浪初始偏移，实现水波从左向右滚动的效果
       },
     ],
   };
@@ -163,16 +176,25 @@ $number-color-1: #fffe95;
     width: 100%;
     flex: 1;
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
     background-image: url("@/views/bigscreen/img/left_box1_center.png");
     background-size: 100% 100%;
     .__left {
       text-align: center;
+      .text1 {
+        margin-bottom: 10px;
+      }
     }
     .__right {
       width: 50%;
       height: 150px;
+      .text {
+        text-align: center;
+        font-size: 14px;
+        color: #66a8cb;
+        margin-top: -5px;
+      }
     }
   }
   .__footer {
