@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="content" style="min-height: 250px">
+    <div class="content" style="min-height: 320px">
       <template v-if="selectedItem === '经营主体'">
         <Left51 style="flex: 1" />
       </template>

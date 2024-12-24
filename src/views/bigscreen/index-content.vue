@@ -5,7 +5,7 @@
       <Left1 />
       <div class="b-space" />
       <!-- <Left2 class="left2" title="合同总数与金额" /> -->
-      <Left2 class="left3" />
+      <Left2 class="left4" />
       <div class="b-space" />
       <Left3 class="left3" />
       <div class="b-space" />
@@ -140,6 +140,9 @@ const initTMapApi = () => {
   flex: 0.5;
 }
 .left3 {
-  flex: 1;
+  flex: 0.8;
+}
+.left4 {
+  flex: 0.6;
 }
 </style>
