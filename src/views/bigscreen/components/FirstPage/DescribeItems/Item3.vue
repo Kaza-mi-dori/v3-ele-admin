@@ -1,112 +1,116 @@
 <template>
   <div class="box">
-    <img class="item3-bg" :src="props.bgImg" />
-    <div class="content-item">
-      <div class="title-box">
-        <img class="title-icon" src="../../../img/left_icon3.png" height="18" />
-        <div>{{ props.title }}</div>
+    <div class="box__icon">
+      <img :src="props.iconUrl" alt="" />
+    </div>
+    <div class="box__content">
+      <div class="box__title">
+        {{ props.title }}
       </div>
-      <div class="annual-total">
-        <div>年度累计</div>
-        <div class="year-num">{{ formatNumber(props.yearTotal) }}</div>
-        <div>{{ props.yearUnit || "万元" }}</div>
-      </div>
-      <div class="monthly-total">
-        <div>本月累计</div>
-        <div class="month-num">{{ formatNumber(props.monthTotal) }}</div>
-        <div>{{ props.monthUnit || "万元" }}</div>
+      <div class="box__amount">
+        <el-statistic :value="animatedAmount" />
+        <span class="__unit">{{ props.unit }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, computed, withDefaults, defineProps } from "vue";
+import { useTransition } from "@vueuse/core";
 
-const props = defineProps<{
-  /** 标题 */
-  title: string;
-  /** 背景图base64 */
-  bgImg: string;
-  /** 年度累计 */
-  yearTotal: number;
-  /** 本月累计 */
-  monthTotal: number;
-  /** 本月累计单位 */
-  /** 年度累计单位 */
-  yearUnit: string;
-  monthUnit: string;
-}>();
-
-const formatNumber = (num: number | string): string => {
-  if (Number(num) > 10000) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  } else {
-    return num.toString(); // 直接返回原始数字，不格式化
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    amount?: string;
+    iconUrl?: string;
+    amountColor?: string;
+    titleColor?: string;
+    iconWidth?: number;
+    iconHeight?: number;
+    height?: number;
+    unit?: string;
+  }>(),
+  {
+    amountColor: "rgb(16,253,254)",
+    titleColor: "white",
+    title: "标题",
+    amount: "0",
+    iconWidth: 50,
+    iconHeight: 50,
+    height: 100,
+    unit: "万吨",
   }
-};
+);
+
+const source = ref(0);
+const animatedAmount = useTransition(source, {
+  duration: 1500,
+});
+
+watch(
+  () => props.amount,
+  (val) => {
+    // 将字符串转换为数字
+    source.value = parseInt(val, 10);
+    // 确保转换后的值不会是 NaN
+    if (isNaN(source.value)) {
+      source.value = 0;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 </script>
 
 <style lang="scss" scoped>
+$title-text-color-bright: #b6d7db;
+$title-text-color: #9dc1d0;
+$number-color: #2abfff;
 .box {
-  position: relative; /* 确保父元素的布局设置好 */
-  width: 100%;
-  height: 100%;
-  justify-content: center;
+  margin: 0 auto;
+  display: flex;
   align-items: center;
-  box-sizing: border-box;
-  color: white;
-  font-size: 20px;
-  padding: 15px 10px;
+  padding: 10px;
+  // background-image: url("@/views/bigscreen/img/tag3.
+  .box__icon {
+    width: 30px;
+    height: 30px;
+    text-align: right;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .box__content {
+    margin-left: 10px;
+    text-align: left;
+    font-family:
+      PingFangSC,
+      Microsoft YaHei,
+      Helvetica Neue,
+      Arial,
+      sans-serif !important;
+    .box__title {
+      font-size: 16px;
+      color: $title-text-color-bright;
+    }
+    .box__amount {
+      display: flex;
+      align-items: baseline;
+      font-size: 1rem;
+      color: $number-color;
+      .__unit {
+        margin-left: 10px;
+        color: $title-text-color;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
 
-  .item3-bg {
-    position: absolute; /* 使图像脱离文档流 */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
-  }
-  .content-item {
-    flex: 1;
-    z-index: 1; /* 确保文字在背景图片上方 */
-    font-size: 16px;
-  }
-  .title-box,
-  .annual-total,
-  .monthly-total {
-    display: flex;
-  }
-  .annual-total {
-    margin-top: 5px;
-  }
-  .monthly-total {
-    margin-top: 3px;
-  }
-  .title-box {
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    letter-spacing: 1px;
-  }
-  .title-icon {
-    width: 17px;
-    height: 17px;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    display: block;
-  }
-  .year-num,
-  .month-num {
-    margin: 0 5px;
-  }
-  .year-num {
-    color: #12f5fb;
-  }
-  .month-num {
-    color: #d6e337;
-  }
+::v-deep(.el-statistic__content) {
+  all: unset;
 }
 </style>

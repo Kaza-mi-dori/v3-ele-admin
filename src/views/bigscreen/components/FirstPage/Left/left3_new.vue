@@ -1,19 +1,19 @@
 <template>
   <div class="left3-box">
     <div class="flex flex-gap-2 w-full justify-between">
-      <DescribeItem3 v-bind="data1" style="flex: 1" />
-      <DescribeItem3 v-bind="data2" style="flex: 1" />
-      <DescribeItem3 v-bind="data3" style="flex: 1" />
+      <DescribeItem4 v-bind="data1" style="flex: 1" />
+      <DescribeItem4 v-bind="data2" style="flex: 1" />
+      <DescribeItem4 v-bind="data3" style="flex: 1" />
     </div>
     <div class="flex flex-gap-2 w-full justify-between mt-[10px]">
-      <DescribeItem3 v-bind="data4" style="flex: 1" />
-      <DescribeItem3 v-bind="data5" style="flex: 1" />
+      <DescribeItem4 v-bind="data4" style="flex: 1" />
+      <DescribeItem4 v-bind="data5" style="flex: 1" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import DescribeItem3 from "../DescribeItems/Item3.vue";
+import DescribeItem4 from "../DescribeItems/Item4.vue";
 import block1 from "@/views/bigscreen/img/left_block1.png";
 import block2 from "@/views/bigscreen/img/left_block2.png";
 import block3 from "@/views/bigscreen/img/left_block3.png";

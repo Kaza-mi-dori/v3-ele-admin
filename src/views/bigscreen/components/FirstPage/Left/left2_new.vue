@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-gap-2 w-full justify-between">
+  <div class="flex flex-gap-2 w-full justify-between h-full flex-1">
     <DescribeItem2 v-bind="revenueData" style="flex: 1" />
     <DescribeItem2 v-bind="profitData" style="flex: 1" />
   </div>
@@ -23,6 +23,10 @@ const profitData = ref<any>({
   fulfilled: -0.55,
   target: 1.5,
   icon: WrappedGift,
+});
+
+onMounted(() => {
+  // initChart();
 });
 </script>
 
