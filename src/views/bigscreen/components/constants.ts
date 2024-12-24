@@ -1,3 +1,5 @@
+import { OurCompanyEnum, OurCompanyEnumMap } from "@/enums/BusinessEnum";
+
 export interface navItem {
   id: number;
   label: string;
@@ -20,6 +22,13 @@ export const businessTypes2: navItem[] = [
   { id: 4, label: "成品油", name: "refinedOilProduct" },
   { id: 5, label: "LNG", name: "LNG" },
   { id: 6, label: "煤炭", name: "coal" },
+];
+
+/** 经营主体 */
+export const businessSubjects: navItem[] = [
+  { id: 1, label: OurCompanyEnumMap[OurCompanyEnum.GTSHC], name: "gtsh" },
+  { id: 2, label: OurCompanyEnumMap[OurCompanyEnum.GDFGS], name: "gtshgd" },
+  { id: 3, label: OurCompanyEnumMap[OurCompanyEnum.GTSHC_ZS], name: "gtshzs" },
 ];
 
 // 动态计算市场信息的id为businessTypes的长度加1

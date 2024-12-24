@@ -5,7 +5,11 @@
 <script lang="ts" setup>
 import * as echarts from "echarts";
 import sassvariables from "@/styles/variables.module.scss";
+import { businessSubjects } from "../../../constants";
+import { ref, onMounted, watch, shallowRef } from "vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const left51Ref = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
 const data = ref<any[]>([
@@ -24,6 +28,22 @@ function dataFilterOne() {
   });
 }
 
+function onClickBar(params: any) {
+  const { name, seriesName } = params;
+  const subject = businessSubjects.find((item) => item.label === name);
+  if (subject) {
+    // console.log(subject);
+    const route = router.resolve({
+      name: "SubjectSubsidiary",
+      params: {
+        subjectName: subject.name,
+      },
+    });
+    if (!route) return;
+    window.open(route.href, "_blank");
+  }
+}
+
 // 初始化图表
 function initChart() {
   // 将数据整理为柱状图所需的格式
@@ -31,6 +51,8 @@ function initChart() {
   // 柱状图
   if (!chartRef.value) {
     chartRef.value = echarts.init(left51Ref.value as HTMLDivElement);
+    // 增加点击回调
+    chartRef.value.on("click", "series", onClickBar);
   }
   chartRef.value.clear();
   const option = {

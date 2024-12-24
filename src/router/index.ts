@@ -106,6 +106,15 @@ export const constantRoutes: RouteRecordRaw[] = [
           import("@/views/bigscreen/components/SecondPage/second-index.vue"),
       },
       {
+        path: "subject/:subjectName",
+        name: "SubjectSubsidiary",
+        meta: {
+          hidden: true,
+        },
+        component: () =>
+          import("@/views/bigscreen/components/SecondPage/subject-index.vue"),
+      },
+      {
         path: "thirdPage",
         name: "ThirdPage",
         meta: {
