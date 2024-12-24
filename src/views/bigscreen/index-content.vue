@@ -60,91 +60,6 @@ import Right4 from "./components/FirstPage/Right/right4.vue";
 import Middle4 from "../bigscreen/components/FirstPage/Middle/Middle4/index.vue";
 import Map from "./components/FirstPage/Map/index.vue";
 
-import { ref } from "vue";
-import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
-
-const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
-  业务维度: undefined,
-  状态集合: undefined,
-  日期早于: undefined,
-  日期晚于: undefined,
-  id集合: undefined,
-  页码: 1,
-  页容量: 20,
-});
-
-let totalData = ref([
-  { title: "累计采购", year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
-  { title: "累计销售", year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
-  { title: "累计营收", year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
-  { title: "累计利润", year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
-]);
-
-const initData = async () => {
-  queryForm.value = {
-    页码: 1,
-    页容量: 1,
-    企业名称: "广投石化",
-    状态集合: ["有效"],
-  };
-  const res: any = await BusinessFormAPI.getCompanyReportFormList(
-    queryForm.value
-  );
-  let resData = (res["当前记录"]?.[0]?.["内容"]?.["详情"] || []).filter(
-    (item: any) => item["业态类型"] === "总体"
-  );
-  const totals = {
-    累计采购: { year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
-    累计销售: { year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
-    累计营收: { year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
-    累计利润: { year: 0, month: 0, monthUnit: "万元", yearUnit: "亿元" },
-  };
-
-  resData.forEach((item: any) => {
-    totals["累计采购"].year += Number(item.累计采购金额) || 0;
-    totals["累计采购"].month += Number(item.当期采购金额) || 0;
-
-    totals["累计销售"].year = Number(item.累计销售金额) || 0;
-    totals["累计销售"].month = Number(item.当期销售金额) || 0;
-
-    totals["累计营收"].year = Number(item.累计营收金额) || 0;
-    totals["累计营收"].month = Number(item.当期营收金额) || 0;
-
-    totals["累计利润"].year = Number(item.累计利润金额) || 0;
-    totals["累计利润"].month = Number(item.当期利润金额) || 0;
-  });
-  totalData.value = [
-    {
-      title: "累计采购",
-      year: (totals["累计采购"].year / 10000).toFixed(2),
-      month: totals["累计采购"].month,
-      monthUnit: "万元",
-      yearUnit: "亿元",
-    },
-    {
-      title: "累计销售",
-      year: (totals["累计销售"].year / 10000).toFixed(2),
-      month: totals["累计销售"].month,
-      monthUnit: "万元",
-      yearUnit: "亿元",
-    },
-    {
-      title: "累计营收",
-      year: (totals["累计营收"].year / 10000).toFixed(2),
-      month: totals["累计营收"].month,
-      monthUnit: "万元",
-      yearUnit: "亿元",
-    },
-    {
-      title: "累计利润",
-      year: (totals["累计利润"].year / 10000).toFixed(2),
-      month: totals["累计利润"].month,
-      monthUnit: "万元",
-      yearUnit: "亿元",
-    },
-  ];
-};
-
 // 加载腾讯地图api
 const initTMapApi = () => {
   const script = document.createElement("script");
@@ -160,10 +75,6 @@ const initTMapApi = () => {
 // onBeforeMount(() => {
 //   initTMapApi();
 // });
-
-onMounted(() => {
-  initData();
-});
 </script>
 
 <style lang="scss" scoped>
