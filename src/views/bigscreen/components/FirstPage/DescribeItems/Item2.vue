@@ -33,7 +33,7 @@
           <span class="__number">{{ props.target }}亿元</span>
         </div>
       </div>
-      <div ref="graphRef" style="height: 130px" class="__right" />
+      <div ref="graphRef" style="height: 100%" class="__right" />
     </div>
     <div class="__footer" />
   </div>
@@ -132,6 +132,8 @@ $number-color-1: #fffe95;
 .box {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
@@ -159,6 +161,7 @@ $number-color-1: #fffe95;
   }
   .__content {
     width: 100%;
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;

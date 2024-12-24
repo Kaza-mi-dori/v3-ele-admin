@@ -5,7 +5,7 @@
       <Left1 />
       <div class="b-space" />
       <!-- <Left2 class="left2" title="合同总数与金额" /> -->
-      <Left2 />
+      <Left2 class="left3" />
       <div class="b-space" />
       <Left3 class="left3" />
       <div class="b-space" />

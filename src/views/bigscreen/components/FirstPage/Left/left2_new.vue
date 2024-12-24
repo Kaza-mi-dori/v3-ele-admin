@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-gap-2 w-full justify-between h-full flex-1">
+  <div class="flex flex-gap-2 w-full justify-between h-full">
     <DescribeItem2 v-bind="revenueData" style="flex: 1" />
     <DescribeItem2 v-bind="profitData" style="flex: 1" />
   </div>

@@ -142,8 +142,15 @@ const initScale = () => {
   // 首屏改为bg-view__header的高度 + bg-view__body的高度
   const headerDOM = document.querySelector(".bg-view__header");
   const bodyDOM = document.querySelector(".bg-view__body");
+  const containerDOM = document.querySelector(".bg-view-img");
+  console.log(!!(headerDOM && bodyDOM));
   const originalHeight =
     headerDOM && bodyDOM ? headerDOM.clientHeight + bodyDOM.clientHeight : 1080;
+  // const originalHeight = containerDOM
+  //   ? containerDOM.clientHeight
+  //   : headerDOM && bodyDOM
+  //     ? headerDOM.clientHeight + bodyDOM.clientHeight
+  //     : 1080;
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const containerElement = document.getElementById("bg-container");
@@ -241,7 +248,7 @@ onMounted(async () => {
 }
 .bg-view-img {
   width: 100%;
-  // height: 100%;
+  height: 100%;
   background-image: url(./img/bg.jpg);
   background-size: cover;
 }
