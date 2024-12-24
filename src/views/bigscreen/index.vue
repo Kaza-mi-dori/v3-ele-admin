@@ -132,6 +132,10 @@ const showOtherContent = computed(() => {
   return router.currentRoute.value.name == "BigScreenBoard";
 });
 
+/**
+ * @description 初始化缩放,令要显示的内容可以在整个window内显示
+ * 渲染的高度是一定的，这导致了窗口高度越小，zoom = originalHeight / windowHeight越大
+ */
 const initScale = () => {
   const originalWidth = 1920;
   // const originalHeight = 1080;
@@ -140,12 +144,13 @@ const initScale = () => {
   // +20是因为有padding，否则会有滚动条
   // const originalHeight = (bgContainer.value?.offsetHeight || 1080) + 0;
   // 首屏改为bg-view__header的高度 + bg-view__body的高度
-  const headerDOM = document.querySelector(".bg-view__header");
-  const bodyDOM = document.querySelector(".bg-view__body");
+  const headerDOM = document.querySelector(".bg-view__header") as HTMLElement;
+  const bodyDOM = document.querySelector(".bg-view__body") as HTMLElement;
   const containerDOM = document.querySelector(".bg-view-img");
-  console.log(!!(headerDOM && bodyDOM));
+  // originalHeight: 完整渲染后的高度，需要用来计算缩放比例
   const originalHeight =
-    headerDOM && bodyDOM ? headerDOM.clientHeight + bodyDOM.clientHeight : 1080;
+    headerDOM && bodyDOM ? headerDOM.offsetHeight + bodyDOM.offsetHeight : 1080;
+  console.log("originalHeight===", originalHeight);
   // const originalHeight = containerDOM
   //   ? containerDOM.clientHeight
   //   : headerDOM && bodyDOM
@@ -154,6 +159,7 @@ const initScale = () => {
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const containerElement = document.getElementById("bg-container");
+  // const containerElement = containerDOM as HTMLElement;
   if (!containerElement) return;
   const aspectRatio = 1920 / 1080;
   const ratio = windowWidth / windowHeight;
@@ -166,15 +172,24 @@ const initScale = () => {
 
   const scale = windowHeight / originalHeight;
   document.body.style.zoom = scale + "";
-  // document.styleSheets[document.styleSheets.length - 1].insertRule(
-  //   ":not(.map-container) canvas { zoom: " + 1 / scale + " !important; }"
-  // );
-  // document.styleSheets[document.styleSheets.length - 1].insertRule(
-  //   "canvas:not(no-zoom) { transform: scale(" + scale + ") !important; }"
-  // );
-  // document.styleSheets[document.styleSheets.length - 1].insertRule(
-  //   "canvas { transform-origin: 0 0 !important; }"
-  // );
+  document.styleSheets[document.styleSheets.length - 1].insertRule(
+    ":not(.map-container) > canvas { zoom: " + 1 / scale + " !important; }"
+  );
+  document.styleSheets[document.styleSheets.length - 1].insertRule(
+    ":not(.map-container) > canvas { transform: scale(" +
+      scale +
+      ") !important; }"
+  );
+  document.styleSheets[document.styleSheets.length - 1].insertRule(
+    "canvas { transform-origin: 0 0 !important; }"
+  );
+
+  if (!headerDOM || !bodyDOM) return;
+  // zoom设置完毕之后，header和body的高度会变化，需要计算header的高度使得body占据父元素剩余的高度
+  const headerHeight = headerDOM.offsetHeight;
+  const containerHeight = containerElement.offsetHeight;
+  const bodyHeight = containerHeight - headerHeight;
+  bodyDOM.style.height = bodyHeight + "px";
 };
 
 onUnmounted(() => {
@@ -221,13 +236,13 @@ onMounted(async () => {
   // min-height: 900px;
   // height: 1080px;
   // height: 100%;
-  width: 1920px;
+  // width: 1920px;
   font-size: 12px;
   color: #bfbfbf;
   font-variant: tabular-nums;
   line-height: 1.5715;
   font-feature-settings: "tnum";
-  width: 100vw;
+  // width: 100vw;
   height: 100%;
   overflow: hidden;
   font-family:
