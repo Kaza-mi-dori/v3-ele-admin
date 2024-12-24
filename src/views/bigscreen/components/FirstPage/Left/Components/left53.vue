@@ -8,9 +8,9 @@ import * as echarts from "echarts";
 const left53Ref = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
 const data = ref<any[]>([
-  { title: "贸易", value: 100 },
-  { title: "仓储", value: 80 },
-  { title: "油站运营", value: 60 },
+  { title: "贸易", value: 100, color: "#ea5a5a" },
+  { title: "仓储", value: 80, color: "#d9c621" },
+  { title: "油站运营", value: 60, color: "#1785d2" },
 ]);
 
 // 初始化图表
@@ -75,6 +75,9 @@ function initChart() {
           return {
             value: item.value,
             name: item.title,
+            itemStyle: {
+              color: item.color, // 使用自定义颜色
+            },
           };
         }),
       },
