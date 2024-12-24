@@ -26,6 +26,7 @@
 import refinedOilProductIcon from "../../../../img/refined_oil_product.png";
 import crudeOilIcon from "../../../../img/crude_oil.png";
 import chemicalProductIcon from "../../../../img/chemical_product.png";
+import fuelOilIcon from "../../../../img/fuel_oil.png";
 
 import { ref } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
@@ -55,7 +56,7 @@ const titleArr = ref([
   },
   {
     title: "燃料油",
-    icon: chemicalProductIcon,
+    icon: fuelOilIcon,
   },
 ]);
 
