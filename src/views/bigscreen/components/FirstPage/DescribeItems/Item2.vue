@@ -103,15 +103,23 @@ function initChart() {
           shadowColor: "rgba(0, 0, 0, 0.4)",
           shadowBlur: 20,
         },
-        color: ["#EB8A00"],
+        color: [
+          new echarts.graphic.LinearGradient(0, 0, 1, 1, [
+            { offset: 0, color: "#EB8A00" },
+            { offset: 0.8, color: "#D65305" },
+          ]),
+        ],
         label: {
-          position: ["50%", "50%"],
+          position: ["50%", "35%"],
           formatter: function () {
             return `${fulfilledPercent.value}%`;
           },
           fontSize: 16,
           color: sassvariables["bigscreen-primary-color-1"],
         },
+        waveAnimation: true, // 启用水波动画
+        amplitude: 10, // 增加波动幅度，让水波效果更明显
+        phase: 1, // 设置波浪初始偏移，实现水波从左向右滚动的效果
       },
     ],
   };
