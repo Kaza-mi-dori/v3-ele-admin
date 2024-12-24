@@ -7,7 +7,7 @@
       <!-- <Left2 class="left2" title="合同总数与金额" /> -->
       <Left2 />
       <div class="b-space" />
-      <Left3 />
+      <Left3 class="left3" />
       <div class="b-space" />
       <!-- <Left4 /> -->
       <Left5 />
@@ -48,7 +48,7 @@
 import Left1 from "./components/FirstPage/Left/left1.vue";
 import Left2 from "./components/FirstPage/Left/left2_new.vue";
 import Left4 from "./components/FirstPage/Left/left4.vue";
-import Left3 from "./components/FirstPage/Left/left3.vue";
+import Left3 from "./components/FirstPage/Left/left3_new.vue";
 import Left5 from "./components/FirstPage/Left/left5.vue";
 import Model2 from "./components/FirstPage/Model2/index.vue";
 import Middle2 from "./components/FirstPage/Middle/Middle2/index.vue";
@@ -227,5 +227,8 @@ onMounted(() => {
 }
 .left2 {
   flex: 0.5;
+}
+.left3 {
+  flex: 1;
 }
 </style>
