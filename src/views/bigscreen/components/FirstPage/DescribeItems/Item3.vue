@@ -73,10 +73,8 @@ $number-color: #2abfff;
   display: flex;
   align-items: center;
   padding: 10px;
-  background: #091f34;
-  border: 1px solid #113852;
-  border-radius: 5px;
-  // background-image: url("@/views/bigscreen/img/tag3.
+  background-image: url("@/views/bigscreen/img/product_box.png");
+  background-size: 100% 100%;
   .box__icon {
     width: 30px;
     height: 30px;

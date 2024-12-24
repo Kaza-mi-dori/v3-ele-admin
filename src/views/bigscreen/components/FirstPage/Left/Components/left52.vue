@@ -18,24 +18,29 @@
       :title="item.title"
       :amount="item.value + ''"
       :unit="item.unit"
-      :iconUrl="inventory"
+      :iconUrl="item.iconUrl"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import inventory from "@/views/bigscreen/img/inventory.png";
+import icon1 from "@/views/bigscreen/img/product_icon1.png";
+import icon2 from "@/views/bigscreen/img/product_icon2.png";
+import icon3 from "@/views/bigscreen/img/product_icon3.png";
+import icon4 from "@/views/bigscreen/img/product_icon4.png";
+import icon5 from "@/views/bigscreen/img/product_icon5.png";
+import icon6 from "@/views/bigscreen/img/product_icon6.png";
 import Item3 from "@/views/bigscreen/components/FirstPage/DescribeItems/Item3.vue";
 async function initChart() {}
 
 const data = ref<any[]>([
-  { title: "成品油(年)", value: 100, unit: "万吨" },
-  { title: "化工产品(年)", value: 50, unit: "万吨" },
-  { title: "原油(年)", value: 100, unit: "万吨" },
-  { title: "LNG(年)", value: 50, unit: "万吨" },
-  { title: "煤炭(年)", value: 100, unit: "万吨" },
-  { title: "燃料油(年)", value: 50, unit: "万吨" },
+  { title: "成品油(年)", value: 100, unit: "万吨", iconUrl: icon1 },
+  { title: "化工产品(年)", value: 50, unit: "万吨", iconUrl: icon2 },
+  { title: "原油(年)", value: 100, unit: "万吨", iconUrl: icon3 },
+  { title: "LNG(年)", value: 50, unit: "万吨", iconUrl: icon4 },
+  { title: "煤炭(年)", value: 100, unit: "万吨", iconUrl: icon5 },
+  { title: "燃料油(年)", value: 50, unit: "万吨", iconUrl: icon6 },
 ]);
 
 onMounted(() => {
