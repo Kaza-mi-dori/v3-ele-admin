@@ -19,6 +19,16 @@
             </div>
           </div>
         </div>
+        <!-- 绝对定位悬挂天气 -->
+        <div class="weather-container">
+          <!-- 日期 -->
+          <div class="weather-item__text">
+            <div class="weather-item__text--2">{{ date }}</div>
+            <div class="weather-item__text--2">{{ today }}</div>
+            <div class="weather-item__text--2">晴</div>
+            <div class="weather-item__text--2">25℃</div>
+          </div>
+        </div>
         <div class="title">
           <div class="__title--text">广投石化驾驶舱</div>
         </div>
@@ -43,6 +53,17 @@ import { businessTypes2, navItem } from "./components/constants";
 
 const businessstore = businessStore();
 const companystore = companyStore();
+
+// 日期，第一个/替换为年-第二个/替换为月
+const date = new Date()
+  .toLocaleDateString()
+  .replace(/(\d{4})\/(\d{1,2})\/(\d{1,2})/, "$1年$2月$3日");
+/** 计算星期几 */
+const today = computed(() => {
+  const week = new Date().getDay();
+  const weekMap = ["日", "一", "二", "三", "四", "五", "六"];
+  return "星期" + weekMap[week];
+});
 
 /** 地图ref */
 const mapRef = ref<any>();
@@ -297,6 +318,27 @@ onMounted(async () => {
         text-shadow: 0 0 5px #fff;
         color: #fff;
         background-image: url("./img/new-nav1.png");
+      }
+    }
+  }
+  /** 天气 */
+  .weather-container {
+    position: absolute;
+    z-index: 1;
+    right: 5px;
+    bottom: 0;
+    .weather-item__text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1rem;
+      .weather-item__text--1 {
+        margin-right: 5px;
+      }
+      .weather-item__text--2 {
+        font-size: 1.4rem;
+        margin-right: 10px;
       }
     }
   }

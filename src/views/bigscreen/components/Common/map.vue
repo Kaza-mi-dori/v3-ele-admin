@@ -282,7 +282,15 @@ function onToggleOilDepot() {
       return item.styleId === "gasStation";
     }
   });
-  console.log(geometries.value.length);
+  if (showOilDepot.value) {
+    // 中心恢复到初始
+    setCenter(22.8226, 108.3734508);
+    setZoom(5);
+  } else {
+    // 中心设为广西广东交界，缩放到7
+    setCenter(23.91799, 112.397027);
+    setZoom(7);
+  }
 }
 
 watch(
