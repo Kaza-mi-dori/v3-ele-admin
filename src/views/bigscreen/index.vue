@@ -3,27 +3,28 @@
     <div v-if="showOtherContent" class="bg-view-img">
       <img style="position: absolute; top: 0" height="100vh" />
       <div class="bg-view__header">
+        <!-- 绝对定位悬挂入口 -->
+        <div class="entry-container">
+          <div
+            v-for="(item, index) in entryList"
+            :key="index"
+            class="entry-item"
+          >
+            <div
+              class="entry-container-item"
+              :class="{ active: item.name === activeEntry }"
+              @click="handleEntryClick(item)"
+            >
+              {{ item.label }}
+            </div>
+          </div>
+        </div>
         <div class="title">
           <div class="__title--text">广投石化驾驶舱</div>
         </div>
       </div>
       <div class="bg-view__body">
-        <ScreenIndexContent style="position: relative">
-          <!-- <Map
-            id="bigscreenmap"
-            ref="mapRef"
-            :markers="gsMarkerList"
-            style="
-              position: absolute;
-              pointer-events: auto;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              z-index: 0;
-            "
-          /> -->
-        </ScreenIndexContent>
+        <ScreenIndexContent style="position: relative" />
       </div>
     </div>
     <router-view v-else />
@@ -37,7 +38,8 @@ import router from "@/router";
 import { businessStore, companyStore } from "@/store";
 import Map from "./components/FirstPage/Map/index.vue";
 import { GsLocationAPI } from "@/api/config/gsLocation";
-import { on } from "events";
+import { BusinessEnum, BusinessEnumMap } from "@/enums/BusinessEnum";
+import { businessTypes2, navItem } from "./components/constants";
 
 const businessstore = businessStore();
 const companystore = companyStore();
@@ -46,6 +48,23 @@ const companystore = companyStore();
 const mapRef = ref<any>();
 /** 地图显示标注点 */
 const gsMarkerList = ref<any[]>([]);
+/** 二级入口(主营产品)列表 */
+const entryList = computed(() => {
+  const result = Object.keys(BusinessEnumMap)
+    .filter((item) => item !== "其他")
+    .map((key) => {
+      return {
+        name: key,
+        label: BusinessEnumMap[key as keyof typeof BusinessEnumMap],
+      };
+    });
+  result.unshift({
+    name: "石化总览",
+    label: "石化总览",
+  });
+  return result;
+});
+const activeEntry = ref<string>("石化总览");
 
 const getGsMarkerList = async () => {
   const res: any = await GsLocationAPI.getAllMapElement();
@@ -91,6 +110,23 @@ const onWheelContent = (e: Event) => {
   // 当前会被z-index为1的元素响应, 要实现其不响应滚轮事件
 };
 
+// 点击入口
+const handleEntryClick = (item: any) => {
+  activeEntry.value = item.label;
+  // 往下跳
+  if (item.name === "石化总览") {
+    return;
+  }
+  const businessType = businessTypes2.find((type) => type.label === item.label);
+  if (businessType) {
+    const route = router.resolve({
+      name: "Business",
+      params: { businessName: businessType.name },
+    });
+    window.open(route.href, "_blank");
+  }
+};
+
 // 根据路由决定显示内容
 const showOtherContent = computed(() => {
   return router.currentRoute.value.name == "BigScreenBoard";
@@ -103,11 +139,11 @@ const initScale = () => {
   const bgContainer = ref<HTMLElement | null>(null);
   // +20是因为有padding，否则会有滚动条
   // const originalHeight = (bgContainer.value?.offsetHeight || 1080) + 0;
-  // 改为bg-view__header的高度 + bg-view__body的高度
+  // 首屏改为bg-view__header的高度 + bg-view__body的高度
   const headerDOM = document.querySelector(".bg-view__header");
   const bodyDOM = document.querySelector(".bg-view__body");
   const originalHeight =
-    (headerDOM?.clientHeight || 66) + (bodyDOM?.clientHeight || 0);
+    headerDOM && bodyDOM ? headerDOM.clientHeight + bodyDOM.clientHeight : 1080;
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const containerElement = document.getElementById("bg-container");
@@ -214,6 +250,34 @@ onMounted(async () => {
   height: 66px;
   display: flex;
   position: relative;
+  .entry-container {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    bottom: 0;
+    left: 5px;
+    .entry-container-item {
+      text-align: center;
+      color: $bigscreen-primary-color-1;
+      background-image: url("./img/new-nav2.png");
+      background-size: 100% 100%;
+      font-size: 1rem;
+      padding: 5px 5px;
+      min-width: 90px;
+      cursor: pointer;
+      &:hover {
+        color: #fff;
+        background-image: url("./img/nav2_over.png");
+      }
+      &.active {
+        font-size: 1.1rem;
+        // 勾边
+        text-shadow: 0 0 5px #fff;
+        color: #fff;
+        background-image: url("./img/new-nav1.png");
+      }
+    }
+  }
   .title {
     flex: 1;
     height: 66px;

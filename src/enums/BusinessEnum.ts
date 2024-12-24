@@ -23,6 +23,17 @@ export const BusinessEnumMap = {
   [BusinessEnum.QT]: "其他",
 };
 
+/** 大屏展示顺序  */
+export const BusinessEnumMapBigScreen = {
+  [BusinessEnum.CPY]: "成品油",
+  [BusinessEnum.YY]: "原油",
+  [BusinessEnum.HGCP]: "化工产品",
+  [BusinessEnum.RLY]: "燃料油",
+  [BusinessEnum.MT]: "煤炭",
+  [BusinessEnum.LNG]: "LNG",
+  [BusinessEnum.QT]: "其他",
+};
+
 /** 币种枚举 */
 export const enum CurrencyEnum {
   CNY = "人民币/CNY",
