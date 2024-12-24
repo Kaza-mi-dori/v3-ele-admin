@@ -17,13 +17,13 @@
     </div>
     <div class="content" style="min-height: 250px">
       <template v-if="selectedItem === '经营主体'">
-        <Left51 />
+        <Left51 style="flex: 1" />
       </template>
       <template v-else-if="selectedItem === '主营产品'">
-        <Left52 style="margin: auto 0" />
+        <Left52 style="flex: 1; margin: auto 0" />
       </template>
       <template v-else-if="selectedItem === '业态类型'">
-        <div class="flex flex-gap-2">
+        <div class="flex flex-gap-2 flex-1">
           <Left53 style="flex: 1" />
           <Left54 style="flex: 1" />
         </div>
@@ -131,6 +131,8 @@ $color-active: #fff;
 .content {
   /** 设置背景 */
   background-image: url("@/views/bigscreen/img/left_box2_center.png");
+  display: flex;
+  align-items: center;
 }
 .footer {
   height: 10px;
