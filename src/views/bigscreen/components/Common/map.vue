@@ -100,8 +100,9 @@
     <!-- 切换开关 -->
     <el-switch
       v-model="showOilDepot"
+      class="custom-switch"
       active-color="#13ce66"
-      inactive-color="#fff"
+      inactive-color="#FFD700"
       active-text="油库"
       inactive-text="油站"
       style="
@@ -109,7 +110,7 @@
         font-size: 16px;
         z-index: 1001;
         bottom: 0;
-        right: 50%;
+        right: 10px;
       "
       @change="onToggleOilDepot"
     />
@@ -395,6 +396,17 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-switch) {
+  .el-switch__label {
+    span {
+      font-size: 16px;
+    }
+    color: #ffffff;
+    &.is-active {
+      color: $bigscreen-primary-color-1;
+    }
+  }
+}
 .map-container {
   width: 100%;
   height: 100%;
