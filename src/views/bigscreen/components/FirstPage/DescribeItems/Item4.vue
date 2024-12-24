@@ -84,7 +84,7 @@ const formatNumber = (num: number | string): string => {
   .title-box {
     display: flex;
     align-items: center;
-    font-size: 18px;
+    font-size: 20px;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     letter-spacing: 1px;
