@@ -996,6 +996,11 @@ const initForm = () => {
         });
       }
       break;
+    case bargainReportDetailForm:
+      console.log("bargain report");
+      break;
+    case fixedCostReportDetailForm:
+      break;
     default:
       break;
   }
@@ -1036,6 +1041,10 @@ watch(
       currentComponent.value = singlePartnerDetailForm;
     } else if (value === "paymentDetail") {
       currentComponent.value = paymentDetailForm;
+    } else if (value === "bargainReport") {
+      currentComponent.value = bargainReportDetailForm;
+    } else if (value === "fixedCostReport") {
+      currentComponent.value = fixedCostReportDetailForm;
     }
   },
   { immediate: true }

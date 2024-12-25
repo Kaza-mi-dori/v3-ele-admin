@@ -1,85 +1,112 @@
 <template>
   <!-- excel表 -->
-  <table class="g-input-table-1">
-    <tr class="__header __row">
-      <!-- 表头显示 -->
-      <!-- 如果传入了行定义，则渲染多一个th叫项目且colspan根据最长的行来定 -->
-      <th v-if="props.inputItemDefsByRow" :colspan="longestRow.names.length">
-        项目
-      </th>
-      <!-- 然后根据列定义渲染 -->
-      <th v-for="col in props.colsDef" :key="col.name" :colspan="1">
-        {{ col.name }}
-        <!-- 如果是不可编辑则多显示一个锁icon -->
-        <el-popover
-          v-if="!col.editable"
-          placement="top"
-          width="200"
-          trigger="hover"
+  <div class="table-container">
+    <table class="g-input-table-1">
+      <thead>
+        <template v-if="extraHeaders.length > 0">
+          <tr
+            v-for="(header, index) in extraHeaders"
+            :key="index"
+            class="__header __row"
+          >
+            <th v-for="col in header" :key="col.title" :colspan="col.colspan">
+              {{ col.title }}
+            </th>
+          </tr>
+        </template>
+      </thead>
+      <tr class="__header __row">
+        <!-- 表头显示 -->
+        <!-- 如果传入了行定义，则渲染多一个th叫项目且colspan根据最长的行来定 -->
+        <th
+          v-if="props.inputItemDefsByRow"
+          :colspan="longestRow.names.length"
+          style="width: 150px"
         >
-          <div style="text-align: center">该列不可编辑</div>
-          <template v-slot:reference>
-            <el-icon>
-              <Lock />
-            </el-icon>
-          </template>
-        </el-popover>
-      </th>
-    </tr>
-    <tr v-for="item in tableData" :key="item.name" class="__row">
-      <!-- 先按需要渲染行头 -->
-      <template v-if="props.inputItemDefsByRow">
-        <!-- 如果不是index === 0则只渲染最后一个名字 -->
+          项目
+        </th>
+        <!-- 然后根据列定义渲染, 宽度为该name的长度 + 10px -->
+        <th
+          v-for="col in props.colsDef"
+          :key="col.name"
+          :colspan="1"
+          :style="{
+            width: '150px',
+            padding: '0 10px',
+          }"
+        >
+          {{ col.name }}
+          <!-- 如果是不可编辑则多显示一个锁icon -->
+          <el-popover
+            v-if="!col.editable"
+            placement="top"
+            width="200"
+            trigger="hover"
+          >
+            <div style="text-align: center">该列不可编辑</div>
+            <template v-slot:reference>
+              <el-icon>
+                <Lock />
+              </el-icon>
+            </template>
+          </el-popover>
+        </th>
+      </tr>
+      <tr v-for="item in tableData" :key="item.name" class="__row">
+        <!-- 先按需要渲染行头 -->
+        <template v-if="props.inputItemDefsByRow">
+          <!-- 如果不是index === 0则只渲染最后一个名字 -->
+          <td
+            v-for="(name, index) in item.names.slice(
+              item.isFirstChild ? 0 : item.names.length - 1,
+              item.names.length
+            )"
+            :key="name"
+            :rowspan="
+              item.isFirstChild ? (index === 0 ? item.childrenCount : 1) : 1
+            "
+            :colspan="
+              index === item.names.length - 1
+                ? longestRow.names.length - index
+                : 1
+            "
+          >
+            {{ name }}
+          </td>
+        </template>
         <td
-          v-for="(name, index) in item.names.slice(
-            item.isFirstChild ? 0 : item.names.length - 1,
-            item.names.length
-          )"
-          :key="name"
-          :rowspan="
-            item.isFirstChild ? (index === 0 ? item.childrenCount : 1) : 1
-          "
-          :colspan="
-            index === item.names.length - 1
-              ? longestRow.names.length - index
-              : 1
-          "
+          v-for="col in props.colsDef"
+          :key="col.prop"
+          :colspan="1"
+          :rowspan="1"
         >
-          {{ name }}
+          <template v-if="col.editable && editing">
+            <el-input
+              v-model="item[col.prop]"
+              :type="col.isNumber ? 'number' : ''"
+            />
+          </template>
+          <template v-else>
+            {{ item[col.prop] }}
+          </template>
         </td>
-      </template>
-      <td
-        v-for="col in props.colsDef"
-        :key="col.prop"
-        :colspan="1"
-        :rowspan="1"
-      >
-        <template v-if="col.editable && editing">
-          <el-input
-            v-model="item[col.prop]"
-            :type="col.isNumber ? 'number' : ''"
-          />
-        </template>
-        <template v-else>
-          {{ item[col.prop] }}
-        </template>
-      </td>
-    </tr>
-    <!-- 汇总行，定义一样，每一个单元格都由上面所有数据汇总而来 -->
-    <tr v-if="props.needSummary" class="__row">
-      <td v-if="props.inputItemDefsByRow" :colspan="longestRow.names.length">
-        汇总
-      </td>
-      <td
-        v-for="col in props.colsDef"
-        :key="col.prop"
-        :colspan="1"
-        :rowspan="1"
-      >
-        {{ summaryRow[col.prop] }}
-      </td>
-    </tr>
-  </table>
+      </tr>
+      <!-- 汇总行，定义一样，每一个单元格都由上面所有数据汇总而来 -->
+      <tr v-if="props.needSummary" class="__row">
+        <td v-if="props.inputItemDefsByRow" :colspan="longestRow.names.length">
+          汇总
+        </td>
+        <td
+          v-for="col in props.colsDef"
+          :key="col.prop"
+          :colspan="1"
+          :rowspan="1"
+        >
+          {{ summaryRow[col.prop] }}
+        </td>
+      </tr>
+    </table>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -96,7 +123,19 @@ const props = defineProps<{
   needSummary: boolean;
   /** 是否可编辑 */
   editing: boolean;
+  /** 额外的表头 */
+  headers?: Header[][];
 }>();
+
+/** 额外的表头 */
+export interface Header {
+  /** 标题 */
+  title: string;
+  /** 列跨度 */
+  colspan: number;
+  /** 顺序 */
+  order?: number;
+}
 
 export interface rowDef {
   /** 行名 */
@@ -129,6 +168,10 @@ export interface ColumnDef {
   computeFormula: string;
   /** 汇总方式 */
   summaryType: "same" | "sum";
+  /** 是否为叶子节点 */
+  isLeaf?: boolean;
+  /** 孩子节点 */
+  children?: ColumnDef[];
 }
 
 // tableData的结构也应该由某种定义得出
@@ -183,6 +226,18 @@ const summaryRow = computed(() => {
   return summary;
 });
 
+// 额外的表头
+const extraHeaders = computed(() => {
+  if (!props.headers) {
+    return [];
+  }
+  const result = props.headers.slice();
+  result.forEach((header) => {
+    header.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  });
+  return result;
+});
+
 // 根据列定义、外部数据初始化表格数据
 const initTableData = () => {
   if (!props.inputItemDefsByRow) {
@@ -219,13 +274,19 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
-.g-input-table-1 {
+.table-container {
+  overflow-x: auto;
   width: 100%;
+}
+
+.g-input-table-1 {
   border-collapse: collapse;
   border-spacing: 0;
   margin-top: 20px;
+  // min-width: 100%;
   // 边框
   border: 1px solid #7c7d81;
+  table-layout: fixed;
   :deep(tr) {
     &.__header {
       background-color: #f5f7fa;
@@ -236,6 +297,7 @@ onBeforeMount(() => {
         color: #303133;
         border-right: 1px solid #7c7d81;
         border-bottom: 1px solid #7c7d81;
+        white-space: nowrap;
         &:last-child {
           border-right: none;
         }
@@ -248,6 +310,7 @@ onBeforeMount(() => {
         color: #46474b;
         border-bottom: 1px solid #7c7d81;
         border-right: 1px solid #7c7d81;
+        white-space: nowrap;
         // 对于el-input的样式
         .el-input {
           width: 100%;
@@ -268,5 +331,16 @@ onBeforeMount(() => {
       }
     }
   }
+}
+
+// 美化滚动条
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 </style>

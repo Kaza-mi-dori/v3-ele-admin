@@ -75,6 +75,7 @@
           needSummary
           :cols-def="columnDefs"
           :editing="editing"
+          :headers="extraHeaders"
         />
       </div>
     </div>
@@ -160,22 +161,9 @@ const isEditing = ref(false); // 是否正在编辑
 // 列定义实例
 const columnDefs = ref<ColumnDef[]>([
   {
-    name: "计量单位",
-    prop: "unit",
+    name: "全年预测固定成本(万元)",
+    prop: "fixedCost",
     order: 2,
-    editable: false,
-    default: "万元",
-    computed: false,
-    computeType: "",
-    computeFormula: "",
-    /** 汇总方式(和第一列保持一致/求和) */
-    summaryType: "same",
-    isNumber: false,
-  },
-  {
-    name: "当月实际数",
-    prop: "realNum",
-    order: 3,
     editable: true,
     computed: false,
     default: 0,
@@ -185,8 +173,20 @@ const columnDefs = ref<ColumnDef[]>([
     isNumber: true,
   },
   {
-    name: "去年同期实际数",
-    prop: "lastYearNum",
+    name: "贸易品类",
+    prop: "tradeCategory",
+    order: 3,
+    editable: true,
+    computed: false,
+    default: "成品油化工",
+    computeType: "",
+    computeFormula: "",
+    summaryType: "same",
+    isNumber: false,
+  },
+  {
+    name: "报告日",
+    prop: "purchaseDaily",
     order: 4,
     default: 0,
     editable: true,
@@ -197,8 +197,8 @@ const columnDefs = ref<ColumnDef[]>([
     isNumber: true,
   },
   {
-    name: "当年累计数",
-    prop: "totalNum",
+    name: "当月累计",
+    prop: "purchaseMonthly",
     order: 5,
     default: 0,
     editable: true,
@@ -209,8 +209,8 @@ const columnDefs = ref<ColumnDef[]>([
     isNumber: true,
   },
   {
-    name: "去年同期累计数",
-    prop: "lastYearTotalNum",
+    name: "本年累计",
+    prop: "purchaseYearly",
     order: 6,
     default: 0,
     editable: true,
@@ -221,97 +221,139 @@ const columnDefs = ref<ColumnDef[]>([
     isNumber: true,
   },
   {
-    name: "较去年同期增长额",
-    prop: "growthNum",
-    order: 7,
+    name: "报告日",
+    prop: "purchasePriceDaily",
+    order: 4,
     default: 0,
-    editable: false,
-    computed: true,
-    computeType: "formula",
-    computeFormula: "totalNum - lastYearTotalNum",
+    editable: true,
+    computed: false,
+    computeType: "",
+    computeFormula: "",
+    summaryType: "sum",
+    isNumber: true,
+  },
+  {
+    name: "当月累计",
+    prop: "purchasePriceMonthly",
+    order: 5,
+    default: 0,
+    editable: true,
+    computed: false,
+    computeType: "",
+    computeFormula: "",
+    summaryType: "sum",
+    isNumber: true,
+  },
+  {
+    name: "本年累计",
+    prop: "purchasePriceYearly",
+    order: 6,
+    default: 0,
+    editable: true,
+    computed: false,
+    computeType: "",
+    computeFormula: "",
+    summaryType: "sum",
+    isNumber: true,
+  },
+  {
+    name: "报告日",
+    prop: "stockDaily",
+    order: 4,
+    default: 0,
+    editable: true,
+    computed: false,
+    computeType: "",
+    computeFormula: "",
+    summaryType: "sum",
+    isNumber: true,
+  },
+  {
+    name: "当月累计",
+    prop: "stockMonthly",
+    order: 5,
+    default: 0,
+    editable: true,
+    computed: false,
+    computeType: "",
+    computeFormula: "",
+    summaryType: "sum",
+    isNumber: true,
+  },
+  {
+    name: "本年累计",
+    prop: "stockYearly",
+    order: 6,
+    default: 0,
+    editable: true,
+    computed: false,
+    computeType: "",
+    computeFormula: "",
     summaryType: "sum",
     isNumber: true,
   },
 ]);
 
-/** 表格每一行的配置 */
+// 额外的表头
+const extraHeaders = [
+  [
+    {
+      title: "统计口径",
+      colspan: 4,
+    },
+    {
+      title: "采购量(万吨)",
+      colspan: 3,
+    },
+    {
+      title: "采购价(含税)(元/吨)",
+      colspan: 3,
+    },
+    {
+      title: "库存量(万吨)",
+      colspan: 3,
+    },
+  ],
+];
+
+/** 行头的配置 */
 const inputItemDefs = ref([
   {
-    name: "企业基本信息",
-    unit: "万元",
-  },
-  {
-    name: "检修维护费用",
-    unit: "万元",
-  },
-  {
-    name: "薪酬费用",
+    name: "广投石化",
     unit: "万元",
     children: [
       {
-        name: "工资总额",
+        name: "成品油",
         unit: "万元",
       },
       {
-        name: "奖金",
+        name: "原油",
+        unit: "万元",
+      },
+      {
+        name: "化工",
+        unit: "万元",
+      },
+      {
+        name: "化学原料",
+        unit: "万元",
+      },
+      {
+        name: "煤",
         unit: "万元",
       },
     ],
   },
   {
-    name: "财务费用",
-    unit: "万元",
-  },
-  {
-    name: "其他费用",
+    name: "永盛公司",
     unit: "万元",
     children: [
       {
-        name: "差旅费",
+        name: "成品油",
         unit: "万元",
       },
       {
-        name: "业务招待费",
-        unit: "万元",
-      },
-      {
-        name: "办公费",
-        unit: "万元",
-      },
-      {
-        name: "会议费",
-        unit: "万元",
-      },
-      {
-        name: "聘请中介机构费",
-        unit: "万元",
-      },
-      {
-        name: "咨询(顾问)费",
-        unit: "万元",
-      },
-      {
-        name: "广告宣传费",
-        unit: "万元",
-      },
-      {
-        name: "汽车费用",
-        unit: "万元",
-      },
-      {
-        name: "装卸费",
-        unit: "万元",
-      },
-      {
-        name: "仓储保管费",
-        unit: "万元",
-      },
-      {
-        name: "外部劳务费",
-        unit: "万元",
-      },
-      {
-        name: "其他",
+        name: "化工",
         unit: "万元",
       },
     ],
