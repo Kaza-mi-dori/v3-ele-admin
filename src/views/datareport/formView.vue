@@ -79,6 +79,8 @@ import safetyDetailForm from "@/views/business/detail/safety.vue";
 import goodsDetailForm from "@/views/business/detail/goods.vue";
 import paymentDetailForm from "@/views/business/detail/payment.vue";
 import singlePartnerDetailForm from "@/views/business/detail/partner.vue";
+import bargainReportDetailForm from "@/views/datareport/bargainReport/detail.vue";
+import fixedCostReportDetailForm from "@/views/datareport/fixedCostReport/detail.vue";
 import BusinessFormAPI from "@/api/businessForm";
 import BusinessStandbookAPI from "@/api/businessStandBook";
 import { ElMessage } from "element-plus";
@@ -117,6 +119,8 @@ const reportTypes = [
   { value: "goodsDetail", label: "商品详情" },
   { value: "paymentDetail", label: "款项详情" },
   { value: "singlePartnerDetail", label: "合作伙伴展示报表" },
+  { value: "bargainReport", label: "贸易板块跟踪表" },
+  { value: "fixedCostReport", label: "固定成本月表" },
 ];
 
 const handleEdit = () => {
@@ -1070,6 +1074,10 @@ watch(
       currentComponent.value = paymentDetailForm;
     } else if (value === "singlePartnerDetail") {
       currentComponent.value = singlePartnerDetailForm;
+    } else if (value === "bargainReport") {
+      currentComponent.value = bargainReportDetailForm;
+    } else if (value === "fixedCostReport") {
+      currentComponent.value = fixedCostReportDetailForm;
     }
   }
 );

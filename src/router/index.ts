@@ -242,6 +242,24 @@ export const constantRoutes: RouteRecordRaw[] = [
           icon: "el-icon-coin",
         },
       },
+      {
+        path: "bargainReportMng",
+        name: "BargainReportMng",
+        component: () => import("@/views/datareport/bargainReport/index.vue"),
+        meta: {
+          title: "贸易板块跟踪表",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "fixedCostReportMng",
+        name: "FixedCostReportMng",
+        component: () => import("@/views/datareport/fixedCostReport/index.vue"),
+        meta: {
+          title: "固定成本报表管理",
+          icon: "el-icon-coin",
+        },
+      },
     ],
   },
   // 台账类
