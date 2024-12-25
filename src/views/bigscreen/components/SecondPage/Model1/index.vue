@@ -76,8 +76,12 @@ defineProps({
       right: 0;
     }
     .model-title__text {
-      font-size: 22px;
+      font-size: 24px;
       color: #fff;
+      // 勾边
+      // text-shadow: 0 0 5px #000;
+      // 边缘阴影
+      -webkit-text-stroke: 1px #e1e1e1;
       z-index: 1; /* 确保文字在背景图片上方 */
       font-family: 黑体;
       letter-spacing: 0.5px;

@@ -86,7 +86,6 @@
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
-import { ArrowRight } from "@element-plus/icons-vue";
 import { ComponentSize } from "element-plus";
 
 const router = useRouter();
@@ -272,6 +271,7 @@ const handleCurrentChange = (val: number) => {
   background-position: center;
   align-items: center;
   .back-btn {
+    cursor: pointer;
     position: absolute;
     left: 30px;
     display: flex;

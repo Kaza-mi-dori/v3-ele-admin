@@ -5,8 +5,11 @@
 </template>
 
 <script setup lang="ts">
+import { dir } from "console";
 import Model1 from "../Model1/index.vue";
+import { ContractTypeEnum, ContractTypeEnumMap } from "@/enums/BusinessEnum";
 import * as echarts from "echarts";
+import { text } from "stream/consumers";
 import { onMounted } from "vue";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
@@ -21,23 +24,47 @@ const initChart2Left2 = () => {
       trigger: "item",
     },
     legend: {
-      show: false, // 隐藏图例
+      show: true, // 隐藏图例
+      orient: "vertical",
+      textStyle: {
+        color: "#fff",
+      },
+      // 图例位置
+      right: 5,
+    },
+    // 颜色
+    color: ["#4BB5EF", "#335ECA", "#E95881", "#E46F44", "#E99F32", "#54DBE3"],
+    grid: {
+      left: "10",
+      right: 0,
+      top: 0,
+      bottom: 0,
     },
     series: [
       {
-        name: "合同执行状态",
+        name: "合同类型",
         type: "pie",
-        radius: ["50%", "75%"], // 环形图内外圈半径设置
+        radius: ["45%", "65%"], // 环形图内外圈半径设置
         startAngle: -180, // 设置饼图的起始角度，使得饼图从顶部开始
         avoidLabelOverlap: false,
         label: {
           // 标签
           show: true,
           position: "outside", // 标签显示在外部
-          formatter: "{b}，{d}%", // 格式化标签，显示名称和占比
+          formatter: "{b}，{c}\n{d}%", // 格式化标签，显示名称和占比
           color: "#fff",
           fontSize: 16,
           fontWight: 400,
+          edgeDistance: 10,
+          lineHeight: 20,
+        },
+        labelLine: {
+          show: true,
+          length: 5,
+          // 颜色
+          lineStyle: {
+            color: "#fff",
+          },
         },
         emphasis: {
           // 鼠标悬浮时
@@ -46,25 +73,10 @@ const initChart2Left2 = () => {
             fontSize: 20,
           },
         },
-        labelLine: {
-          show: false, // 不显示连接线
-        },
-        data: [
-          {
-            value: 80,
-            name: "已履行",
-            itemStyle: {
-              color: "#5cafff",
-            },
-          },
-          {
-            value: 20,
-            name: "未履行",
-            itemStyle: {
-              color: "#fc377e",
-            },
-          },
-        ],
+        data: Object.keys(ContractTypeEnumMap).map((key) => ({
+          value: Math.floor(Math.random() * 100),
+          name: ContractTypeEnumMap[key as keyof typeof ContractTypeEnumMap],
+        })),
       },
     ],
   };

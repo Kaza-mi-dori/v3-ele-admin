@@ -110,7 +110,7 @@ const initChart = () => {
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: "#25DDA7" },
-            { offset: 1, color: "#249E55" },
+            { offset: 1, color: "#2BFDBC" },
           ]),
         },
         barWidth: "25%",

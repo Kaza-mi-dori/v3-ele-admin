@@ -220,7 +220,20 @@ const goBack = () => {
   router.go(-1);
 };
 
-onMounted(() => {
+async function initTableData() {
+  tableData.value = getRandomData();
+}
+
+onMounted(async () => {
+  const route = router.currentRoute.value;
+  if (route.query.filters) {
+    const params = JSON.parse(route.query.filters as string);
+    filters.value = {
+      ...filters.value,
+      ...params,
+    };
+  }
+  await initTableData();
   initChart();
   window.addEventListener("resize", () => {
     chart.value?.resize();

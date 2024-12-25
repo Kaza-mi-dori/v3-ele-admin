@@ -19,8 +19,10 @@
 import Model1 from "../Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
+import { useRouter } from "vue-router";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
+const router = useRouter();
 
 // 每个类别对应的数据系列
 const dates = ["10-01", "10-02", "10-03", "10-04", "10-05", "10-06", "10-07"];
@@ -28,8 +30,8 @@ const dates = ["10-01", "10-02", "10-03", "10-04", "10-05", "10-06", "10-07"];
 // 随机生成收入数据
 const getRandomData = () => {
   return dates.map(() => ({
-    tradingVolume: Math.floor(Math.random() * 11), // 成交量
-    transactionVolume: Math.floor(Math.random() * 101), // 交易额
+    tradingVolume: Math.floor(Math.random() * 11), // 销售量
+    transactionVolume: Math.floor(Math.random() * 101), // 销售金额
   }));
 };
 
@@ -57,13 +59,13 @@ const initChart = () => {
       containLabel: true,
     },
     legend: {
-      data: ["交易额", "成交量"],
+      data: ["销售金额", "销售量"],
       textStyle: {
         color: "#5099E3",
       },
       icon: "rect",
       top: 10,
-      right: 40,
+      right: 10,
       itemWidth: 12,
       itemHeight: 7,
       itemGap: 8, // 图例项之间的间距
@@ -122,7 +124,7 @@ const initChart = () => {
         min: 0,
         max: 10,
         interval: 2,
-        name: "单位：份",
+        name: "单位：万吨",
         nameTextStyle: {
           color: "#5099E3",
           fontSize: 15,
@@ -149,7 +151,7 @@ const initChart = () => {
     ],
     series: [
       {
-        name: "成交量",
+        name: "销售量",
         type: "bar",
         yAxisIndex: 1, // 指定使用右边的Y轴
         data: data.map((item) => item.tradingVolume),
@@ -162,7 +164,7 @@ const initChart = () => {
         barWidth: "25%",
       },
       {
-        name: "交易额",
+        name: "销售金额",
         type: "line",
         smooth: true, // 设置线条为圆滑
         symbol: "none", // 不显示折线点的点号
@@ -188,6 +190,16 @@ const initChart = () => {
 
 const handleRiskWarningClick = () => {
   console.log("风险提示信息被点击了");
+  // 跳转合同三级页
+  router.push({
+    name: "ContractList",
+    query: {
+      module: "contract",
+      filters: JSON.stringify({
+        是否风险合同: true,
+      }),
+    },
+  });
 };
 
 onMounted(() => {
