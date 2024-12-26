@@ -61,8 +61,14 @@ function initChart() {
     },
     barWidth: "15%",
     color: [
-      sassvariables["bigscreen-primary-color-2"],
-      sassvariables["bigscreen-primary-color-1"],
+      new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: sassvariables["bigscreen-primary-color-3"] },
+        { offset: 1, color: sassvariables["bigscreen-primary-color-4"] },
+      ]),
+      new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: sassvariables["bigscreen-primary-color-5"] },
+        { offset: 1, color: sassvariables["bigscreen-primary-color-6"] },
+      ]),
     ],
     grid: {
       bottom: 40,
