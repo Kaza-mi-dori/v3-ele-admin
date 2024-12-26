@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="__header">
-      <img :src="props.icon" height="18" />
+      <img :src="props.icon" height="20" style="margin-left: 5px" />
       <div class="__title">{{ props.title }}</div>
     </div>
     <div class="__content">
