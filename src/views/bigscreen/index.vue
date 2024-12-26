@@ -325,8 +325,9 @@ onMounted(async () => {
   .weather-container {
     position: absolute;
     z-index: 1;
-    right: 5px;
-    bottom: 0;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     .weather-item__text {
       display: flex;
       align-items: center;
