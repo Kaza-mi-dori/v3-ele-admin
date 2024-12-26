@@ -165,8 +165,12 @@ const initScale = () => {
   // +20是因为有padding，否则会有滚动条
   // const originalHeight = (bgContainer.value?.offsetHeight || 1080) + 0;
   // 首屏改为bg-view__header的高度 + bg-view__body的高度
-  const headerDOM = document.querySelector(".bg-view__header") as HTMLElement;
-  const bodyDOM = document.querySelector(".bg-view__body") as HTMLElement;
+  const headerDOM =
+    (document.querySelector(".bg-view__header") as HTMLElement) ||
+    (document.querySelector(".bg-view1__header") as HTMLElement);
+  const bodyDOM =
+    (document.querySelector(".bg-view__body") as HTMLElement) ||
+    (document.querySelector(".bg-view1__body") as HTMLElement);
   const containerDOM = document.querySelector(".bg-view-img");
   // originalHeight: 完整渲染后的高度，需要用来计算缩放比例
   const originalHeight =

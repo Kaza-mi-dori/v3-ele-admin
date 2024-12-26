@@ -1,4 +1,9 @@
-import { OurCompanyEnum, OurCompanyEnumMap } from "@/enums/BusinessEnum";
+import {
+  OurCompanyEnum,
+  OurCompanyEnumMap,
+  BusinessFormatEnum,
+  BusinessFormatEnumMap,
+} from "@/enums/BusinessEnum";
 
 export interface navItem {
   id: number;
@@ -29,6 +34,25 @@ export const businessSubjects: navItem[] = [
   { id: 1, label: OurCompanyEnumMap[OurCompanyEnum.GTSHC], name: "gtsh" },
   { id: 2, label: OurCompanyEnumMap[OurCompanyEnum.GDFGS], name: "gtshgd" },
   { id: 3, label: OurCompanyEnumMap[OurCompanyEnum.GTSHC_ZS], name: "gtshzs" },
+];
+
+/** 业态 */
+export const businessFormats: navItem[] = [
+  {
+    id: 1,
+    label: BusinessFormatEnumMap[BusinessFormatEnum.TRADE],
+    name: "trade",
+  },
+  {
+    id: 2,
+    label: BusinessFormatEnumMap[BusinessFormatEnum.GAS_STATION],
+    name: "gasStation",
+  },
+  {
+    id: 3,
+    label: BusinessFormatEnumMap[BusinessFormatEnum.STORAGE],
+    name: "storage",
+  },
 ];
 
 // 动态计算市场信息的id为businessTypes的长度加1

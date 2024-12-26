@@ -133,3 +133,19 @@ export const ContractTypeEnumMap = {
   [ContractTypeEnum.STORAGE]: "仓储合同",
   [ContractTypeEnum.OTHER]: "其他合同",
 };
+
+/** 业态枚举 */
+export const enum BusinessFormatEnum {
+  /** 贸易 */
+  TRADE = "贸易",
+  /** 油站运营 */
+  GAS_STATION = "油站运营",
+  /** 仓储 */
+  STORAGE = "仓储",
+}
+
+export const BusinessFormatEnumMap = {
+  [BusinessFormatEnum.TRADE]: "贸易",
+  [BusinessFormatEnum.GAS_STATION]: "油站运营",
+  [BusinessFormatEnum.STORAGE]: "仓储",
+};
