@@ -90,7 +90,7 @@ $number-color: #2abfff;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  padding: 20px 10px;
+  padding: 20px 5px;
   background-image: url("@/views/bigscreen/img/product_box.png");
   background-size: 100% 100%;
   cursor: pointer;
