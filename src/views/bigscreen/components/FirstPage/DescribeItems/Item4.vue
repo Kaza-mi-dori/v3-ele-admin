@@ -3,7 +3,7 @@
     <img class="item3-bg" :src="props.bgImg" />
     <div class="content-item">
       <div class="title-box">
-        <img class="title-icon" src="../../../img/left_icon3.png" height="18" />
+        <img class="title-icon" src="../../../img/left_icon3.png" height="20" />
         <div>{{ props.title }}</div>
       </div>
       <div class="annual-total">
