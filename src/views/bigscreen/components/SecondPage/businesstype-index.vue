@@ -3,12 +3,11 @@
     <img style="position: absolute; top: 0" height="100vh" />
     <div class="bg-view1__header">
       <div class="title">
-        <div class="__title--text">{{ title }}驾驶舱</div>
+        <div class="__title--text">{{ title }}</div>
       </div>
     </div>
     <div class="bg-view1__body">
-      <!-- 油站 && 仓储 -->
-      <SubjectScreen1 />
+      <BusinessTypeScreen1 />
     </div>
   </div>
 </template>
@@ -16,22 +15,29 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import Screen1 from "./Screen1.vue";
-import Screen2 from "./Screen2.vue";
-import SubjectScreen1 from "./SubjectScreen1.vue";
-import { businessSubjects } from "../constants";
+import BusinessTypeScreen1 from "./BusinessTypeScreen1.vue";
+import {
+  BusinessFormatEnum,
+  BusinessFormatEnumMap,
+} from "@/enums/BusinessEnum";
+import { businessFormats } from "../constants";
 
 const route = useRoute();
 const title = ref("");
 
 onMounted(() => {
-  const paramName = route.params.subjectName;
-  const matchedItem = businessSubjects.find(
+  const paramName = route.params.typeName;
+  const matchedItem = businessFormats.find(
     (item: { name: string | string[] }) => item.name === paramName
   );
   console.log(matchedItem);
   if (matchedItem) {
-    title.value = matchedItem.label;
+    title.value =
+      matchedItem.label ===
+        BusinessFormatEnumMap[BusinessFormatEnum.GAS_STATION] ||
+      matchedItem.label === BusinessFormatEnumMap[BusinessFormatEnum.STORAGE]
+        ? "油站与仓储运营"
+        : matchedItem.label;
   }
 });
 </script>
@@ -68,6 +74,7 @@ onMounted(() => {
         rgb(251, 254, 254),
         rgb(188, 247, 255)
       );
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       position: relative;
@@ -75,9 +82,11 @@ onMounted(() => {
   }
 }
 .bg-view1__body {
-  flex-grow: 1;
+  // flex-grow: 1;
   // overflow-y: hidden;
-  margin: 20px 50px 50px 50px;
+  // margin: 20px 50px 50px 50px;
+  padding: 20px 0 20px 0;
+  // height: calc(100% - 66px);
   ::-webkit-scrollbar {
     display: none;
   }

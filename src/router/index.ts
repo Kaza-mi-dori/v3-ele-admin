@@ -115,6 +115,17 @@ export const constantRoutes: RouteRecordRaw[] = [
           import("@/views/bigscreen/components/SecondPage/subject-index.vue"),
       },
       {
+        path: "businessType/:typeName",
+        name: "BusinessType",
+        meta: {
+          hidden: true,
+        },
+        component: () =>
+          import(
+            "@/views/bigscreen/components/SecondPage/businesstype-index.vue"
+          ),
+      },
+      {
         path: "thirdPage",
         name: "ThirdPage",
         meta: {
@@ -256,7 +267,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "FixedCostReportMng",
         component: () => import("@/views/datareport/fixedCostReport/index.vue"),
         meta: {
-          title: "固定成本报表管理",
+          title: "固定成本月表",
           icon: "el-icon-coin",
         },
       },

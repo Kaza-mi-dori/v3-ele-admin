@@ -4,7 +4,11 @@
 
 <script lang="ts" setup>
 import * as echarts from "echarts";
+import { businessFormats } from "../../../constants";
+import { ref, onMounted, shallowRef } from "vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const left54Ref = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
 const data = ref<any[]>([
@@ -13,11 +17,29 @@ const data = ref<any[]>([
   { title: "油站运营", value: 50, color: "#1785d2" },
 ]);
 
+// 点击回调
+function onClickPie(params: any) {
+  const { name } = params;
+  if (!name) return;
+  const format = businessFormats.find((item) => item.label === name);
+  if (format) {
+    const route = router.resolve({
+      name: "BusinessType",
+      params: {
+        typeName: format.name,
+      },
+    });
+    window.open(route.href, "_blank");
+  }
+}
+
 // 初始化图表
 function initChart() {
   // 饼图
   if (!chartRef.value) {
     chartRef.value = echarts.init(left54Ref.value as HTMLDivElement);
+    // 增加点击回调
+    chartRef.value.on("click", "series", onClickPie);
   }
   chartRef.value.clear();
   const option = {
