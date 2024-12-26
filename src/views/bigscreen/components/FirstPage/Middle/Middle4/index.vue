@@ -203,6 +203,11 @@ const initChartMiddle4 = () => {
     },
     yAxis: {
       type: "value",
+      name: "单位：元/吨",
+      nameTextStyle: {
+        color: "#5099E3",
+        fontSize: 15,
+      },
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {

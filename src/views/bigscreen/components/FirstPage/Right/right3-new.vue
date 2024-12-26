@@ -152,6 +152,11 @@ const initChartRight3 = async () => {
     },
     yAxis: {
       type: "value",
+      name: "单位：万元",
+      nameTextStyle: {
+        color: "#5099E3",
+        fontSize: 15,
+      },
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
