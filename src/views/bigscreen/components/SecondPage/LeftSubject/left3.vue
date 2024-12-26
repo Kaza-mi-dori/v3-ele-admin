@@ -72,6 +72,7 @@ import { useTransition } from "@vueuse/core";
 import planIcon from "@/views/bigscreen/img/business.png";
 import sellIcon from "@/views/bigscreen/img/left_icon1.png";
 import finishIcon from "@/views/bigscreen/img/left_icon2.png";
+import sassvariables from "@/styles/variables.module.scss";
 
 // 每个类别对应的数据系列(过去5年的年份)
 const categoryMap = new Array(5)
@@ -122,8 +123,14 @@ const initChartMiddle4 = () => {
   const data = getRandomCategoryData(categoryMap);
 
   const gradientColors = [
-    { start: "#f2b678", end: "#f18c32" },
-    { start: "#18DBD4", end: "#01B3F3" },
+    {
+      start: sassvariables["bigscreen-primary-color-3"],
+      end: sassvariables["bigscreen-primary-color-4"],
+    },
+    {
+      start: sassvariables["bigscreen-primary-color-5"],
+      end: sassvariables["bigscreen-primary-color-6"],
+    },
     { start: "#25DDA7", end: "#249E55" },
   ];
 

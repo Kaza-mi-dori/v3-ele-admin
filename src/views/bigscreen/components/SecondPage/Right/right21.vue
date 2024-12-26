@@ -11,6 +11,7 @@
 import Model1 from "../Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
+import sassvariables from "@/styles/variables.module.scss";
 
 // 每个类别对应的数据系列
 const months = ["2020年", "2021年", "2022年", "2023年", "2024年"];
@@ -111,8 +112,8 @@ const initChart = () => {
         data: data.map((item) => item.product2),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: "#f2b678" },
-            { offset: 1, color: "#f18c32" },
+            { offset: 0, color: sassvariables["bigscreen-primary-color-3"] },
+            { offset: 1, color: sassvariables["bigscreen-primary-color-4"] },
           ]),
         },
         barWidth: "24%",

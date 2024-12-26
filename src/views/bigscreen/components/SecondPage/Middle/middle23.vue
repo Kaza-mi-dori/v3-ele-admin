@@ -11,6 +11,7 @@
 import Model1 from "../Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
+import sassvariables from "@/styles/variables.module.scss";
 
 // 每个类别对应的数据系列
 const months = [
@@ -114,7 +115,7 @@ const initChart = () => {
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: "#19DCD5" },
-            { offset: 1, color: "#01B3F3" },
+            { offset: 1, color: sassvariables["bigscreen-primary-color-6"] },
           ]),
         },
         barWidth: "25%",

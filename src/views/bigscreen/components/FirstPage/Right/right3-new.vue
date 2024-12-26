@@ -16,6 +16,7 @@ import type { TabsPaneContext } from "element-plus";
 import { ref, onMounted } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { useRouter } from "vue-router";
+import sassvariables from "@/styles/variables.module.scss";
 
 const REVENUE = "REVENUE";
 const PROFIT = "PROFIT";
@@ -116,8 +117,14 @@ const initChartRight3 = async () => {
   });
 
   const gradientColors = [
-    { start: "#f2b678", end: "#f18c32" },
-    { start: "#18DBD4", end: "#01B3F3" },
+    {
+      start: sassvariables["bigscreen-primary-color-3"],
+      end: sassvariables["bigscreen-primary-color-4"],
+    },
+    {
+      start: sassvariables["bigscreen-primary-color-5"],
+      end: sassvariables["bigscreen-primary-color-6"],
+    },
     { start: "#25DDA7", end: "#249E55" },
     { start: "#F28F78", end: "#F05633" },
     { start: "#18DDD4", end: "#02B4F2" },

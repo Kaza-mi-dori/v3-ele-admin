@@ -20,6 +20,7 @@ import Model1 from "../Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
+import sassvariables from "@/styles/variables.module.scss";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 const router = useRouter();
@@ -157,8 +158,8 @@ const initChart = () => {
         data: data.map((item) => item.tradingVolume),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: "#18DBD4" },
-            { offset: 1, color: "#01B3F3" },
+            { offset: 0, color: sassvariables["bigscreen-primary-color-5"] },
+            { offset: 1, color: sassvariables["bigscreen-primary-color-6"] },
           ]),
         },
         barWidth: "25%",

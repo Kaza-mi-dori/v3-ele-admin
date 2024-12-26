@@ -87,6 +87,7 @@ import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
 import { ComponentSize } from "element-plus";
+import sassvariables from "@/styles/variables.module.scss";
 
 const router = useRouter();
 
@@ -217,8 +218,8 @@ const initChart = () => {
         data: chartData.map((item) => item.actual),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: "#f2b678" },
-            { offset: 1, color: "#f18c32" },
+            { offset: 0, color: sassvariables["bigscreen-primary-color-3"] },
+            { offset: 1, color: sassvariables["bigscreen-primary-color-4"] },
           ]),
         },
         barWidth: "25%",
