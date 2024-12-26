@@ -354,6 +354,7 @@ onMounted(async () => {
     margin-bottom: auto;
     .__title--text {
       margin: auto 0;
+      margin-top: 8px;
       font-size: 2.5rem;
       letter-spacing: 6px;
       // line-height: px;
