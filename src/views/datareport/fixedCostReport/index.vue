@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">企业概况报表</div>
+      <div class="__title">固定成本报表</div>
       <div class="__stat">
         <span class="__item">当前有</span>
         <span class="__item">
@@ -279,14 +279,6 @@ const handleResetAudit = (row: any) => {
 };
 
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
-  {
-    label: "业务维度",
-    prop: "业务维度",
-    value: null,
-    options: ["成品油", "燃料油", "原油", "化工产品", "LNG", "煤炭"],
-    inputType: "select",
-    order: 1,
-  },
   {
     label: "状态",
     prop: "状态",

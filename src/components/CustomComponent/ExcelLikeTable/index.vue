@@ -2,6 +2,10 @@
   <!-- excel表 -->
   <div class="table-container">
     <table class="g-input-table-1">
+      <colgroup>
+        <col />
+        <col v-for="col in props.colsDef" :key="col.prop" />
+      </colgroup>
       <thead>
         <template v-if="extraHeaders.length > 0">
           <tr
@@ -18,11 +22,7 @@
       <tr class="__header __row">
         <!-- 表头显示 -->
         <!-- 如果传入了行定义，则渲染多一个th叫项目且colspan根据最长的行来定 -->
-        <th
-          v-if="props.inputItemDefsByRow"
-          :colspan="longestRow.names.length"
-          style="width: 150px"
-        >
+        <th v-if="props.inputItemDefsByRow" :colspan="longestRow.names.length">
           项目
         </th>
         <!-- 然后根据列定义渲染, 宽度为该name的长度 + 10px -->
@@ -31,11 +31,12 @@
           :key="col.name"
           :colspan="1"
           :style="{
-            width: '150px',
-            padding: '0 10px',
+            padding: '0 20px',
           }"
         >
-          {{ col.name }}
+          <div :style="{ width: col.name.length * 15 + 30 + 'px' }">
+            {{ col.name }}
+          </div>
           <!-- 如果是不可编辑则多显示一个锁icon -->
           <el-popover
             v-if="!col.editable"
@@ -62,6 +63,10 @@
               item.names.length
             )"
             :key="name"
+            :class="{
+              'sticky-cell':
+                index === (item.isFirstChild ? item.names.length - 1 : 0),
+            }"
             :rowspan="
               item.isFirstChild ? (index === 0 ? item.childrenCount : 1) : 1
             "
@@ -71,7 +76,7 @@
                 : 1
             "
           >
-            {{ name }}
+            <div>{{ name }}</div>
           </td>
         </template>
         <td
@@ -82,18 +87,41 @@
         >
           <template v-if="col.editable && editing">
             <el-input
+              v-if="col.inputType === 'input'"
+              v-model="item[col.prop]"
+              :type="col.isNumber ? 'number' : ''"
+            />
+            <el-select
+              v-else-if="col.inputType === 'select'"
+              v-model="item[col.prop]"
+              :multiple="col.selectType === 'multiple'"
+              :placeholder="'请选择' + col.name"
+            >
+              <el-option
+                v-for="option in col.options"
+                :key="option"
+                :label="option"
+                :value="option"
+              />
+            </el-select>
+            <el-input
+              v-else
               v-model="item[col.prop]"
               :type="col.isNumber ? 'number' : ''"
             />
           </template>
           <template v-else>
-            {{ item[col.prop] }}
+            <div>{{ item[col.prop] }}</div>
           </template>
         </td>
       </tr>
       <!-- 汇总行，定义一样，每一个单元格都由上面所有数据汇总而来 -->
       <tr v-if="props.needSummary" class="__row">
-        <td v-if="props.inputItemDefsByRow" :colspan="longestRow.names.length">
+        <td
+          v-if="props.inputItemDefsByRow"
+          :colspan="longestRow.names.length"
+          class="sticky-cell"
+        >
           汇总
         </td>
         <td
@@ -152,6 +180,8 @@ export interface ColumnDef {
   name: string;
   /** 对应的prop */
   prop: string;
+  /** 输入类型 */
+  inputType?: "input" | "select";
   /** 默认值 */
   default?: any;
   /** 是否为数值 */
@@ -172,6 +202,12 @@ export interface ColumnDef {
   isLeaf?: boolean;
   /** 孩子节点 */
   children?: ColumnDef[];
+  /** 可选选项 */
+  options?: string[];
+  /** 是否为必填项 */
+  isRequired?: boolean;
+  /** 选择类型(单选/多选) */
+  selectType?: "single" | "multiple";
 }
 
 // tableData的结构也应该由某种定义得出
@@ -279,6 +315,20 @@ onBeforeMount(() => {
   width: 100%;
 }
 
+.sticky-header {
+  position: sticky;
+  left: 0;
+  background-color: #f5f7fa; /* 确保固定列背景色不被覆盖 */
+  z-index: 1; /* 确保固定列在其他内容之上 */
+}
+
+.sticky-cell {
+  position: sticky;
+  left: 0;
+  background-color: #f5f7fa; /* 确保固定列背景色不被覆盖 */
+  z-index: 1; /* 确保固定列在其他内容之上 */
+}
+
 .g-input-table-1 {
   border-collapse: collapse;
   border-spacing: 0;
@@ -313,6 +363,20 @@ onBeforeMount(() => {
         white-space: nowrap;
         // 对于el-input的样式
         .el-input {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          border: none;
+          background-color: transparent;
+          .el-input__inner {
+            border: none;
+            background-color: transparent;
+            padding: 0;
+            text-align: center;
+          }
+        }
+        // 对于el-select的样式
+        .el-select {
           width: 100%;
           margin: 0;
           padding: 0;
