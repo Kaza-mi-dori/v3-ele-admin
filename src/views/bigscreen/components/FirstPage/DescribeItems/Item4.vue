@@ -46,6 +46,7 @@ const formatNumber = (num: number | string): string => {
 </script>
 
 <style lang="scss" scoped>
+$bg-color-1: #ffffff;
 .box {
   position: relative; /* 确保父元素的布局设置好 */
   width: 100%;
@@ -85,7 +86,7 @@ const formatNumber = (num: number | string): string => {
         display: block;
         width: 100%;
         height: 2px;
-        background-color: #ffffff;
+        background-color: $bg-color-1;
       }
     }
   }
@@ -99,7 +100,7 @@ const formatNumber = (num: number | string): string => {
         display: block;
         width: 100%;
         height: 1px;
-        background-color: #ffffff;
+        background-color: $bg-color-1;
       }
     }
   }
