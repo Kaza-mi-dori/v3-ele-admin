@@ -130,7 +130,10 @@ const initChartMiddle4 = () => {
   const gradientColors = [
     { start: "#f2b678", end: "#f18c32" },
     { start: "#18DBD4", end: "#01B3F3" },
-    { start: sassvariables["bigscreen-primary-color-9"], end: "#249E55" },
+    {
+      start: sassvariables["bigscreen-primary-color-9"],
+      end: sassvariables["bigscreen-primary-color-10"],
+    },
   ];
 
   const option = {

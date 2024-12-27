@@ -207,7 +207,7 @@ const initChart = () => {
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: sassvariables["bigscreen-primary-color-9"] },
-            { offset: 1, color: "#249E55" },
+            { offset: 1, color: sassvariables["bigscreen-primary-color-10"] },
           ]),
         },
         barWidth: "25%",
