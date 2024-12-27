@@ -62,7 +62,7 @@ const initChart = () => {
     legend: {
       data: ["销售金额", "销售量"],
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
       icon: "rect",
       top: 10,
@@ -78,12 +78,12 @@ const initChart = () => {
         data: dates,
         axisLine: {
           lineStyle: {
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         axisLabel: {
           fontSize: 15,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
         axisPointer: {
           type: "shadow",
@@ -98,26 +98,26 @@ const initChart = () => {
         interval: 20,
         name: "单位：万元",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 15,
         axisLine: {
           show: true, // 显示坐标轴线
           lineStyle: {
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         splitLine: {
           show: true, // 显示分割线
           lineStyle: {
             type: "dashed", // 虚线
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         axisLabel: {
           fontSize: 16,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       {
@@ -127,26 +127,26 @@ const initChart = () => {
         interval: 2,
         name: "单位：万吨",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 20,
         axisLine: {
           show: true, // 显示坐标轴线
           lineStyle: {
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         splitLine: {
           show: true, // 显示分割线
           lineStyle: {
             type: "dashed", // 虚线
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         axisLabel: {
           fontSize: 16,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
     ],

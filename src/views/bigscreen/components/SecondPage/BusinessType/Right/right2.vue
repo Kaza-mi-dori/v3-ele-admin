@@ -9,6 +9,7 @@ import Model1 from "@/views/bigscreen/components/SecondPage/Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
+import sassvariables from "@/styles/variables.module.scss";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 const router = useRouter();
@@ -54,7 +55,7 @@ const initChart = () => {
     },
     legend: {
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
       icon: "rect",
       top: 10,
@@ -70,12 +71,12 @@ const initChart = () => {
         data: dates,
         axisLine: {
           lineStyle: {
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         axisLabel: {
           fontSize: 15,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
         axisPointer: {
           type: "shadow",
@@ -87,52 +88,52 @@ const initChart = () => {
         type: "value",
         name: "单位：升",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 15,
         axisLine: {
           show: true, // 显示坐标轴线
           lineStyle: {
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         splitLine: {
           show: true, // 显示分割线
           lineStyle: {
             type: "dashed", // 虚线
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         axisLabel: {
           fontSize: 16,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       {
         type: "value",
         name: "单位：元/升",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 20,
         axisLine: {
           show: true, // 显示坐标轴线
           lineStyle: {
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         splitLine: {
           show: true, // 显示分割线
           lineStyle: {
             type: "dashed", // 虚线
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
         axisLabel: {
           fontSize: 16,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
     ],

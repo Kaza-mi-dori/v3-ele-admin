@@ -113,7 +113,10 @@ const initChartMiddle4 = async () => {
       start: sassvariables["bigscreen-primary-color-5"],
       end: sassvariables["bigscreen-primary-color-6"],
     },
-    { start: "#25DDA7", end: "#249E55" },
+    {
+      start: sassvariables["bigscreen-primary-color-9"],
+      end: sassvariables["bigscreen-primary-color-10"],
+    },
     { start: "#F28F78", end: "#F05633" },
     { start: "#18DDD4", end: "#02B4F2" },
     { start: "#69EBC9", end: "#AA3DD5" },
@@ -134,12 +137,12 @@ const initChartMiddle4 = async () => {
       data: fixedCategories, // 使用固定的业态类型顺序
       axisLine: {
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 14,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
@@ -147,19 +150,19 @@ const initChartMiddle4 = async () => {
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       splitLine: {
         show: true, // 显示分割线
         lineStyle: {
           type: "dashed", // 虚线
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 14,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [

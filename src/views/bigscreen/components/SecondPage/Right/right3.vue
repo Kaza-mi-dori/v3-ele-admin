@@ -8,6 +8,7 @@
 import Model1 from "../Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
+import sassvariables from "@/styles/variables.module.scss";
 
 const months = [
   "1月",
@@ -40,7 +41,7 @@ const initChart = () => {
       right: 40,
       data: ["利润"], // 显示的文本
       textStyle: {
-        color: "#5099E3", // 文字颜色
+        color: sassvariables["bigscreen-primary-color-7"], // 文字颜色
         fontSize: 14, // 文字大小
       },
       icon: "rect", // 设置为矩形
@@ -62,12 +63,12 @@ const initChart = () => {
       data: months,
       axisLine: {
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 15,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
@@ -77,26 +78,26 @@ const initChart = () => {
       interval: 20,
       name: "单位：万元",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       nameGap: 20,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       splitLine: {
         show: true, // 显示分割线
         lineStyle: {
           type: "dashed", // 虚线
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 16,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [

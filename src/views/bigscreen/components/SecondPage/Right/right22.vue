@@ -14,6 +14,7 @@ import Tab from "@/views/bigscreen/components/FirstPage/Tab/index.vue";
 import * as echarts from "echarts";
 import type { TabsPaneContext } from "element-plus";
 import { ref, onMounted } from "vue";
+import sassvariables from "@/styles/variables.module.scss";
 
 const CRUDEOIL = "CRUDEOIL";
 const REFINEDOIL = "REFINEDOIL";
@@ -72,38 +73,38 @@ const initChart22Right2 = () => {
       data: categories,
       axisLine: {
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 15,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
       type: "value",
       name: "单位：万元",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       nameGap: 20,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       splitLine: {
         show: true, // 显示分割线
         lineStyle: {
           type: "dashed", // 虚线
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 16,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [

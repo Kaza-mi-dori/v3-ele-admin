@@ -125,7 +125,10 @@ const initChartRight3 = async () => {
       start: sassvariables["bigscreen-primary-color-5"],
       end: sassvariables["bigscreen-primary-color-6"],
     },
-    { start: "#25DDA7", end: "#249E55" },
+    {
+      start: sassvariables["bigscreen-primary-color-9"],
+      end: sassvariables["bigscreen-primary-color-10"],
+    },
     { start: "#F28F78", end: "#F05633" },
     { start: "#18DDD4", end: "#02B4F2" },
     { start: "#69EBC9", end: "#AA3DD5" },
@@ -149,37 +152,37 @@ const initChartRight3 = async () => {
       data: years, // 横坐标为年份
       axisLine: {
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 14,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
       type: "value",
       name: "单位：万元",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       splitLine: {
         show: true, // 显示分割线
         lineStyle: {
           type: "dashed", // 虚线
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 14,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [

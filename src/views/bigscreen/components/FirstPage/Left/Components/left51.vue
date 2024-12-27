@@ -87,25 +87,25 @@ function initChart() {
       type: "value",
       name: "单位:亿元",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontWeight: "bold",
       },
       axisLabel: {
         fontSize: 14,
         fontWeight: "bold",
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       splitLine: {
         show: true, // 显示分割线
         lineStyle: {
           type: "dashed", // 虚线
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
     },

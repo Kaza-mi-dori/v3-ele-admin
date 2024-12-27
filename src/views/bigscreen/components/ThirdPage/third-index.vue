@@ -151,7 +151,7 @@ const initChart = () => {
     legend: {
       data: ["计划经营收入", "实际经营收入"],
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     grid: {
@@ -165,38 +165,38 @@ const initChart = () => {
       data: months,
       axisLine: {
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 15,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
       type: "value",
       name: "单位：万元",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       nameGap: 20,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       splitLine: {
         show: true, // 显示分割线
         lineStyle: {
           type: "dashed", // 虚线
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 16,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [
@@ -206,8 +206,8 @@ const initChart = () => {
         data: chartData.map((item) => item.planned),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: "#25DDA7" },
-            { offset: 1, color: "#249E55" },
+            { offset: 0, color: sassvariables["bigscreen-primary-color-9"] },
+            { offset: 1, color: sassvariables["bigscreen-primary-color-10"] },
           ]),
         },
         barWidth: "25%",

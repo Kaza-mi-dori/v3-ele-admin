@@ -42,7 +42,10 @@ const initChartMiddle4 = () => {
       start: sassvariables["bigscreen-primary-color-5"],
       end: sassvariables["bigscreen-primary-color-6"],
     },
-    { start: "#25DDA7", end: "#249E55" },
+    {
+      start: sassvariables["bigscreen-primary-color-9"],
+      end: sassvariables["bigscreen-primary-color-10"],
+    },
   ];
 
   const option = {
@@ -52,7 +55,7 @@ const initChartMiddle4 = () => {
     legend: {
       data: categoryMap,
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     grid: {
@@ -66,12 +69,12 @@ const initChartMiddle4 = () => {
       data: categoryMap,
       axisLine: {
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 15,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
@@ -79,26 +82,26 @@ const initChartMiddle4 = () => {
       name: "单位：份",
       nameTextStyle: {
         // 显示
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       nameGap: 20, // 控制轴名与轴线之间的间距，单位为像素
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       splitLine: {
         show: true, // 显示分割线
         lineStyle: {
           type: "dashed", // 虚线
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       axisLabel: {
         fontSize: 16,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [
