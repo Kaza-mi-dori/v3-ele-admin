@@ -160,7 +160,7 @@ const initChartMiddle4 = () => {
       data: categoryMap,
       axisLine: {
         lineStyle: {
-          color: "#27518D",
+          color: sassvariables["bigscreen-primary-color-8"],
         },
       },
       // 倾斜
@@ -194,7 +194,7 @@ const initChartMiddle4 = () => {
         splitLine: {
           show: true,
           lineStyle: {
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
       },
@@ -215,7 +215,7 @@ const initChartMiddle4 = () => {
         splitLine: {
           show: true,
           lineStyle: {
-            color: "#27518D",
+            color: sassvariables["bigscreen-primary-color-8"],
           },
         },
       },
