@@ -2,6 +2,7 @@
   <div class="model1">
     <div class="custom-tab">
       <div class="__header">
+        <span class="title">企业构成</span>
         <div
           v-for="item of items"
           :key="item"
@@ -124,6 +125,14 @@ $color-active: #fff;
         background-size: 100% 100%;
         background-image: url("@/views/bigscreen/img/left_tab1.png") !important;
       }
+    }
+    .title {
+      font-size: 18px;
+      color: #fff;
+      z-index: 1;
+      margin: 0 1rem;
+      font-family: 黑体;
+      text-align: center;
     }
   }
 }

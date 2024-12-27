@@ -59,7 +59,7 @@ let totalData = ref([
     yearUnit: "亿元",
   },
   {
-    title: "累计毛利率",
+    title: "毛利率",
     bgImg: block3,
     yearTotal: 0,
     monthTotal: 0,
@@ -159,7 +159,7 @@ const initData = async () => {
       yearUnit: "亿元",
     },
     {
-      title: "累计毛利率",
+      title: "毛利率",
       bgImg: block3,
       yearTotal: Number((totals["累计毛利率"].yearTotal / 10000).toFixed(2)),
       monthTotal: totals["累计毛利率"].monthTotal,

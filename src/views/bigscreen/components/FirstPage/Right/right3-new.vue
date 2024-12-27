@@ -191,6 +191,7 @@ const initChartRight3 = async () => {
         barWidth: "50%",
         barGap: "10%", // 柱体间距
         data: currentData, // 柱状图的值: 根据选中的页签显示对应的数据
+        name: activeName.value === REVENUE ? "营收" : "利润",
         itemStyle: {
           color: (params: any) => {
             const color =
