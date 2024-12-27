@@ -221,6 +221,7 @@ const converToFrontendFormData = (type: string | null, data: any) => {
       return {
         // 转换数据
         year: data["日期"],
+        timeDimension: data["类型"],
         firmName: data["企业名称"],
         firmType: data["企业类型"],
         details: data["内容"]["详情"].map((item: any) => {
@@ -453,6 +454,7 @@ const convertToBackendData = (type: string | null, data: any) => {
       result["日期"] = data.year;
       result["企业名称"] = data.firmName;
       result["企业类型"] = data.firmType;
+      result["类型"] = data.timeDimension;
       result["内容"] = {
         详情: data.details.map((item: any) => {
           return {

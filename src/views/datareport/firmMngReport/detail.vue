@@ -38,7 +38,7 @@
           :model="yearlyReportDetailForm"
         >
           <el-row class="w-full">
-            <!-- <el-col :span="8">
+            <el-col :span="8">
               <el-form-item label="维度" prop="timeDimension">
                 <el-select
                   v-if="editing"
@@ -61,8 +61,8 @@
                   }}
                 </span>
               </el-form-item>
-            </el-col> -->
-            <!-- <el-col :span="8">
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="时间" prop="year">
                 <template v-if="editing">
                   <el-date-picker
@@ -93,7 +93,7 @@
                 </template>
                 <span v-else>{{ yearlyReportDetailForm.year }}</span>
               </el-form-item>
-            </el-col> -->
+            </el-col>
             <!-- 企业名称 -->
             <el-col :span="8">
               <el-form-item label="企业名称" prop="firmName">
@@ -105,7 +105,7 @@
               </el-form-item>
             </el-col>
             <!-- 数据日期 -->
-            <el-col :span="8">
+            <!-- <el-col :span="8">
               <el-form-item label="数据日期" prop="year">
                 <el-date-picker
                   v-if="editing"
@@ -116,7 +116,7 @@
                 />
                 <span v-else>{{ yearlyReportDetailForm.year || "-" }}</span>
               </el-form-item>
-            </el-col>
+            </el-col> -->
           </el-row>
         </el-form>
       </div>
@@ -1206,6 +1206,7 @@ import { ref, unref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useManualRefHistory } from "@vueuse/core";
 import { type FormInstance } from "element-plus";
+import { timeDimensionFtoBMap } from "@/enums/OptionLabelEnum";
 import { BusinessEnumMap } from "@/enums/BusinessEnum";
 import datePickerPlus from "@/components/ElBasicPlus/datePicker.vue";
 import sassvariables from "@/styles/variables.module.scss";
@@ -1240,6 +1241,7 @@ const yearlyReportDetailForm = ref({
   /** */
   name: "永盛石化", // 企业名称
   year: undefined, // 数据日期
+  timeDimension: "年",
   firmName: "", // 企业名称
   firmType: "", // 企业类型,
   details: Object.keys(BusinessEnumMap).map((key) => ({
@@ -1477,6 +1479,7 @@ const realForm: Ref<any> = ref({
 const handleAddSubRecord = () => {
   yearlyReportDetailForm.value.details.push({
     businessType: "",
+    timeDimension: "",
     dataDate: "",
     storage: 0,
     bargain: 0,
@@ -1521,6 +1524,7 @@ const converter: (data: any) => YearlyReportDetailFormData = (data) => {
   const result = {} as YearlyReportDetailFormData;
   result.name = data["企业名称"];
   result.year = data["年度"];
+  result.timeDimension = data["类型"];
   // result.businessDimension = data["业务维度"];
   result.profit = data["利润金额"];
   result.income = data["营收金额"];
@@ -1583,6 +1587,11 @@ const exportForm = () => {
 const handleDelete = (row: any) => {
   yearlyReportDetailForm.value.storage =
     yearlyReportDetailForm.value.storage.filter((item) => item !== row);
+};
+
+/** 如果改变了时间维度则重置时间 */
+const onChangeTimeDimension = (value: string) => {
+  yearlyReportDetailForm.value.year = undefined;
 };
 
 // snippet: ts-useManualRefHistory

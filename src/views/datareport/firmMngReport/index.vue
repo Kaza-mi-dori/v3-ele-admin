@@ -76,6 +76,19 @@
       </el-table-column> -->
       <el-table-column
         prop="name"
+        label="报表维度"
+        width="120"
+        sortable
+        align="center"
+      >
+        <template v-slot="scope">
+          <span>
+            {{ scope.row.类型 || "-" }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="name"
         label="报表时间"
         width="200"
         sortable
@@ -280,6 +293,14 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
     selected: null,
     inputType: "input",
     order: 1,
+  },
+  {
+    label: "时间维度",
+    prop: "类型",
+    value: null,
+    options: ["全部", "年", "月", "日"],
+    inputType: "select",
+    order: 2,
   },
   {
     label: "状态",
