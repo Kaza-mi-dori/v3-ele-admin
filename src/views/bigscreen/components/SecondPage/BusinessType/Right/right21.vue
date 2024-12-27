@@ -100,7 +100,7 @@ const initChart = () => {
         data: data.map((item) => item.product1),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: "#25DDA7" },
+            { offset: 0, color: sassvariables["bigscreen-primary-color-9"] },
             { offset: 1, color: "#249E55" },
           ]),
         },

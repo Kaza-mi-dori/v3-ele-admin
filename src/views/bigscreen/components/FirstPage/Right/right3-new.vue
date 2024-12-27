@@ -125,7 +125,7 @@ const initChartRight3 = async () => {
       start: sassvariables["bigscreen-primary-color-5"],
       end: sassvariables["bigscreen-primary-color-6"],
     },
-    { start: "#25DDA7", end: "#249E55" },
+    { start: sassvariables["bigscreen-primary-color-9"], end: "#249E55" },
     { start: "#F28F78", end: "#F05633" },
     { start: "#18DDD4", end: "#02B4F2" },
     { start: "#69EBC9", end: "#AA3DD5" },

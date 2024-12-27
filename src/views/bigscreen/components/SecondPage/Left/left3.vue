@@ -42,7 +42,7 @@ const initChartMiddle4 = () => {
       start: sassvariables["bigscreen-primary-color-5"],
       end: sassvariables["bigscreen-primary-color-6"],
     },
-    { start: "#25DDA7", end: "#249E55" },
+    { start: sassvariables["bigscreen-primary-color-9"], end: "#249E55" },
   ];
 
   const option = {
