@@ -15,3 +15,12 @@ export const timeDimensionFtoBMap = {
   [timeDimensionEnum.DAY]: "日",
   // [timeDimensionEnum.HOUR]: "时",
 };
+
+export const BMapFtoTimeDimension = {
+  年: timeDimensionEnum.YEAR,
+  //季: timeDimensionEnum.QUARTER,
+  月: timeDimensionEnum.MONTH,
+  // 周: timeDimensionEnum.WEEK,
+  日: timeDimensionEnum.DAY,
+  // 时: timeDimensionEnum.HOUR,
+};

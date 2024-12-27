@@ -57,7 +57,9 @@
                   {{
                     timeDimensionFtoBMap[
                       yearlyReportDetailForm.timeDimension
-                    ] || "未选择"
+                    ] ||
+                    yearlyReportDetailForm.timeDimension ||
+                    "未选择"
                   }}
                 </span>
               </el-form-item>
