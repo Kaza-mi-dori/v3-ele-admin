@@ -151,7 +151,7 @@ const initChart = () => {
     legend: {
       data: ["计划经营收入", "实际经营收入"],
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     grid: {
@@ -170,14 +170,14 @@ const initChart = () => {
       },
       axisLabel: {
         fontSize: 15,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
       type: "value",
       name: "单位：万元",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       nameGap: 20,
@@ -196,7 +196,7 @@ const initChart = () => {
       },
       axisLabel: {
         fontSize: 16,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [

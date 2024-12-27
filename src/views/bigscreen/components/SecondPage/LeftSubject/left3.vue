@@ -141,7 +141,7 @@ const initChartMiddle4 = () => {
     legend: {
       data: categoryMap,
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     grid: {
@@ -160,7 +160,7 @@ const initChartMiddle4 = () => {
       },
       axisLabel: {
         fontSize: 15,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         formatter: (value: string) => {
           return value + "年";
         },
@@ -171,7 +171,7 @@ const initChartMiddle4 = () => {
       name: "单位：万元",
       nameTextStyle: {
         // 显示
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       nameGap: 20, // 控制轴名与轴线之间的间距，单位为像素
@@ -190,7 +190,7 @@ const initChartMiddle4 = () => {
       },
       axisLabel: {
         fontSize: 16,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [

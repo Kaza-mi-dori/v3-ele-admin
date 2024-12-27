@@ -62,7 +62,7 @@ const initChart = () => {
     legend: {
       data: ["销售金额", "销售量"],
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
       icon: "rect",
       top: 10,
@@ -83,7 +83,7 @@ const initChart = () => {
         },
         axisLabel: {
           fontSize: 15,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
         axisPointer: {
           type: "shadow",
@@ -98,7 +98,7 @@ const initChart = () => {
         interval: 20,
         name: "单位：万元",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 15,
@@ -117,7 +117,7 @@ const initChart = () => {
         },
         axisLabel: {
           fontSize: 16,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       {
@@ -127,7 +127,7 @@ const initChart = () => {
         interval: 2,
         name: "单位：万吨",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 20,
@@ -146,7 +146,7 @@ const initChart = () => {
         },
         axisLabel: {
           fontSize: 16,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
     ],

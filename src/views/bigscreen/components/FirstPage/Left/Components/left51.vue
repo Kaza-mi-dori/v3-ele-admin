@@ -87,13 +87,13 @@ function initChart() {
       type: "value",
       name: "单位:亿元",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontWeight: "bold",
       },
       axisLabel: {
         fontSize: 14,
         fontWeight: "bold",
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
       axisLine: {
         show: true, // 显示坐标轴线

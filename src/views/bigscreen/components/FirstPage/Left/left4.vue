@@ -139,7 +139,7 @@ const initChartMiddle4 = async () => {
       },
       axisLabel: {
         fontSize: 14,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
@@ -159,7 +159,7 @@ const initChartMiddle4 = async () => {
       },
       axisLabel: {
         fontSize: 14,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [

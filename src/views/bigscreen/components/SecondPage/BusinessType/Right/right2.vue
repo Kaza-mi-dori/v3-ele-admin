@@ -9,6 +9,7 @@ import Model1 from "@/views/bigscreen/components/SecondPage/Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
+import sassvariables from "@/styles/variables.module.scss";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 const router = useRouter();
@@ -54,7 +55,7 @@ const initChart = () => {
     },
     legend: {
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
       icon: "rect",
       top: 10,
@@ -75,7 +76,7 @@ const initChart = () => {
         },
         axisLabel: {
           fontSize: 15,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
         axisPointer: {
           type: "shadow",
@@ -87,7 +88,7 @@ const initChart = () => {
         type: "value",
         name: "单位：升",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 15,
@@ -106,14 +107,14 @@ const initChart = () => {
         },
         axisLabel: {
           fontSize: 16,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       {
         type: "value",
         name: "单位：元/升",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 20,
@@ -132,7 +133,7 @@ const initChart = () => {
         },
         axisLabel: {
           fontSize: 16,
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
     ],

@@ -72,6 +72,7 @@ import { useTransition } from "@vueuse/core";
 import planIcon from "@/views/bigscreen/img/business.png";
 import sellIcon from "@/views/bigscreen/img/left_icon1.png";
 import finishIcon from "@/views/bigscreen/img/left_icon2.png";
+import sassvariables from "@/styles/variables.module.scss";
 
 // 每个类别对应的数据系列(过去12个月)
 const year = new Date().getFullYear();
@@ -142,7 +143,7 @@ const initChartMiddle4 = () => {
     legend: {
       data: ["营收", "利润", "周转量"],
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
       top: 20,
       left: "center",
@@ -167,7 +168,7 @@ const initChartMiddle4 = () => {
         interval: 0,
         rotate: 45,
         fontSize: 15,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         formatter: (value: string) => {
           // 将年月格式化为年-月
           return value.replace("年", "-").replace("月", "");
@@ -180,14 +181,14 @@ const initChartMiddle4 = () => {
         type: "value",
         name: "单位：万元",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 20,
         axisLine: {
           show: true,
           lineStyle: {
-            color: "#5099E3",
+            color: sassvariables["bigscreen-primary-color-7"],
           },
         },
         splitLine: {
@@ -201,14 +202,14 @@ const initChartMiddle4 = () => {
         type: "value",
         name: "单位：万吨",
         nameTextStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
           fontSize: 15,
         },
         nameGap: 20,
         axisLine: {
           show: true,
           lineStyle: {
-            color: "#5099E3",
+            color: sassvariables["bigscreen-primary-color-7"],
           },
         },
         splitLine: {

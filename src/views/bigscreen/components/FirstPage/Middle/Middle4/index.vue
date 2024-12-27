@@ -21,6 +21,7 @@ import { DataIndicesAPI } from "@/api/dataIndices";
 import { DataDefinitionNameToMarkMap } from "@/enums/DataDefinitionEnum";
 import { ref, onMounted } from "vue";
 import { autoRetryWrapper } from "@/utils/asyncwork";
+import sassvariables from "@/styles/variables.module.scss";
 
 const YUANYOU = "YUANYOU";
 const HUAGONG = "HUAGONG";
@@ -197,7 +198,7 @@ const initChartMiddle4 = () => {
       data: xAxisData,
       axisLine: {
         lineStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
     },
@@ -205,13 +206,13 @@ const initChartMiddle4 = () => {
       type: "value",
       name: "单位：元/吨",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
-          color: "#5099E3",
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       splitLine: {

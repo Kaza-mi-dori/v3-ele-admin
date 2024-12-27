@@ -41,7 +41,7 @@ const initChart = () => {
     legend: {
       data: ["化工产品", "成品油"],
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
       top: 20,
       right: 40,
@@ -64,14 +64,14 @@ const initChart = () => {
       },
       axisLabel: {
         fontSize: 14,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
       type: "value",
       name: "单位：万元",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       nameGap: 20,
@@ -90,7 +90,7 @@ const initChart = () => {
       },
       axisLabel: {
         fontSize: 14,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [

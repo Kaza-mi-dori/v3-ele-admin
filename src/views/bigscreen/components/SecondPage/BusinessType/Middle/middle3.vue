@@ -8,6 +8,7 @@
 import Model1 from "@/views/bigscreen/components/SecondPage/Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
+import sassvariables from "@/styles/variables.module.scss";
 
 // 每个类别对应的数据系列
 const months = [
@@ -50,7 +51,7 @@ const initChart = () => {
     legend: {
       data: ["计划经营收入", "实际经营收入"],
       textStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
       top: 20,
       right: 40,
@@ -73,14 +74,14 @@ const initChart = () => {
       },
       axisLabel: {
         fontSize: 15,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     yAxis: {
       type: "value",
       name: "单位：万元",
       nameTextStyle: {
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
       },
       nameGap: 20,
@@ -99,7 +100,7 @@ const initChart = () => {
       },
       axisLabel: {
         fontSize: 16,
-        color: "#5099E3",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     series: [
