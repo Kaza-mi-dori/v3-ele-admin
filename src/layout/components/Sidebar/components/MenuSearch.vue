@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div ref="searchMenuModalRef" class="container">
     <el-input
       ref="searchInputRef"
       v-model="searchKeyword"
@@ -56,6 +56,7 @@ const menuItems = ref<SearchItem[]>([]);
 const searchResults = ref<SearchItem[]>([]);
 const activeIndex = ref(-1);
 const emit = defineEmits(["closePanel"]);
+const searchMenuModalRef = ref<HTMLElement>();
 
 interface SearchItem {
   title: string;
@@ -155,6 +156,7 @@ function loadRoutes(routes: RouteRecordRaw[], parentPath = "") {
     }
   });
 }
+
 // 初始化路由数据
 onMounted(() => {
   loadRoutes(permissionStore.routes);
