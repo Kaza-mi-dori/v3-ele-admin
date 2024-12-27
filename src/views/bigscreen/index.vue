@@ -12,7 +12,9 @@
           >
             <div
               class="entry-container-item"
-              :class="{ active: item.name === activeEntry }"
+              :class="{
+                active: item.name === activeEntry && item.name === '石化总览',
+              }"
               @click="handleEntryClick(item)"
             >
               {{ item.label }}
@@ -133,9 +135,9 @@ const onWheelContent = (e: Event) => {
 
 // 点击入口
 const handleEntryClick = (item: any) => {
-  activeEntry.value = item.label;
   // 往下跳
   if (item.name === "石化总览") {
+    activeEntry.value = item.label;
     return;
   }
   const businessType = businessTypes2.find((type) => type.label === item.label);
