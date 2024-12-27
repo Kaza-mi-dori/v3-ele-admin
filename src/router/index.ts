@@ -20,13 +20,11 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-
   {
     path: "/login",
     component: () => import("@/views/login/index.vue"),
     meta: { hidden: true },
   },
-
   {
     path: "/",
     name: "/",
@@ -91,7 +89,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "BigScreenBoard",
         component: () => import("@/views/bigscreen/index.vue"),
         meta: {
-          title: "大屏看板",
+          title: "大屏看板(数据大屏首页)",
           icon: "el-icon-monitor",
           hidden: true,
         },
