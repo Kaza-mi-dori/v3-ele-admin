@@ -16,6 +16,7 @@
     </transition>
     <div
       v-if="showPanel"
+      ref="MenuSearchRef"
       class="panel"
       :style="{
         left: collapse
@@ -54,15 +55,36 @@ defineProps({
 });
 
 const showPanel = ref(false);
+const MenuSearchRef = ref();
 
-function onClickLogo() {
-  showPanel.value = !showPanel.value;
+function onClickLogo(e: MouseEvent) {
+  e.preventDefault();
+  e.stopPropagation();
+  showPanel.value = true;
 }
 
 function onClosePanel() {
-  console.log("触发");
-  showPanel.value = !showPanel.value;
+  showPanel.value = false;
 }
+
+function onClickOutside(e: MouseEvent) {
+  if (
+    MenuSearchRef.value &&
+    !MenuSearchRef.value.contains(e.target as Node) &&
+    e.target !== MenuSearchRef.value &&
+    showPanel.value
+  ) {
+    showPanel.value = false;
+  }
+}
+
+onMounted(() => {
+  document.addEventListener("click", onClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", onClickOutside);
+});
 </script>
 
 <style lang="scss" scoped>
