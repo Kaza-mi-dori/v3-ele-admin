@@ -16,6 +16,7 @@ const data = ref<any[]>([
   { title: "广投石化本部", value: [100, 50] },
   { title: "广投石化广东分公司", value: [100, 50] },
   { title: "广投石化舟山", value: [100, 50] },
+  { title: "永盛仓储", value: [100, 50] },
 ]);
 
 // 数据整理
@@ -60,6 +61,16 @@ function initChart() {
       trigger: "axis",
     },
     barWidth: "15%",
+    // 标题
+    title: {
+      text: "各主体营收及利润",
+      left: "center",
+      top: 10,
+      textStyle: {
+        color: sassvariables["bigscreen-primary-color-1"],
+        fontSize: "1rem",
+      },
+    },
     color: [
       new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: sassvariables["bigscreen-primary-color-3"] },
@@ -113,8 +124,10 @@ function initChart() {
       type: "category",
       data: data.value.map((item) => item.title),
       axisLabel: {
+        // 全部显示
+        interval: 0,
         color: "#fff",
-        fontSize: 14,
+        fontSize: "0.8rem",
         fontWeight: "bold",
       },
     },

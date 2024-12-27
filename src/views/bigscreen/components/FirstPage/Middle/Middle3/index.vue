@@ -139,6 +139,51 @@ onMounted(() => {
     z-index: 1; /* 确保文字在背景图片上方 */
     color: #ffffff;
     font-size: 16px;
+    // 为奇数孩子节点时给下面的孩子节点加动画
+    &:nth-child(odd) {
+      .title-icon {
+        animation: updown 8s cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+        @keyframes updown {
+          0% {
+            transform: translateY(-3px);
+          }
+          25% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-3px);
+          }
+          75% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-3px);
+          }
+        }
+      }
+    }
+    &:nth-child(even) {
+      .title-icon {
+        animation: updown2 8s cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+        @keyframes updown2 {
+          0% {
+            transform: translateY(0px);
+          }
+          25% {
+            transform: translateY(-3px);
+          }
+          50% {
+            transform: translateY(0px);
+          }
+          75% {
+            transform: translateY(-3px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
+        }
+      }
+    }
   }
   .content-item {
     margin: auto 10px;

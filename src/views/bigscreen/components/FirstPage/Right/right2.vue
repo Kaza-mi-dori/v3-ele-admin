@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Model1 class="model1" title="贸易金额交易伙伴TOP5">
+    <Model1 class="model1" title="贸易伙伴交易金额排行">
       <div
         id="chart-right-2"
         style="

@@ -118,6 +118,19 @@ $bg-color-1: #ffffff;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
     display: block;
+    // 边界闪光效果动画
+    animation: shine 2s infinite;
+    @keyframes shine {
+      0% {
+        filter: brightness(1);
+      }
+      50% {
+        filter: brightness(1.5);
+      }
+      100% {
+        filter: brightness(1);
+      }
+    }
   }
   .year-num,
   .month-num {

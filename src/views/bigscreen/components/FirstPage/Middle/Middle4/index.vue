@@ -1,5 +1,5 @@
 <template>
-  <Model1 class="model1" title="价格趋势图" :showSpecialTitleBg="true">
+  <Model1 class="model1" title="市场价格" :showSpecialTitleBg="true">
     <Tab v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="原油" name="YUANYOU" />
       <el-tab-pane label="汽柴油" name="QICHAIYOU" />
