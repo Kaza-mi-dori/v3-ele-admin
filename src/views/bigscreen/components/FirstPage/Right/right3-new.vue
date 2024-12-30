@@ -17,6 +17,7 @@ import { ref, onMounted } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { useRouter } from "vue-router";
 import sassvariables from "@/styles/variables.module.scss";
+import { text } from "stream/consumers";
 
 const REVENUE = "REVENUE";
 const PROFIT = "PROFIT";
@@ -192,6 +193,15 @@ const initChartRight3 = async () => {
         barGap: "10%", // 柱体间距
         data: currentData, // 柱状图的值: 根据选中的页签显示对应的数据
         name: activeName.value === REVENUE ? "营收" : "利润",
+        // 显示标签
+        label: {
+          show: true,
+          position: "top",
+          color: "#fff",
+          textStyle: {
+            fontSize: "1rem",
+          },
+        },
         itemStyle: {
           color: (params: any) => {
             const color =
