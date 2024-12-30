@@ -5,14 +5,20 @@
         <img class="title-bg" src="../../../img/tit.png" alt="" />
         <div class="header-left">利润统计分析</div>
         <div class="header-right">
-          <el-input
-            v-model="inputValue"
-            size="large"
+          <el-select
+            v-model="year"
             style="width: 250px"
             class="input-field"
-            placeholder="请输入"
-            clearable
-          />
+            size="large"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="d in 10"
+              :key="d"
+              :value="currentYear + 1 - d"
+              :label="currentYear + 1 - d"
+            />
+          </el-select>
           <el-button type="primary" size="large" class="search-button">
             搜索
           </el-button>
@@ -26,6 +32,7 @@
     </div>
     <div class="content-form">
       <el-table
+        class="g-table-2"
         stripe
         :data="
           tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -61,7 +68,7 @@
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
-import { ComponentSize } from "element-plus";
+import { ComponentSize, formatter } from "element-plus";
 
 const router = useRouter();
 
@@ -76,6 +83,8 @@ const filters: Ref<any> = ref({
 });
 
 const inputValue = ref("");
+const currentYear = new Date().getFullYear();
+const year = ref();
 
 // 每个类别对应的数据系列
 const months = [
@@ -118,7 +127,7 @@ const getRandomData = () => {
       同比增长: "10%",
     },
     {
-      企业名称: "广投舟山有限公司",
+      企业名称: "广投石化(舟山)有限公司",
       累计利润: "1000",
       占比: "33.33%",
       目标利润: "3000",
@@ -148,6 +157,7 @@ const tableData = ref(chartData);
 const chart = shallowRef<echarts.ECharts | null>(null);
 const chart2 = shallowRef<echarts.ECharts | null>(null);
 
+// 左侧图
 const initChart1 = () => {
   if (!chart.value) {
     chart.value = echarts.init(
@@ -194,6 +204,7 @@ const initChart1 = () => {
           // 颜色暗些
           color: "#eee",
           fontSize: 16,
+          formatter: "{b} : {c}万元 ({d}%)",
         },
         emphasis: {
           itemStyle: {
@@ -208,6 +219,7 @@ const initChart1 = () => {
   chart.value.setOption(option);
 };
 
+// 右侧图
 const initChart2 = () => {
   if (!chart2.value) {
     chart2.value = echarts.init(
@@ -328,6 +340,14 @@ async function initTableData() {
 onMounted(async () => {
   const route = router.currentRoute.value;
   moduleName.value = route.query.module as string;
+  if (route.query.year) {
+    year.value = parseInt(route.query.year as string);
+    filters.value = {
+      ...filters.value,
+      日期晚于: `${year.value}-01-01`,
+      日期早于: `${year.value}-12-31`,
+    };
+  }
   if (route.query.filters) {
     const params = JSON.parse(route.query.filters as string);
     filters.value = {
@@ -484,6 +504,12 @@ const handleCurrentRowChange = (val: any) => {
     background-color: #1c1e57 !important;
     color: #7b9de0 !important;
   }
+  .el-select__wrapper {
+    background-color: #1c1e57 !important;
+    .el-select__placeholder {
+      color: #e3e3e3 !important;
+    }
+  }
 }
 .search-button {
   margin-left: 12px;
@@ -624,4 +650,11 @@ const handleCurrentRowChange = (val: any) => {
 //     background-color: #1c1e57 !important;
 //   }
 // }
+:deep(.g-table-2.el-table) {
+  // 行距拉高
+  .cell {
+    line-height: 36px !important;
+    font-size: 16px;
+  }
+}
 </style>

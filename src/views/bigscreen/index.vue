@@ -177,7 +177,7 @@ const initScale = () => {
   // originalHeight: 完整渲染后的高度，需要用来计算缩放比例
   const originalHeight =
     headerDOM && bodyDOM ? headerDOM.offsetHeight + bodyDOM.offsetHeight : 1080;
-  console.log("originalHeight===", originalHeight);
+  // console.log("originalHeight===", originalHeight);
   // const originalHeight = containerDOM
   //   ? containerDOM.clientHeight
   //   : headerDOM && bodyDOM
