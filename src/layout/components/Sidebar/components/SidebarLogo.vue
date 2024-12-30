@@ -5,7 +5,7 @@
         :key="+collapse"
         class="wh-full flex-center"
         to="/"
-        @click="onClickLogo"
+        @mouseenter="onClickLogo"
       >
         <img :src="logo" class="w20px h20px" />
         <span v-if="!collapse" class="title">

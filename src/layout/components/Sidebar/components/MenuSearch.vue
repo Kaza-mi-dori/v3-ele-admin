@@ -18,6 +18,7 @@
     </el-input>
     <!-- 搜索结果 -->
     <div class="search-result">
+      <div v-if="displayResults.length > 0" class="mt-4">搜索结果</div>
       <div v-if="displayResults.length > 0" class="result-items-container">
         <div
           v-for="(item, index) in displayResults"
