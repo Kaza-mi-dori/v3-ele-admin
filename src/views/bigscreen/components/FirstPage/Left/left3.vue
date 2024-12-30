@@ -26,6 +26,7 @@ import * as echarts from "echarts";
 import type { TabsPaneContext } from "element-plus";
 import { ref, onMounted } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { startOfYear, endOfYear } from "@/utils/time"; // 导入工具类
 
 const activeName = ref<number | string | undefined>("all");
 
@@ -139,6 +140,9 @@ const getData = async () => {
     页容量: 1,
     企业名称: "广投石化",
     状态集合: ["有效"],
+    类型集合: ["年"],
+    日期晚于: startOfYear(), // 取当年数据,设置为当前年份的第一天
+    日期早于: endOfYear(), // 取当年数据,设置为当前年份的最后一天
   };
   const res = await BusinessFormAPI.getCompanyReportFormList(queryForm.value);
   let resData = res["当前记录"]?.[0]?.["内容"]?.["详情"] || [];

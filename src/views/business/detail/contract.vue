@@ -151,7 +151,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="合同总金额(含税)" prop="amount">
+              <el-form-item label="合同总金额(含税)(万元)" prop="amount">
                 <el-input
                   v-if="editing"
                   v-model="firmReportDetailForm.amount"

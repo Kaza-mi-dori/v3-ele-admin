@@ -30,6 +30,7 @@ import block2 from "@/views/bigscreen/img/left_block2.png";
 import block3 from "@/views/bigscreen/img/left_block3.png";
 import block4 from "@/views/bigscreen/img/left_block4.png";
 import block5 from "@/views/bigscreen/img/left_block5.png";
+import { startOfYear, endOfYear } from "@/utils/time"; // 导入工具类
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -90,6 +91,9 @@ const initData = async () => {
     页容量: 1,
     企业名称: "广投石化",
     状态集合: ["有效"],
+    类型集合: ["年"],
+    日期晚于: startOfYear(), // 取当年数据,设置为当前年份的第一天
+    日期早于: endOfYear(), // 取当年数据,设置为当前年份的最后一天
   };
   const res: any = await BusinessFormAPI.getCompanyReportFormList(
     queryForm.value
