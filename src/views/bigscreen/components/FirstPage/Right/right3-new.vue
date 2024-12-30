@@ -62,6 +62,7 @@ const initData = async () => {
     页容量: 6,
     企业名称: "广投石化",
     状态集合: ["有效"],
+    类型集合: ["年"],
   };
   const res: any = await BusinessFormAPI.getCompanyReportFormList(
     queryForm.value
