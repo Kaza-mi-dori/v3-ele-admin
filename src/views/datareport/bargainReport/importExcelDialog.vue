@@ -43,25 +43,72 @@
       v-if="tableData.length > 0"
       :header-cell-style="() => ({ textAlign: 'center' })"
       :data="tableData"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       border
       style="width: 100%"
+      row-key="名称"
+      default-expand-all
       stripe
     >
-      <el-table-column type="index" label="序号" width="50" />
-      <!-- 按照第一行的属性名，生成表头 -->
+      <!-- 名称 -->
+      <el-table-column label="名称" prop="名称" width="100" align="center" />
+      <!-- 固定成本 -->
       <el-table-column
-        v-for="(value, key) of tableData[0]"
-        :key="key"
-        :prop="key + ''"
-        :label="key + ''"
-        sortable
+        label="全年预测固定成本"
+        prop="全年预测固定成本"
+        width="150"
+        align="center"
       >
         <template v-slot="{ row }">
-          <span>{{ row[key] }}</span>
+          <span>
+            {{
+              row["全年预测固定成本"]
+                ? parseFloat(row["全年预测固定成本"]).toFixed(2)
+                : "-"
+            }}
+          </span>
         </template>
       </el-table-column>
+      <el-table-column
+        v-for="(unit, key) of tableData[0].数据"
+        :key="key"
+        :label="unit['类型']"
+      >
+        <el-table-column label="报告日" prop="报告日" sortable>
+          <template v-slot="{ row }">
+            <span>
+              {{
+                row["数据"][key] && row["数据"][key]["报告日"]
+                  ? parseFloat(row["数据"][key]["报告日"]).toFixed(2)
+                  : "-"
+              }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="月累计" prop="月累计" sortable>
+          <template v-slot="{ row }">
+            <span>
+              {{
+                row["数据"][key] && row["数据"][key]["月累计"]
+                  ? parseFloat(row["数据"][key]["月累计"]).toFixed(2)
+                  : "-"
+              }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="年累计" prop="年累计" sortable>
+          <template v-slot="{ row }">
+            <span>
+              {{
+                row["数据"][key] && row["数据"][key]["年累计"]
+                  ? parseFloat(row["数据"][key]["年累计"]).toFixed(2)
+                  : "-"
+              }}
+            </span>
+          </template>
+        </el-table-column>
+      </el-table-column>
     </el-table>
-    <!-- 分页 -->
     <el-pagination
       v-if="tableData.length > 0"
       v-model:current-page="currentPage"
@@ -77,7 +124,7 @@
     <div class="flex justify-end mt-4">
       <el-button @click="handleClose">取消</el-button>
       <el-button type="primary" :loading="submitLoading" @click="handleSubmit">
-        提交
+        确认
       </el-button>
     </div>
   </el-dialog>
@@ -87,6 +134,7 @@
 import { ref, defineExpose, defineProps } from "vue";
 import { ElMessageBox, ElMessage, UploadFiles } from "element-plus";
 import { getToken } from "@/utils/auth2";
+import { ta } from "element-plus/es/locale";
 
 const emit = defineEmits(["submit"]);
 const props = defineProps({
@@ -138,8 +186,45 @@ const handleSuccess = (response: any, file: any) => {
   } else {
     // 后端2
     const data: any = response["对象"];
-    if (Array.isArray(data)) {
-      tableData.value = data;
+    // 241230 特殊表格处理
+    if (!data) {
+      ElMessage.error("解析数据失败，请检查文件格式是否正确！");
+      return;
+    }
+    const {
+      内容: { 数据列表: list },
+    } = data;
+    if (Array.isArray(list)) {
+      console.log("list==", list);
+      const parentNodeNames = ["广投石化", "永盛公司"];
+      // 找出父节点的位置，假定顺序严格按照父1-子11-子12-父2-子21-子22
+      const parentIndexs = list
+        .map((item, index) =>
+          parentNodeNames.includes(item.名称) ? index : -1
+        )
+        .filter((index) => index !== -1);
+      // 生成树形结构
+      const treeData: any[] = [];
+      parentIndexs.forEach((parentIndex, index) => {
+        const result = {
+          名称: list[parentIndex].名称,
+          全年预测固定成本: list[parentIndex].全年预测固定成本,
+          数据: list[parentIndex].数据,
+          children: [] as any[],
+        };
+        const children = list.slice(parentIndex + 1, parentIndexs[index + 1]);
+        result.children = children.map((child) => ({
+          名称: child.名称,
+          全年预测固定成本: child.全年预测固定成本,
+          数据: child.数据,
+        })) as any[];
+        // if (result.children.length === 0) {
+        //   result.hasChildren = false;
+        // }
+        treeData.push(result);
+      });
+      tableData.value = treeData;
+      console.log("tableData==", tableData.value);
     } else {
       ElMessage.error("解析数据失败，请检查文件格式是否正确！");
     }

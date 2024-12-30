@@ -341,7 +341,7 @@ const handleAddRecord = () => {
   router.push({
     name: "ReportForm",
     query: {
-      type: "bargainReport",
+      type: "fixedCostReport",
     },
   });
 };

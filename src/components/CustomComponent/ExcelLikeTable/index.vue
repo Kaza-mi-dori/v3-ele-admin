@@ -300,7 +300,7 @@ const initTableData = () => {
     });
     return rowObj;
   });
-  // console.log("tableData", tableData);
+  console.log("tableData", tableData);
 };
 
 // 初始化表格数据

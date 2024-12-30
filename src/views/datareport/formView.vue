@@ -83,6 +83,7 @@ import bargainReportDetailForm from "@/views/datareport/bargainReport/detail.vue
 import fixedCostReportDetailForm from "@/views/datareport/fixedCostReport/detail.vue";
 import BusinessFormAPI from "@/api/businessForm";
 import BusinessStandbookAPI from "@/api/businessStandBook";
+import { bargainFormApi } from "@/api/datasource/bargainForm";
 import { ElMessage } from "element-plus";
 import { stringToArray, arrayToString } from "@/utils";
 import { ref, onMounted, shallowRef } from "vue";
@@ -373,6 +374,11 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         修改时间: data["修改时间"],
         日期: data["日期"],
       };
+    case "bargainReport":
+      return {
+        year: data["日期"],
+        content: data["内容"]?.["数据列表"] || [],
+      };
     default:
       return data;
   }
@@ -597,6 +603,12 @@ const convertToBackendData = (type: string | null, data: any) => {
         累计贸易额: data["累计贸易额"],
         累计签订合同数: data["累计签订合同数"],
         未履约合同数: data["未履约合同数"],
+      };
+      return result;
+    case "bargainReport":
+      result["日期"] = data.year;
+      result["内容"] = {
+        数据列表: data.content,
       };
       return result;
     default:
@@ -845,6 +857,34 @@ const submitForm = async () => {
         .finally(() => {
           submitting.value = false;
         });
+      break;
+    case "bargainReport":
+      const opBargainReport = route.query.id
+        ? bargainFormApi.update
+        : bargainFormApi.add;
+      opBargainReport(realDataToSubmit)
+        .then(() => {
+          isEditing.value = false;
+          if (!route.query.id) {
+            // 跳转到列表页
+            ElMessage.success("提交成功, 正在跳转到列表页");
+            setTimeout(() => {
+              router.push({
+                name: "BargainReportMng",
+              });
+            }, 500);
+          } else {
+            ElMessage.success("提交成功");
+          }
+        })
+        .catch((err) => {
+          isEditing.value = false;
+          ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
+        });
+      break;
     default:
       break;
   }
@@ -999,7 +1039,19 @@ const initForm = () => {
       }
       break;
     case bargainReportDetailForm:
-      console.log("bargain report");
+      if (route.query.id) {
+        bargainFormApi.getDetail(route.query.id as string).then((data) => {
+          if (formRef.value) {
+            const form = formRef.value as any;
+            form.setFormValue(
+              converToFrontendFormData(
+                route.query.type as Nullable<string>,
+                data
+              )
+            );
+          }
+        });
+      }
       break;
     case fixedCostReportDetailForm:
       break;
