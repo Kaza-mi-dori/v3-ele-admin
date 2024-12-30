@@ -52,6 +52,7 @@ import header from "@/views/bigscreen/img/left_box1_top.png";
 import center from "@/views/bigscreen/img/left_box1_center.png";
 import bottom from "@/views/bigscreen/img/left_box1_bottom.png";
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
   /** 标题 */
@@ -66,6 +67,8 @@ const props = defineProps<{
   yoy: number;
 }>();
 
+const router = useRouter();
+
 const graphRef = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
 
@@ -73,15 +76,27 @@ const fulfilledPercent = computed(() => {
   return ((props.fulfilled / props.target) * 100).toFixed(1);
 });
 
+function handleClick(params: any) {
+  const route = router.resolve({
+    name: props.title === "年度营收" ? "RevenueAnalysis" : "ProfitAnalysis",
+    query: {
+      module: props.title,
+    },
+  });
+  window.open(route.href, "_blank");
+}
+
 function initChart() {
   if (!chartRef.value) {
     chartRef.value = echarts.init(graphRef.value as HTMLDivElement);
+    chartRef.value.getZr().on("click", handleClick);
   }
   chartRef.value.clear();
   const option = {
     series: [
       {
         type: "liquidFill",
+        name: props.title,
         data: [
           {
             value: fulfilledPercent.value / 100,
