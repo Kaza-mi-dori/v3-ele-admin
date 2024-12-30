@@ -334,9 +334,11 @@ const handleResetFilter = () => {
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res = await BusinessFormAPI.getBusinessReportFormList(
-      queryForm.value
-    );
+    const res = await BusinessFormAPI.getBusinessReportFormList({
+      ...queryForm.value,
+      页码: pagination.value.currentPage,
+      页容量: pagination.value.pageSize,
+    });
     tableData.value = res["当前记录"];
     pagination.value.total = +res["记录总数"];
   } catch (error) {
