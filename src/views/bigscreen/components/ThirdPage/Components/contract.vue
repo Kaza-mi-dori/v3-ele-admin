@@ -26,29 +26,28 @@
     <div class="content-form">
       <el-table
         stripe
-        :data="
-          tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-        "
+        :data="tableData"
         style="width: 100%"
         height="480"
         @current-change="handleCurrentChange"
       >
-        <el-table-column label="签订时间" prop="签订日期" />
+        <el-table-column label="签订时间" prop="签署日期" />
         <el-table-column label="合同类型" prop="合同类型" />
         <el-table-column label="合同编号" prop="合同编号" />
         <el-table-column label="合同名称" prop="合同名称" />
-        <el-table-column label="合同金额" prop="合同金额" />
+        <el-table-column label="合同金额(含税)(万元)" prop="含税金额" />
         <el-table-column label="相对方" prop="相对人名称" />
+        <el-table-column label="我方" prop="我方名称" />
       </el-table>
       <el-pagination
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        :page-sizes="pageSizes"
+        v-model:current-page="pagination.currentPage"
+        v-model:page-size="pagination.pageSize"
+        :page-sizes="pagination.pageSizes"
         :size="size"
         background
         layout="total, sizes, prev, pager, next"
         style="margin-top: 10px; display: flex; justify-content: center"
-        :total="tableData.length"
+        :total="pagination.total"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -62,6 +61,7 @@ import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
 import { ArrowRight } from "@element-plus/icons-vue";
 import { ComponentSize } from "element-plus";
+import BusinessStandbookAPI from "@/api/businessStandBook";
 
 const router = useRouter();
 
@@ -77,79 +77,7 @@ const filters: Ref<any> = ref({
 
 const inputValue = ref("");
 
-// 每个类别对应的数据系列
-const months = [
-  "1月",
-  "2月",
-  "3月",
-  "4月",
-  "5月",
-  "6月",
-  "7月",
-  "8月",
-  "9月",
-  "10月",
-  "11月",
-  "12月",
-];
-
-// 随机生成收入数据
-const getRandomData = () => {
-  // return months.map((month, index) => ({
-  //   month: month,
-  //   planned: Math.floor(Math.random() * 101), // 计划经营收入
-  //   actual: Math.floor(Math.random() * 101), // 实际经营收入
-  // }));
-  return [
-    {
-      签订日期: "2021-01-01",
-      合同类型: "销售",
-      合同编号: "HT20210101",
-      合同名称: "销售合同",
-      合同金额: "10000",
-      相对人名称: "测试公司A",
-    },
-    {
-      签订日期: "2021-02-01",
-      合同类型: "采购",
-      合同编号: "HT20210201",
-      合同名称: "采购合同",
-      合同金额: "20000",
-      相对人名称: "测试公司B",
-    },
-    {
-      签订日期: "2021-03-01",
-      合同类型: "运输",
-      合同编号: "HT20210301",
-      合同名称: "运输合同",
-      合同金额: "30000",
-      相对人名称: "测试公司C",
-    },
-    {
-      签订日期: "2021-04-01",
-      合同类型: "仓储",
-      合同编号: "HT20210401",
-      合同名称: "仓储合同",
-      合同金额: "40000",
-      相对人名称: "测试公司D",
-    },
-    {
-      签订日期: "2021-05-01",
-      合同类型: "装卸",
-      合同编号: "HT20210501",
-      合同名称: "装卸合同",
-      合同金额: "50000",
-      相对人名称: "孙七",
-    },
-  ];
-};
-
-// 填充表格数据
-const chartData = getRandomData();
-
-//更新表格数据
-const tableData = ref(chartData);
-
+const tableData: Ref<[]> = ref([]);
 // 初始化Echarts图表
 const chart = shallowRef<echarts.ECharts | null>(null);
 
@@ -162,7 +90,6 @@ const initChart = () => {
   chart.value.clear();
 
   // 饼状图
-
   const option = {
     title: {
       text: "合同类型分布",
@@ -220,9 +147,36 @@ const goBack = () => {
   router.go(-1);
 };
 
+const queryForm: Ref<any> = ref({
+  状态集合: undefined,
+  数据源集合: undefined,
+  日期早于: undefined,
+  日期晚于: undefined,
+  页码: 1,
+  页容量: 10,
+});
+
+const pagination: Ref<any> = ref({
+  total: 100,
+  pageSizes: [10, 20, 50, 100],
+  pageSize: 10, // //每页大小
+  currentPage: 1, // 当前页
+});
+
 async function initTableData() {
-  tableData.value = getRandomData();
-}
+  BusinessStandbookAPI.getContractLedgerRecordList({
+    ...queryForm.value,
+    页码: pagination.value.currentPage,
+    页容量: pagination.value.pageSize,
+  })
+    .then((res: any) => {
+      tableData.value = res["当前记录"];
+      pagination.value.total = +res["记录总数"];
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
 
 onMounted(async () => {
   const route = router.currentRoute.value;
@@ -240,16 +194,15 @@ onMounted(async () => {
   });
 });
 
-const currentPage = ref(1); //当前页
-const pageSize = ref(10); //每页大小
-const pageSizes = ref([10, 20, 50, 100]);
 const size = ref<ComponentSize>("default");
 
-const handleSizeChange = (val: number) => {
-  pageSize.value = val;
+const handleSizeChange = (pageSize: number) => {
+  pagination.value.pageSize = pageSize;
+  initTableData();
 };
-const handleCurrentChange = (val: number) => {
-  currentPage.value = val;
+const handleCurrentChange = (currentPage: number) => {
+  pagination.value.currentPage = currentPage;
+  initTableData();
 };
 </script>
 
