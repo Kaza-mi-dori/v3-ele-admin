@@ -140,6 +140,24 @@ export const constantRoutes: RouteRecordRaw[] = [
                 "@/views/bigscreen/components/ThirdPage/Components/contract.vue"
               ),
           },
+          // 营收分析
+          {
+            name: "RevenueAnalysis",
+            path: "revenueAnalysis",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/ThirdPage/Components/revenue.vue"
+              ),
+          },
+          // 利润分析
+          {
+            name: "ProfitAnalysis",
+            path: "profitAnalysis",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/ThirdPage/Components/profit.vue"
+              ),
+          },
         ],
       },
     ],
