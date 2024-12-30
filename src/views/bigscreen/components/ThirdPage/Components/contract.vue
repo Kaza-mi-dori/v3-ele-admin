@@ -25,6 +25,7 @@
     </div>
     <div class="content-form">
       <el-table
+        class="g-table-2"
         stripe
         :data="tableData"
         style="width: 100%"
@@ -464,4 +465,12 @@ const handleCurrentChange = (currentPage: number) => {
 //     background-color: #1c1e57 !important;
 //   }
 // }
+
+:deep(.g-table-2.el-table) {
+  // 行距拉高
+  .cell {
+    line-height: 36px !important;
+    font-size: 16px;
+  }
+}
 </style>
