@@ -17,7 +17,6 @@ import { ref, onMounted } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { useRouter } from "vue-router";
 import sassvariables from "@/styles/variables.module.scss";
-import { text } from "stream/consumers";
 
 const REVENUE = "REVENUE";
 const PROFIT = "PROFIT";
@@ -39,19 +38,19 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
 });
 
 const handleClick = (tab: TabsPaneContext) => {
-  console.log(tab);
   activeName.value = tab.paneName;
   initChartRight3(); // 切换页签时重新初始化图表
 };
 
 const clickBarCb = (params: any) => {
-  router.push({
-    name: "ContractList",
+  const { seriesName, name: year } = params;
+  const route = router.resolve({
+    name: seriesName === "营收" ? "RevenueAnalysis" : "ProfitAnalysis",
     query: {
-      module: "contract",
-      businessType: params.name,
+      year,
     },
   });
+  window.open(route.href, "_blank");
 };
 
 let resData = ref([]);

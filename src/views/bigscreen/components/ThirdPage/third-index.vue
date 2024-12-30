@@ -258,7 +258,7 @@ const handleCurrentChange = (val: number) => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  // height: 100%;
   background-color: #030542;
 }
 .bg-view1__header {
@@ -319,7 +319,7 @@ const handleCurrentChange = (val: number) => {
 }
 .bg-view1__body {
   flex-grow: 1;
-  margin: 20px 50px 50px 50px;
+  padding: 20px 50px 20px 50px;
   ::-webkit-scrollbar {
     display: none;
   }
