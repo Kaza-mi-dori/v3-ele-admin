@@ -477,6 +477,8 @@ const handleCurrentRowChange = (val: any) => {
   border: 1px solid #21246f !important;
   font-size: 16px;
   .el-input__wrapper {
+    padding-top: 2px;
+    padding-bottom: 2px;
     background-color: #1c1e57 !important;
   }
   .el-input__inner {
