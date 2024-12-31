@@ -30,6 +30,7 @@ const initChart2Left2 = () => {
         color: "#fff",
       },
       // 图例位置
+      top: 10,
       right: 5,
     },
     // 颜色
@@ -77,6 +78,8 @@ const initChart2Left2 = () => {
           value: Math.floor(Math.random() * 100),
           name: ContractTypeEnumMap[key as keyof typeof ContractTypeEnumMap],
         })),
+        // 添加center属性调整饼图位置
+        center: ["42%", "50%"], //X轴位置调整为40%，Y轴位置保持在50%
       },
     ],
   };
