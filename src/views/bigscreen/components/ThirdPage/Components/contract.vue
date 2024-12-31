@@ -166,9 +166,9 @@ const initChart2 = () => {
       },
     },
     // 橙色与蓝色
-    color: ["#FFA500"],
+    color: ["#FFA500", "#00CFFF"],
     legend: {
-      data: ["合同金额"],
+      data: ["合同金额", "合同数量"],
       textStyle: {
         color: "#fff",
       },
@@ -187,31 +187,58 @@ const initChart2 = () => {
         color: "#fff",
       },
     },
-    yAxis: {
-      type: "value",
-      name: "单位：万元",
-      nameTextStyle: {
-        color: "#fff",
-        fontSize: 15,
-      },
-      axisLine: {
-        show: true, // 显示坐标轴线
-        lineStyle: {
+    yAxis: [
+      {
+        type: "value",
+        name: "单位：万元",
+        nameTextStyle: {
+          color: "#fff",
+          fontSize: 15,
+        },
+        axisLine: {
+          show: true, // 显示坐标轴线
+          lineStyle: {
+            color: "#fff",
+          },
+        },
+        splitLine: {
+          show: true, // 显示分割线
+          lineStyle: {
+            type: "dashed", // 虚线
+            color: "#fff",
+          },
+        },
+        axisLabel: {
+          fontSize: 14,
           color: "#fff",
         },
       },
-      splitLine: {
-        show: true, // 显示分割线
-        lineStyle: {
-          type: "dashed", // 虚线
+      {
+        type: "value",
+        name: "合同数量",
+        nameTextStyle: {
+          color: "#fff",
+          fontSize: 15,
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: "#fff",
+          },
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            type: "dashed",
+            color: "#fff",
+          },
+        },
+        axisLabel: {
+          fontSize: 14,
           color: "#fff",
         },
       },
-      axisLabel: {
-        fontSize: 14,
-        color: "#fff",
-      },
-    },
+    ],
     series: [
       {
         type: "bar",
@@ -220,6 +247,22 @@ const initChart2 = () => {
         data: profitDataArray.map((item) => item.合同金额), // Y轴数据为合同金额
         name: "合同金额",
         // 显示标签
+        label: {
+          show: true,
+          position: "top",
+          color: "#fff",
+          textStyle: {
+            fontSize: "1rem",
+          },
+        },
+      },
+      {
+        type: "bar",
+        barWidth: "40%",
+        barGap: "10%",
+        data: profitDataArray.map((item) => item.合同数量), // Y轴数据为合同数量
+        name: "合同数量",
+        yAxisIndex: 1,
         label: {
           show: true,
           position: "top",
@@ -300,23 +343,29 @@ const calculateContractTypeData = () => {
 };
 
 const calculateProfitData = () => {
-  const profitMap: { [key: string]: number } = {};
+  const profitDataMap: {
+    [key: string]: { totalAmount: number; count: number };
+  } = {};
 
-  // 计算每个我方的合同金额总和
+  // 计算每个我方的合同金额总和和合同数量
   tableData.value.forEach((item) => {
     const partyName = item["我方名称"];
     const amount = parseFloat(item["含税金额"]);
+    const contractType = item["合同类型"];
 
-    if (!profitMap[partyName]) {
-      profitMap[partyName] = 0;
+    if (!profitDataMap[partyName]) {
+      profitDataMap[partyName] = { totalAmount: 0, count: 0 };
     }
-    profitMap[partyName] += amount;
+
+    profitDataMap[partyName].totalAmount += amount;
+    profitDataMap[partyName].count += 1;
   });
 
   // 转换为ECharts需要的数据格式
-  const profitDataArray = Object.keys(profitMap).map((partyName) => ({
+  const profitDataArray = Object.keys(profitDataMap).map((partyName) => ({
     企业名称: partyName,
-    合同金额: profitMap[partyName],
+    合同金额: profitDataMap[partyName].totalAmount,
+    合同数量: profitDataMap[partyName].count,
   }));
 
   return profitDataArray;
