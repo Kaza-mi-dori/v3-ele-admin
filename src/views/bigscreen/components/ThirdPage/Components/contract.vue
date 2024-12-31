@@ -215,7 +215,7 @@ const initChart2 = () => {
       },
       {
         type: "value",
-        name: "合同数量",
+        name: "单位：份",
         nameTextStyle: {
           color: "#fff",
           fontSize: 15,
