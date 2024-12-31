@@ -674,6 +674,12 @@ const handleCurrentChange = (currentPage: number) => {
   box-shadow: 0 0 0 2px #272a9b inset;
 }
 
+:deep(
+    .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell
+  ) {
+  background-color: #272786 !important;
+}
+
 // :deep(.el-table) {
 //   // 高亮当前行的背景色为#1c1e57
 //   .el-table__body tr.current-row {
