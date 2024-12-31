@@ -74,14 +74,14 @@ const initChart2Left2 = async () => {
       {
         name: "合同类型",
         type: "pie",
-        radius: ["45%", "70%"], // 环形图内外圈半径设置
+        radius: ["40%", "65%"], // 环形图内外圈半径设置
         startAngle: -180, // 设置饼图的起始角度，使得饼图从顶部开始
         avoidLabelOverlap: false,
         label: {
           // 标签
           show: true,
           position: "outside", // 标签显示在外部
-          formatter: "{b}，{c}\n{d}%", // 格式化标签，显示名称和占比
+          formatter: "{b}\n{c}，{d}%", // 格式化标签，显示名称和占比
           color: "#fff",
           fontSize: 16,
           fontWight: 400,
@@ -100,7 +100,7 @@ const initChart2Left2 = async () => {
           // 鼠标悬浮时
           label: {
             show: true,
-            fontSize: 20,
+            fontSize: 17,
           },
         },
         data: itemLists.value.map((item) => {
