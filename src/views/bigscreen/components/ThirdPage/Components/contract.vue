@@ -662,6 +662,18 @@ const handleCurrentChange = (currentPage: number) => {
   display: none;
 }
 
+:deep(.el-input__wrapper) {
+  box-shadow: 0 0 0 1px #272a9b inset;
+}
+
+:deep(.el-select__wrapper) {
+  box-shadow: 0 0 0 1px #272a9b inset;
+}
+
+:deep(.el-select__wrapper.is-hovering:not(.is-focused)) {
+  box-shadow: 0 0 0 2px #272a9b inset;
+}
+
 // :deep(.el-table) {
 //   // 高亮当前行的背景色为#1c1e57
 //   .el-table__body tr.current-row {
