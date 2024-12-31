@@ -22,6 +22,7 @@
     </div>
     <div class="content-middle">
       <div id="chart-contract-1" style="flex: 1; height: 300px; margin: auto" />
+      <div id="chart-contract-2" style="flex: 1; height: 300px; margin: auto" />
     </div>
     <div class="content-form">
       <el-table
@@ -81,6 +82,7 @@ const inputValue = ref("");
 const tableData: Ref<[]> = ref([]);
 // 初始化Echarts图表
 const chart = shallowRef<echarts.ECharts | null>(null);
+const chart2 = shallowRef<echarts.ECharts | null>(null);
 
 const initChart1 = () => {
   if (!chart.value) {
@@ -144,6 +146,94 @@ const initChart1 = () => {
   chart.value.setOption(option);
 };
 
+// 右侧图
+const initChart2 = () => {
+  if (!chart2.value) {
+    chart2.value = echarts.init(
+      document.getElementById("chart-contract-2") as HTMLDivElement
+    );
+  }
+  chart2.value.clear();
+
+  const profitDataArray = calculateProfitData(); // 获取我方合同金额数据
+
+  // 柱状图
+  const option = {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+    },
+    // 橙色与蓝色
+    color: ["#FFA500"],
+    legend: {
+      data: ["合同金额"],
+      textStyle: {
+        color: "#fff",
+      },
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
+    },
+    xAxis: {
+      type: "category",
+      data: profitDataArray.map((item) => item.企业名称), // X轴数据为我方名称
+      axisLabel: {
+        fontSize: 14,
+        color: "#fff",
+      },
+    },
+    yAxis: {
+      type: "value",
+      name: "单位：万元",
+      nameTextStyle: {
+        color: "#fff",
+        fontSize: 15,
+      },
+      axisLine: {
+        show: true, // 显示坐标轴线
+        lineStyle: {
+          color: "#fff",
+        },
+      },
+      splitLine: {
+        show: true, // 显示分割线
+        lineStyle: {
+          type: "dashed", // 虚线
+          color: "#fff",
+        },
+      },
+      axisLabel: {
+        fontSize: 14,
+        color: "#fff",
+      },
+    },
+    series: [
+      {
+        type: "bar",
+        barWidth: "40%",
+        barGap: "10%", // 柱体间距
+        data: profitDataArray.map((item) => item.合同金额), // Y轴数据为合同金额
+        name: "合同金额",
+        // 显示标签
+        label: {
+          show: true,
+          position: "top",
+          color: "#fff",
+          textStyle: {
+            fontSize: "1rem",
+          },
+        },
+      },
+    ],
+  };
+  chart2.value.setOption(option);
+};
+
 const goBack = () => {
   router.go(-1);
 };
@@ -174,6 +264,7 @@ async function initTableData() {
       tableData.value = res["当前记录"];
       pagination.value.total = +res["记录总数"];
       initChart1(); // 在数据加载后更新图表
+      initChart2();
     })
     .catch((err) => {
       console.error(err);
@@ -208,6 +299,29 @@ const calculateContractTypeData = () => {
   return { chartData, totalAmount };
 };
 
+const calculateProfitData = () => {
+  const profitMap: { [key: string]: number } = {};
+
+  // 计算每个我方的合同金额总和
+  tableData.value.forEach((item) => {
+    const partyName = item["我方名称"];
+    const amount = parseFloat(item["含税金额"]);
+
+    if (!profitMap[partyName]) {
+      profitMap[partyName] = 0;
+    }
+    profitMap[partyName] += amount;
+  });
+
+  // 转换为ECharts需要的数据格式
+  const profitDataArray = Object.keys(profitMap).map((partyName) => ({
+    企业名称: partyName,
+    合同金额: profitMap[partyName],
+  }));
+
+  return profitDataArray;
+};
+
 onMounted(async () => {
   const route = router.currentRoute.value;
   if (route.query.filters) {
@@ -218,9 +332,10 @@ onMounted(async () => {
     };
   }
   await initTableData();
-  setTimeout(() => {
-    initChart1();
-  }, 100);
+  // setTimeout(() => {
+  //   initChart1();
+  //   initChart2();
+  // }, 100);
   window.addEventListener("resize", () => {
     chart.value?.resize();
   });
