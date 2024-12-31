@@ -73,7 +73,7 @@ function initChart() {
           lineHeight: 20,
           // 上面一行是标题+百分比，下一行是数值
           // {rich|{d}%}的意思是使用rich中的d字段，d字段是百分比, {c}是数值, {b}是标题, {a}是标题+百分比
-          formatter: `{b} {d}%\n{c}万元`,
+          formatter: `{b}\n{d}%\n{c}万元`,
           rich: {
             a: {
               color: "#fff",
