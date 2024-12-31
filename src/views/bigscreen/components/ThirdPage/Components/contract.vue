@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="content-middle">
-      <div id="chart3-1" style="width: 80%; height: 300px; margin: auto" />
+      <div id="chart-contract-1" style="flex: 1; height: 300px; margin: auto" />
     </div>
     <div class="content-form">
       <el-table
@@ -82,13 +82,15 @@ const tableData: Ref<[]> = ref([]);
 // 初始化Echarts图表
 const chart = shallowRef<echarts.ECharts | null>(null);
 
-const initChart = () => {
+const initChart1 = () => {
   if (!chart.value) {
     chart.value = echarts.init(
-      document.getElementById("chart3-1") as HTMLDivElement
+      document.getElementById("chart-contract-1") as HTMLDivElement
     );
   }
   chart.value.clear();
+
+  const { chartData } = calculateContractTypeData(); // 获取合同类型数据
 
   // 饼状图
   const option = {
@@ -107,7 +109,7 @@ const initChart = () => {
     legend: {
       orient: "vertical",
       left: "left",
-      data: ["销售", "采购", "运输", "仓储", "装卸"],
+      data: chartData.map((item) => item.name),
       textStyle: {
         color: "#fff",
       },
@@ -118,18 +120,16 @@ const initChart = () => {
         type: "pie",
         radius: "55%",
         center: ["50%", "60%"],
-        data: [
-          { value: 335, name: "销售" },
-          { value: 310, name: "采购" },
-          { value: 234, name: "运输" },
-          { value: 135, name: "仓储" },
-          { value: 1548, name: "装卸" },
-        ],
+        data: chartData.map((item) => ({
+          value: item.value,
+          name: item.name,
+        })),
         label: {
           show: true,
           // 颜色暗些
           color: "#eee",
           fontSize: 16,
+          formatter: "{b} : {c}万元 ({d}%)",
         },
         emphasis: {
           itemStyle: {
@@ -173,10 +173,39 @@ async function initTableData() {
     .then((res: any) => {
       tableData.value = res["当前记录"];
       pagination.value.total = +res["记录总数"];
+      initChart1(); // 在数据加载后更新图表
     })
     .catch((err) => {
       console.error(err);
     });
+};
+
+const calculateContractTypeData = () => {
+  const typeMap: { [key: string]: number } = {};
+  let totalAmount = 0;
+
+  // 计算每种合同类型的总金额
+  tableData.value.forEach((item) => {
+    const type = item["合同类型"];
+    const amount = parseFloat(item["含税金额"]);
+
+    if (!typeMap[type]) {
+      typeMap[type] = 0;
+    }
+    typeMap[type] += amount;
+    totalAmount += amount;
+  });
+
+  // 转换为ECharts需要的数据格式
+  const chartData = Object.keys(typeMap).map((type) => {
+    return {
+      name: type,
+      value: typeMap[type],
+      percentage: ((typeMap[type] / totalAmount) * 100).toFixed(2) + "%",
+    };
+  });
+
+  return { chartData, totalAmount };
 };
 
 onMounted(async () => {
@@ -189,7 +218,9 @@ onMounted(async () => {
     };
   }
   await initTableData();
-  initChart();
+  setTimeout(() => {
+    initChart1();
+  }, 100);
   window.addEventListener("resize", () => {
     chart.value?.resize();
   });
@@ -353,6 +384,10 @@ const handleCurrentChange = (currentPage: number) => {
 }
 .content-middle {
   margin-top: 20px;
+  @apply flex justify-center flex-gap-2;
+  canvas {
+    width: 100%;
+  }
 }
 .content-form {
   margin-top: 20px;
