@@ -644,6 +644,10 @@ const handleCurrentRowChange = (val: any) => {
   color: #272a9b;
 }
 
+:deep(.el-table__inner-wrapper:before) {
+  display: none;
+}
+
 // :deep(.el-table) {
 //   // 高亮当前行的背景色为#1c1e57
 //   .el-table__body tr.current-row {
