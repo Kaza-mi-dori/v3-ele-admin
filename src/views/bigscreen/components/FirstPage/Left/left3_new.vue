@@ -130,8 +130,8 @@ const initData = async () => {
   };
 
   resData.forEach((item: any) => {
-    totals["累计采购"].yearTotal += Number(item.累计采购金额) || 0;
-    totals["累计采购"].monthTotal += Number(item.当期采购金额) || 0;
+    totals["累计采购"].yearTotal = Number(item.累计采购金额) || 0;
+    totals["累计采购"].monthTotal = Number(item.当期采购金额) || 0;
 
     totals["累计销售"].yearTotal = Number(item.累计销售金额) || 0;
     totals["累计销售"].monthTotal = Number(item.当期销售金额) || 0;
