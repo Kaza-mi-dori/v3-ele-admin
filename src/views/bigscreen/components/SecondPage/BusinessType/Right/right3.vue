@@ -48,7 +48,7 @@ const initChart = () => {
       itemWidth: 15, // 设置矩形宽度
       itemHeight: 10, // 设置矩形高度
       itemStyle: {
-        color: "#F44586", // 矩形颜色
+        color: "#DB8943", // 矩形颜色
       },
     },
     grid: {
