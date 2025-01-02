@@ -241,6 +241,17 @@ onMounted(async () => {
     }, 100);
   });
 });
+
+// 每次更新时，重新计算缩放
+onUpdated(() => {
+  nextTick(() => {
+    initScale();
+    // 让所有echarts图表自适应
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 100);
+  });
+});
 </script>
 
 <style lang="scss" scoped>

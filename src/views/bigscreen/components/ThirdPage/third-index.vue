@@ -230,7 +230,15 @@ const initChart = () => {
 };
 
 const goBack = () => {
-  router.go(-1);
+  // 如果路由栈中有上一页，则返回上一页，否则返回首页
+  if (window.history.length <= 1) {
+    // const route = router.resolve({ path: "/bigScreenBoard/index" });
+    router.push({
+      name: "BigScreenBoard",
+    });
+  } else {
+    router.go(-1);
+  }
 };
 
 onMounted(() => {

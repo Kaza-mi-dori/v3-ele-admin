@@ -173,7 +173,7 @@ const initChartMiddle4 = () => {
       trigger: "axis",
     },
     grid: {
-      left: "3%",
+      left: "5%",
       right: "4%",
       bottom: "2%",
       containLabel: true,
@@ -208,6 +208,7 @@ const initChartMiddle4 = () => {
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
+        padding: [0, 0, 0, 20],
       },
       axisLine: {
         show: true, // 显示坐标轴线

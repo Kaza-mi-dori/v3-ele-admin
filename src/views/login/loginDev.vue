@@ -26,6 +26,10 @@
           :rules="rules"
           label-width="80px"
         >
+          <div class="form-title">
+            <!-- <h2>数据采集及可视化平台</h2> -->
+            <h2>二次验证(开发环境)</h2>
+          </div>
           <el-form-item label="用户名" prop="username">
             <el-input v-model="loginData.username" />
           </el-form-item>

@@ -22,7 +22,7 @@
       <div class="login-form">
         <el-form ref="loginFormRef" :model="loginData" :rules="loginRules">
           <div class="form-title">
-            <h2>{{ defaultSettings.title }}</h2>
+            <h2>数据采集及可视化平台</h2>
             <el-dropdown style="position: absolute; right: 0">
               <div class="cursor-pointer">
                 <el-icon>
