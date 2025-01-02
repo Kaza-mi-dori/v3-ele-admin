@@ -140,7 +140,7 @@ const initTMapApi = () => {
   flex: 0.75;
 }
 .left3 {
-  flex: 0.8;
+  flex: 0.4;
 }
 .left4 {
   flex: 0.6;

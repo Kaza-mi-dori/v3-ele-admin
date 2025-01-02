@@ -81,7 +81,7 @@ const handleMouseoutText = () => {
   }
   .scroll-area {
     flex: 1.1;
-    max-height: 180px;
+    max-height: 230px;
     margin: auto;
     overflow: hidden;
   }
