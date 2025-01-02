@@ -54,7 +54,7 @@
         </el-form>
       </div>
     </div>
-    <div class="info-card-level1">
+    <div v-if="ordersTableData.length > 0" class="info-card-level1">
       <div class="__title">
         <span>报表信息</span>
       </div>
@@ -209,6 +209,38 @@
         </el-form>
       </div>
     </div>
+    <!-- 关联信息 -->
+    <div class="info-card-level1">
+      <div class="__title">
+        <span>执行追踪</span>
+      </div>
+      <div class="__content">
+        <div class="flex mb-4 items-center">
+          <!-- 表格，显示关联的合同、订单、回款、结算 -->
+          <el-table
+            :data="ordersTableData"
+            row-key="id"
+            style="width: 100%"
+            :tree-props="{ children: '关联款项' }"
+            show-summary
+            :summary-method="getOrdersSummary"
+          >
+            <el-table-column label="类型" prop="类型" />
+            <el-table-column label="编号">
+              <template v-slot="scope">
+                <el-link type="primary" @click="handleExpand(scope.row)">
+                  {{ scope.row.编号 }}
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column prop="日期" label="日期" />
+            <el-table-column prop="金额" label="金额" />
+            <el-table-column prop="状态" label="状态" />
+            <el-table-column prop="百分比" label="合同占比" />
+          </el-table>
+        </div>
+      </div>
+    </div>
     <div class="info-card-level1">
       <div class="__title">
         <span>附件信息</span>
@@ -310,6 +342,37 @@ const props = defineProps({
 const { id, editing } = toRefs(props);
 const formRef = ref<Nullable<FormInstance>>(null);
 
+const ordersTableData = ref([
+  {
+    id: 1,
+    类型: "货转单",
+    编号: "HT2022001",
+    日期: "2022-01-01",
+    金额: "1000000",
+    状态: "未完成",
+    百分比: "10%",
+    关联款项: [
+      {
+        类型: "回款",
+        日期: "2024-11-01",
+        金额: "20000",
+        状态: "已付款",
+        款项说明: "第一笔回款",
+        百分比: "20%",
+      },
+    ],
+  },
+  {
+    id: 2,
+    类型: "货转单",
+    编号: "HT2022002",
+    日期: "2022-01-02",
+    金额: "2000000",
+    状态: "已完成",
+    百分比: "20%",
+  },
+]);
+
 const firmReportDetailForm = ref({
   /** 数据来源 */
   source: DatasourceEnumMap[DatasourceEnum.OTHER],
@@ -334,7 +397,7 @@ const firmReportDetailForm = ref({
   /** 履约期限 */
   expired: undefined,
   /** 附件 */
-  attachment: [],
+  attachment: [] as Array<{ name: string; url: string; type: string }>,
 });
 
 const rules: Ref<GenericRecord> = ref({
@@ -443,6 +506,35 @@ const setFormValue = (value: any) => {
 const validateForm = () => {
   return formRef.value?.validate();
 };
+
+const handleExpand = (row: any) => {
+  console.log("handleExpand", row);
+};
+
+function getOrdersSummary(param: any) {
+  const { columns, data } = param;
+  const sums: any[] = [];
+  // 根据列名，计算汇总金额与百分比
+  columns.forEach((column: any, index: number) => {
+    if (index === 0) {
+      sums[index] = "";
+      return;
+    }
+    if (column.property === "金额") {
+      sums[index] = data.reduce((sum: number, row: any) => {
+        return sum + Number(row.金额);
+      }, 0);
+    } else if (column.property === "百分比") {
+      sums[index] = data.reduce((sum: number, row: any) => {
+        return sum + parseFloat(row.百分比);
+      }, 0);
+    } else {
+      sums[index] = "-";
+      return;
+    }
+  });
+  return sums;
+}
 
 // 取消类型验证
 const generateRandomData = () => {

@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">订单台账</div>
+      <div class="__title">货单台账</div>
       <div class="__stat">
         <span class="__item">你有</span>
         <span class="__item">统计指标一</span>
@@ -67,7 +67,12 @@
       </el-table-column>
       <el-table-column prop="name" label="名称" align="center">
         <template v-slot="scope">
-          <el-link type="primary">{{ scope.row.name }}</el-link>
+          <el-link
+            type="primary"
+            @click="() => handleClickRecord(scope.row, router)"
+          >
+            {{ scope.row.name }}
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column prop="dataFrom" label="订单来源" width="150" sortable>
@@ -123,6 +128,11 @@ import sassvariables from "@/styles/variables.module.scss";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
+import {
+  handleClickRecord,
+  handleAuditRow,
+  handleDeleteRow,
+} from "@/hooks/useTableOp";
 
 const router = useRouter();
 
@@ -219,6 +229,14 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
 const handleConfirmFilter = (filter: any) => {
   console.log(filter);
 };
+
+const initTableData = () => {
+  console.log("初始化表格数据");
+};
+
+onMounted(() => {
+  initTableData();
+});
 </script>
 
 <style lang="scss" scoped>

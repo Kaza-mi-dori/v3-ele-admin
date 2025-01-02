@@ -1,5 +1,5 @@
 import { ElMessage, ElMessageBox } from "element-plus";
-// todo 判断是否有数据管理权限
+import type { Router } from "vue-router";
 
 export const handleDeleteRow = (row: any, api: any, callback: () => void) => {
   // 确认是否删除
@@ -93,4 +93,19 @@ export const handleAuditRow = (
       // 取消审核
       ElMessage.info("已取消审核");
     });
+};
+
+/**
+ * 点击详情操作
+ */
+export const handleClickRecord = (row: any, router: Router) => {
+  const route = router.resolve({
+    name: "ReportForm",
+    query: {
+      type: "orderDetail",
+      id: row.id,
+    },
+  });
+  console.log(route);
+  router.push(route);
 };
