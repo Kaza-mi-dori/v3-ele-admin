@@ -7,8 +7,8 @@
     <div class="__content">
       <div class="__left">
         <div class="text1">
-          <span class="__number">{{ props.fulfilled }}</span>
-          <span class="__unit">亿元</span>
+          <span class="__number">{{ formatNumber(props.fulfilled) }}</span>
+          <span class="__unit">万元</span>
         </div>
         <div class="text2">
           <span class="__desc">同比</span>
@@ -30,7 +30,7 @@
         </div>
         <div class="text2">
           <span class="__desc">目标额</span>
-          <span class="__number">{{ props.target }}亿元</span>
+          <span class="__number">{{ formatNumber(props.target) }}万元</span>
         </div>
       </div>
       <div class="__right">
@@ -71,6 +71,14 @@ const router = useRouter();
 
 const graphRef = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
+
+const formatNumber = (num: number | string): string => {
+  if (Number(num) > 10000) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  } else {
+    return num.toString(); // 直接返回原始数字，不格式化
+  }
+};
 
 const fulfilledPercent = computed(() => {
   return ((props.fulfilled / props.target) * 100).toFixed(1);

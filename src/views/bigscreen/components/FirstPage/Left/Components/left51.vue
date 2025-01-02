@@ -96,7 +96,7 @@ function initChart() {
     // y轴单位
     yAxis: {
       type: "value",
-      name: "单位:亿元",
+      name: "单位:万元",
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontWeight: "bold",
