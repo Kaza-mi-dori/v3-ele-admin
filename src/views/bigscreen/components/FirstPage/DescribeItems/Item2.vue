@@ -32,6 +32,13 @@
           <span class="__desc">目标额</span>
           <span class="__number">{{ formatNumber(props.target) }}万元</span>
         </div>
+        <div class="monthly-total">
+          <div class="scale">月</div>
+          <span class="month-num">
+            {{ formatNumber(props.monthTotal) }}
+          </span>
+          <span class="__unit">万元</span>
+        </div>
       </div>
       <div class="__right">
         <div ref="graphRef" style="height: 80%" />
@@ -65,6 +72,8 @@ const props = defineProps<{
   fulfilled: number;
   /** 同比 */
   yoy: number;
+  /** 本月累计 */
+  monthTotal: number;
 }>();
 
 const router = useRouter();
@@ -86,7 +95,7 @@ const fulfilledPercent = computed(() => {
 
 function handleClick(params: any) {
   const route = router.resolve({
-    name: props.title === "年度营收" ? "RevenueAnalysis" : "ProfitAnalysis",
+    name: props.title === "累计营收" ? "RevenueAnalysis" : "ProfitAnalysis",
     query: {
       module: props.title,
     },
@@ -200,7 +209,7 @@ $number-color-1: #fffe95;
     width: 100%;
     flex: 1;
     display: flex;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
     background-image: url("@/views/bigscreen/img/left_box1_center.png");
     background-size: 100% 100%;
@@ -209,9 +218,37 @@ $number-color-1: #fffe95;
       .text1 {
         margin-bottom: 10px;
       }
+      .monthly-total {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+        font-size: 1em;
+        .scale {
+          margin-right: 5px;
+          font-size: 0.9em;
+          &::after {
+            // 下划线
+            content: "";
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+          }
+        }
+        .__unit {
+          font-size: 0.8em;
+        }
+      }
+      .month-num {
+        color: $number-color-1;
+        font-size: 0.9em;
+        font-weight: bold;
+        /** 勾边 */
+        margin: 0 5px;
+      }
     }
     .__right {
-      width: 50%;
+      width: 40%;
       height: 150px;
       .text {
         text-align: center;

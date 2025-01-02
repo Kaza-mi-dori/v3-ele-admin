@@ -9,15 +9,6 @@
         <DescribeItem4 v-bind="item" />
       </div>
     </div>
-    <div class="flex flex-gap-2 w-full justify-between mt-[10px]">
-      <div
-        v-for="(item, index) in totalData.slice(3)"
-        :key="index"
-        style="flex: 1"
-      >
-        <DescribeItem4 v-bind="item" />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -28,8 +19,6 @@ import DescribeItem4 from "../DescribeItems/Item4.vue";
 import block1 from "@/views/bigscreen/img/left_block1.png";
 import block2 from "@/views/bigscreen/img/left_block2.png";
 import block3 from "@/views/bigscreen/img/left_block3.png";
-import block4 from "@/views/bigscreen/img/left_block4.png";
-import block5 from "@/views/bigscreen/img/left_block5.png";
 import { startOfYear, endOfYear } from "@/utils/time"; // 导入工具类
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
@@ -67,22 +56,6 @@ let totalData = ref([
     monthUnit: "%",
     yearUnit: "%",
   },
-  {
-    title: "累计营收",
-    bgImg: block4,
-    yearTotal: 0,
-    monthTotal: 0,
-    monthUnit: "万元",
-    yearUnit: "万元",
-  },
-  {
-    title: "累计利润",
-    bgImg: block5,
-    yearTotal: 0,
-    monthTotal: 0,
-    monthUnit: "万元",
-    yearUnit: "万元",
-  },
 ]);
 
 const initData = async () => {
@@ -115,18 +88,6 @@ const initData = async () => {
       yearUnit: "万元",
     },
     累计毛利率: { yearTotal: 0, monthTotal: 0, monthUnit: "%", yearUnit: "%" },
-    累计营收: {
-      yearTotal: 0,
-      monthTotal: 0,
-      monthUnit: "万元",
-      yearUnit: "万元",
-    },
-    累计利润: {
-      yearTotal: 0,
-      monthTotal: 0,
-      monthUnit: "万元",
-      yearUnit: "万元",
-    },
   };
 
   resData.forEach((item: any) => {
@@ -138,12 +99,6 @@ const initData = async () => {
 
     totals["累计毛利率"].yearTotal = Number(item.累计毛利率) || 0;
     totals["累计毛利率"].monthTotal = Number(item.本月毛利率) || 0;
-
-    totals["累计营收"].yearTotal = Number(item.累计营收金额) || 0;
-    totals["累计营收"].monthTotal = Number(item.当期营收金额) || 0;
-
-    totals["累计利润"].yearTotal = Number(item.累计利润金额) || 0;
-    totals["累计利润"].monthTotal = Number(item.当期利润金额) || 0;
   });
   totalData.value = [
     {
@@ -169,22 +124,6 @@ const initData = async () => {
       monthTotal: totals["累计毛利率"].monthTotal,
       monthUnit: "%",
       yearUnit: "%",
-    },
-    {
-      title: "累计营收",
-      bgImg: block4,
-      yearTotal: Number(totals["累计营收"].yearTotal.toFixed(2)),
-      monthTotal: totals["累计营收"].monthTotal,
-      monthUnit: "万元",
-      yearUnit: "万元",
-    },
-    {
-      title: "累计利润",
-      bgImg: block5,
-      yearTotal: Number(totals["累计利润"].yearTotal.toFixed(2)),
-      monthTotal: totals["累计利润"].monthTotal,
-      monthUnit: "万元",
-      yearUnit: "万元",
     },
   ];
 };
