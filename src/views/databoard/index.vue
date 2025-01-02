@@ -939,4 +939,7 @@ onMounted(() => {
   @apply flex justify-between;
   margin-block: 10px;
 }
+.g-main-mapper {
+  @apply w-full;
+}
 </style>
