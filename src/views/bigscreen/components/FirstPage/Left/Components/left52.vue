@@ -43,6 +43,12 @@ const data = ref<any[]>([
   { title: "燃料油", value: 50, unit: "万吨", iconUrl: icon6 },
 ]);
 
+const props = defineProps<{
+  year: number;
+}>();
+
+watch(() => props.year, initChart);
+
 onMounted(() => {
   initChart();
 });

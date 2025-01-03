@@ -2,7 +2,16 @@
   <div class="model1">
     <div class="custom-tab">
       <div class="__header">
-        <span class="title">企业构成</span>
+        <span class="title">
+          <el-select
+            v-model="year"
+            size="small"
+            class="year-select"
+            @change="onChangeYear"
+          >
+            <el-option v-for="item in years" :key="item" :value="item" />
+          </el-select>
+        </span>
         <div
           v-for="item of items"
           :key="item"
@@ -18,15 +27,15 @@
     </div>
     <div class="content" style="min-height: 320px">
       <template v-if="selectedItem === '经营主体'">
-        <Left51 style="flex: 1" />
+        <Left51 style="flex: 1" :year="year" />
       </template>
       <template v-else-if="selectedItem === '主营产品'">
-        <Left52 style="flex: 1; margin: auto 0" />
+        <Left52 style="flex: 1; margin: auto 0" :year="year" />
       </template>
       <template v-else-if="selectedItem === '业态类型'">
         <div class="flex flex-gap-2 flex-1">
-          <Left53 style="flex: 1" />
-          <Left54 style="flex: 1" />
+          <Left53 style="flex: 1" :year="year" />
+          <Left54 style="flex: 1" :year="year" />
         </div>
       </template>
     </div>
@@ -55,8 +64,16 @@ const selectedItem = ref("经营主体");
 //   yoy: number;
 // }>();
 
+const currentYear = new Date().getFullYear();
+const years = ref(Array.from({ length: 10 }, (_, i) => currentYear - i));
+const year = ref(currentYear);
+
 const onClickItem = (item: string) => {
   selectedItem.value = item;
+};
+
+const onChangeYear = (value: number) => {
+  console.log(value);
 };
 </script>
 
@@ -69,6 +86,21 @@ $color-active: #fff;
   flex: 1;
   flex-direction: column;
   height: 100%;
+}
+
+:deep(.year-select) {
+  width: 100px;
+  &.el-select {
+    .el-select__wrapper {
+      background-color: transparent !important;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      .el-select__placeholder {
+        color: white;
+      }
+    }
+  }
 }
 
 :deep(.el-tabs) {

@@ -63,7 +63,7 @@ function initChart() {
     barWidth: "15%",
     // 标题
     title: {
-      text: "各主体营收及利润",
+      text: `各主体营收及利润/${props.year}`,
       left: "center",
       top: 10,
       textStyle: {
@@ -146,6 +146,12 @@ function initChart() {
   };
   chartRef.value.setOption(option);
 }
+
+const props = defineProps<{
+  year: number;
+}>();
+
+watch(() => props.year, initChart);
 
 onMounted(() => {
   initChart();

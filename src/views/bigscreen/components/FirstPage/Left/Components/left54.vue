@@ -8,6 +8,9 @@ import { businessFormats } from "../../../constants";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
 
+const props = defineProps<{
+  year: number;
+}>();
 const router = useRouter();
 const left54Ref = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
@@ -44,7 +47,7 @@ function initChart() {
   chartRef.value.clear();
   const option = {
     title: {
-      text: "各业态利润",
+      text: `${props.year}年各业态利润`,
       left: "center",
       top: 20,
       textStyle: {
@@ -107,6 +110,8 @@ function initChart() {
   };
   chartRef.value.setOption(option);
 }
+
+watch(() => props.year, initChart);
 
 onMounted(() => {
   initChart();
