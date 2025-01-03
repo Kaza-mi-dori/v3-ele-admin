@@ -37,6 +37,7 @@
                 <date-picker
                   v-if="editing"
                   v-model="orderDetailForm.日期"
+                  style="width: 100%"
                   value-format="YYYY-MM-DD"
                   placeholder="选择日期"
                 />
@@ -47,7 +48,7 @@
             </el-col>
             <!-- 数量 -->
             <el-col :span="8">
-              <el-form-item label="数量" prop="数量">
+              <el-form-item label="货单数量" prop="数量">
                 <el-input
                   v-if="editing"
                   v-model="orderDetailForm.数量"
@@ -58,64 +59,54 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="金额" prop="金额">
+              <el-form-item label="货单金额" prop="金额">
                 <el-input
                   v-if="editing"
                   v-model="orderDetailForm.金额"
                   type="number"
                   placeholder="请输入金额"
                 />
-                <span v-else>{{ orderDetailForm.金额 }}</span>
+                <span v-else>{{ toThousands(orderDetailForm.金额) }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态" prop="状态">
-                <el-input
+                <el-select
                   v-if="editing"
                   v-model="orderDetailForm.状态"
-                  placeholder="请输入状态"
-                />
+                  placeholder="请选择状态"
+                >
+                  <el-option
+                    v-for="(value, key) in OrderStatusEnumMap"
+                    :key="key"
+                    :label="value"
+                    :value="key"
+                  />
+                </el-select>
                 <span v-else>{{ orderDetailForm.状态 }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="合同编号" prop="合同编号">
-                <el-input
+                <el-autocomplete
                   v-if="editing"
                   v-model="orderDetailForm.合同编号"
+                  :fetch-suggestions="debounceContractSearchAsync as any"
                   placeholder="请输入合同编号"
+                  value-key="label"
+                  @select="handleSelectContract"
                 />
                 <span v-else>{{ orderDetailForm.合同编号 }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="备注" prop="备注">
+              <el-form-item label="合作方" prop="合作方">
                 <el-input
                   v-if="editing"
-                  v-model="orderDetailForm.备注"
-                  placeholder="请输入备注"
+                  v-model="orderDetailForm.合作方"
+                  placeholder="请输入合作方"
                 />
-                <span v-else>{{ orderDetailForm.备注 }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="主体" prop="主体">
-                <el-input
-                  v-if="editing"
-                  v-model="orderDetailForm.主体"
-                  placeholder="请输入主体"
-                />
-                <span v-else>{{ orderDetailForm.主体 }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="客商" prop="客商">
-                <el-input
-                  v-if="editing"
-                  v-model="orderDetailForm.客商"
-                  placeholder="请输入客商"
-                />
-                <span v-else>{{ orderDetailForm.客商 }}</span>
+                <span v-else>{{ orderDetailForm.合作方 }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -126,6 +117,17 @@
                   placeholder="请输入货品"
                 />
                 <span v-else>{{ orderDetailForm.货品 }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="备注" prop="备注">
+                <el-input
+                  v-if="editing"
+                  v-model="orderDetailForm.备注"
+                  type="textarea"
+                  placeholder="请输入备注"
+                />
+                <span v-else>{{ orderDetailForm.备注 }}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -148,7 +150,7 @@
           :disabled="!editing"
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
-          :file-list="orderDetailForm.attachment"
+          :file-list="orderDetailForm.附件 as any"
         />
       </div>
     </div>
@@ -167,11 +169,15 @@ import pdfPNG from "@/assets/icons/pdf.png";
 import ExcelPNG from "@/assets/icons/excel.png";
 import WordPNG from "@/assets/icons/WORD.png";
 import ZipSVG from "@/assets/icons/zip.svg";
-
+import BusinessStandbookAPI from "@/api/businessStandBook";
+import {
+  ContractStatusEnumMap,
+  OrderStatusEnumMap,
+} from "@/enums/BusinessEnum";
 import { ref, onMounted } from "vue";
-import { useManualRefHistory } from "@vueuse/core";
+import { useManualRefHistory, useDebounceFn } from "@vueuse/core";
 import { FormInstance } from "element-plus";
-
+import { toThousands } from "@/utils";
 const props = defineProps({
   id: {
     type: String,
@@ -192,27 +198,24 @@ const formRef = ref<Nullable<FormInstance>>(null);
  * 编号、类型、日期、金额、状态、附件、合同编号、备注、主体、客商、货品、数量、单价
  */
 const orderDetailForm = ref({
-  日期: "",
-  金额: "",
-  状态: "",
+  日期: undefined,
+  金额: undefined,
+  状态: undefined,
   附件: [],
-  合同编号: "",
-  备注: "",
-  主体: "",
-  客商: "",
-  货品: "",
-  数量: "",
-  单价: "",
+  合同编号: undefined,
+  备注: undefined,
+  合作方: undefined,
+  货品: undefined,
+  数量: undefined,
+  单价: undefined,
 });
 
 const rules: Ref<GenericRecord> = ref({
-  日期: [{ required: true, message: "请输入日期", trigger: "blur" }],
+  日期: [{ required: true, message: "请选择日期", trigger: "blur" }],
   金额: [{ required: true, message: "请输入金额", trigger: "blur" }],
   状态: [{ required: true, message: "请输入状态", trigger: "blur" }],
   合同编号: [{ required: true, message: "请输入合同编号", trigger: "blur" }],
-  备注: [{ required: true, message: "请输入备注", trigger: "blur" }],
-  主体: [{ required: true, message: "请输入主体", trigger: "blur" }],
-  客商: [{ required: true, message: "请输入客商", trigger: "blur" }],
+  合作方: [{ required: true, message: "请输入合作方", trigger: "blur" }],
   货品: [{ required: true, message: "请输入货品", trigger: "blur" }],
   数量: [{ required: true, message: "请输入数量", trigger: "blur" }],
   单价: [{ required: true, message: "请输入单价", trigger: "blur" }],
@@ -245,6 +248,32 @@ const converter = (value: any) => {
   }
   return obj;
 };
+
+function contractSearchAsync(query: string, callback: (data: any) => void) {
+  BusinessStandbookAPI.getContractLedgerRecordList({
+    编号: query,
+  })
+    .then((res: any) => {
+      // 将res.当前记录.合同编号转化为value
+      const data = res.当前记录?.map((item: any) => {
+        return {
+          value: item.合同编号,
+          label: item.合同编号 + "(" + item.合同名称 + ")",
+        };
+      });
+      callback(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      callback([]);
+    });
+}
+
+const debounceContractSearchAsync = useDebounceFn(contractSearchAsync, 500);
+
+function handleSelectContract(item: any) {
+  orderDetailForm.value.合同编号 = item.value;
+}
 
 const submitForm = () => {
   console.log("submitForm");
@@ -298,20 +327,10 @@ const generateRandomData = () => {
     日期: "2021-01-01",
     金额: "1000",
     状态: "有效",
-    附件: [
-      {
-        name: "附件1",
-        url: "http://www.baidu.com",
-      },
-      {
-        name: "附件2",
-        url: "http://www.baidu.com",
-      },
-    ],
+    附件: [],
     合同编号: "合同编号",
     备注: "备注",
-    主体: "主体",
-    客商: "客商",
+    合作方: "合作方",
     货品: "货品",
     数量: "数量",
     单价: "单价",

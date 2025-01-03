@@ -149,3 +149,29 @@ export const BusinessFormatEnumMap = {
   [BusinessFormatEnum.GAS_STATION]: "油站运营",
   [BusinessFormatEnum.STORAGE]: "仓储",
 };
+
+/** 合同状态枚举 */
+export const enum ContractStatusEnum {
+  /** 未签订 */
+  UN_SIGNED = "未签订",
+  /** 已签订 */
+  SIGNED = "已签订",
+}
+
+export const ContractStatusEnumMap = {
+  [ContractStatusEnum.UN_SIGNED]: "未签订",
+  [ContractStatusEnum.SIGNED]: "已签订",
+};
+
+/** 货单状态枚举 */
+export const enum OrderStatusEnum {
+  /** 已提货 */
+  PICKED = "已提货",
+  /** 未提货 */
+  NOT_PICKED = "未提货",
+}
+
+export const OrderStatusEnumMap = {
+  [OrderStatusEnum.PICKED]: "已提货",
+  [OrderStatusEnum.NOT_PICKED]: "未提货",
+};

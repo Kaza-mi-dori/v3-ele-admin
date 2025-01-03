@@ -55,7 +55,14 @@ export function deepUnref(value: any): any {
 /**
  * 数值转换为千分位
  */
-export function toThousands(num: number) {
+export function toThousands(num: number | string) {
+  // 如果是undefined或者null则返回-
+  if (num === undefined || num === null) {
+    return "";
+  }
+  if (typeof num === "string") {
+    num = Number(num);
+  }
   return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, "$1,");
 }
 

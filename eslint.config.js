@@ -18,7 +18,14 @@ export default [
   // 通用 JavaScript 配置
   {
     ...js.configs.recommended,
-    ignores: ["**/.*", "dist/*", "*.d.ts", "public/*", "src/assets/**"],
+    ignores: [
+      "**/.*",
+      "dist/*",
+      "*.d.ts",
+      "public/*",
+      "src/assets/**",
+      "node_modules",
+    ],
     languageOptions: {
       globals: {
         ...globals.browser, // 浏览器变量 (window, document 等)
