@@ -29,13 +29,17 @@
           <el-progress
             class="__progress"
             :percentage="(item.ratio || 0) * 100"
+            :text-inside="true"
             :show-text="false"
             color="rgb(11,215,223)"
-            :stroke-width="10"
-          />
-          <div class="__value">
+            :stroke-width="20"
+          >
             <span>{{ item.value }}</span>
             <span>{{ item.unit }}</span>
+          </el-progress>
+          <div class="__value">
+            <span>{{ (item.ratio || 0) * 100 }}</span>
+            <span>%</span>
           </div>
         </div>
       </div>
@@ -59,6 +63,12 @@ interface Rank {
   unit: string;
   ratio?: number;
 }
+
+const totalData: Ref<{}> = ref({
+  name: "总金额",
+  value: 20000,
+  unit: "万元",
+});
 
 const rankData: Ref<Rank[]> = ref([
   { order: 1, name: "A公司", value: 5000, unit: "万元" },
@@ -91,7 +101,7 @@ watch(
     rankDataToDisplay.value = rankDataToDisplay.value
       .map((item, index) => ({
         ...item,
-        ratio: item.value / rankDataToDisplay.value[0].value,
+        ratio: item.value / totalData.value.value,
         order: index + 1,
       }))
       .slice(0, 5);
