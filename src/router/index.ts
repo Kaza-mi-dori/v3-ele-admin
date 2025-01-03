@@ -188,7 +188,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "DataBoard",
     component: Layout,
     meta: {
-      title: "数据看板",
+      title: "指标管理",
       icon: "el-icon-s-data",
     },
     redirect: "/marketData",
@@ -198,7 +198,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "MarketData",
         component: () => import("@/views/databoard/index.vue"),
         meta: {
-          title: "数据看板",
+          title: "指标管理",
           icon: "monitor",
         },
       },
