@@ -152,6 +152,19 @@ const initChart = () => {
     ],
     series: [
       {
+        name: "销售金额",
+        type: "bar",
+        yAxisIndex: 0, // 指定使用左边的Y轴
+        data: data.map((item) => item.transactionVolume),
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: sassvariables["bigscreen-primary-color-11"] },
+            { offset: 1, color: sassvariables["bigscreen-primary-color-12"] },
+          ]),
+        },
+        barWidth: "25%",
+      },
+      {
         name: "销售量",
         type: "bar",
         yAxisIndex: 1, // 指定使用右边的Y轴
@@ -163,26 +176,6 @@ const initChart = () => {
           ]),
         },
         barWidth: "25%",
-      },
-      {
-        name: "销售金额",
-        type: "line",
-        smooth: true, // 设置线条为圆滑
-        symbol: "none", // 不显示折线点的点号
-        lineStyle: {
-          color: "#E8325C", // 设置线条颜色
-          width: 3, // 线条宽度
-        },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: "rgba(232,50,92, 0.4)" }, // 折线图顶端颜色
-            { offset: 1, color: "rgba(219, 137, 67, 0)" }, // 底部渐变透明
-          ]),
-        },
-        itemStyle: {
-          color: "#E8325C",
-        },
-        data: data.map((item) => item.transactionVolume),
       },
     ],
   };
