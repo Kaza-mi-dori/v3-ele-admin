@@ -205,9 +205,9 @@ const BusinessStandbookAPI = {
    * @param data 订单台账记录
    * @returns
    */
-  addCompanyReportForm(data: any) {
+  addOrderLedgerRecord(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/CorporateOperationsReportShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/OrderLedgerShow`,
       method: "post",
       data: data,
     });
@@ -218,9 +218,9 @@ const BusinessStandbookAPI = {
    * @param data 订单台账记录
    * @returns
    */
-  editCompanyReportForm(data: any) {
+  editOrderLedgerRecord(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/CorporateOperationsReportShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/OrderLedgerShow`,
       method: "patch",
       data: data,
     });
@@ -231,9 +231,9 @@ const BusinessStandbookAPI = {
    * @param companyId 企业ID
    * @returns 订单台账记录详情
    */
-  getCompanyReportForm(companyId: number) {
+  getOrderLedgerRecord(companyId: number) {
     return request2<any, any>({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/CorporateOperationsReportShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/OrderLedgerShow`,
       method: "get",
       params: {
         id: companyId,
@@ -246,9 +246,9 @@ const BusinessStandbookAPI = {
    * @param companyId 企业ID
    * @returns
    */
-  deleteCompanyReportForm(companyId: number) {
+  deleteOrderLedgerRecord(companyId: number) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/CorporateOperationsReportShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/OrderLedgerShow`,
       method: "delete",
       params: {
         id: companyId,
@@ -261,9 +261,9 @@ const BusinessStandbookAPI = {
    * @param data 查询条件
    * @returns 订单台账记录列表
    */
-  getCompanyReportFormList(data: any) {
+  getOrderLedgerRecordList(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/CorporateOperationsReportShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/OrderLedgerShow/Query`,
       method: "post",
       data,
     });
@@ -274,9 +274,9 @@ const BusinessStandbookAPI = {
    * @param data 查询条件
    * @returns 订单台账记录列表
    */
-  exportCompanyReportForm(data: any) {
+  exportOrderLedgerRecord(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/CorporateOperationsReportShow/Export`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/OrderLedgerShow/Export`,
       method: "get",
       data,
     });
@@ -287,9 +287,9 @@ const BusinessStandbookAPI = {
    * @param data 查询条件
    * @returns 订单台账记录列表
    */
-  importCompanyReportForm(data: any) {
+  importOrderLedgerRecord(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/CorporateOperationsReportShow/Import`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/OrderLedgerShow/Import`,
       method: "post",
       data,
     });
@@ -492,7 +492,7 @@ const BusinessStandbookAPI = {
    */
   addWaybillLedgerRecord(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ShipmentLedgerShow`,
       method: "post",
       data: data,
     });
@@ -505,7 +505,7 @@ const BusinessStandbookAPI = {
    */
   editWaybillLedgerRecord(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ShipmentLedgerShow`,
       method: "patch",
       data: data,
     });
@@ -518,7 +518,7 @@ const BusinessStandbookAPI = {
    */
   getWaybillLedgerRecord(companyId: number) {
     return request2<any, any>({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ShipmentLedgerShow`,
       method: "get",
       params: {
         id: companyId,
@@ -533,7 +533,7 @@ const BusinessStandbookAPI = {
    */
   deleteWaybillLedgerRecord(companyId: number) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ShipmentLedgerShow`,
       method: "delete",
       params: {
         id: companyId,
@@ -548,7 +548,7 @@ const BusinessStandbookAPI = {
    */
   getWaybillLedgerRecordList(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ShipmentLedgerShow/Query`,
       method: "post",
       data,
     });
@@ -561,7 +561,7 @@ const BusinessStandbookAPI = {
    */
   exportWaybillLedgerRecord(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow/Export`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ShipmentLedgerShow/Export`,
       method: "get",
       data,
     });
@@ -574,7 +574,7 @@ const BusinessStandbookAPI = {
    */
   importWaybillLedgerRecord(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/WaybillLedgerShow/Import`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ShipmentLedgerShow/Import`,
       method: "post",
       data,
     });

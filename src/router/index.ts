@@ -331,7 +331,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "OrderLedgerMng",
         component: () => import("@/views/business/order.vue"),
         meta: {
-          title: "货单台账管理",
+          title: "订单台账管理",
           icon: "el-icon-coin",
         },
       },

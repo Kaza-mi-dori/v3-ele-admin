@@ -5,14 +5,13 @@
     <div class="title-block">
       <div class="__title">合同结算</div>
       <div class="__stat">
-        <span class="__item">你有</span>
+        <span class="__item">当前有</span>
         <span class="__item">
           <span>
             <span class="text-red-5 mr-2">{{ pagination.total }}</span>
-            <span>份结算单</span>
+            <span>份记录</span>
           </span>
         </span>
-        <span class="__item">统计指标二</span>
       </div>
     </div>
     <!-- 筛选操作区 -->

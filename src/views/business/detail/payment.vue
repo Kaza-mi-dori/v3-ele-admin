@@ -93,10 +93,13 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="订单编号" prop="订单编号">
-                <el-input
+                <el-autocomplete
                   v-if="editing"
                   v-model="paymentDetailForm.订单编号"
                   placeholder="请输入订单编号"
+                  :fetch-suggestions="queryOrderAsync"
+                  :trigger-on-focus="false"
+                  :debounce="500"
                 />
                 <span v-else>{{ paymentDetailForm.订单编号 }}</span>
               </el-form-item>
@@ -134,6 +137,7 @@
                   v-model="paymentDetailForm.款项时间"
                   type="date"
                   value-format="YYYY-MM-DD"
+                  style="width: 100%"
                   placeholder="请选择款项时间"
                 />
                 <span v-else>{{ paymentDetailForm.款项时间 }}</span>
@@ -163,6 +167,7 @@
                   <el-option label="未回款" value="未回款" />
                   <el-option label="部分回款" value="部分回款" />
                 </el-select>
+                <span v-else>{{ paymentDetailForm.款项状态 }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -196,7 +201,7 @@
           :disabled="!editing"
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
-          :file-list="paymentDetailForm.attachment"
+          :file-list="paymentDetailForm.附件"
         />
       </div>
     </div>
@@ -216,7 +221,7 @@ import ExcelPNG from "@/assets/icons/excel.png";
 import WordPNG from "@/assets/icons/WORD.png";
 import ZipSVG from "@/assets/icons/zip.svg";
 import { DatasourceEnumMap } from "@/enums/DatasourceEnum";
-
+import BusinessStandbookAPI from "@/api/businessStandBook";
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
 import { FormInstance } from "element-plus";
@@ -247,6 +252,7 @@ const paymentDetailForm = ref({
   款项时间: undefined,
   款项说明: undefined,
   款项状态: undefined,
+  附件: [],
 });
 
 const rules: Ref<GenericRecord> = ref({
@@ -288,6 +294,25 @@ const converter = (value: any) => {
   }
   return obj;
 };
+
+function queryOrderAsync(query: string, callback: (data: any) => void) {
+  BusinessStandbookAPI.getOrderLedgerRecordList({
+    编号: query,
+  })
+    .then((data: any) => {
+      const list = data?.["当前记录"] || [];
+      callback(
+        list.map((item: any) => ({
+          value: item.订单编号,
+          label: item.订单编号,
+        }))
+      );
+    })
+    .catch((error: any) => {
+      console.error(error);
+      callback([]);
+    });
+}
 
 const submitForm = () => {
   console.log("submitForm");

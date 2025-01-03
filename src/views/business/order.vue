@@ -3,11 +3,15 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">货单台账</div>
+      <div class="__title">订单台账</div>
       <div class="__stat">
-        <span class="__item">你有</span>
-        <span class="__item">统计指标一</span>
-        <span class="__item">统计指标二</span>
+        <span class="__item">共有</span>
+        <span class="__item">
+          <span class="text-red-5 inline-block ml-1 mr-1">
+            {{ pagination.total }}
+          </span>
+          条记录
+        </span>
       </div>
     </div>
     <!-- 筛选操作区 -->
@@ -16,6 +20,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @resetFilter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -133,12 +138,18 @@ import {
   handleAuditRow,
   handleDeleteRow,
 } from "@/hooks/useTableOp";
+import BusinessStandbookAPI from "@/api/businessStandBook";
 
 const router = useRouter();
 
 type IExampleData = business.IAuditableEntity<Partial<business.IOrder>>;
 
 const loading: Ref<boolean> = ref(false);
+const queryParams: Ref<any> = ref({
+  状态集合: undefined,
+  日期早于: null,
+  日期晚于: null,
+});
 const exampleData: Ref<IExampleData[]> = ref([
   {
     name: "订单1",
@@ -170,7 +181,7 @@ const exampleData: Ref<IExampleData[]> = ref([
   },
 ]);
 const pagination: Ref<any> = ref({
-  total: 100,
+  total: 0,
   pageSizes: [10, 20, 30, 40, 50],
   pageSize: 10,
   currentPage: 1,
@@ -194,14 +205,14 @@ const handleDeleteRecord = () => {
   console.log("删除");
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
-  {
-    label: "订单类型",
-    prop: "type",
-    value: null,
-    options: ["全部", "采购", "销售"],
-    inputType: "select",
-    order: 1,
-  },
+  // {
+  //   label: "订单类型",
+  //   prop: "type",
+  //   value: null,
+  //   options: ["全部", "采购", "销售"],
+  //   inputType: "select",
+  //   order: 1,
+  // },
   {
     label: "状态",
     prop: "status",
@@ -213,9 +224,9 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
     label: "日期",
     prop: "date",
-    value: null,
+    value: [null, null],
     selected: null,
-    inputType: "date",
+    inputType: "daterange",
     order: 3,
   },
   {
@@ -227,11 +238,52 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
 ]);
 const handleConfirmFilter = (filter: any) => {
-  console.log(filter);
+  const { type, status, date, number } = filter;
+  queryParams.value = {
+    日期早于: date[0],
+    日期晚于: date[1],
+  };
+  if (type && type !== "全部") {
+    queryParams.value.订单类别 = type;
+  }
+  if (status && status !== "全部") {
+    queryParams.value.状态集合 = [status];
+  }
+  if (number) {
+    queryParams.value.订单编号 = number;
+  }
+  initTableData();
+};
+const handleResetFilter = () => {
+  queryParams.value = {
+    日期早于: undefined,
+    日期晚于: undefined,
+    状态集合: undefined,
+    订单编号: undefined,
+  };
+  pagination.value.currentPage = 1;
+  initTableData();
 };
 
 const initTableData = () => {
-  console.log("初始化表格数据");
+  loading.value = true;
+  BusinessStandbookAPI.getOrderLedgerRecordList({
+    页码: pagination.value.currentPage,
+    页容量: pagination.value.pageSize,
+    ...queryParams.value,
+  })
+    .then((data: any) => {
+      exampleData.value = data?.["当前记录"] || [];
+      pagination.value.total = parseInt(data?.["记录总数"] || "0");
+    })
+    .catch((err) => {
+      ElMessage.error("获取数据失败");
+      exampleData.value = [];
+      pagination.value.total = 0;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 
 onMounted(() => {
