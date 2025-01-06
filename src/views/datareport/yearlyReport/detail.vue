@@ -56,8 +56,8 @@
                 </el-select>
                 <span v-else>
                   {{
-                    timeDimensionFtoBMap[
-                      yearlyReportDetailForm.timeDimension
+                    BMapFtoTimeDimension[
+                      yearlyReportDetailForm.timeDimension as keyof typeof BMapFtoTimeDimension
                     ] || "未选择"
                   }}
                 </span>
@@ -899,7 +899,10 @@ import { ref, unref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useManualRefHistory } from "@vueuse/core";
 import { type FormInstance } from "element-plus";
-import { timeDimensionFtoBMap } from "@/enums/OptionLabelEnum";
+import {
+  timeDimensionFtoBMap,
+  BMapFtoTimeDimension,
+} from "@/enums/OptionLabelEnum";
 import { BusinessEnumMap } from "@/enums/BusinessEnum";
 import BusinessFormAPI from "@/api/businessForm";
 import business from "@/types/business";

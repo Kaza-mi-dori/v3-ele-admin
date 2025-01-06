@@ -197,6 +197,7 @@ import WordPNG from "@/assets/icons/WORD.png";
 import ZipSVG from "@/assets/icons/zip.svg";
 
 import { ref, onMounted } from "vue";
+import { OurCompanyEnum, OurCompanyEnumMap } from "@/enums/BusinessEnum";
 import { useManualRefHistory } from "@vueuse/core";
 import { FormInstance } from "element-plus";
 

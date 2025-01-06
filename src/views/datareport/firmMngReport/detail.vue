@@ -99,10 +99,18 @@
             <!-- 企业名称 -->
             <el-col :span="8">
               <el-form-item label="企业名称" prop="firmName">
-                <el-input
+                <el-select
                   v-if="editing"
                   v-model="yearlyReportDetailForm.firmName"
-                />
+                  placeholder="请选择企业名称"
+                >
+                  <el-option
+                    v-for="(value, key) in OurCompanyEnumMap"
+                    :key="key"
+                    :label="key"
+                    :value="value"
+                  />
+                </el-select>
                 <span v-else>{{ yearlyReportDetailForm.firmName || "-" }}</span>
               </el-form-item>
             </el-col>
@@ -1210,6 +1218,7 @@ import { useManualRefHistory } from "@vueuse/core";
 import { type FormInstance } from "element-plus";
 import { timeDimensionFtoBMap } from "@/enums/OptionLabelEnum";
 import { BusinessEnumMap } from "@/enums/BusinessEnum";
+import { OurCompanyEnum, OurCompanyEnumMap } from "@/enums/BusinessEnum";
 import datePickerPlus from "@/components/ElBasicPlus/datePicker.vue";
 import sassvariables from "@/styles/variables.module.scss";
 import BusinessFormAPI from "@/api/businessForm";

@@ -183,12 +183,16 @@ const converToFrontendFormData = (type: string | null, data: any) => {
       return {
         year: data["日期"],
         businessDimension: data["业务维度"],
+        timeDimension: data["类型"],
         content: data["内容"]["详情"].map((item: any) => {
           return {
             product: item["业态类型"],
             year: item["数据日期"],
             profit: item["利润金额"],
             income: item["营收金额"],
+            outcome: item["支出金额"],
+            purchaseAmount: item["采购金额"],
+            salesAmount: item["销售金额"],
             contractCount: item["合同总份数"],
             contractAmount: item["合同总金额"],
             contractFulfilledCount: item["合同履行数"],

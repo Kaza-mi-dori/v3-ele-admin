@@ -7,17 +7,62 @@ import * as echarts from "echarts";
 import sassvariables from "@/styles/variables.module.scss";
 import { businessSubjects } from "../../../constants";
 import { ref, onMounted, watch, shallowRef } from "vue";
+import { OurCompanyEnum } from "@/enums/BusinessEnum";
+import { companyStoreHook } from "@/store/modules/company";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 const left51Ref = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
 const data = ref<any[]>([
-  { title: "广投石化本部", value: [100, 50] },
+  { title: "广投石化", value: [100, 50] },
   { title: "广投石化广东分公司", value: [100, 50] },
   { title: "广投石化舟山", value: [100, 50] },
   { title: "永盛仓储", value: [100, 50] },
 ]);
+const companyStore = companyStoreHook();
+
+// 获取数据
+async function getData() {
+  const firms = [
+    OurCompanyEnum.GTSHC,
+    OurCompanyEnum.GDFGS,
+    OurCompanyEnum.GTSHC_ZS,
+    OurCompanyEnum.YSCC,
+    OurCompanyEnum.YSSHC,
+  ];
+  const res = await Promise.allSettled(
+    firms.map(
+      (firm) =>
+        new Promise((resolve) => {
+          companyStore
+            .getFirmReportMap(firm, props.year.toString())
+            .then((res) => {
+              resolve(res);
+            });
+        })
+    )
+  );
+  /**
+   * 遍历data，查看res中是否存在对应的数据
+   * 如果数据不存在，则设置为0
+   * 如果数据存在，则更新数据
+   */
+  data.value.forEach((item: any) => {
+    const firmData: any = res.find(
+      (res: any) => res.value?.["企业名称"] === item.title
+    );
+    if (firmData) {
+      const totalRow = firmData.value["内容"]?.["详情"]?.find(
+        (item: any) => item["业态类型"] === "总体"
+      );
+      const { 累计营收金额: revenue, 累计利润金额: profit } = totalRow || {};
+      item.value = [+revenue, +profit];
+    } else {
+      item.value = [0, 0];
+    }
+  });
+}
 
 // 数据整理
 function dataFilterOne() {
@@ -151,9 +196,16 @@ const props = defineProps<{
   year: number;
 }>();
 
-watch(() => props.year, initChart);
+watch(
+  () => props.year,
+  async () => {
+    await getData();
+    initChart();
+  }
+);
 
 onMounted(() => {
+  getData();
   initChart();
   // 监听窗口变化，重置图表
   window.addEventListener("resize", () => {
