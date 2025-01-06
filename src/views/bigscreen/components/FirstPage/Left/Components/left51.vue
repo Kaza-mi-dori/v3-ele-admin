@@ -138,8 +138,8 @@ function initChart() {
         color: "#2abfff",
       },
     },
-    // y轴单位
-    yAxis: {
+    // x轴单位
+    xAxis: {
       type: "value",
       name: "单位:万元",
       nameTextStyle: {
@@ -165,7 +165,7 @@ function initChart() {
         },
       },
     },
-    xAxis: {
+    yAxis: {
       type: "category",
       data: data.value.map((item) => item.title),
       axisLabel: {
