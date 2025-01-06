@@ -34,6 +34,7 @@ const chart = shallowRef<echarts.ECharts | null>(null);
 interface DataRecord {
   time: string;
   value: number;
+  unit: string;
 }
 
 const allData: Ref<Record<any, DataRecord[]>> = ref({
@@ -121,6 +122,7 @@ const getRandomDataOneYear = () => {
     return {
       time: item,
       value: 400 + Math.floor(Math.random() * 100),
+      unit: "元/吨",
     };
   });
   return data;
@@ -133,6 +135,7 @@ const getRandomDataOneMonth = () => {
     return {
       time: item,
       value: 400 + Math.floor(Math.random() * 100),
+      unit: "元/吨",
     };
   });
   return data;
@@ -144,6 +147,7 @@ const dataFilterOne = (data: DataRecord[]) => {
     return {
       time: item.time,
       value: item.value,
+      unit: item.unit,
     };
   });
 };
@@ -204,7 +208,8 @@ const initChartMiddle4 = () => {
     },
     yAxis: {
       type: "value",
-      name: "单位：元/吨",
+      name: activeName.value === YUANYOU ? "美元/桶" : "元/吨",
+      // 读取
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
@@ -249,6 +254,9 @@ const initChartMiddle4 = () => {
   chart.value.setOption(option);
 };
 
+/**
+ * 根据dataSeries.value 获取相应数据渲染图表
+ */
 const processChartData = (data: any) => {
   for (const category in categoryMap as Record<string, string[]>) {
     categoryMap[category as keyof typeof categoryMap].forEach(
@@ -264,6 +272,7 @@ const processChartData = (data: any) => {
               return {
                 time: record["时间"].substring(5, 10),
                 value: record["数据"],
+                unit: record["单位"],
               };
             })
             .sort((a: any, b: any) => {

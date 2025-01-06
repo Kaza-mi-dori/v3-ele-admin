@@ -56,6 +56,11 @@ const initChart = () => {
     legend: {
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
+        fontSize: 15,
+      },
+      // 图例显示名字取消最后两个字
+      formatter: (name: string) => {
+        return name.indexOf("销售量") > -1 ? name.slice(0, -3) : name;
       },
       icon: "rect",
       top: 10,

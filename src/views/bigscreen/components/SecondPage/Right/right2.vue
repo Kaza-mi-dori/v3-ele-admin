@@ -8,10 +8,7 @@
         <el-icon><ArrowRight /></el-icon>
       </span>
     </div>
-    <div
-      id="chart2-right-2"
-      style="width: 100%; height: 190px; margin-top: -30px"
-    />
+    <div id="chart2-right-2" style="width: 100%; height: 250px" />
   </Model1>
 </template>
 
@@ -56,7 +53,8 @@ const initChart = () => {
     grid: {
       left: "3%",
       right: "4%",
-      bottom: "2%",
+      // top: 60,
+      bottom: "1%",
       containLabel: true,
     },
     legend: {
@@ -65,12 +63,11 @@ const initChart = () => {
         color: sassvariables["bigscreen-primary-color-7"],
       },
       icon: "rect",
-      top: 10,
       right: 10,
       itemWidth: 12,
       itemHeight: 7,
       itemGap: 8, // 图例项之间的间距
-      padding: [-5, 0, 0, 0], // 图例的上下内边距，格式为 [上, 右, 下, 左]
+      // padding: [-5, 0, 0, 0], // 图例的上下内边距，格式为 [上, 右, 下, 左]
     },
     xAxis: [
       {

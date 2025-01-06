@@ -7,6 +7,7 @@
             <th class="table-header" style="width: 70px">排行</th>
             <th class="table-header">公司</th>
             <th class="table-header" style="width: 140px">交易额(万元)</th>
+            <th class="table-header" style="width: 140px">交易额占比(%)</th>
           </tr>
         </thead>
         <tbody>
@@ -18,6 +19,7 @@
             <td class="table-cell cell1">{{ index + 1 }}</td>
             <td class="table-cell cell2">{{ item.company }}</td>
             <td class="table-cell">{{ item.amount }}</td>
+            <td class="table-cell">{{ item.ratio }}</td>
           </tr>
         </tbody>
       </table>
@@ -30,11 +32,11 @@ import Model1 from "../Model1/index.vue";
 import { ref } from "vue";
 
 const tradePartners = ref([
-  { company: "公司A", amount: 96 },
-  { company: "公司B", amount: 82 },
-  { company: "公司C", amount: 76 },
-  { company: "公司D", amount: 56 },
-  { company: "公司E", amount: 30 },
+  { company: "公司A", amount: 96, ratio: 10.23 },
+  { company: "公司B", amount: 82, ratio: 8.23 },
+  { company: "公司C", amount: 76, ratio: 7.23 },
+  { company: "公司D", amount: 56, ratio: 5.23 },
+  { company: "公司E", amount: 30, ratio: 3.23 },
 ]);
 </script>
 
