@@ -15,10 +15,10 @@ const router = useRouter();
 const left51Ref = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
 const data = ref<any[]>([
-  { title: "广投石化", value: [100, 50] },
-  { title: "广投石化广东分公司", value: [100, 50] },
-  { title: "广投石化舟山", value: [100, 50] },
-  { title: "永盛仓储", value: [100, 50] },
+  { title: "广投石化", value: [100, 50, 50, 30] },
+  { title: "广投石化广东分公司", value: [100, 50, 30, -30] },
+  { title: "广投石化舟山", value: [100, 50, 80, 40] },
+  { title: "永盛仓储", value: [100, 50, 90, -10] },
 ]);
 const companyStore = companyStoreHook();
 
@@ -56,10 +56,20 @@ async function getData() {
       const totalRow = firmData.value["内容"]?.["详情"]?.find(
         (item: any) => item["业态类型"] === "总体"
       );
-      const { 累计营收金额: revenue, 累计利润金额: profit } = totalRow || {};
-      item.value = [+revenue, +profit];
+      const {
+        累计营收金额: revenue,
+        累计利润金额: profit,
+        累计营收目标完成率: revenueRate,
+        累计利润目标完成率: profitRate,
+      } = totalRow || {};
+      item.value = [
+        +revenue,
+        +profit,
+        +(revenue / revenueRate).toFixed(2),
+        +(profit / profitRate).toFixed(2),
+      ];
     } else {
-      item.value = [0, 0];
+      item.value = [0, 0, 0, 0];
     }
   });
 }
