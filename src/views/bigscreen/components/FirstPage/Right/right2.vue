@@ -25,7 +25,7 @@
           >
             <span>{{ item.order }}</span>
           </div>
-          <div class="__name">{{ item.name }}</div>
+          <div class="__name" :title="item.name">{{ item.name }}</div>
           <el-progress
             class="__progress"
             :percentage="(item.ratio || 0) * 100"
@@ -201,11 +201,14 @@ onMounted(() => {
     color: #7b9eeb;
     text-align: left; // 确保公司名称左对齐
     flex-grow: 1; // 让公司名称部分占满剩余的空间
-    min-width: 50px; // 给公司名称设置一个最小宽度
+    max-width: 100px; // 设置最大宽度
+    white-space: nowrap; // 禁止换行
+    overflow: hidden; // 隐藏溢出的内容
+    text-overflow: ellipsis; // 超出部分显示省略号
   }
 
   .__progress {
-    width: 55%;
+    width: 65%;
     margin-left: 5px;
   }
 
@@ -213,7 +216,7 @@ onMounted(() => {
     font-size: 14px;
     color: #7b9eeb;
     text-align: right; // 确保百分比右对齐
-    min-width: 50px; // 设置一个最小宽度，以保证有足够空间显示百分比
+    min-width: 45px; // 设置一个最小宽度，以保证有足够空间显示百分比
   }
 }
 </style>
