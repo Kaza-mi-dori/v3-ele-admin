@@ -6,8 +6,16 @@
 import * as echarts from "echarts";
 import { businessFormats } from "../../../constants";
 import { ref, onMounted, shallowRef } from "vue";
+import { companyStoreHook } from "@/store";
 import { useRouter } from "vue-router";
+import {
+  OurCompanyEnum,
+  OurCompanyEnumMap,
+  BusinessEnum,
+  BusinessEnumMap,
+} from "@/enums/BusinessEnum";
 
+const companyStore = companyStoreHook();
 const props = defineProps<{
   year: number;
 }>();
@@ -110,9 +118,55 @@ function initChart() {
   chartRef.value.setOption(option);
 }
 
-watch(() => props.year, initChart);
+async function initData() {
+  const res: any = await companyStore.getFirmReportMap(
+    OurCompanyEnum.GTSHC,
+    props.year.toString()
+  );
+  if (res) {
+    // 抽取对应的贸易（六个业态加和）、仓储、油站运营
+    const rows = res["内容"]?.["详情"] || [];
+    const trade = rows
+      .filter((item: any) =>
+        Object.values(BusinessEnumMap).includes(item.业态类型)
+      )
+      .reduce(
+        (sum: number, item: any) => sum + parseFloat(item.累计营收金额),
+        0
+      );
+    const storage = rows.find((item: any) => item.业态类型 === BusinessEnum.CC);
+    const oilStation = rows.find(
+      (item: any) => item.业态类型 === BusinessEnum.YZ
+    );
+    data.value = [
+      { title: "贸易", value: trade ?? 0, color: "#ea5a5a" },
+      { title: "仓储", value: storage?.累计营收金额 ?? 0, color: "#d9c621" },
+      {
+        title: "油站运营",
+        value: oilStation?.累计营收金额 ?? 0,
+        color: "#1785d2",
+      },
+    ];
+  } else {
+    data.value = [
+      { title: "贸易", value: 0, color: "#ea5a5a" },
+      { title: "仓储", value: 0, color: "#d9c621" },
+      { title: "油站运营", value: 0, color: "#1785d2" },
+    ];
+  }
+}
 
-onMounted(() => {
+// 监听年份变化，重新初始化图表
+watch(
+  () => props.year,
+  async () => {
+    // await initData();
+    initChart();
+  }
+);
+
+onMounted(async () => {
+  // await initData();
   initChart();
   // 监听窗口变化，重置图表
   window.addEventListener("resize", () => {

@@ -11,6 +11,8 @@ export const enum BusinessEnum {
   HGCP = "化工产品",
   YY = "原油",
   QT = "其他",
+  YZ = "油站运营",
+  CC = "仓储",
 }
 
 export const BusinessEnumMap = {
@@ -21,6 +23,8 @@ export const BusinessEnumMap = {
   [BusinessEnum.MT]: "煤炭",
   [BusinessEnum.LNG]: "LNG",
   [BusinessEnum.QT]: "其他",
+  [BusinessEnum.YZ]: "油站运营",
+  [BusinessEnum.CC]: "仓储",
 };
 
 /** 大屏展示顺序  */

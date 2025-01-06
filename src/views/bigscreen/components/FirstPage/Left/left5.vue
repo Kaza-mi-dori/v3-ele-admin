@@ -64,7 +64,7 @@ const selectedItem = ref("经营主体");
 //   yoy: number;
 // }>();
 
-const currentYear = new Date().getFullYear();
+const currentYear = new Date().getFullYear(); //
 const years = ref(Array.from({ length: 10 }, (_, i) => currentYear - i));
 const year = ref(currentYear);
 
@@ -72,9 +72,9 @@ const onClickItem = (item: string) => {
   selectedItem.value = item;
 };
 
-const onChangeYear = (value: number) => {
-  console.log(value);
-};
+// const onChangeYear = (value: number) => {
+//   console.log(value);
+// };
 </script>
 
 <style lang="scss" scoped>

@@ -32,6 +32,10 @@ import icon4 from "@/views/bigscreen/img/product_icon4.png";
 import icon5 from "@/views/bigscreen/img/product_icon5.png";
 import icon6 from "@/views/bigscreen/img/product_icon6.png";
 import Item3 from "@/views/bigscreen/components/FirstPage/DescribeItems/Item3.vue";
+import { businessStoreHook } from "@/store/modules/business";
+
+const businessStore = businessStoreHook();
+
 async function initChart() {}
 
 const data = ref<any[]>([
@@ -47,9 +51,44 @@ const props = defineProps<{
   year: number;
 }>();
 
-watch(() => props.year, initChart);
+// Add interface for the response type
+interface BusinessReportResponse {
+  内容?: {
+    详情?: {
+      结算数量?: number;
+    }[];
+  };
+}
 
-onMounted(() => {
+async function initData() {
+  const res = await Promise.allSettled(
+    data.value.map((item) =>
+      businessStore.getBusinessReportMap(props.year.toString(), item.title)
+    )
+  );
+  data.value.forEach((item, index) => {
+    // 如果成功更新数据
+    if (res[index].status === "fulfilled") {
+      const { 结算数量: amount } =
+        (res[index].value as BusinessReportResponse)?.["内容"]?.["详情"]?.[0] ||
+        {};
+      item.value = amount;
+    } else {
+      item.value = 0;
+    }
+  });
+}
+
+watch(
+  () => props.year,
+  async () => {
+    await initData();
+    initChart();
+  }
+);
+
+onMounted(async () => {
+  await initData();
   initChart();
 });
 </script>

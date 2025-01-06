@@ -7,6 +7,9 @@ export const timeDimensionEnum = {
   HOUR: "小时报表",
 };
 
+/**
+ * 时间维度前端到后端映射
+ */
 export const timeDimensionFtoBMap = {
   [timeDimensionEnum.YEAR]: "年",
   // [timeDimensionEnum.QUARTER]: "季",
@@ -16,6 +19,9 @@ export const timeDimensionFtoBMap = {
   // [timeDimensionEnum.HOUR]: "时",
 };
 
+/**
+ * 时间维度后端到前端映射
+ */
 export const BMapFtoTimeDimension = {
   年: timeDimensionEnum.YEAR,
   //季: timeDimensionEnum.QUARTER,
