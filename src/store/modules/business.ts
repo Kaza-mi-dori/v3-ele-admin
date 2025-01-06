@@ -15,6 +15,7 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
 export const businessStore = defineStore("business", () => {
   const businessInfo = ref([]);
   const businessInfoValue = computed(() => businessInfo.value);
+  const businessReportMap = ref<Record<string, any>>({});
   /**
    * 获取业态报表列表
    *
@@ -37,11 +38,37 @@ export const businessStore = defineStore("business", () => {
     });
   }
 
+  /**
+   * 获取业态报表数据
+   *
+   */
+  function getBusinessReportMap(year: string, category: string, force = false) {
+    return new Promise(async (resolve) => {
+      if (!businessReportMap.value[year]) {
+        businessReportMap.value[year] = {};
+      }
+      if (businessReportMap.value[year][category] && !force) {
+        resolve(businessReportMap.value[year][category]);
+        return;
+      }
+      const data: any = await BusinessFormAPI.getBusinessReportFormList({
+        业务维度: category,
+        类型集合: ["年"],
+        状态集合: ["有效"],
+        日期早于: `${year}-12-31`,
+        日期晚于: `${year}-01-01`,
+      });
+      businessReportMap.value[year][year] = data["当前记录"]?.[0];
+      resolve(businessReportMap.value[year][year]);
+    });
+  }
   return {
     queryForm,
     businessInfo,
     businessInfoValue,
     getBusinessReportFormList,
+    getBusinessReportMap,
+    businessReportMap,
   };
 });
 
