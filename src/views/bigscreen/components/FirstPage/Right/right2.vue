@@ -72,7 +72,7 @@ const totalData: Ref<{}> = ref({
 
 const rankData: Ref<Rank[]> = ref([
   { order: 1, name: "A公司", value: 5000, unit: "万元" },
-  { order: 2, name: "B公司", value: 4000, unit: "万元" },
+  { order: 2, name: "B有限公司", value: 4000, unit: "万元" },
   { order: 3, name: "C公司", value: 3000, unit: "万元" },
   { order: 4, name: "D公司", value: 2000, unit: "万元" },
   { order: 5, name: "E公司", value: 1000, unit: "万元" },
@@ -179,7 +179,7 @@ onMounted(() => {
 .rank-item {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between; // 确保每一列有间距并对齐
   margin-bottom: 5px;
 
   .order {
@@ -190,7 +190,7 @@ onMounted(() => {
     font-size: 14px;
     font-weight: bold;
     padding-left: 5px;
-    margin-right: 15px;
+    margin-right: 10px;
     color: #fff;
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -199,17 +199,21 @@ onMounted(() => {
   .__name {
     font-size: 14px;
     color: #7b9eeb;
-    margin-right: 3em;
+    text-align: left; // 确保公司名称左对齐
+    flex-grow: 1; // 让公司名称部分占满剩余的空间
+    min-width: 50px; // 给公司名称设置一个最小宽度
   }
 
   .__progress {
     width: 55%;
+    margin-left: 5px;
   }
 
   .__value {
     font-size: 14px;
-    margin-left: 2em;
     color: #7b9eeb;
+    text-align: right; // 确保百分比右对齐
+    min-width: 50px; // 设置一个最小宽度，以保证有足够空间显示百分比
   }
 }
 </style>
