@@ -5,12 +5,15 @@
         v-model="monitorArea"
         class="monitor-selector"
         style="width: 200px"
-        placeholder="请选择"
+        placeholder="所有监控"
+        @change="onChangeMonitorArea"
       >
-        <el-option label="监控1" value="1" />
-        <el-option label="监控2" value="2" />
-        <el-option label="监控3" value="3" />
-        <el-option label="监控4" value="4" />
+        <el-option
+          v-for="item in monitorList"
+          :key="item.id"
+          :label="item.name"
+          :value="item.name"
+        />
       </el-select>
       <a class="text-sm link" @click="onCheckMore">更多>></a>
     </div>
@@ -28,6 +31,8 @@ import inventory from "@/views/bigscreen/img/inventory.png";
 import business from "@/views/bigscreen/img/business.png";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
+import { GsLocationAPI } from "@/api/config/gsLocation";
 
 const props = defineProps({
   // 受控属性，如果传入则改变一次
@@ -39,7 +44,8 @@ const props = defineProps({
 
 const oilStorage = ref<string>("254,38");
 const oilBargain = ref<string>("254,38");
-const monitorArea = ref<string>("1");
+const monitorArea = ref<string>();
+const monitorList = ref<any[]>([]);
 const router = useRouter();
 const onCheckMore = async () => {
   const route = router.resolve({
@@ -54,6 +60,26 @@ watch(
     monitorArea.value = newVal;
   }
 );
+
+function onChangeMonitorArea(val: string) {
+  // TODO 根据监控区域获取监控视频
+}
+const getGsLocation = async () => {
+  const res: any = await GsLocationAPI.getAllMapElement();
+  const list = res["当前记录"];
+  // TODO 判断是否有监控视频
+  // list = list.filter((item: any) => item.类型 === MapElementEnum.监控);
+  monitorList.value = list.map((item: any) => {
+    return {
+      id: item.id,
+      name: item.名称,
+    };
+  });
+};
+
+onMounted(() => {
+  getGsLocation();
+});
 </script>
 
 <style lang="scss" scoped>
