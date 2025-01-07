@@ -42,8 +42,9 @@
     <el-table
       v-if="tableData.length > 0"
       :header-cell-style="() => ({ textAlign: 'center' })"
-      :data="tableData"
+      :data="currentTableData"
       border
+      max-height="600px"
       style="width: 100%"
       stripe
     >
@@ -116,6 +117,12 @@ const props = defineProps({
 const fileList = ref<UploadFiles>([]);
 const tableData = ref<any[]>([]);
 const currentPage = ref<number>(1);
+const currentTableData = computed(() => {
+  return tableData.value.slice(
+    (currentPage.value - 1) * pageSize.value,
+    currentPage.value * pageSize.value
+  );
+});
 const pageSize = ref<number>(10);
 const submitLoading = ref<boolean>(false);
 

@@ -10,6 +10,10 @@
       <!-- <el-button v-model:disabled="notAllowedToAddSub" @click="handleAddNode">
         下级新增
       </el-button> -->
+      <el-button @click="handleGetMultipleImportTemplate">
+        获取多个导入模板
+      </el-button>
+      <el-button @click="handleImportExcel">导入excel</el-button>
     </div>
     <div class="flex w-full">
       <div class="bg-white p-10px shadow-coolGray-100 max-w-300px">
@@ -308,11 +312,11 @@
       v-model="chooseDialogVisible"
       title="选择要导入的数据指标"
       width="50%"
-      center
+      top="5vh"
     >
       <el-tree
         ref="chooseImportTreeRef"
-        class="w-full"
+        class="w-full max-h-600px overflow-y-auto"
         default-expand-all
         :data="data"
         :props="defaultProps"
@@ -857,6 +861,10 @@ const handleCloseConfirmImportDialog = () => {
   chooseImportTreeRef.value?.setCheckedKeys([]);
   checkedNodes.value = [];
   chooseDialogVisible.value = false;
+};
+
+const handleGetMultipleImportTemplate = () => {
+  chooseDialogVisible.value = true;
 };
 
 /** 选择导入数据改变回调 */
