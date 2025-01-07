@@ -86,7 +86,9 @@ watch(
   .el-select__wrapper {
     // border: 1px solid #fff;
     background-color: transparent;
+    box-shadow: 0 0 0 1px $bigscreen-primary-color-1;
     .el-select__selected-item.el-select__placeholder {
+      // color: $bigscreen-primary-color-1;
       color: #fff;
     }
   }

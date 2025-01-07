@@ -19,6 +19,7 @@
             class="input-field"
             size="large"
             placeholder="请选择"
+            @change="onChangeYear"
           >
             <el-option
               v-for="d in 10"
@@ -78,8 +79,11 @@ import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
 import { ComponentSize } from "element-plus";
 import businessFormAPI from "@/api/businessForm";
+import { companyStoreHook } from "@/store";
+import { OurCompanyEnum, OurCompanyFullNameMap } from "@/enums/BusinessEnum";
 
 const router = useRouter();
+const companyStore = companyStoreHook();
 
 // 页面动态显示内容，由参数决定
 const title: Ref<string> = ref("广投石化驾驶舱");
@@ -120,7 +124,7 @@ const getRandomData = () => {
   // }));
   return [
     {
-      企业名称: "广投石化本部",
+      企业名称: "广投石化",
       累计营收: "1000",
       占比: "33.33%",
       目标营收: "3000",
@@ -152,6 +156,49 @@ const getRandomData = () => {
       同比增长: "10%",
     },
   ];
+};
+
+// 获取公司数据
+const onChangeYear = (value: any) => {
+  Promise.all(
+    Object.keys(OurCompanyFullNameMap).map((company) =>
+      companyStore.getFirmReportMap(company as OurCompanyEnum, value.toString())
+    )
+  ).then((res) => {
+    console.log("res", res);
+    dataFilterOne(res);
+  });
+};
+
+// 处理后端数据
+const dataFilterOne = (res: any) => {
+  tableData.value.forEach((item: any, index: number) => {
+    // 找到res中对应的公司
+    const company = res.find((data: any) => data?.企业名称 === item.企业名称);
+    if (company) {
+      // 在内容-详情下找到业态类型为“总体”这一条
+      const overall = company.内容.详情.find(
+        (item: any) => item.业态类型 === "总体"
+      );
+      item.累计营收 = overall?.累计营收金额 || 0;
+      item.占比 = company.占比;
+      item.目标营收 = company.营收基准值 || 0;
+      item.目标完成率 =
+        (overall?.累计营收金额 || 0) / (company.营收基准值 || 0);
+      item.同比增长 = company.同比增长 || 0;
+    } else {
+      item.累计营收 = 0;
+      item.占比 = 0;
+      item.目标营收 = 0;
+      item.目标完成率 = 0;
+      item.同比增长 = 0;
+    }
+  });
+  // reduce计算占比
+  const total = tableData.value.reduce((acc, item) => acc + item.累计营收, 0);
+  tableData.value.forEach((item) => {
+    item.占比 = ((item.累计营收 / total) * 100).toFixed(2);
+  });
 };
 
 // 填充表格数据
