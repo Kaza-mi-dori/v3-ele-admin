@@ -155,14 +155,14 @@ function initChart() {
         { offset: 1, color: sassvariables["bigscreen-primary-color-4"] },
       ]),
       // 半透明
-      "rgba(255, 255, 255, 0.9)",
+      "rgba(241,140,50, 0.3)",
       // 半透明
       new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: sassvariables["bigscreen-primary-color-7"] },
         { offset: 1, color: sassvariables["bigscreen-primary-color-8"] },
       ]),
       // 半透明
-      "rgba(255, 255, 255, 0.9)",
+      "rgba(39,81,141, 0.3)",
     ],
     grid: {
       bottom: 20,
@@ -211,7 +211,7 @@ function initChart() {
       axisLabel: {
         // 全部显示
         interval: 0,
-        color: "#fff",
+        color: sassvariables["bigscreen-primary-color-7"],
         fontSize: "0.8rem",
         fontWeight: "bold",
       },
