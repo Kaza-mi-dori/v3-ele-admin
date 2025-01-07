@@ -9,6 +9,7 @@
       mapStyleId: styleId,
     }"
     class="map-container"
+    @click="onClickMap"
   >
     <!-- <tlbs-multi-marker
       ref="multiMarker"
@@ -24,7 +25,6 @@
         lat: item.position.lat,
         lng: item.position.lng,
       }"
-      @click="onClickGeo1"
     >
       <div :style="{ cursor: 'pointer', textAlign: 'center' }">
         <img
@@ -64,7 +64,9 @@
                 organization: item.styleId === 'organization',
                 'charging-station': item.styleId === 'chargingStation',
               }"
+              :data-name="item.properties.label"
               style="font-size: 14px; transform: translateY(-14px)"
+              @click="onClickGeo1"
             >
               {{ item.properties && item.properties.label }}
             </div>
@@ -125,7 +127,7 @@ import gas from "@/views/bigscreen/img/oil2_medium.png";
 import enterprise from "@/views/bigscreen/img/enterprise.png";
 import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
 import { getDistrict } from "@/api/thirdSystem/tmap";
-import { all } from "axios";
+import { inject } from "vue";
 
 const props = defineProps({
   /** 标记点 */
@@ -136,6 +138,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["clickGeo"]);
+
+const currentMonitor = inject("currentMonitor") as Ref<string>;
 
 const showOilDepot = ref(true); // 默认显示油库
 const mapContainer = ref<any>(null);
@@ -241,6 +245,47 @@ const setZoom = (value: number) => {
   zoom.value = value;
 };
 
+// 找到离x,y 最近的geometry
+// 由于每个元素可以计算出xOffset,yOffset，所以可以计算出每个元素的中心点
+// 然后计算每个元素的中心点与x,y的距离，找到最小的那个
+const getNearestGeometry = (x: number, y: number) => {
+  let minDistance = Infinity;
+  let nearestGeometry = null;
+  geometries.value.forEach((geometry) => {
+    // 找到data-name为geometry.content的元素
+    const dom = document.querySelector(`[data-name="${geometry.content}"]`);
+    if (dom) {
+      // 计算元素对于地图的xOffset,yOffset
+      const { x: domX, y: domY } = dom.getBoundingClientRect();
+      const distance = Math.sqrt((domX - x) ** 2 + (domY - y) ** 2);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestGeometry = geometry;
+      }
+    }
+  });
+  // 只有当nearestGeometry存在且distance(像素)小于40时，才返回nearestGeometry
+  if (nearestGeometry && minDistance < 40) {
+    return nearestGeometry;
+  }
+  return null;
+};
+
+function onClickMap(e: any) {
+  // const { x, y } = e.point;
+  const { x, y } = e.originalEvent;
+  try {
+    const nearestGeometry = getNearestGeometry(x, y) as any;
+    // 将x,y坐标emit出去，适配父组件显示的逻辑
+    // emit("clickGeo", { x, y });
+    if (nearestGeometry) {
+      currentMonitor.value = nearestGeometry.content;
+    }
+  } catch (error) {
+    console.error("onClickMap", error);
+  }
+}
+
 const onClickGeo1 = (e: any) => {
   // console.log("ClickGeo!", e);
   const { geometry } = e;
@@ -268,6 +313,7 @@ const onClickGeo1 = (e: any) => {
     activeItem.value = geometry.properties;
     // 将x,y坐标emit出去，适配父组件显示的逻辑
     // emit("clickGeo", { x, y });
+    emit("clickGeo", geometry);
   }
 };
 

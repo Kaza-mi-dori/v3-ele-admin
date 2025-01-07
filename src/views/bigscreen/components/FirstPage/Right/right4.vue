@@ -1,6 +1,17 @@
 <template>
   <Model1 class="model1" title="监控视频">
-    <div class="flex justify-end mb-2 mr-2">
+    <div class="flex justify-between items-center mb-2 mr-2 pl-5">
+      <el-select
+        v-model="monitorArea"
+        class="monitor-selector"
+        style="width: 200px"
+        placeholder="请选择"
+      >
+        <el-option label="监控1" value="1" />
+        <el-option label="监控2" value="2" />
+        <el-option label="监控3" value="3" />
+        <el-option label="监控4" value="4" />
+      </el-select>
       <a class="text-sm link" @click="onCheckMore">更多>></a>
     </div>
     <div class="box1">
@@ -18,9 +29,17 @@ import business from "@/views/bigscreen/img/business.png";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
+const props = defineProps({
+  // 受控属性，如果传入则改变一次
+  monitorAreaProp: {
+    type: String,
+    default: "1",
+  },
+});
+
 const oilStorage = ref<string>("254,38");
 const oilBargain = ref<string>("254,38");
-
+const monitorArea = ref<string>("1");
 const router = useRouter();
 const onCheckMore = async () => {
   const route = router.resolve({
@@ -28,6 +47,13 @@ const onCheckMore = async () => {
   });
   window.open(route.href, "_blank");
 };
+
+watch(
+  () => props.monitorAreaProp,
+  (newVal) => {
+    monitorArea.value = newVal;
+  }
+);
 </script>
 
 <style lang="scss" scoped>
@@ -54,5 +80,15 @@ const onCheckMore = async () => {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+:deep(.monitor-selector) {
+  .el-select__wrapper {
+    // border: 1px solid #fff;
+    background-color: transparent;
+    .el-select__selected-item.el-select__placeholder {
+      color: #fff;
+    }
+  }
 }
 </style>

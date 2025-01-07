@@ -19,7 +19,7 @@
       </div>
       <div class="b-space" /> -->
       <div class="middle-item flex-grow">
-        <Middle2 class="middle2" />
+        <Middle2 class="middle2" @changeMonitor="onChangeMonitor" />
       </div>
       <div class="b-space" />
       <div class="middle-item" style="margin-bottom: 10px">
@@ -38,7 +38,7 @@
       <div class="b-space" />
       <right3New style="flex: 0.8" />
       <div class="b-space" />
-      <Right4 style="flex: 0.6" />
+      <Right4 style="flex: 0.6" :monitorAreaProp="currentMonitor" />
     </div>
     <div class="c-space" />
   </div>
@@ -59,6 +59,15 @@ import right3New from "./components/FirstPage/Right/right3-new.vue";
 import Right4 from "./components/FirstPage/Right/right4.vue";
 import Middle4 from "../bigscreen/components/FirstPage/Middle/Middle4/index.vue";
 import Map from "./components/FirstPage/Map/index.vue";
+import { provide } from "vue";
+
+const currentMonitor = ref<any>();
+
+const onChangeMonitor = (geometry: any) => {
+  console.log("handleClickGeo", geometry);
+};
+
+provide("currentMonitor", currentMonitor);
 
 // 加载腾讯地图api
 const initTMapApi = () => {
