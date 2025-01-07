@@ -154,15 +154,17 @@ function initChart() {
         { offset: 0, color: sassvariables["bigscreen-primary-color-2"] },
         { offset: 1, color: sassvariables["bigscreen-primary-color-4"] },
       ]),
+      // 比上面淡一些
+      "#96704b",
       // 半透明
-      "rgba(241,140,50, 0.3)",
-      // 半透明
+      // "rgba(255, 255, 255, 0.9)",
       new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: sassvariables["bigscreen-primary-color-7"] },
         { offset: 1, color: sassvariables["bigscreen-primary-color-8"] },
       ]),
+      "#334c6e",
       // 半透明
-      "rgba(39,81,141, 0.3)",
+      // "rgba(255, 255, 255, 0.9)",
     ],
     grid: {
       bottom: 20,

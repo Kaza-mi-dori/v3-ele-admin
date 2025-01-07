@@ -78,7 +78,7 @@ const gsMarkerList = ref<any[]>([]);
 /** 二级入口(主营产品)列表 */
 const entryList = computed(() => {
   const result = Object.keys(BusinessEnumMap)
-    .filter((item) => item !== "其他")
+    .filter((item) => item !== "其他" && item !== "仓储" && item !== "油站运营")
     .map((key) => {
       return {
         name: key,
