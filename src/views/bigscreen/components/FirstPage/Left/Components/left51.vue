@@ -15,10 +15,10 @@ const router = useRouter();
 const left51Ref = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
 const data = ref<any[]>([
-  { title: "广投石化", value: [100, 50, 50, 30] },
-  { title: "广投石化广东分公司", value: [100, 50, 30, -30] },
-  { title: "广投石化舟山", value: [100, 50, 80, 40] },
-  { title: "永盛仓储", value: [100, 50, 90, -10] },
+  { title: "广投石化", value: [100, 50, 10, 20, 1000, 250] },
+  { title: "广投石化广东分公司", value: [100, 50, 25, 40, 400, 125] },
+  { title: "广投石化舟山", value: [100, 50, 50, 40, 200, 125] },
+  { title: "永盛仓储", value: [100, 50, 5, 10, 2000, 500] },
 ]);
 const companyStore = companyStoreHook();
 
@@ -65,8 +65,8 @@ async function getData() {
       item.value = [
         +revenue,
         +profit,
-        +(revenue / revenueRate).toFixed(2),
-        +(profit / profitRate).toFixed(2),
+        +revenueRate,
+        +profitRate,
         +(
           firmData.value["内容"]?.["营收基准值"] ||
           (revenueRate ? (revenue / revenueRate).toFixed(2) : 0)
