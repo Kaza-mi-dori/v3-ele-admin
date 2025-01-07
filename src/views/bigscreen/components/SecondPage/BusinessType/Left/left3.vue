@@ -295,7 +295,7 @@ onMounted(() => {
         color: #2abfff;
       }
       .__unit {
-        margin-left: 1em;
+        margin-left: 0.2em;
         font-size: 1rem;
         color: #5099e3;
       }
