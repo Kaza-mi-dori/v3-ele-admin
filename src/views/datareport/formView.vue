@@ -229,6 +229,10 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         timeDimension: data["类型"],
         firmName: data["企业名称"],
         firmType: data["企业类型"],
+        revenueTarget: data["内容"]?.["营收基准值"],
+        profitTarget: data["内容"]?.["利润基准值"],
+        revenueTarget2: data["内容"]?.["营收奋斗值"],
+        profitTarget2: data["内容"]?.["利润奋斗值"],
         details: data["内容"]["详情"].map((item: any) => {
           return {
             businessType: item["业态类型"],
@@ -466,6 +470,10 @@ const convertToBackendData = (type: string | null, data: any) => {
       result["企业类型"] = data.firmType;
       result["类型"] = data.timeDimension;
       result["内容"] = {
+        营收基准值: data.revenueTarget,
+        利润基准值: data.profitTarget,
+        营收奋斗值: data.revenueTarget2,
+        利润奋斗值: data.profitTarget2,
         详情: data.details.map((item: any) => {
           return {
             业态类型: item.businessType,

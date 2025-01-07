@@ -675,6 +675,8 @@ export interface BusinessReportQuery {
   日期晚于: string;
   /** 企业名称 */
   企业名称: string;
+  /** 类型集合 */
+  类型集合: string[];
 }
 
 export interface MarketQuotationReportQuery {

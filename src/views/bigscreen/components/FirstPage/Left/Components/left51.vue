@@ -67,21 +67,41 @@ async function getData() {
         +profit,
         +(revenue / revenueRate).toFixed(2),
         +(profit / profitRate).toFixed(2),
+        +(
+          firmData.value["内容"]?.["营收基准值"] ||
+          (revenueRate ? (revenue / revenueRate).toFixed(2) : 0)
+        ),
+        +(
+          firmData.value["内容"]?.["利润基准值"] ||
+          (profitRate ? (profit / profitRate).toFixed(2) : 0)
+        ),
       ];
     } else {
-      item.value = [0, 0, 0, 0];
+      item.value = [0, 0, 0, 0, 0, 0];
     }
   });
 }
 
 // 数据整理
 function dataFilterOne() {
-  data.value = data.value.map((item) => {
-    return {
-      title: item.title,
-      value: item.value,
-    };
-  });
+  const order = {
+    [OurCompanyEnum.GTSHC]: 1,
+    [OurCompanyEnum.GDFGS]: 2,
+    [OurCompanyEnum.GTSHC_ZS]: 3,
+    [OurCompanyEnum.YSCC]: 4,
+  };
+  data.value = data.value
+    .map((item) => {
+      return {
+        title: item.title,
+        value: item.value,
+      };
+    })
+    .sort(
+      (a, b) =>
+        order[b.title as keyof typeof order] -
+        order[a.title as keyof typeof order]
+    );
 }
 
 function onClickBar(params: any) {
@@ -111,11 +131,14 @@ function initChart() {
     chartRef.value.on("click", "series", onClickBar);
   }
   chartRef.value.clear();
+  console.log(data.value);
   const option = {
     tooltip: {
       trigger: "axis",
     },
-    barWidth: "15%",
+    barWidth: "25%",
+    // 系列之间的距离
+    barGap: "0%",
     // 标题
     title: {
       text: `各主体营收及利润/${props.year}`,
@@ -128,16 +151,23 @@ function initChart() {
     },
     color: [
       new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-        { offset: 0, color: sassvariables["bigscreen-primary-color-3"] },
+        { offset: 0, color: sassvariables["bigscreen-primary-color-2"] },
         { offset: 1, color: sassvariables["bigscreen-primary-color-4"] },
       ]),
+      // 半透明
+      "rgba(255, 255, 255, 0.9)",
+      // 半透明
       new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-        { offset: 0, color: sassvariables["bigscreen-primary-color-5"] },
-        { offset: 1, color: sassvariables["bigscreen-primary-color-6"] },
+        { offset: 0, color: sassvariables["bigscreen-primary-color-7"] },
+        { offset: 1, color: sassvariables["bigscreen-primary-color-8"] },
       ]),
+      // 半透明
+      "rgba(255, 255, 255, 0.9)",
     ],
     grid: {
-      bottom: 40,
+      bottom: 20,
+      left: "3%",
+      containLabel: true,
     },
     legend: {
       data: ["营收", "利润"],
@@ -168,7 +198,7 @@ function initChart() {
         },
       },
       splitLine: {
-        show: true, // 显示分割线
+        show: false, // 显示分割线
         lineStyle: {
           type: "dashed", // 虚线
           color: sassvariables["bigscreen-primary-color-8"],
@@ -190,12 +220,97 @@ function initChart() {
       {
         name: "营收",
         type: "bar",
+        stack: "revenue",
         data: data.value.map((item) => item.value[0]),
+        label: {
+          show: true,
+          position: "inside",
+          textStyle: {
+            // 文字颜色
+            color: "#fff",
+            fontSize: "0.8rem",
+            fontWeight: "bold",
+            align: "center",
+            verticalAlign: "middle",
+          },
+          // 数值/百分比
+          formatter: "{c}",
+        },
+        // markPoint显示完成率
+        markPoint: {
+          data: data.value.map((item) => ({
+            symbolSize: 35,
+            symbolOffset: [0, "-5%"],
+            // symbol背景色
+            itemStyle: {
+              color: "crimson",
+            },
+            xAxis: item.value[0],
+            yAxis: item.title,
+            value: item.value[4]
+              ? ((item.value[0] / item.value[4]) * 100).toFixed(0) + "%"
+              : "0%",
+          })),
+          label: {
+            fontWeight: "bold",
+            color: "#fff",
+          },
+        },
+        // markLine: {
+        //   symbol: "none",
+        //   label: {
+        //     show: false,
+        //   },
+        //   data: data.value
+        //     .filter(
+        //       (item) => item.value[0] > 0 && item.value[0] < item.value[4]
+        //     )
+        //     .map((item) => ({
+        //       type: "line",
+        //       xAxis: item.value[0],
+        //       lineStyle: {
+        //         color: "rgba(255, 255, 255)",
+        //         cap: "round",
+        //       },
+        //       dashOffset: 5,
+        //     })),
+        // },
+      },
+      {
+        name: "未完成营收",
+        type: "bar",
+        stack: "revenue",
+        // 如果小于0，则显示0
+        data: data.value.map((item) =>
+          item.value[4] - item.value[0] < 0 ? 0 : item.value[4] - item.value[0]
+        ),
       },
       {
         name: "利润",
         type: "bar",
+        stack: "profit",
         data: data.value.map((item) => item.value[1]),
+        label: {
+          show: true,
+          position: "inside",
+          textStyle: {
+            color: "#fff",
+            fontSize: "0.8rem",
+            fontWeight: "bold",
+            align: "center",
+            verticalAlign: "middle",
+          },
+          formatter: "{c}",
+        },
+      },
+      {
+        name: "未完成利润",
+        type: "bar",
+        stack: "profit",
+        // 如果小于0，则显示0
+        data: data.value.map((item) =>
+          item.value[5] - item.value[1] < 0 ? 0 : item.value[5] - item.value[1]
+        ),
       },
     ],
   };

@@ -131,9 +131,82 @@
         </el-form>
       </div>
     </div>
+    <!-- 当期经营目标 -->
     <div class="info-card-level1">
       <div class="__title">
-        <span>基本信息</span>
+        <span>当期经营目标</span>
+      </div>
+      <div class="__content">
+        <el-form
+          ref="formRef"
+          label-position="top"
+          label-width="100px"
+          inline
+          :rules="rules"
+          class="w-full g-form-1"
+          :model="yearlyReportDetailForm"
+        >
+          <el-row class="w-full">
+            <el-col :span="8">
+              <el-form-item label="营收基准值(万元)" prop="revenueTarget">
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.revenueTarget"
+                  type="number"
+                  placeholder="请输入营收基准值"
+                />
+                <span v-else>
+                  {{ toThousands(yearlyReportDetailForm.revenueTarget) }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="利润基准值(万元)" prop="profitTarget">
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.profitTarget"
+                  type="number"
+                  placeholder="请输入利润基准值"
+                />
+                <span v-else>
+                  {{ toThousands(yearlyReportDetailForm.profitTarget) }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="营收奋斗值(万元)" prop="revenueTarget2">
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.revenueTarget2"
+                  type="number"
+                  placeholder="请输入营收奋斗值"
+                />
+                <span v-else>
+                  {{ toThousands(yearlyReportDetailForm.revenueTarget2) }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="利润奋斗值(万元)" prop="profitTarget2">
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.profitTarget2"
+                  type="number"
+                  placeholder="请输入利润奋斗值"
+                />
+                <span v-else>
+                  {{ toThousands(yearlyReportDetailForm.profitTarget2) }}
+                </span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+    </div>
+    <!-- 经营情况 -->
+    <div class="info-card-level1">
+      <div class="__title">
+        <span>当期经营情况</span>
       </div>
       <div class="__content">
         <el-form
@@ -1223,7 +1296,7 @@ import datePickerPlus from "@/components/ElBasicPlus/datePicker.vue";
 import sassvariables from "@/styles/variables.module.scss";
 import BusinessFormAPI from "@/api/businessForm";
 import business from "@/types/business";
-import Data from "@/views/system/dict/data.vue";
+import { toThousands } from "@/utils";
 
 const props = defineProps({
   id: {
@@ -1255,6 +1328,10 @@ const yearlyReportDetailForm = ref({
   timeDimension: "年",
   firmName: "", // 企业名称
   firmType: "", // 企业类型,
+  revenueTarget: 0, // 营收基准值
+  profitTarget: 0, // 利润基准值
+  revenueTarget2: 0, // 营收奋斗值
+  profitTarget2: 0, // 利润奋斗值
   details: Object.keys(BusinessEnumMap).map((key) => ({
     businessType: key, // 业态类型
     dataDate: undefined, // 数据日期,
