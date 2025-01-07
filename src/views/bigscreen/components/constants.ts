@@ -29,6 +29,15 @@ export const businessTypes2: navItem[] = [
   { id: 6, label: "煤炭", name: "coal" },
 ];
 
+export const businessTypeRouteNameMap = {
+  chemicalProduct: "Cpy",
+  crudeOil: "Mt",
+  fuelOil: "Yy",
+  refinedOilProduct: "Cpy",
+  LNG: "Lng",
+  coal: "Rly",
+};
+
 /** 经营主体 */
 export const businessSubjects: navItem[] = [
   { id: 1, label: OurCompanyEnumMap[OurCompanyEnum.GTSHC], name: "gtsh" },

@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { ref, computed, withDefaults, defineProps } from "vue";
 import { useTransition } from "@vueuse/core";
-import { businessTypes2 } from "../../constants";
+import { businessTypes2, businessTypeRouteNameMap } from "../../constants";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -59,9 +59,14 @@ function handleClick() {
   if (!businessName) {
     return;
   }
+  const routeName =
+    businessTypeRouteNameMap[
+      businessName as keyof typeof businessTypeRouteNameMap
+    ];
   const route = router.resolve({
-    name: "Business",
-    params: { businessName },
+    // name: "Business",
+    name: routeName,
+    query: { businessName },
   });
   window.open(route.href, "_blank");
 }

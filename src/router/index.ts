@@ -95,13 +95,60 @@ export const constantRoutes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "business/:businessName",
+        // path: "business/:businessName",
+        path: "business",
         name: "Business",
         meta: {
           hidden: true,
         },
         component: () =>
           import("@/views/bigscreen/components/SecondPage/second-index.vue"),
+        children: [
+          {
+            path: "cpy",
+            name: "Cpy",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Products/cpy.vue"
+              ),
+          },
+          {
+            path: "yy",
+            name: "Yy",
+            component: () =>
+              import("@/views/bigscreen/components/SecondPage/Products/yy.vue"),
+          },
+          {
+            path: "mt",
+            name: "Mt",
+            component: () =>
+              import("@/views/bigscreen/components/SecondPage/Products/mt.vue"),
+          },
+          {
+            path: "rly",
+            name: "Rly",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Products/rly.vue"
+              ),
+          },
+          {
+            path: "lng",
+            name: "Lng",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Products/lng.vue"
+              ),
+          },
+          {
+            path: "hgcp",
+            name: "Hgcp",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Products/hgcp.vue"
+              ),
+          },
+        ],
       },
       {
         path: "subject/:subjectName",

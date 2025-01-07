@@ -51,7 +51,11 @@ import { businessStore, companyStore } from "@/store";
 import Map from "./components/FirstPage/Map/index.vue";
 import { GsLocationAPI } from "@/api/config/gsLocation";
 import { BusinessEnum, BusinessEnumMap } from "@/enums/BusinessEnum";
-import { businessTypes2, navItem } from "./components/constants";
+import {
+  businessTypes2,
+  navItem,
+  businessTypeRouteNameMap,
+} from "./components/constants";
 
 const businessstore = businessStore();
 const companystore = companyStore();
@@ -141,11 +145,17 @@ const handleEntryClick = (item: any) => {
     return;
   }
   const businessType = businessTypes2.find((type) => type.label === item.label);
+  const routeName =
+    businessTypeRouteNameMap[
+      businessType?.name as keyof typeof businessTypeRouteNameMap
+    ];
   if (businessType) {
     const route = router.resolve({
-      name: "Business",
-      params: { businessName: businessType.name },
+      // name: "Business",
+      name: routeName,
+      query: { businessName: businessType.name },
     });
+    console.log("route", route);
     window.open(route.href, "_blank");
   }
 };

@@ -8,7 +8,8 @@
     </div>
     <div class="bg-view1__body">
       <Screen2 v-if="title === '市场信息'" />
-      <Screen1 v-else />
+      <!-- <Screen1 v-else /> -->
+      <router-view v-else />
     </div>
   </div>
 </template>
@@ -18,17 +19,18 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import Screen1 from "./Screen1.vue";
 import Screen2 from "./Screen2.vue";
-import { allBusinessTypes } from "../constants";
+import { allBusinessTypes, businessTypeRouteNameMap } from "../constants";
 
 const route = useRoute();
 const title = ref("");
 
 onMounted(() => {
-  const paramName = route.params.businessName;
+  console.log(route.params);
+  const paramName = route.query.businessName;
   const matchedItem = allBusinessTypes.find(
     (item: { name: string | string[] }) => item.name === paramName
   );
-
+  console.log(matchedItem, paramName);
   if (matchedItem) {
     title.value = matchedItem.label;
   }
