@@ -188,6 +188,8 @@ function initChart() {
         color: sassvariables["bigscreen-primary-color-7"],
         fontWeight: "bold",
       },
+      ameLocation: "end", // 将单位文字放到坐标轴末尾位置
+      nameGap: 5, // 调整单位文字和坐标轴的间距，负值可以让它向左移动
       axisLabel: {
         fontSize: 14,
         fontWeight: "bold",
