@@ -35,9 +35,9 @@
 </template>
 
 <script setup lang="ts">
-import Left1 from "@/views/bigscreen/components/SecondPage/LeftSubject/left1.vue";
-import Left2 from "@/views/bigscreen/components/SecondPage/LeftSubject/left2.vue";
-import Left3 from "@/views/bigscreen/components/SecondPage/LeftSubject/left3.vue";
+import Left1 from "@/views/bigscreen/components/SecondPage/Left/left1.vue";
+import Left2 from "@/views/bigscreen/components/SecondPage/Left/left2.vue";
+import Left3 from "@/views/bigscreen/components/SecondPage/Left/left3.vue";
 import Model2 from "@/views/bigscreen/components/FirstPage/Model2/index.vue";
 import Middle2 from "@/views/bigscreen/components/FirstPage/Middle/Middle2/index.vue";
 import Middle3 from "@/views/bigscreen/components/SecondPage/Middle/middle3.vue";

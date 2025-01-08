@@ -163,17 +163,21 @@ onMounted(() => {
   height: 100%;
 }
 
-// ::v-deep
-//   .el-progress.el-progress--line.el-progress--without-text.__progress
-//   .el-progress-bar
-//   > .el-progress-bar__outer {
-//   background-color: #192d56 !important;
-// }
-
 :deep(.el-progress.el-progress--line.el-progress--without-text.__progress)
   .el-progress-bar
   > .el-progress-bar__outer {
   background-color: #192d56 !important;
+  > .el-progress-bar__inner {
+    // 动画时间延后2s并设置动画
+    animation: progress-animation 1s ease !important;
+    @keyframes progress-animation {
+      from {
+        width: 0;
+      }
+      to {
+      }
+    }
+  }
 }
 
 .rank-item {
