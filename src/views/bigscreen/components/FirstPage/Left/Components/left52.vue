@@ -14,7 +14,7 @@
     <Item3
       v-for="item in data"
       :key="item.title"
-      style="width: 30%; margin: 10px"
+      style="width: 30%; margin: 8px"
       :title="item.title"
       :amount="item.value + ''"
       :unit="item.unit"
