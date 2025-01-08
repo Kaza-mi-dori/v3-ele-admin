@@ -11,6 +11,7 @@ import DescribeItem2 from "../DescribeItems/Item2.vue";
 import Coin from "@/views/bigscreen/img/left_icon1.png";
 import WrappedGift from "@/views/bigscreen/img/left_icon2.png";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { currentYear } from "@/utils/time";
 
 interface FinancialData {
   title: string;
@@ -57,8 +58,6 @@ const commonQueryParams = {
   类型集合: ["年"],
 };
 
-const currentYear = new Date().getFullYear();
-
 // 计算同比
 const calculateYoY = (current: number, lastYear: number): number => {
   return lastYear
@@ -76,8 +75,8 @@ const fetchData = async (queryParams: Partial<BusinessReportQuery>) => {
 const fetchLastYearData = async () => {
   const queryParams = {
     ...commonQueryParams,
-    日期晚于: `${currentYear - 1}-01-01`,
-    日期早于: `${currentYear - 1}-12-31`,
+    日期晚于: `${currentYear() - 1}-01-01`,
+    日期早于: `${currentYear() - 1}-12-31`,
   };
 
   const resData = await fetchData(queryParams);
@@ -100,8 +99,8 @@ const initData = async () => {
 
   const queryParams = {
     ...commonQueryParams,
-    日期晚于: `${currentYear}-01-01`,
-    日期早于: `${currentYear}-12-31`,
+    日期晚于: `${currentYear()}-01-01`,
+    日期早于: `${currentYear()}-12-31`,
   };
 
   const resData = await fetchData(queryParams);
