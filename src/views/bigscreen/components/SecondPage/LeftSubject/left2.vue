@@ -28,6 +28,7 @@ const initChart2Left2 = () => {
       orient: "vertical",
       textStyle: {
         color: "#fff",
+        fontSize: "1rem",
       },
       // 图例位置
       top: 10,
@@ -61,11 +62,12 @@ const initChart2Left2 = () => {
         },
         labelLine: {
           show: true,
-          length: 5,
+          length: 10,
           // 颜色
           lineStyle: {
             color: "#fff",
           },
+          // 设置表前线
         },
         emphasis: {
           // 鼠标悬浮时
