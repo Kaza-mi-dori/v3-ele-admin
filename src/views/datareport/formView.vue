@@ -336,6 +336,19 @@ const converToFrontendFormData = (type: string | null, data: any) => {
     case "settlementDetail":
       return {
         // 转换数据
+        date: data["日期"],
+        number: data["结算编号"],
+        description: data["结算描述"],
+        remark: data["备注"],
+        type: data["结算类型"],
+        status: data["状态"],
+        amount: data["内容"]?.["结算金额"],
+        count: data["内容"]?.["结算数量"],
+        taxRate: data["内容"]?.["税率"],
+        counterparty: data["内容"]?.["结算相对人"],
+        contractNum: data["内容"]?.["合同编号"],
+        attachment: data["附件"] || [],
+        payments: data["内容"]?.["付款信息"] || [],
       };
     case "storageDetail":
       return {
@@ -567,10 +580,21 @@ const convertToBackendData = (type: string | null, data: any) => {
         // 转换数据
       };
     case "settlementDetail":
-      return {
-        ...data,
-        // 转换数据
+      result["日期"] = data.date;
+      result["结算编号"] = data.number;
+      result["结算描述"] = data.description;
+      result["备注"] = data.remark;
+      result["结算类型"] = data.type;
+      result["状态"] = data.status;
+      result["内容"] = {
+        结算金额: data.amount,
+        结算数量: data.count,
+        合同编号: data.contractNum,
+        结算相对人: data.counterparty,
+        附件: data.attachment,
+        付款信息: data.payments,
       };
+      return result;
     case "storageDetail":
       return {
         ...data,
@@ -810,6 +834,31 @@ const submitForm = async () => {
       break;
     case "settlementDetail":
       // BusinessFormAPI.saveSettlementDetail(submitData);
+      const opSettlementDetail = route.query.id
+        ? BusinessStandbookAPI.editSettlementLedgerRecord
+        : BusinessStandbookAPI.addSettlementLedgerRecord;
+      opSettlementDetail(realDataToSubmit)
+        .then(() => {
+          isEditing.value = false;
+          if (!route.query.id) {
+            // 跳转到列表页
+            ElMessage.success("提交成功, 正在跳转到列表页");
+            setTimeout(() => {
+              router.push({
+                name: "SettlementLedgerMng",
+              });
+            }, 500);
+          } else {
+            ElMessage.success("提交成功");
+          }
+        })
+        .catch((err) => {
+          isEditing.value = false;
+          ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
+        });
       break;
     case "storageDetail":
       // BusinessFormAPI.saveStorageDetail(submitData);
@@ -1008,6 +1057,21 @@ const initForm = () => {
     case orderDetailForm:
       break;
     case settlementDetailForm:
+      if (route.query.id) {
+        BusinessStandbookAPI.getSettlementLedgerRecord(
+          route.query.id as string
+        ).then((data) => {
+          if (formRef.value) {
+            const form = formRef.value as any;
+            form.setFormValue(
+              converToFrontendFormData(
+                route.query.type as Nullable<string>,
+                data
+              )
+            );
+          }
+        });
+      }
       break;
     case storageDetailForm:
       break;

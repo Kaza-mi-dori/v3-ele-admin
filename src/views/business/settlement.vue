@@ -20,6 +20,7 @@
       <SearchBar
         :itemList="filterItemList"
         @confirmFilter="handleConfirmFilter"
+        @resetFilter="handleResetFilter"
       />
     </div>
     <!-- 表格操作区 -->
@@ -56,7 +57,7 @@
       stripe
       border
       class="w-full"
-      :data="exampleData"
+      :data="tableData"
       element-loading-text="拼命加载中"
       :header-cell-style="{
         'background-color': sassvariables['custom-table-header-background'],
@@ -77,27 +78,49 @@
         sortable
       >
         <template v-slot="scope">
-          <span>{{ scope.row.date }}</span>
+          <span>{{ scope.row.日期 }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="number" label="结算单号" align="center" sortable>
         <template v-slot="scope">
-          <el-link type="primary">{{ scope.row.number }}</el-link>
+          <el-link type="primary" @click="handleViewDetail(scope.row)">
+            {{ scope.row.结算编号 }}
+          </el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" width="150" sortable>
+      <el-table-column prop="name" label="备注" width="150" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.name }}</span>
+          <span>{{ scope.row.备注 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="结算类型" width="150" sortable>
+      <el-table-column prop="type" label="结算类型" width="150">
         <template v-slot="scope">
-          <span>{{ scope.row.type }}</span>
+          <span>{{ scope.row.内容?.结算类型 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态" width="150" sortable>
+      <el-table-column prop="status" label="状态" width="150" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.status }}</span>
+          <span v-if="scope.row.状态 === '有效'" class="text-green-5">
+            <!-- 打勾 -->
+            <el-icon>
+              <Check />
+            </el-icon>
+            已审核
+          </span>
+          <span v-else-if="scope.row.状态 === '无效'" class="text-red-5">
+            <!-- 打叉 -->
+            <el-icon>
+              <Close />
+            </el-icon>
+            无效
+          </span>
+          <span v-else class="text-gray-5">
+            <!-- 问号 -->
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+            未审核
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right">
@@ -107,6 +130,16 @@
               详情
             </el-button>
             <el-button type="text">编辑</el-button> -->
+            <el-link type="primary" @click="handleAudit(scope.row)">
+              审核
+            </el-link>
+            <el-link
+              v-if="scope.row['状态'] === '有效'"
+              type="primary"
+              @click="handleResetAudit(scope.row)"
+            >
+              设为无效
+            </el-link>
             <el-link type="danger" @click="handleDeleteRecord(scope.row)">
               删除
             </el-link>
@@ -133,13 +166,15 @@ import Filter from "@/components/Business/filter.vue";
 import SearchBar from "@/components/CustomComponent/SearchBar.vue";
 import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
+import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
-
+import BusinessStandbookAPI from "@/api/businessStandBook";
 const router = useRouter();
 
 type IExampleData = {
+  id: string;
   name: string;
   number: string;
   date: string;
@@ -149,8 +184,10 @@ type IExampleData = {
 };
 
 const loading: Ref<boolean> = ref(false);
+const queryParams: Ref<any> = ref({});
 const exampleData: Ref<IExampleData[]> = ref([
   {
+    id: "1",
     name: "结算一",
     number: "123456789",
     date: "2022-01-01",
@@ -159,6 +196,7 @@ const exampleData: Ref<IExampleData[]> = ref([
     audited: false,
   },
   {
+    id: "2",
     name: "结算二",
     number: "987654321",
     date: "2022-01-02",
@@ -167,6 +205,7 @@ const exampleData: Ref<IExampleData[]> = ref([
     audited: true,
   },
   {
+    id: "3",
     name: "结算三",
     number: "123456789",
     date: "2022-01-03",
@@ -175,6 +214,7 @@ const exampleData: Ref<IExampleData[]> = ref([
     audited: false,
   },
 ]);
+const tableData = ref<any[]>([]);
 const pagination: Ref<any> = ref({
   total: 0,
   pageSizes: [10, 20, 30, 40, 50],
@@ -186,7 +226,14 @@ const handleCurrentChange = (currentPage: number) => {
   initTableData();
 };
 const handleViewDetail = (row: IExampleData) => {
-  console.log(row);
+  // console.log(row);
+  router.push({
+    name: "ReportForm",
+    query: {
+      type: "settlementDetail",
+      id: row.id,
+    },
+  });
 };
 const handleAddRecord = () => {
   router.push({
@@ -197,12 +244,36 @@ const handleAddRecord = () => {
   });
 };
 const handleDeleteRecord = (row: any) => {
-  console.log("删除");
+  handleDeleteRow(
+    row,
+    BusinessStandbookAPI.deleteSettlementLedgerRecord,
+    () => {
+      initTableData();
+    }
+  );
+};
+const handleAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessStandbookAPI.editSettlementLedgerRecord,
+    "状态",
+    "有效",
+    initTableData
+  );
+};
+const handleResetAudit = (row: any) => {
+  handleAuditRow(
+    row,
+    BusinessStandbookAPI.editSettlementLedgerRecord,
+    "状态",
+    "无效",
+    initTableData
+  );
 };
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   {
     label: "结算类型",
-    prop: "type",
+    prop: "结算类型",
     value: null,
     options: ["全部", "采购", "销售"],
     inputType: "select",
@@ -210,7 +281,7 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
   {
     label: "状态",
-    prop: "status",
+    prop: "状态",
     value: null,
     options: ["全部", "待审核", "已审核"],
     inputType: "select",
@@ -218,23 +289,61 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
   {
     label: "结算日期",
-    prop: "date",
-    value: null,
+    prop: "结算日期",
+    value: [null, null],
     selected: null,
-    inputType: "date",
+    inputType: "daterange",
     order: 3,
   },
   {
     label: "结算单号",
-    prop: "number",
+    prop: "结算单号",
     value: null,
     selected: null,
     inputType: "input",
   },
 ]);
-const handleConfirmFilter = (filter: any) => {
-  console.log(filter);
+
+const initTableData = () => {
+  loading.value = true;
+  BusinessStandbookAPI.getSettlementLedgerRecordList(queryParams.value)
+    .then((res: any) => {
+      tableData.value = res?.当前记录;
+      pagination.value.total = parseInt(res?.记录总数);
+      loading.value = false;
+    })
+    .catch(() => {
+      loading.value = false;
+      ElMessage.error("获取数据失败");
+    });
 };
+
+const handleConfirmFilter = (filter: any) => {
+  queryParams.value = {
+    ...filter,
+    页码: pagination.value.currentPage,
+    页容量: pagination.value.pageSize,
+  };
+  if (queryParams.value["状态"] && queryParams.value["状态"] !== "全部") {
+    queryParams.value["状态集合"] = [queryParams.value["状态"]];
+  }
+  if (queryParams.value["结算日期"]) {
+    queryParams.value["日期早于"] = queryParams.value["结算日期"][0];
+    queryParams.value["日期晚于"] = queryParams.value["结算日期"][1];
+  }
+  pagination.value.currentPage = 1;
+  initTableData();
+};
+
+const handleResetFilter = () => {
+  queryParams.value = {};
+  pagination.value.currentPage = 1;
+  initTableData();
+};
+
+onMounted(() => {
+  initTableData();
+});
 </script>
 
 <style lang="scss" scoped>

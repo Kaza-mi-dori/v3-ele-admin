@@ -421,12 +421,12 @@ const BusinessStandbookAPI = {
    * @param companyId 企业ID
    * @returns 结算台账记录详情
    */
-  getSettlementLedgerRecord(companyId: number) {
+  getSettlementLedgerRecord(id: number | string) {
     return request2<any, any>({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow`,
       method: "get",
       params: {
-        id: companyId,
+        id,
       },
     });
   },
@@ -453,7 +453,7 @@ const BusinessStandbookAPI = {
    */
   getSettlementLedgerRecordList(data: any) {
     return request2({
-      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow`,
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow/Query`,
       method: "post",
       data,
     });
