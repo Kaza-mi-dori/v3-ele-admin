@@ -8,12 +8,24 @@
         placeholder="所有监控"
         @change="onChangeMonitorArea"
       >
-        <el-option
+        <!-- <el-option
           v-for="item in monitorList"
           :key="item.id"
           :label="item.name"
           :value="item.name"
-        />
+        /> -->
+        <el-option-group
+          v-for="item in monitorList"
+          :key="item.label"
+          :label="item.label"
+        >
+          <el-option
+            v-for="option in item.options"
+            :key="option.id"
+            :label="option.name"
+            :value="option.name"
+          />
+        </el-option-group>
       </el-select>
       <a class="text-sm link" @click="onCheckMore">更多>></a>
     </div>
@@ -69,12 +81,32 @@ const getGsLocation = async () => {
   const list = res["当前记录"];
   // TODO 判断是否有监控视频
   // list = list.filter((item: any) => item.类型 === MapElementEnum.监控);
-  monitorList.value = list.map((item: any) => {
-    return {
+  // monitorList.value = list.map((item: any) => {
+  //   return {
+  //     id: item.id,
+  //     name: item.名称,
+  //     type: item.类型,
+  //   };
+  // });
+  // 按照类型分组
+  const groupByType = list.reduce((acc: any, item: any) => {
+    acc[item.类型] = acc[item.类型] || [];
+    acc[item.类型].push({
       id: item.id,
       name: item.名称,
-    };
+      type: item.类型,
+    });
+    return acc;
+  }, {});
+  Object.keys(groupByType).forEach((key) => {
+    monitorList.value.push({
+      label: key,
+      options: groupByType[key],
+    });
   });
+  monitorList.value = monitorList.value.filter(
+    (item) => !(item.label === "组织机构" || item.label === "运油船")
+  );
 };
 
 onMounted(() => {
