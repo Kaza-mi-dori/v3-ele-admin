@@ -77,7 +77,7 @@ onMounted(() => {
 .bg-view1__body {
   flex-grow: 1;
   // overflow-y: hidden;
-  margin: 20px 50px 50px 50px;
+  padding: 20px 50px 50px 50px;
   ::-webkit-scrollbar {
     display: none;
   }
