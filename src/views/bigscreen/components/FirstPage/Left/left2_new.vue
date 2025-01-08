@@ -49,6 +49,14 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   页容量: 20,
 });
 
+const commonQueryParams = {
+  页码: 1,
+  页容量: 1,
+  企业名称: "广投石化",
+  状态集合: ["有效"],
+  类型集合: ["年"],
+};
+
 const currentYear = new Date().getFullYear();
 
 // 计算同比
@@ -67,11 +75,7 @@ const fetchData = async (queryParams: Partial<BusinessReportQuery>) => {
 // 获取去年数据
 const fetchLastYearData = async () => {
   const queryParams = {
-    页码: 1,
-    页容量: 1,
-    企业名称: "广投石化",
-    状态集合: ["有效"],
-    类型集合: ["年"],
+    ...commonQueryParams,
     日期晚于: `${currentYear - 1}-01-01`,
     日期早于: `${currentYear - 1}-12-31`,
   };
@@ -95,11 +99,7 @@ const initData = async () => {
   const lastYearData = await fetchLastYearData();
 
   const queryParams = {
-    页码: 1,
-    页容量: 1,
-    企业名称: "广投石化",
-    状态集合: ["有效"],
-    类型集合: ["年"],
+    ...commonQueryParams,
     日期晚于: `${currentYear}-01-01`,
     日期早于: `${currentYear}-12-31`,
   };
