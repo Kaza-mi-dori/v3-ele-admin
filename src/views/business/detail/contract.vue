@@ -210,9 +210,9 @@
       </div>
     </div>
     <!-- 关联信息 -->
-    <div class="info-card-level1">
+    <div v-if="!editing" class="info-card-level1">
       <div class="__title">
-        <span>执行追踪</span>
+        <span>结算追踪</span>
       </div>
       <div class="__content">
         <div class="flex mb-4 items-center">
@@ -239,6 +239,32 @@
             <el-table-column prop="百分比" label="合同占比" />
           </el-table>
         </div>
+      </div>
+    </div>
+    <!-- 关联结算 -->
+    <div v-if="!editing" class="info-card-level1">
+      <div class="__title">
+        <span>关联结算</span>
+      </div>
+      <div class="__content">
+        <el-table
+          :data="settlementTableData"
+          row-key="id"
+          show-summary
+          :summary-method="getSettlementSummary"
+        >
+          <el-table-column label="编号" prop="结算编号">
+            <template v-slot="scope">
+              <el-link type="primary">
+                {{ scope.row.结算编号 }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column label="日期" prop="结算日期" />
+          <el-table-column label="金额" prop="结算金额" />
+          <el-table-column label="状态" prop="结算状态" />
+          <el-table-column label="结算数量" prop="结算数量" />
+        </el-table>
       </div>
     </div>
     <div class="info-card-level1">
@@ -370,6 +396,17 @@ const ordersTableData = ref([
     金额: "2000000",
     状态: "已完成",
     百分比: "20%",
+  },
+]);
+
+const settlementTableData = ref([
+  {
+    id: 1,
+    结算编号: "HT2022001",
+    结算日期: "2022-01-01",
+    结算金额: "1000000",
+    结算状态: "已结算",
+    结算数量: "1000",
   },
 ]);
 
@@ -511,6 +548,39 @@ const handleExpand = (row: any) => {
   console.log("handleExpand", row);
 };
 
+/**
+ * 获取关联结算的汇总
+ * @param param
+ * @returns
+ */
+function getSettlementSummary(param: any) {
+  const { columns, data } = param;
+  const sums: any[] = [];
+  columns.forEach((column: any, index: number) => {
+    if (index === 0) {
+      sums[index] = "";
+      return;
+    } else if (column.property === "结算金额") {
+      sums[index] = data.reduce((sum: number, row: any) => {
+        return sum + Number(row.结算金额);
+      }, 0);
+    } else if (column.property === "结算数量") {
+      sums[index] = data.reduce((sum: number, row: any) => {
+        return sum + Number(row.结算数量);
+      }, 0);
+    } else {
+      sums[index] = "-";
+      return;
+    }
+  });
+  return sums;
+}
+
+/**
+ * 获取关联订单的汇总
+ * @param param
+ * @returns
+ */
 function getOrdersSummary(param: any) {
   const { columns, data } = param;
   const sums: any[] = [];
