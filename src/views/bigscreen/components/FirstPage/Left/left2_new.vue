@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted } from "vue";
 import DescribeItem2 from "../DescribeItems/Item2.vue";
 import Coin from "@/views/bigscreen/img/left_icon1.png";
 import WrappedGift from "@/views/bigscreen/img/left_icon2.png";
