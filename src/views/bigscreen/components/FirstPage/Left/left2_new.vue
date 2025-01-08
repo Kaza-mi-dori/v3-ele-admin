@@ -72,6 +72,13 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   页容量: 20,
 });
 
+// 计算同比
+const calculateYoY = (current: number, lastYear: number): number => {
+  return lastYear
+    ? Number((((current - lastYear) / lastYear) * 100).toFixed(2))
+    : 0;
+};
+
 // 获取去年数据
 const fetchLastYearData = async () => {
   const lastYearQueryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> =
@@ -154,13 +161,10 @@ const initData = async () => {
   resData2.forEach((item: any) => {
     revenueData.value = {
       title: "累计营收",
-      yoy: lastYearData.lastYearRevenue.value
-        ? (
-            ((currentRevenue.value - lastYearData.lastYearRevenue.value) /
-              lastYearData.lastYearRevenue.value) *
-            100
-          ).toFixed(2)
-        : 0,
+      yoy: calculateYoY(
+        currentRevenue.value,
+        lastYearData.lastYearRevenue.value
+      ),
       fulfilled: currentRevenue.value,
       target: Number(resData.营收基准值) || 0,
       monthTotal: Number(item.当期营收金额) || 0,
@@ -168,13 +172,7 @@ const initData = async () => {
     };
     profitData.value = {
       title: "累计利润",
-      yoy: lastYearData.lastYearProfit
-        ? (
-            ((currentProfit.value - lastYearData.lastYearProfit.value) /
-              lastYearData.lastYearProfit.value) *
-            100
-          ).toFixed(2)
-        : 0,
+      yoy: calculateYoY(currentProfit.value, lastYearData.lastYearProfit.value),
       fulfilled: currentProfit.value,
       target: Number(resData.利润基准值) || 0,
       monthTotal: Number(item.当期利润金额) || 0,
