@@ -77,3 +77,21 @@ export const endOfYear = () => {
   const day = String(date.getDate()).padStart(2, "0"); // 获取日期，确保为2位
   return `${year}-${month}-${day}`; // 格式化为 "YYYY-MM-DD"
 };
+
+// 获取去年的第一天（例如：2023-01-01）
+export const startOfLastYear = () => {
+  const date = new Date(currentYear(), 0, 1); // 获取当前年份的第一天
+  const year = date.getFullYear() - 1;
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // 获取月份，确保为2位
+  const day = String(date.getDate()).padStart(2, "0"); // 获取日期，确保为2位
+  return `${year}-${month}-${day}`; // 格式化为 "YYYY-MM-DD"
+};
+
+// 获取去年的最后一天（例如：2023-12-31）
+export const endOfLastYear = () => {
+  const date = new Date(currentYear(), 11, 31); // 获取当前年份的最后一天
+  const year = date.getFullYear() - 1;
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // 获取月份，确保为2位 const day = String(date.getDate()).padStart(2, "0"); // 获取日期，确保为2位 return `${year}-${month}-${day}`; // 格式化为 "YYYY-MM-DD"
+  const day = String(date.getDate()).padStart(2, "0"); // 获取日期，确保为2位
+  return `${year}-${month}-${day}`; // 格式化为 "YYYY-MM-DD"
+};

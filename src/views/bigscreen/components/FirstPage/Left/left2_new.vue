@@ -10,7 +10,12 @@ import DescribeItem2 from "../DescribeItems/Item2.vue";
 import Coin from "@/views/bigscreen/img/left_icon1.png";
 import WrappedGift from "@/views/bigscreen/img/left_icon2.png";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
-import { startOfYear, endOfYear } from "@/utils/time"; // 导入工具类
+import {
+  startOfYear,
+  endOfYear,
+  startOfLastYear,
+  endOfLastYear,
+} from "@/utils/time"; // 导入工具类
 
 let revenueData = ref<any>({
   title: "累计营收",
@@ -30,22 +35,22 @@ let profitData = ref<any>({
   icon: WrappedGift,
 });
 
-revenueData = {
-  title: "累计营收",
-  yoy: -36.53,
-  fulfilled: 2043700,
-  target: 3999100,
-  monthTotal: 1000,
-  icon: Coin,
-};
-profitData = {
-  title: "累计利润",
-  yoy: -31.26,
-  fulfilled: -5500,
-  target: 15000,
-  monthTotal: 100,
-  icon: WrappedGift,
-};
+// revenueData.value = {
+//   title: "累计营收",
+//   yoy: -36.53,
+//   fulfilled: 2043700,
+//   target: 3999100,
+//   monthTotal: 1000,
+//   icon: Coin,
+// };
+// profitData.value = {
+//   title: "累计利润",
+//   yoy: -31.26,
+//   fulfilled: -5500,
+//   target: 15000,
+//   monthTotal: 100,
+//   icon: WrappedGift,
+// };
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -57,7 +62,43 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   页容量: 20,
 });
 
+// 获取去年数据
+const fetchLastYearData = async () => {
+  const lastYearQueryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> =
+    ref({
+      页码: 1,
+      页容量: 1,
+      企业名称: "广投石化",
+      状态集合: ["有效"],
+      类型集合: ["年"],
+      日期晚于: startOfLastYear(), // 取去年的数据
+      日期早于: endOfLastYear(), // 取去年的最后一天
+    });
+
+  const res: any = await BusinessFormAPI.getCompanyReportFormList(
+    lastYearQueryForm.value
+  );
+  let resData = (res["当前记录"]?.[0]?.["内容"]?.["详情"] || []).filter(
+    (item: any) => item["业态类型"] === "总体"
+  );
+
+  let lastYearRevenue = ref(0);
+  let lastYearProfit = ref(0);
+
+  resData.forEach((item: any) => {
+    lastYearRevenue.value = Number(item.累计营收金额) || 0;
+    lastYearProfit.value = Number(item.累计利润金额) || 0;
+  });
+
+  return {
+    lastYearRevenue,
+    lastYearProfit,
+  };
+};
+
 const initData = async () => {
+  const lastYearData = await fetchLastYearData();
+
   queryForm.value = {
     页码: 1,
     页容量: 1,
@@ -74,6 +115,15 @@ const initData = async () => {
   let resData2 = (res["当前记录"]?.[0]?.["内容"]?.["详情"] || []).filter(
     (item: any) => item["业态类型"] === "总体"
   );
+
+  let currentRevenue = ref(0);
+  let currentProfit = ref(0);
+
+  resData2.forEach((item: any) => {
+    currentRevenue.value = Number(item.累计营收金额) || 0;
+    currentProfit.value = Number(item.累计利润金额) || 0;
+  });
+
   revenueData.value = {
     title: "累计营收",
     yoy: 0,
@@ -94,16 +144,28 @@ const initData = async () => {
   resData2.forEach((item: any) => {
     revenueData.value = {
       title: "累计营收",
-      yoy: 0,
-      fulfilled: Number(item.累计营收金额) || 0,
+      yoy: lastYearData.lastYearRevenue.value
+        ? (
+            ((currentRevenue.value - lastYearData.lastYearRevenue.value) /
+              lastYearData.lastYearRevenue.value) *
+            100
+          ).toFixed(2)
+        : 0,
+      fulfilled: currentRevenue.value,
       target: Number(resData.营收基准值) || 0,
       monthTotal: Number(item.当期营收金额) || 0,
       icon: Coin,
     };
     profitData.value = {
       title: "累计利润",
-      yoy: 0,
-      fulfilled: Number(item.累计利润金额) || 0,
+      yoy: lastYearData.lastYearProfit
+        ? (
+            ((currentProfit.value - lastYearData.lastYearProfit.value) /
+              lastYearData.lastYearProfit.value) *
+            100
+          ).toFixed(2)
+        : 0,
+      fulfilled: currentProfit.value,
       target: Number(resData.利润基准值) || 0,
       monthTotal: Number(item.当期利润金额) || 0,
       icon: WrappedGift,
