@@ -98,7 +98,7 @@ const fulfilledPercent = computed(() => {
     return 0; // 如果目标额为0或者无效值，直接返回0%
   }
   const percent = (props.fulfilled / props.target) * 100;
-  return isNaN(percent) ? 0 : percent.toFixed(1); // 确保不会返回 NaN
+  return isNaN(percent) ? 0 : Number(percent.toFixed(1)); // 确保不会返回 NaN
 });
 
 function handleClick(params: any) {
@@ -166,6 +166,11 @@ function initChart() {
   };
   chartRef.value.setOption(option);
 }
+
+// 监听fulfilledPercent的变化
+watch(fulfilledPercent, (newValue) => {
+  initChart(); // 当完成率变化时，重新初始化图表
+});
 
 onMounted(() => {
   initChart();
