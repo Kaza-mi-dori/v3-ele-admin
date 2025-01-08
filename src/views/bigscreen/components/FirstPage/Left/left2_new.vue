@@ -18,7 +18,16 @@ import {
   endOfLastYear,
 } from "@/utils/time"; // 导入工具类
 
-let revenueData = ref<any>({
+interface FinancialData {
+  title: string;
+  yoy: number;
+  fulfilled: number;
+  target: number;
+  monthTotal: number;
+  icon: string;
+}
+
+let revenueData = ref<FinancialData>({
   title: "累计营收",
   yoy: 0,
   fulfilled: 0,
@@ -27,7 +36,7 @@ let revenueData = ref<any>({
   icon: Coin,
 });
 
-let profitData = ref<any>({
+let profitData = ref<FinancialData>({
   title: "累计利润",
   yoy: 0,
   fulfilled: 0,
