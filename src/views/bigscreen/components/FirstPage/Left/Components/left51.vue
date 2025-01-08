@@ -216,7 +216,7 @@ function initChart() {
         // 全部显示
         interval: 0,
         color: sassvariables["bigscreen-primary-color-7"],
-        fontSize: "0.8rem",
+        fontSize: "0.9rem",
         fontWeight: "bold",
       },
     },
