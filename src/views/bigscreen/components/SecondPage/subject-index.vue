@@ -1,5 +1,15 @@
 <template>
-  <div class="bg-view-img2">
+  <div
+    v-loading="loading"
+    class="bg-view-img2"
+    element-loading-text="页面加载中"
+    element-loading-background="rgba(0, 0, 0, 0.7)"
+    spinner="loader"
+  >
+    <canvas
+      id="second-page-bg-canvas-1"
+      style="position: absolute; z-index: 0; top: 0; left: 0"
+    />
     <img style="position: absolute; top: 0" height="100vh" />
     <div class="bg-view1__header">
       <div class="title">
@@ -20,16 +30,29 @@ import Screen1 from "./Screen1.vue";
 import Screen2 from "./Screen2.vue";
 import SubjectScreen1 from "./SubjectScreen1.vue";
 import { businessSubjects } from "../constants";
-
+import { StarrySky } from "@/views/bigscreen/components/Common/DynamicBG/starrySky";
 const route = useRoute();
 const title = ref("");
-
+const loading = ref(true);
+const starrySky = new StarrySky();
 onMounted(() => {
+  setTimeout(() => {
+    loading.value = false;
+    nextTick(() => {
+      const canvas = document.getElementById(
+        "second-page-bg-canvas-1"
+      ) as HTMLCanvasElement;
+      canvas.width = document.body.clientWidth;
+      canvas.height = document.body.clientHeight;
+      starrySky.setCanvas(canvas);
+      starrySky.init();
+    });
+  }, 1000);
   const paramName = route.params.subjectName;
   const matchedItem = businessSubjects.find(
     (item: { name: string | string[] }) => item.name === paramName
   );
-  console.log(matchedItem);
+  // console.log(matchedItem);
   if (matchedItem) {
     title.value = matchedItem.label;
   }

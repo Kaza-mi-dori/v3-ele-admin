@@ -7,12 +7,11 @@
       <div class="__stat">
         <span class="__item">当前有</span>
         <span class="__item">
-          <span class="text-blue-5 inline-block ml-1 mr-1">
+          <span class="text-red-5 inline-block ml-1 mr-1">
             {{ pagination.total }}
           </span>
           条记录
         </span>
-        <span class="__item">统计指标二</span>
       </div>
     </div>
     <!-- 筛选操作区 -->
