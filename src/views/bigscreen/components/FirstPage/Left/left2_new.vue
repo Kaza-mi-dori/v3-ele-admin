@@ -9,26 +9,110 @@
 import DescribeItem2 from "../DescribeItems/Item2.vue";
 import Coin from "@/views/bigscreen/img/left_icon1.png";
 import WrappedGift from "@/views/bigscreen/img/left_icon2.png";
+import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { startOfYear, endOfYear } from "@/utils/time"; // 导入工具类
 
-const revenueData = ref<any>({
+let revenueData = ref<any>({
+  title: "累计营收",
+  yoy: 0,
+  fulfilled: 0,
+  target: 0,
+  monthTotal: 0,
+  icon: Coin,
+});
+
+let profitData = ref<any>({
+  title: "累计利润",
+  yoy: 0,
+  fulfilled: 0,
+  target: 0,
+  monthTotal: 0,
+  icon: WrappedGift,
+});
+
+revenueData = {
   title: "累计营收",
   yoy: -36.53,
   fulfilled: 2043700,
   target: 3999100,
   monthTotal: 1000,
   icon: Coin,
-});
-const profitData = ref<any>({
+};
+profitData = {
   title: "累计利润",
   yoy: -31.26,
   fulfilled: -5500,
   target: 15000,
   monthTotal: 100,
   icon: WrappedGift,
+};
+
+const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
+  业务维度: undefined,
+  状态集合: undefined,
+  日期早于: undefined,
+  日期晚于: undefined,
+  id集合: undefined,
+  页码: 1,
+  页容量: 20,
 });
 
+const initData = async () => {
+  queryForm.value = {
+    页码: 1,
+    页容量: 1,
+    企业名称: "广投石化",
+    状态集合: ["有效"],
+    类型集合: ["年"],
+    日期晚于: startOfYear(), // 取当年数据,设置为当前年份的第一天
+    日期早于: endOfYear(), // 取当年数据,设置为当前年份的最后一天
+  };
+  const res: any = await BusinessFormAPI.getCompanyReportFormList(
+    queryForm.value
+  );
+  let resData = res["当前记录"]?.[0]?.["内容"];
+  let resData2 = (res["当前记录"]?.[0]?.["内容"]?.["详情"] || []).filter(
+    (item: any) => item["业态类型"] === "总体"
+  );
+  revenueData.value = {
+    title: "累计营收",
+    yoy: 0,
+    fulfilled: 0,
+    target: 0,
+    monthTotal: 0,
+    icon: Coin,
+  };
+  profitData.value = {
+    title: "累计利润",
+    yoy: 0,
+    fulfilled: 0,
+    target: 0,
+    monthTotal: 0,
+    icon: WrappedGift,
+  };
+
+  resData2.forEach((item: any) => {
+    revenueData.value = {
+      title: "累计营收",
+      yoy: 0,
+      fulfilled: Number(item.累计营收金额) || 0,
+      target: Number(resData.营收基准值) || 0,
+      monthTotal: Number(item.当期营收金额) || 0,
+      icon: Coin,
+    };
+    profitData.value = {
+      title: "累计利润",
+      yoy: 0,
+      fulfilled: Number(item.累计利润金额) || 0,
+      target: Number(resData.利润基准值) || 0,
+      monthTotal: Number(item.当期利润金额) || 0,
+      icon: WrappedGift,
+    };
+  });
+};
+
 onMounted(() => {
-  // initChart();
+  initData();
 });
 </script>
 

@@ -90,7 +90,15 @@ const formatNumber = (num: number | string): string => {
 };
 
 const fulfilledPercent = computed(() => {
-  return ((props.fulfilled / props.target) * 100).toFixed(1);
+  if (
+    props.target === 0 ||
+    props.target === null ||
+    props.target === undefined
+  ) {
+    return 0; // 如果目标额为0或者无效值，直接返回0%
+  }
+  const percent = (props.fulfilled / props.target) * 100;
+  return isNaN(percent) ? 0 : percent.toFixed(1); // 确保不会返回 NaN
 });
 
 function handleClick(params: any) {
