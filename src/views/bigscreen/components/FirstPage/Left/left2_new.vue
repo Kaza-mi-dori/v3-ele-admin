@@ -45,23 +45,6 @@ let profitData = ref<FinancialData>({
   icon: WrappedGift,
 });
 
-// revenueData.value = {
-//   title: "累计营收",
-//   yoy: -36.53,
-//   fulfilled: 2043700,
-//   target: 3999100,
-//   monthTotal: 1000,
-//   icon: Coin,
-// };
-// profitData.value = {
-//   title: "累计利润",
-//   yoy: -31.26,
-//   fulfilled: -5500,
-//   target: 15000,
-//   monthTotal: 100,
-//   icon: WrappedGift,
-// };
-
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
   状态集合: undefined,
@@ -140,23 +123,6 @@ const initData = async () => {
     currentRevenue.value = Number(item.累计营收金额) || 0;
     currentProfit.value = Number(item.累计利润金额) || 0;
   });
-
-  revenueData.value = {
-    title: "累计营收",
-    yoy: 0,
-    fulfilled: 0,
-    target: 0,
-    monthTotal: 0,
-    icon: Coin,
-  };
-  profitData.value = {
-    title: "累计利润",
-    yoy: 0,
-    fulfilled: 0,
-    target: 0,
-    monthTotal: 0,
-    icon: WrappedGift,
-  };
 
   resData2.forEach((item: any) => {
     revenueData.value = {
