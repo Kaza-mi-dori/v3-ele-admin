@@ -25,6 +25,7 @@
           <!-- 初始内容及复制内容 -->
           <div class="text-content">
             <div>{{ companyInfo }}</div>
+            <br />
             <div>{{ companyInfo }}</div>
           </div>
         </div>
