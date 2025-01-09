@@ -62,11 +62,12 @@
         'text-align': 'center',
       }"
     >
-      <!-- <el-table-column type="selection" align="center" width="55">
+      <!-- 选择框列 -->
+      <el-table-column type="selection" align="center" width="55">
         <template v-slot="scope">
           <el-checkbox v-model="scope.row.checked" />
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <!-- <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
