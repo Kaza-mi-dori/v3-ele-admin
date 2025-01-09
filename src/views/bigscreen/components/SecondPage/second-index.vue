@@ -17,9 +17,12 @@
       </div>
     </div>
     <div class="bg-view1__body">
-      <Screen2 v-if="title === '市场信息'" />
-      <!-- <Screen1 v-else /> -->
-      <router-view v-else />
+      <template v-if="hasPermission">
+        <Screen2 v-if="title === '市场信息'" />
+        <!-- <Screen1 v-else /> -->
+        <router-view v-else />
+      </template>
+      <Deny v-else />
     </div>
   </div>
 </template>
@@ -30,10 +33,12 @@ import { useRoute } from "vue-router";
 import Screen1 from "./Screen1.vue";
 import Screen2 from "./Screen2.vue";
 import { allBusinessTypes, businessTypeRouteNameMap } from "../constants";
+import Deny from "@/views/bigscreen/components/Common/Deny/index.vue";
 
 const route = useRoute();
 const title = ref("");
 const loading = ref(true);
+const hasPermission = ref(true);
 const canvas = ref<HTMLCanvasElement | null>(null);
 
 class Part {

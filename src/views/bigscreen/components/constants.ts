@@ -43,6 +43,7 @@ export const businessSubjects: navItem[] = [
   { id: 1, label: OurCompanyEnumMap[OurCompanyEnum.GTSHC], name: "gtsh" },
   { id: 2, label: OurCompanyEnumMap[OurCompanyEnum.GDFGS], name: "gtshgd" },
   { id: 3, label: OurCompanyEnumMap[OurCompanyEnum.GTSHC_ZS], name: "gtshzs" },
+  { id: 4, label: OurCompanyEnumMap[OurCompanyEnum.YSCC], name: "yscc" },
 ];
 
 /** 业态 */

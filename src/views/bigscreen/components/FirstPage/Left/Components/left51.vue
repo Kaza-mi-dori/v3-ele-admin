@@ -110,10 +110,8 @@ function onClickBar(params: any) {
   if (subject) {
     // console.log(subject);
     const route = router.resolve({
-      name: "SubjectSubsidiary",
-      params: {
-        subjectName: subject.name,
-      },
+      // 第一个字母大写
+      name: subject.name.charAt(0).toUpperCase() + subject.name.slice(1),
     });
     if (!route) return;
     window.open(route.href, "_blank");
