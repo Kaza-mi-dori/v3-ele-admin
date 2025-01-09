@@ -11,73 +11,8 @@
       </div>
     </div>
     <div class="bg-view1__body">
-      <!-- <div class="breadcrumb-box">
-        <img src="../../img/home.png" alt="" />
-        <span class="breadcrumb-title">您所在的位置：</span>
-        <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
-          <el-breadcrumb-item>标题标题</el-breadcrumb-item>
-          <el-breadcrumb-item>标题标题</el-breadcrumb-item>
-          <el-breadcrumb-item>标题标题</el-breadcrumb-item>
-        </el-breadcrumb>
-      </div> -->
-      <!-- <div class="third-content">
-        <div class="content-header">
-          <div class="title-bg-container">
-            <img class="title-bg" src="../../img/tit.png" alt="" />
-            <div class="header-left">{{ moduleName }}统计</div>
-            <div class="header-right">
-              <el-input
-                v-model="inputValue"
-                size="large"
-                style="width: 250px"
-                class="input-field"
-                placeholder="请输入"
-                clearable
-              />
-              <el-button type="primary" size="large" class="search-button">
-                搜索
-              </el-button>
-              <el-button plain size="large" class="reset-button">
-                重置
-              </el-button>
-            </div>
-          </div>
-        </div>
-        <div class="content-middle">
-          <div id="chart3-1" style="width: 80%; height: 300px; margin: auto" />
-        </div>
-        <div class="content-form">
-          <el-table
-            stripe
-            :data="
-              tableData.slice(
-                (currentPage - 1) * pageSize,
-                currentPage * pageSize
-              )
-            "
-            style="width: 100%"
-            height="480"
-          >
-            <el-table-column label="月份" prop="month" />
-            <el-table-column label="计划经营收入" prop="planned" />
-            <el-table-column label="实际经营收入" prop="actual" />
-          </el-table>
-          <el-pagination
-            v-model:current-page="currentPage"
-            v-model:page-size="pageSize"
-            :page-sizes="pageSizes"
-            :size="size"
-            background
-            layout="total, sizes, prev, pager, next"
-            style="margin-top: 10px; display: flex; justify-content: center"
-            :total="tableData.length"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          />
-        </div>
-      </div> -->
-      <router-view />
+      <router-view v-if="hasPermission" />
+      <Deny v-else />
     </div>
   </div>
 </template>
@@ -88,9 +23,10 @@ import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
 import { ComponentSize } from "element-plus";
 import sassvariables from "@/styles/variables.module.scss";
+import Deny from "@/views/bigscreen/components/Common/Deny/index.vue";
 
 const router = useRouter();
-
+const hasPermission = ref(true);
 // 页面动态显示内容，由参数决定
 const title: Ref<string> = ref("广投石化驾驶舱");
 const moduleName: Ref<string> = ref("合同台账");
@@ -240,6 +176,11 @@ const goBack = () => {
     router.go(-1);
   }
 };
+
+onBeforeMount(() => {
+  // hasPermission.value = true;
+  // TODO 验证权限
+});
 
 onMounted(() => {
   // initChart();

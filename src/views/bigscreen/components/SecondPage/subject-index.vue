@@ -17,8 +17,8 @@
       </div>
     </div>
     <div class="bg-view1__body">
-      <!-- 油站 && 仓储 -->
-      <SubjectScreen1 />
+      <router-view v-if="hasPermission" />
+      <Deny v-else />
     </div>
   </div>
 </template>
@@ -26,14 +26,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import Screen1 from "./Screen1.vue";
-import Screen2 from "./Screen2.vue";
-import SubjectScreen1 from "./SubjectScreen1.vue";
 import { businessSubjects } from "../constants";
 import { StarrySky } from "@/views/bigscreen/components/Common/DynamicBG/starrySky";
+import { nextTick } from "vue";
+import Deny from "@/views/bigscreen/components/Common/Deny/index.vue";
+
 const route = useRoute();
 const title = ref("");
 const loading = ref(true);
+const hasPermission = ref(true);
 const starrySky = new StarrySky();
 onMounted(() => {
   setTimeout(() => {
@@ -48,7 +49,8 @@ onMounted(() => {
       starrySky.init();
     });
   }, 1000);
-  const paramName = route.params.subjectName;
+  const routeName = route.name as string;
+  const paramName = routeName.charAt(0).toLowerCase() + routeName.slice(1);
   const matchedItem = businessSubjects.find(
     (item: { name: string | string[] }) => item.name === paramName
   );

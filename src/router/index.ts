@@ -151,13 +151,47 @@ export const constantRoutes: RouteRecordRaw[] = [
         ],
       },
       {
-        path: "subject/:subjectName",
+        path: "subject",
         name: "SubjectSubsidiary",
         meta: {
           hidden: true,
         },
         component: () =>
           import("@/views/bigscreen/components/SecondPage/subject-index.vue"),
+        children: [
+          {
+            path: "yscc",
+            name: "Yscc",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Subjects/yscc.vue"
+              ),
+          },
+          {
+            path: "gtsh",
+            name: "Gtsh",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Subjects/gtsh.vue"
+              ),
+          },
+          {
+            path: "gtshzs",
+            name: "Gtshzs",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Subjects/gtshzs.vue"
+              ),
+          },
+          {
+            path: "gtshgd",
+            name: "Gtshgd",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Subjects/gtshgd.vue"
+              ),
+          },
+        ],
       },
       {
         path: "businessType/:typeName",
