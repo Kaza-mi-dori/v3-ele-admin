@@ -22,7 +22,11 @@
           @mouseover="handleMouseoverText"
           @mouseout="handleMouseoutText"
         >
-          {{ companyInfo }}
+          <!-- 初始内容及复制内容 -->
+          <div class="text-content">
+            <div>{{ companyInfo }}</div>
+            <div>{{ companyInfo }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -91,15 +95,20 @@ const handleMouseoutText = () => {
     font-size: 14px;
     letter-spacing: 1px;
     line-height: 20px;
+    /* 包裹文字内容的容器 */
+    .text-content {
+      display: flex;
+      flex-direction: column;
+    }
     // 需要有间隔时间，否则会出现闪烁
     animation: scroll 25s ease-in forwards infinite;
     // animation-delay: 0.5s;
     @keyframes scroll {
       0% {
-        transform: translateY(50%);
+        transform: translateY(0);
       }
       100% {
-        transform: translateY(-100%);
+        transform: translateY(-50%);
       }
     }
   }
