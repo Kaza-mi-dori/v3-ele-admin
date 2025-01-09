@@ -83,7 +83,7 @@ import bargainReportDetailForm from "@/views/datareport/bargainReport/detail.vue
 import fixedCostReportDetailForm from "@/views/datareport/fixedCostReport/detail.vue";
 import BusinessFormAPI from "@/api/businessForm";
 import BusinessStandbookAPI from "@/api/businessStandBook";
-import { bargainFormApi } from "@/api/datasource/bargainForm";
+import { BargainFormApi } from "@/api/datasource/bargainForm";
 import { ElMessage } from "element-plus";
 import { stringToArray, arrayToString } from "@/utils";
 import { ref, onMounted, shallowRef } from "vue";
@@ -642,9 +642,12 @@ const convertToBackendData = (type: string | null, data: any) => {
       };
       return result;
     case "bargainReport":
+      // 需借用组件中的方法
+      const form = formRef.value as any;
+      const transferredData = form?.getTransferredData?.() || [];
       result["日期"] = data.year;
       result["内容"] = {
-        数据列表: data.content,
+        数据列表: transferredData,
       };
       return result;
     default:
@@ -921,8 +924,8 @@ const submitForm = async () => {
       break;
     case "bargainReport":
       const opBargainReport = route.query.id
-        ? bargainFormApi.update
-        : bargainFormApi.add;
+        ? BargainFormApi.update
+        : BargainFormApi.add;
       opBargainReport(realDataToSubmit)
         .then(() => {
           isEditing.value = false;
@@ -1116,7 +1119,7 @@ const initForm = () => {
       break;
     case bargainReportDetailForm:
       if (route.query.id) {
-        bargainFormApi.getDetail(route.query.id as string).then((data) => {
+        BargainFormApi.getDetail(route.query.id as string).then((data) => {
           if (formRef.value) {
             const form = formRef.value as any;
             form.setFormValue(

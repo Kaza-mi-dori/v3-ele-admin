@@ -174,7 +174,6 @@ const open = () => {
 };
 
 const handleSuccess = (response: any, file: any) => {
-  console.log(response);
   if (response.data) {
     // 后端1
     const data = response.data;
@@ -195,7 +194,6 @@ const handleSuccess = (response: any, file: any) => {
       内容: { 数据列表: list },
     } = data;
     if (Array.isArray(list)) {
-      console.log("list==", list);
       const parentNodeNames = ["广投石化", "永盛公司"];
       // 找出父节点的位置，假定顺序严格按照父1-子11-子12-父2-子21-子22
       const parentIndexs = list
@@ -213,18 +211,42 @@ const handleSuccess = (response: any, file: any) => {
           children: [] as any[],
         };
         const children = list.slice(parentIndex + 1, parentIndexs[index + 1]);
-        result.children = children.map((child) => ({
-          名称: child.名称,
-          全年预测固定成本: child.全年预测固定成本,
-          数据: child.数据,
-        })) as any[];
+        result.children = children.map((child) => {
+          // 将父节点中数据字段有的key，复制到子节点中
+          const keys = ["报告日", "月累计", "年累计"];
+          if (child.数据) {
+            keys.forEach((key) => {
+              child.数据.forEach((item: any) => {
+                item[key] = item[key] || undefined;
+              });
+              // 如果发现child.数据长度小于父节点，则需要补充到父节点长度
+              if (child.数据.length < list[parentIndex].数据.length) {
+                const len = list[parentIndex].数据.length - child.数据.length;
+                const originalLength = child.数据.length;
+                for (let i = 0; i < len; i++) {
+                  child.数据.push({
+                    类型: list[parentIndex].数据[i + originalLength].类型,
+                    报告日: undefined,
+                    月累计: undefined,
+                    年累计: undefined,
+                  });
+                }
+              }
+            });
+          }
+          return {
+            名称: child.名称,
+            全年预测固定成本: child.全年预测固定成本,
+            数据: child.数据,
+          };
+        }) as any[];
         // if (result.children.length === 0) {
         //   result.hasChildren = false;
         // }
         treeData.push(result);
       });
       tableData.value = treeData;
-      console.log("tableData==", tableData.value);
+      // console.log("tableData==", tableData.value);
     } else {
       ElMessage.error("解析数据失败，请检查文件格式是否正确！");
     }

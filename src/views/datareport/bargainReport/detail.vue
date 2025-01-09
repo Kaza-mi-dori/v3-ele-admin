@@ -49,7 +49,11 @@
       </div>
       <div class="__content">
         <div class="mb-4">
-          <el-button icon="ArrowDown" @click="onImportExcel">
+          <el-button
+            icon="ArrowDown"
+            :disabled="!editing"
+            @click="onImportExcel"
+          >
             从Excel导入
           </el-button>
         </div>
@@ -62,6 +66,7 @@
           :headers="extraHeaders"
         /> -->
         <el-table
+          v-if="tableData.length > 0"
           :header-cell-style="() => ({ textAlign: 'center' })"
           :data="tableData"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
@@ -86,7 +91,13 @@
             align="center"
           >
             <template v-slot="{ row }">
-              <span>
+              <el-input
+                v-if="editing"
+                v-model="row['全年预测固定成本']"
+                type="number"
+                placeholder="请输入全年预测固定成本"
+              />
+              <span v-else>
                 {{
                   row["全年预测固定成本"]
                     ? parseFloat(row["全年预测固定成本"]).toFixed(2)
@@ -100,9 +111,15 @@
             :key="key"
             :label="unit['类型']"
           >
-            <el-table-column label="报告日" prop="报告日" sortable>
+            <el-table-column label="报告日" prop="报告日" width="120">
               <template v-slot="{ row }">
-                <span>
+                <el-input
+                  v-if="editing"
+                  v-model="row['数据'][key]['报告日']"
+                  type="number"
+                  placeholder="请输入报告日"
+                />
+                <span v-else>
                   {{
                     row["数据"][key] && row["数据"][key]["报告日"]
                       ? parseFloat(row["数据"][key]["报告日"]).toFixed(2)
@@ -111,9 +128,15 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="月累计" prop="月累计" sortable>
+            <el-table-column label="月累计" prop="月累计" width="120">
               <template v-slot="{ row }">
-                <span>
+                <el-input
+                  v-if="editing"
+                  v-model="row['数据'][key]['月累计']"
+                  type="number"
+                  placeholder="请输入月累计"
+                />
+                <span v-else>
                   {{
                     row["数据"][key] && row["数据"][key]["月累计"]
                       ? parseFloat(row["数据"][key]["月累计"]).toFixed(2)
@@ -122,9 +145,15 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="年累计" prop="年累计" sortable>
+            <el-table-column label="年累计" prop="年累计" width="120">
               <template v-slot="{ row }">
-                <span>
+                <el-input
+                  v-if="editing"
+                  v-model="row['数据'][key]['年累计']"
+                  type="number"
+                  placeholder="请输入年累计"
+                />
+                <span v-else>
                   {{
                     row["数据"][key] && row["数据"][key]["年累计"]
                       ? parseFloat(row["数据"][key]["年累计"]).toFixed(2)
@@ -1249,9 +1278,87 @@ function converImportedDataToSubmitData(data: any): any {
   console.log("data", data);
 }
 
-function importSuccess(data: any) {
-  console.log("importSuccess", data);
+/**
+ * 将表格数据转换为后端格式
+ * 由于表格已经转换为了树形结构，要将内层的数据放出来
+ * @param data 表格数据
+ * @returns
+ */
+function getTransferredData(): any {
+  const result: any[] = [];
+  for (const item of tableData.value) {
+    result.push(item);
+    if (item.children) {
+      item.children.forEach((child: any) => {
+        result.push(child);
+      });
+    }
+  }
+  return result;
 }
+
+/**
+ * 将后端数据转换为表格格式
+ * @param data
+ * @returns
+ */
+function transferDataToTree(list: any): any {
+  console.log("开始转换", list);
+  if (Array.isArray(list)) {
+    const parentNodeNames = ["广投石化", "永盛公司"];
+    // 找出父节点的位置，假定顺序严格按照父1-子11-子12-父2-子21-子22
+    const parentIndexs = list
+      .map((item, index) => (parentNodeNames.includes(item.名称) ? index : -1))
+      .filter((index) => index !== -1);
+    // 生成树形结构
+    const treeData: any[] = [];
+    parentIndexs.forEach((parentIndex, index) => {
+      const result = {
+        名称: list[parentIndex].名称,
+        全年预测固定成本: list[parentIndex].全年预测固定成本,
+        数据: list[parentIndex].数据,
+        children: [] as any[],
+      };
+      const children = list.slice(parentIndex + 1, parentIndexs[index + 1]);
+      result.children = children.map((child) => {
+        // 将父节点中数据字段有的key，复制到子节点中
+        const keys = ["报告日", "月累计", "年累计"];
+        if (child.数据) {
+          keys.forEach((key) => {
+            child.数据.forEach((item: any) => {
+              item[key] = item[key] || undefined;
+            });
+            // 如果发现child.数据长度小于父节点，则需要补充到父节点长度
+            if (child.数据.length < list[parentIndex].数据.length) {
+              const len = list[parentIndex].数据.length - child.数据.length;
+              const originalLength = child.数据.length;
+              for (let i = 0; i < len; i++) {
+                child.数据.push({
+                  类型: list[parentIndex].数据[i + originalLength].类型,
+                  报告日: undefined,
+                  月累计: undefined,
+                  年累计: undefined,
+                });
+              }
+            }
+          });
+        }
+        return {
+          名称: child.名称,
+          全年预测固定成本: child.全年预测固定成本,
+          数据: child.数据,
+        };
+      }) as any[];
+      // if (result.children.length === 0) {
+      //   result.hasChildren = false;
+      // }
+      treeData.push(result);
+    });
+    tableData.value = unref(treeData);
+  }
+}
+
+function importSuccess(data: any) {}
 
 function handleSubmit(data: any) {
   // 逐行对应填入tableData
@@ -1260,7 +1367,7 @@ function handleSubmit(data: any) {
       const row = data[i];
       tableData.value[i] = row;
     }
-    firmReportDetailForm.value.content = data;
+    // firmReportDetailForm.value.content = data;
     importExcelDialogRef.value?.handleClose();
   } catch (error) {
     console.log("error", error);
@@ -1271,25 +1378,15 @@ function handleSubmit(data: any) {
   // 关闭
 }
 
-/**
- * 中文键值转为英文键值
- * @param value
- */
-const converter = (value: any) => {
-  const obj: any = {};
-  for (const key in value) {
-    if (key === "年份") {
-      obj.year = value[key];
-    } else if (key === "企业名称") {
-      obj.name = value[key];
-    } else if (key === "企业介绍") {
-      obj.description = value[key];
-    } else if (key === "企业资产") {
-      obj.asset = value[key];
+// 特殊逻辑：观察content的变化，如果变化了，则将content转化为表格格式
+watch(
+  () => firmReportDetailForm.value.content,
+  (newVal) => {
+    if (newVal) {
+      transferDataToTree(unref(newVal));
     }
   }
-  return obj;
-};
+);
 
 const submitForm = () => {
   console.log("submitForm");
@@ -1343,8 +1440,7 @@ const generateRandomData = () => {
   firmReportDetailForm.value = {
     name: "广投石化",
     year: "2024",
-    description: "广投石化有限公司",
-    asset: "1000",
+    content: [],
     attachment: [],
   };
 };
@@ -1356,6 +1452,7 @@ defineExpose({
   setFormValue,
   generateRandomData,
   validateForm,
+  getTransferredData,
 });
 </script>
 

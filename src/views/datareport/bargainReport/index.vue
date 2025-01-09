@@ -163,6 +163,7 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { BargainFormApi } from "@/api/datasource/bargainForm";
 import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { onMounted } from "vue";
@@ -227,7 +228,7 @@ const handleViewDetail = (row: any) => {
     name: "ReportForm",
     query: {
       id: row.id,
-      type: "firmReport",
+      type: "bargainReport",
     },
   });
 };
@@ -248,7 +249,7 @@ const handleDelete = (row: any) => {
         return;
       }
       // 删除操作
-      BusinessFormAPI.deleteCompanyDescForm(row.id).then(() => {
+      BargainFormApi.delete(row.id).then(() => {
         initTableData();
       });
     })
@@ -259,23 +260,11 @@ const handleDelete = (row: any) => {
 };
 
 const handleAudit = (row: any) => {
-  handleAuditRow(
-    row,
-    BusinessFormAPI.editCompanyDescForm,
-    "状态",
-    "有效",
-    initTableData
-  );
+  handleAuditRow(row, BargainFormApi.update, "状态", "有效", initTableData);
 };
 
 const handleResetAudit = (row: any) => {
-  handleAuditRow(
-    row,
-    BusinessFormAPI.editCompanyDescForm,
-    "状态",
-    "无效",
-    initTableData
-  );
+  handleAuditRow(row, BargainFormApi.update, "状态", "无效", initTableData);
 };
 
 const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
@@ -315,7 +304,7 @@ const handleConfirmFilter = (value: any) => {
 const initTableData = async () => {
   loading.value = true;
   try {
-    const res: any = await BusinessFormAPI.getCompanyDescFormList({
+    const res: any = await BargainFormApi.query({
       ...queryForm.value,
       页码: pagination.value.currentPage,
       页容量: pagination.value.pageSize,
@@ -364,9 +353,7 @@ const handleBatchDelete = () => {
   }).then(() => {
     const ids = selected.map((item: any) => item.id);
     // 批量调用删除接口
-    const deleteTasks = ids.map((id: any) =>
-      BusinessFormAPI.deleteCompanyDescForm(id)
-    );
+    const deleteTasks = ids.map((id: any) => BargainFormApi.delete(id));
     Promise.all(deleteTasks).then(() => {
       tableRef?.value?.clearSelection();
       initTableData();

@@ -326,7 +326,7 @@ onUpdated(() => {
     position: absolute;
     z-index: 1;
     display: flex;
-    bottom: 0;
+    bottom: 5px;
     left: 5px;
     .entry-container-item {
       text-align: center;
@@ -384,7 +384,7 @@ onUpdated(() => {
     margin-bottom: auto;
     .__title--text {
       margin: auto 0;
-      margin-top: 8px;
+      // margin-top: 8px;
       font-size: 2.5rem;
       letter-spacing: 6px;
       // line-height: px;

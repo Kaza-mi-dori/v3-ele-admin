@@ -2,7 +2,7 @@ import request2 from "@/utils/request2";
 
 const COMMON_URL = "/Api/Business/TradeTracking";
 
-export const bargainFormApi = {
+export const BargainFormApi = {
   // 新增
   add(data: any) {
     return request2({
@@ -20,25 +20,25 @@ export const bargainFormApi = {
     });
   },
   // 删除
-  delete(data: any) {
+  delete(id: number | string) {
     return request2({
       url: `${COMMON_URL}`,
       method: "delete",
-      data,
+      params: { id },
     });
   },
   // 查询
   query(data: any) {
     return request2({
-      url: `${COMMON_URL}`,
-      method: "get",
+      url: `${COMMON_URL}/Query`,
+      method: "post",
       data,
     });
   },
   // 获取详情
   getDetail(id: number | string) {
     return request2({
-      url: `${COMMON_URL}/GetDetail`,
+      url: `${COMMON_URL}`,
       method: "get",
       params: { id },
     });
