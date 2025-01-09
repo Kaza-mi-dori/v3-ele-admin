@@ -11,6 +11,7 @@
             class="input-field"
             size="large"
             placeholder="请选择"
+            @change="onChangeYear"
           >
             <el-option
               v-for="d in 10"
@@ -42,11 +43,11 @@
         @current-change="handleCurrentRowChange"
       >
         <el-table-column label="企业名称" prop="企业名称" />
-        <el-table-column label="累计利润" prop="累计利润" />
-        <el-table-column label="占比" prop="占比" />
-        <el-table-column label="目标利润" prop="目标利润" />
-        <el-table-column label="年度目标完成率" prop="目标完成率" />
-        <el-table-column label="同比增长" prop="同比增长" />
+        <el-table-column label="累计利润(万元)" prop="累计利润" />
+        <el-table-column label="占比(%)" prop="占比" />
+        <el-table-column label="目标利润(万元)" prop="目标利润" />
+        <el-table-column label="年度目标完成率(%)" prop="目标完成率" />
+        <el-table-column label="同比增长(%)" prop="同比增长" />
       </el-table>
       <el-pagination
         v-model:current-page="currentPage"
@@ -69,9 +70,11 @@ import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
 import { ComponentSize, formatter } from "element-plus";
+import { OurCompanyEnum, OurCompanyFullNameMap } from "@/enums/BusinessEnum";
+import { companyStoreHook } from "@/store";
 
 const router = useRouter();
-
+const companyStore = companyStoreHook();
 // 页面动态显示内容，由参数决定
 const title: Ref<string> = ref("广投石化驾驶舱");
 const moduleName: Ref<string> = ref("合同台账");
@@ -111,7 +114,7 @@ const getRandomData = () => {
   // }));
   return [
     {
-      企业名称: "广投石化本部",
+      企业名称: "广投石化",
       累计利润: "1000",
       占比: "33.33%",
       目标利润: "3000",
@@ -151,11 +154,65 @@ const chartData = getRandomData();
 const profitData = ref(chartData);
 
 //更新表格数据
-const tableData = ref(chartData);
+const tableData = ref<any[]>(chartData);
 
 // 初始化Echarts图表
 const chart = shallowRef<echarts.ECharts | null>(null);
 const chart2 = shallowRef<echarts.ECharts | null>(null);
+
+function dataFilterOne(res: any) {
+  tableData.value.forEach((item: any, index: number) => {
+    // 找到res中对应的公司
+    const company = res.find((data: any) => data?.企业名称 === item.企业名称);
+    if (company) {
+      // 在内容-详情下找到业态类型为“总体”这一条
+      const overall = company.内容.详情.find(
+        (item: any) => item.业态类型 === "总体"
+      );
+      item.累计利润 = overall?.累计利润金额 || 0;
+      item.占比 = company.占比;
+      item.目标利润 = company.利润基准值 || 0;
+      item.目标完成率 =
+        (overall?.累计利润金额 || 0) / (company.利润基准值 || 0);
+      item.同比增长 = company.同比增长 || 0;
+    } else {
+      item.累计利润 = 0;
+      item.占比 = 0;
+      item.目标利润 = 0;
+      item.目标完成率 = 0;
+      item.同比增长 = 0;
+    }
+  });
+  // reduce计算占比
+  const total = tableData.value.reduce((acc, item) => acc + item.累计利润, 0);
+  tableData.value.forEach((item) => {
+    item.占比 = ((item.累计利润 / total) * 100).toFixed(2);
+  });
+}
+
+const onChangeYear = (value: any) => {
+  Promise.all(
+    Object.keys(OurCompanyFullNameMap).map((company) =>
+      companyStore.getFirmReportMap(company as OurCompanyEnum, value.toString())
+    )
+  ).then((res) => {
+    dataFilterOne(res);
+    profitData.value = [];
+    tableData.value.forEach((item) => {
+      profitData.value.push({
+        企业名称: item.企业名称,
+        累计利润: item.累计利润,
+        占比: item.占比,
+        目标利润: item.目标利润,
+        目标完成率: item.目标完成率,
+        同比增长: item.同比增长,
+      });
+    });
+    console.log("profitData", profitData.value);
+    initChart1();
+    initChart2();
+  });
+};
 
 // 左侧图
 const initChart1 = () => {

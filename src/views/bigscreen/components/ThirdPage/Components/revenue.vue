@@ -5,14 +5,6 @@
         <img class="title-bg" src="../../../img/tit.png" alt="" />
         <div class="header-left">营收统计分析</div>
         <div class="header-right">
-          <!-- <el-input
-            v-model="inputValue"
-            size="large"
-            style="width: 250px"
-            class="input-field"
-            placeholder="请输入"
-            clearable
-          /> -->
           <el-select
             v-model="year"
             style="width: 250px"
@@ -51,11 +43,11 @@
         @current-change="handleCurrentRowChange"
       >
         <el-table-column label="企业名称" prop="企业名称" />
-        <el-table-column label="累计营收" prop="累计营收" />
-        <el-table-column label="占比" prop="占比" />
-        <el-table-column label="目标营收" prop="目标营收" />
-        <el-table-column label="年度目标完成率" prop="目标完成率" />
-        <el-table-column label="同比增长" prop="同比增长" />
+        <el-table-column label="累计营收(万元)" prop="累计营收" />
+        <el-table-column label="占比(%)" prop="占比" />
+        <el-table-column label="目标营收(万元)" prop="目标营收" />
+        <el-table-column label="年度目标完成率(%)" prop="目标完成率" />
+        <el-table-column label="同比增长(%)" prop="同比增长" />
       </el-table>
       <el-pagination
         v-model:current-page="currentPage"
@@ -165,8 +157,20 @@ const onChangeYear = (value: any) => {
       companyStore.getFirmReportMap(company as OurCompanyEnum, value.toString())
     )
   ).then((res) => {
-    console.log("res", res);
     dataFilterOne(res);
+    revenueData.value = [];
+    tableData.value.forEach((item) => {
+      revenueData.value.push({
+        企业名称: item.企业名称,
+        累计营收: item.累计营收,
+        占比: item.占比,
+        目标营收: item.目标营收,
+        目标完成率: item.目标完成率,
+        同比增长: item.同比增长,
+      });
+    });
+    initChart1();
+    initChart2();
   });
 };
 

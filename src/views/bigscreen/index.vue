@@ -1,5 +1,12 @@
 <template>
-  <div id="bg-container" ref="container" class="bg-view">
+  <div
+    id="bg-container"
+    ref="container"
+    v-loading="loading"
+    element-loading-text="页面加载中"
+    element-loading-background="rgba(0, 0, 0, 0.7)"
+    class="bg-view"
+  >
     <div v-if="showOtherContent" class="bg-view-img">
       <img style="position: absolute; top: 0" height="100vh" />
       <div class="bg-view__header">
@@ -59,7 +66,7 @@ import {
 
 const businessstore = businessStore();
 const companystore = companyStore();
-
+const loading = ref(true);
 // 日期，第一个/替换为年-第二个/替换为月
 const date = new Date()
   .toLocaleDateString()
@@ -229,12 +236,6 @@ const initScale = () => {
   bodyDOM.style.height = bodyHeight + "px";
 };
 
-onUnmounted(() => {
-  // const dom = document.getElementById("bigscreenmap");
-  // dom?.removeEventListener("wheel", onWheelContent);
-  // window.removeEventListener("wheel", onWheelContent);
-});
-
 onMounted(async () => {
   businessstore.getBusinessReportFormList(businessstore.queryForm);
   companystore.getCompanyReportFormList(companystore.queryForm2);
@@ -247,6 +248,7 @@ onMounted(async () => {
     initScale();
     // 让所有echarts图表自适应
     setTimeout(() => {
+      loading.value = false;
       window.dispatchEvent(new Event("resize"));
     }, 100);
   });
