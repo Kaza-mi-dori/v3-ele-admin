@@ -134,3 +134,22 @@
     }
   }
 }
+
+@mixin g-scrollbar-1 {
+  /* 现代浏览器 */
+  &::-webkit-scrollbar {
+    @apply w-1;
+    background-color: rgba(105, 117, 168, 0.2);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(105, 117, 168, 0.6);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  /* 兼容性 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(105, 117, 168, 0.6) transparent;
+}
