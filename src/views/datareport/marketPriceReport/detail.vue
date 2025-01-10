@@ -45,7 +45,7 @@
                   v-model="priceDetailForm.year"
                   type="date"
                   placeholder="选择数据日期"
-                  value-format="YYYY-MM-DD 00:00:00"
+                  value-format="YYYY-MM-DD"
                 />
                 <span v-else>{{ priceDetailForm.year }}</span>
               </el-form-item>
