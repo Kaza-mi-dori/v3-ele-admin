@@ -1,4 +1,4 @@
-import { ElMessageBox } from "element-plus";
+import { ElMessageBox, ElMessage } from "element-plus";
 
 type DeleteFunction = (id: any) => Promise<void>;
 
@@ -35,19 +35,24 @@ export const handleBatchDeleteForm = ({
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
-  }).then(() => {
-    const ids = selected.map((item: any) => item.id); // 获取选中项的ID
+  })
+    .then(() => {
+      const ids = selected.map((item: any) => item.id); // 获取选中项的ID
 
-    // 批量调用删除接口
-    const deleteTasks = ids.map((id: any) => deleteApi(id));
+      // 批量调用删除接口
+      const deleteTasks = ids.map((id: any) => deleteApi(id));
 
-    // 等待所有删除请求完成
-    Promise.all(deleteTasks).then(() => {
-      // 删除完成后清空选择，重新加载数据
-      tableRef?.value?.clearSelection();
-      if (successCallback) {
-        successCallback();
-      }
+      // 等待所有删除请求完成
+      Promise.all(deleteTasks).then(() => {
+        // 删除完成后清空选择，重新加载数据
+        tableRef?.value?.clearSelection();
+        if (successCallback) {
+          successCallback();
+        }
+      });
+    })
+    .catch(() => {
+      // 取消删除
+      ElMessage.info("已取消删除");
     });
-  });
 };
