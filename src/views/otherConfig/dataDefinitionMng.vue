@@ -148,9 +148,11 @@
       v-model:page-size="pagination.pageSize"
       class="mt-2 pb-4 flex justify-end"
       background
-      layout="total, prev, pager, next, jumper"
+      layout="total, sizes, prev, pager, next, jumper"
+      :page-sizes="pagination.pageSizes"
       :total="pagination.total"
       @current-change="handleCurrentChange"
+      @size-change="handleDataSizeChange"
     />
     <!-- 底部操作区 -->
     <!-- 新增弹窗 -->
@@ -296,13 +298,34 @@ const queryParams: {
   名称: undefined,
   类型集合: undefined,
 };
+
+/**
+ * 改变页码
+ */
 const handleCurrentChange = (currentPage: number) => {
   pagination.value.currentPage = currentPage;
   initTableData();
 };
+
+/**
+ * 改变页容量
+ */
+const handleDataSizeChange = (val: number) => {
+  pagination.value.pageSize = val;
+  pagination.value.currentPage = 1;
+  initTableData();
+};
+
+/**
+ * 查看详情
+ */
 const handleViewDetail = (row: ItableData) => {
   console.log(row);
 };
+
+/**
+ * 更新详情
+ */
 const handleUpdateDetail = (row: any) => {
   dialogVisible.value = true;
   itemForm.value = {
@@ -353,7 +376,7 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
     label: "类型",
     prop: "类型",
     value: null,
-    options: ["全部", "油库", "加油站"],
+    options: ["全部", "其他数据"],
     inputType: "select",
     order: 1,
   },

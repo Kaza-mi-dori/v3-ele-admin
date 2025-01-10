@@ -120,6 +120,7 @@
       layout="total, prev, pager, next, jumper, sizes"
       :total="pagination.total"
       @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
     />
     <!-- 底部操作区 -->
     <!-- 新增弹窗 -->
@@ -233,6 +234,12 @@ const handleCurrentChange = (currentPage: number) => {
   pagination.value.currentPage = currentPage;
   initTableData();
 };
+
+const handleSizeChange = (size: number) => {
+  pagination.value.pageSize = size;
+  initTableData();
+};
+
 const handleViewDetail = (row: ItableData) => {
   console.log(row);
 };
