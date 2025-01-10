@@ -28,7 +28,7 @@
       <el-table
         class="g-table-2"
         stripe
-        :data="tableData"
+        :data="tableDataDisplay"
         style="width: 100%"
         height="480"
         @current-change="handleCurrentChange"
@@ -80,6 +80,12 @@ const filters: Ref<any> = ref({
 const inputValue = ref("");
 
 const tableData: Ref<[]> = ref([]);
+const tableDataDisplay = computed(() => {
+  return tableData.value.slice(
+    (pagination.value.currentPage - 1) * pagination.value.pageSize,
+    pagination.value.currentPage * pagination.value.pageSize
+  );
+});
 // 初始化Echarts图表
 const chart = shallowRef<echarts.ECharts | null>(null);
 const chart2 = shallowRef<echarts.ECharts | null>(null);
@@ -300,8 +306,10 @@ const pagination: Ref<any> = ref({
 async function initTableData() {
   BusinessStandbookAPI.getContractLedgerRecordList({
     ...queryForm.value,
-    页码: pagination.value.currentPage,
-    页容量: pagination.value.pageSize,
+    // 页码: pagination.value.currentPage,
+    // 页容量: pagination.value.pageSize,
+    页码: 1,
+    页容量: 1000,
   })
     .then((res: any) => {
       tableData.value = res["当前记录"];
@@ -312,7 +320,7 @@ async function initTableData() {
     .catch((err) => {
       console.error(err);
     });
-};
+}
 
 const calculateContractTypeData = () => {
   const typeMap: { [key: string]: number } = {};

@@ -69,8 +69,8 @@ export const DataIndicesAPI = {
    */
   deleteDataIndices: (data: any) => {
     return request2({
-      url: `${BASE_URL}`,
-      method: "delete",
+      url: `${BASE_URL}/DeleteIntegratedData`,
+      method: "post",
       data,
     });
   },

@@ -74,6 +74,9 @@
           </el-button>
           <template v-slot:dropdown>
             <el-dropdown-menu>
+              <el-dropdown-item @click="showImportDingTalkContractLedgerDialog">
+                <span>导入钉钉台账</span>
+              </el-dropdown-item>
               <el-dropdown-item>
                 <span>批量审核</span>
               </el-dropdown-item>
@@ -118,9 +121,10 @@
         key="合同名称"
         prop="合同名称"
         label="合同名称"
-        width="150"
+        width="350"
         sortable
         align="center"
+        show-overflow-tooltip
       >
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
@@ -325,6 +329,7 @@
         sortable
         align="center"
         min-width="150"
+        show-overflow-tooltip
       >
         <template v-slot="scope">
           <span>{{ scope.row.内容 ? scope.row.内容.合同说明 : "-" }}</span>
@@ -364,11 +369,19 @@
       v-model:page-size="pagination.pageSize"
       class="mt-2 pb-4 flex justify-end"
       background
-      layout="total, prev, pager, next, jumper"
+      layout="total, prev, sizes, pager, next, jumper"
+      :page-sizes="pagination.pageSizes"
       :total="pagination.total"
       @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
     />
     <!-- 底部操作区 -->
+    <ImportExcelDialog
+      ref="importExcelDialogRef"
+      :uploadUrl="uploadDingTalkContractLedgerExcelUrl"
+      :uploadName="'Excel文件'"
+      @submit="handleImportDingTalkContractLedgerExcel"
+    />
   </div>
 </template>
 
@@ -383,10 +396,15 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { toThousands } from "@/utils";
 import { useRouter } from "vue-router";
-import { on } from "events";
-
+import ImportExcelDialog from "@/components/Dialogs/importExcelDialog.vue";
+import { getToken } from "@/utils/auth";
 const router = useRouter();
-
+const uploadDingTalkContractLedgerExcelUrl =
+  import.meta.env.VITE_APP_API_URL_DEV +
+  "/Api/Business/ContractLedgerShow/ReadFromDingExcel";
+const uploadDingTalkContractLedgerExcelHeaders = {
+  Authorization: getToken(),
+};
 const popoverVisible: Ref<boolean> = ref(false);
 const checkedColumns: Ref<string[]> = ref([
   "来源",
@@ -405,24 +423,6 @@ const checkedColumns: Ref<string[]> = ref([
 
 type IExampleData = business.IAuditableEntity<business.IContract>;
 
-/**
- *   interface IContract {
-    id: string;
-    no: string; // 编号
-    name: string; // 名称
-    amount: number; // 金额（含税)
-    tax: number; // 税率
-    taxAmount: number; // 税额
-    description: string; // 说明
-    currency: string; // 币种
-    partner: string; // 合同相对方(相对人)
-    status: string; // 合同状态
-    date: string; // 签订日期
-    from: string; // 合同信息来源，如：泛微、钉钉
-    goodsDetails: any[]; // 商品明细
-  }
- */
-
 const loading: Ref<boolean> = ref(false);
 const exampleData: Ref<IExampleData[]> = ref([]);
 const queryForm: Ref<any> = ref({
@@ -440,10 +440,16 @@ const pagination: Ref<any> = ref({
   currentPage: 1,
 });
 const riskAmount = ref(0);
-
+const importDingTalkContractLedgerDialogVisible = ref(false);
+const importExcelDialogRef = ref<InstanceType<typeof ImportExcelDialog>>();
 /** 表格操作回调 */
 const handleCurrentChange = (currentPage: number) => {
   pagination.value.currentPage = currentPage;
+  initTableData();
+};
+
+const handleSizeChange = (pageSize: number) => {
+  pagination.value.pageSize = pageSize;
   initTableData();
 };
 
@@ -569,9 +575,9 @@ const handleConfirmFilter = (filter: any) => {
 const initTableData = () => {
   loading.value = true;
   BusinessStandbookAPI.getContractLedgerRecordList({
-    page: pagination.value.currentPage,
-    pageSize: pagination.value.pageSize,
     ...queryForm.value,
+    页码: pagination.value.currentPage,
+    页容量: pagination.value.pageSize,
   })
     .then((res: any) => {
       exampleData.value = res["当前记录"];
@@ -581,6 +587,26 @@ const initTableData = () => {
     .catch((err) => {
       console.error(err);
       loading.value = false;
+    });
+};
+
+const showImportDingTalkContractLedgerDialog = () => {
+  importExcelDialogRef.value?.open();
+};
+
+const handleImportDingTalkContractLedgerExcel = async (data: any) => {
+  importExcelDialogRef.value?.setSubmitLoading(true);
+  BusinessStandbookAPI.batchAddEditContractLedgerRecord(data)
+    .then((res: any) => {
+      importExcelDialogRef.value?.setSubmitLoading(false);
+      importExcelDialogRef.value?.handleClose();
+      ElMessage.success("导入成功");
+      initTableData();
+    })
+    .catch((err) => {
+      importExcelDialogRef.value?.setSubmitLoading(false);
+      ElMessage.error("导入失败");
+      console.error(err);
     });
 };
 

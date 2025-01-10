@@ -32,6 +32,20 @@ const BusinessStandbookAPI = {
   },
 
   /**
+   * 合同展示台账记录批量新增修改
+   * @param data 合同展示台账记录
+   * @returns
+   * @throws
+   */
+  batchAddEditContractLedgerRecord(data: any[]) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow/AddOrChangeBatch`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
    * 合同展示台账记录详情
    * @param companyId 企业ID
    * @returns 合同展示台账记录详情
@@ -100,6 +114,19 @@ const BusinessStandbookAPI = {
   importContractLedgerRecord(data: any) {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow/Import`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 解析钉钉合同台账excel
+   * @param data 钉钉合同台账excel
+   * @returns
+   */
+  parseDingTalkContractLedgerExcel(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow/ReadFromDingExcel`,
       method: "post",
       data,
     });

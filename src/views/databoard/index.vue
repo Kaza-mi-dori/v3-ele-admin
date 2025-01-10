@@ -180,6 +180,17 @@
                 sortable
               />
               <el-table-column prop="数据" label="数据值" align="center" />
+              <!-- 操作区 -->
+              <el-table-column label="操作" align="center">
+                <template v-slot="{ row }">
+                  <el-button type="primary" @click="handleEditRecord(row)">
+                    编辑
+                  </el-button>
+                  <el-button type="danger" @click="handleDeleteRecord(row)">
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
             </el-table>
             <el-pagination
               v-model:current-page="dataPagination.currentPage"
@@ -364,6 +375,7 @@ import importExcelDialog from "@/components/Dialogs/importExcelDialog.vue";
 import { ref, onMounted } from "vue";
 import { DataIndicesAPI } from "@/api/dataIndices";
 import { DataDefinitionAPI } from "@/api/dataIndices/dataDefinition";
+import { handleDeleteRow } from "@/hooks/useTableOp";
 import * as echarts from "echarts";
 
 const chartRef = shallowRef<echarts.ECharts | null>();
@@ -591,6 +603,35 @@ const handleEditRecord = (row: any) => {
     value: row["数据"],
   };
   dialogVisible.value = true;
+};
+
+const handleDeleteRecord = (row: any) => {
+  // 删除数据
+  tableLoading.value = true;
+  ElMessageBox.confirm("确定要删除吗？", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
+    DataIndicesAPI.deleteDataIndices([
+      {
+        id: row.id,
+        标识: row["标识"],
+      },
+    ])
+      .then((res: any) => {
+        console.log(res);
+        ElMessage.success("删除成功");
+        initActiveIndexData();
+      })
+      .catch((err) => {
+        console.error(err);
+        ElMessage.error("删除失败");
+      })
+      .finally(() => {
+        tableLoading.value = false;
+      });
+  });
 };
 
 const handleExportExcel = () => {
@@ -1025,6 +1066,7 @@ onMounted(() => {
 }
 
 :deep(.el-tree) {
+  @include g-scrollbar-1;
   .el-tree-node {
     @apply text-ellipsis overflow-hidden whitespace-nowrap !important;
     .el-tree-node__content {
