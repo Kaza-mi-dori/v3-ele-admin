@@ -17,4 +17,5 @@ export * from "./modules/dict";
 export * from "./modules/user2";
 export * from "./modules/business";
 export * from "./modules/company";
+export * from "./modules/dataIndex";
 export { store };

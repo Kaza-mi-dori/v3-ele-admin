@@ -81,3 +81,73 @@ export function getTreeFromFlatNodes(
   }
   return root.children;
 }
+
+export interface IDataItem {
+  类型: string;
+  名称1: string;
+  名称2?: string;
+  名称3?: string;
+  标识?: string;
+}
+
+/**
+ *  按名称1、名称2、名称3组织出树形结构(BFS)
+ * @param data
+ * @returns
+ */
+export function generateTreeData(data: IDataItem[]): any[] {
+  const treeData: any[] = [];
+  const typeMap = new Map();
+  for (const item of data) {
+    const type = item["类型"];
+    const name1 = item["名称1"];
+    const name2 = item["名称2"];
+    const name3 = item["名称3"];
+    if (!typeMap.has(type)) {
+      typeMap.set(type, {
+        label: type,
+        id: "-1",
+        children: [],
+      });
+      treeData.push(typeMap.get(type));
+    }
+    const typeNode = typeMap.get(type);
+    const name1Node = typeNode.children.find(
+      (node: any) => node.label === name1
+    );
+    if (!name1Node) {
+      typeNode.children.push({
+        label: name1,
+        ...item,
+        children: [],
+      });
+    }
+    const name1NodeIndex = typeNode.children.findIndex(
+      (node: any) => node.label === name1
+    );
+    const name2Node = typeNode.children[name1NodeIndex].children.find(
+      (node: any) => node.label === name2
+    );
+    if (!name2Node) {
+      typeNode.children[name1NodeIndex].children.push({
+        label: name2,
+        children: [],
+        ...item,
+      });
+    }
+    const name2NodeIndex = typeNode.children[name1NodeIndex].children.findIndex(
+      (node: any) => node.label === name2
+    );
+    const name3Node = typeNode.children[name1NodeIndex].children[
+      name2NodeIndex
+    ].children.find((node: any) => node.label === name3);
+    if (!name3Node) {
+      typeNode.children[name1NodeIndex].children[name2NodeIndex].children.push({
+        label: name3,
+        ...item,
+      });
+    }
+  }
+  // console.log(treeData);
+  return treeData;
+}
