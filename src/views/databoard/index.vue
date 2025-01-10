@@ -16,7 +16,7 @@
       <el-button @click="handleImportExcel">导入excel</el-button>
     </div>
     <div class="flex w-full">
-      <div class="bg-white p-10px shadow-coolGray-100 max-w-300px">
+      <div class="tree-wrapper">
         <!-- <el-input
           v-model="searchValue"
           search-icon="el-icon-search"
@@ -28,12 +28,25 @@
           @input="handleInput"
         /> -->
         <el-tree
-          class="w-full"
+          class="tree-menu"
           default-expand-all
           :data="data"
           :props="defaultProps"
+          draggable
           @node-click="handleNodeClick"
-        />
+          @node-drag-start="handleNodeDragStart"
+          @node-drag-end="handleNodeDragEnd"
+        >
+          <template v-slot="{ node, data }">
+            <el-icon v-if="data.children && data.children.length" class="ml-2">
+              <Folder />
+            </el-icon>
+            <el-icon v-else>
+              <Document />
+            </el-icon>
+            <span class="ml-2">{{ node.label }}</span>
+          </template>
+        </el-tree>
       </div>
       <div class="flex-1 ml-4">
         <div class="info-card-level1">
@@ -82,7 +95,11 @@
             class="__content"
             style="width: calc(100% - 20px); height: 400px"
           >
-            <div id="chart-container" style="width: 100%; height: 100%" />
+            <div
+              id="chart-container"
+              style="width: 100%; height: 100%"
+              @dragover="(e) => e.preventDefault()"
+            />
           </div>
         </div>
         <div class="info-card-level1">
@@ -169,9 +186,11 @@
               v-model:page-size="dataPagination.pageSize"
               class="mt-2 flex justify-end mb-4"
               background
+              :page-sizes="dataPagination.sizes"
               layout="total, prev, pager, next, jumper, sizes"
               :total="dataPagination.total"
               @current-change="handleDataPageChange"
+              @size-change="handleDataSizeChange"
             />
           </div>
         </div>
@@ -358,6 +377,7 @@ const dataPagination = ref({
   currentPage: 1,
   pageSize: 10,
   total: 0,
+  sizes: [10, 20, 50, 100],
 });
 /** 单个指标数据表格加载状态 */
 const tableLoading = ref(false);
@@ -484,6 +504,46 @@ const handleAddNode = () => {
 
 const handleClear = () => {
   searchValue.value = "";
+};
+
+const handleNodeDragStart = (data: any) => {
+  // console.log(data);
+};
+
+const handleNodeDragEnd = (data: any) => {
+  handleDropIndex(data);
+};
+
+const handleDropIndex = (item: any) => {
+  // 如果没有activeIndex则什么也不做
+  if (!activeIndex.value) return;
+  let index = [];
+  if (item.children) {
+    index = item.children.map((item: any) => item.data["标识"]);
+  } else {
+    index = [item.data["标识"]];
+  }
+  DataIndicesAPI.getAllDataIndicesList({
+    标识集合: index,
+    页码: dataPagination.value.currentPage,
+    页容量: dataPagination.value.pageSize,
+  })
+    .then((res: any) => {
+      allData.value.push(...res);
+      dataPagination.value.total = allData.value.length;
+      latestData.value = allData.value.slice(
+        (dataPagination.value.currentPage - 1) * dataPagination.value.pageSize,
+        dataPagination.value.currentPage * dataPagination.value.pageSize
+      );
+      initChart(unref(allData));
+    })
+    .catch((err) => {
+      console.error(err);
+      ElMessage.error("获取数据失败");
+    })
+    .finally(() => {
+      tableLoading.value = false;
+    });
 };
 
 const handleInput = (value: string) => {
@@ -661,6 +721,15 @@ const handleDataPageChange = (val: number) => {
     (val - 1) * dataPagination.value.pageSize,
     val * dataPagination.value.pageSize
   );
+};
+
+/**
+ * 改变页容量
+ */
+const handleDataSizeChange = (val: number) => {
+  dataPagination.value.pageSize = val;
+  dataPagination.value.currentPage = 1;
+  initActiveIndexData();
 };
 
 /** 批量写入数据 */
@@ -885,7 +954,6 @@ const handleConfirmImportData = () => {
     }
   });
   const checkedNodesArr = Array.from(checkedNodesSet) as string[];
-  console.log(checkedNodesArr);
   DataIndicesAPI.getImportTemplate(checkedNodesArr)
     .then((res: any) => {
       const blob = new Blob([res.data], {
@@ -943,6 +1011,38 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "@/styles/index.scss" as *;
+
+.tree-wrapper {
+  @include g-scrollbar-1;
+  @apply bg-white p-10px shadow-coolGray-100;
+  height: calc(75vh + 20px);
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  .tree-menu {
+    @apply w-250px h-[calc(75vh)] overflow-auto;
+  }
+}
+
+:deep(.el-tree) {
+  .el-tree-node {
+    @apply text-ellipsis overflow-hidden whitespace-nowrap !important;
+    .el-tree-node__content {
+      @apply block text-ellipsis overflow-hidden whitespace-nowrap !important;
+      @apply lh-normal;
+      &:first-child {
+        @apply ml-2;
+      }
+      &:hover {
+        @apply bg-blue-5 color-white;
+      }
+    }
+    .el-icon.el-tree-node__expand-icon.expanded {
+      @apply hidden;
+    }
+  }
+}
+
 .op-block {
   @apply flex justify-between;
   margin-block: 10px;

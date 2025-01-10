@@ -270,7 +270,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: Layout,
     meta: {
       title: "指标管理",
-      icon: "el-icon-s-data",
+      icon: "dict",
     },
     redirect: "/marketData",
     children: [
@@ -280,6 +280,15 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/databoard/index.vue"),
         meta: {
           title: "指标管理",
+          icon: "monitor",
+        },
+      },
+      {
+        path: "customDataBoard",
+        name: "CustomDataBoard",
+        component: () => import("@/views/databoard/customDataboard.vue"),
+        meta: {
+          title: "自定义查询",
           icon: "monitor",
         },
       },
