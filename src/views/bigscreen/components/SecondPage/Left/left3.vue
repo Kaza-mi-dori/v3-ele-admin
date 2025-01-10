@@ -1,5 +1,5 @@
 <template>
-  <Model1 class="model1" title="合同类型">
+  <Model1 class="model1" title="合同构成">
     <div id="chart2-left-3" style="height: 230px" />
   </Model1>
 </template>

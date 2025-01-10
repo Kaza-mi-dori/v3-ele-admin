@@ -34,7 +34,7 @@ const initChart2Left2 = () => {
           // 标签
           show: true,
           position: "outside", // 标签显示在外部
-          formatter: "{b}，{d}%", // 格式化标签，显示名称和占比
+          formatter: `{b}，{d}%\n{c}万元`, // 格式化标签，显示名称、占比、实际值
           color: "#fff",
           fontSize: 16,
           fontWight: 400,
@@ -51,14 +51,14 @@ const initChart2Left2 = () => {
         },
         data: [
           {
-            value: 80,
+            value: 194.32,
             name: "已履行",
             itemStyle: {
               color: "#5cafff",
             },
           },
           {
-            value: 20,
+            value: 27.44,
             name: "未履行",
             itemStyle: {
               color: "#fc377e",

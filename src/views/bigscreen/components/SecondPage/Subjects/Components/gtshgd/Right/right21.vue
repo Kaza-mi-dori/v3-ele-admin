@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import Model1 from "../Model1/index.vue";
+import Model1 from "@/views/bigscreen/components/SecondPage/Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
