@@ -37,9 +37,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     css: {
       preprocessorOptions: {
         // 定义全局 SCSS 变量
+        // api配置项是modern-compiler，则使用现代编译器，否则使用旧的编译
+        // 现代编译器支持css-loader@6.x，旧的编译器支持css-loader@5.x,它们的差别是(https://github.com/webpack-contrib/css-loader/blob/master/CHANGELOG.md#600)
         scss: {
           javascriptEnabled: true,
           api: "modern-compiler",
+          // additionalData: 在预处理器中添加额外的数据
           additionalData: `
             @use "@/styles/variables.scss" as *;
           `,
@@ -93,6 +96,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         dts: false,
         // dts: "src/types/auto-imports.d.ts",
       }),
+      // Components 组件自动导入，
       Components({
         resolvers: [
           // 导入 Element Plus 组件
@@ -109,6 +113,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         iconDirs: [resolve(pathSrc, "assets/icons")],
         symbolId: "icon-[dir]-[name]",
       }),
+      // visualizer
+      // visualizer({
+      //   filename: "statistics.html",
+      //   open: true,
+      // }),
     ],
     // 预加载项目必需的组件
     optimizeDeps: {

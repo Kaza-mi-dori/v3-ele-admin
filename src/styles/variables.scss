@@ -1,4 +1,4 @@
-// @forward 表示引入 element-plus/theme-chalk/src/common/var.scss 文件
+// @forward 表示引入 element-plus/theme-chalk/src/common/var.scss 文件, 和@use的区别是@forward是引入文件让@use这个文件的可以去访问@forward的文件的变量，@use是引入文件中的变量
 // with 表示修改 var.scss 文件中的 $colors 和 $bg-color 变量
 @forward "element-plus/theme-chalk/src/common/var.scss" with (
   $colors: (
@@ -52,6 +52,8 @@
   --sidebar-logo-text-color: #000;
 
   // 修复表格 fixed 列被选中后由于透明色导致叠字的 bug
+  // 使用现代编译器时，需要使用--el-table-current-row-bg-color，使用旧的编译器时，需要使用--el-table-current-row-bg-color-legacy
+
   .el-table {
     --el-table-current-row-bg-color: rgb(235 243 250);
   }
