@@ -130,7 +130,9 @@ const initChartRight3 = async () => {
   await initData();
 
   // 用于存储最终图表数据
-  const years: string[] = [];
+  let years: string[] = [];
+  const revenueYears: string[] = [];
+  const profitYears: string[] = [];
   const revenueData: number[] = [];
   const profitData: number[] = [];
 
@@ -166,15 +168,19 @@ const initChartRight3 = async () => {
   } else if (mode === 1) {
     resData.value.forEach((item: any) => {
       const { year, type, value } = item;
-      if (!years.includes(year)) {
-        years.push(year);
-      }
 
       if (type === "revenue") {
+        if (!revenueYears.includes(year)) {
+          revenueYears.push(year);
+        }
         revenueData.push(value);
       } else if (type === "profit") {
+        if (!profitYears.includes(year)) {
+          profitYears.push(year);
+        }
         profitData.push(value);
       }
+      years = activeName.value === REVENUE ? revenueYears : profitYears;
     });
   }
 
