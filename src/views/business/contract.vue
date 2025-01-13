@@ -80,7 +80,7 @@
               <el-dropdown-item>
                 <span>批量审核</span>
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item @click="handleBatchDelete">
                 <span class="text-red-5">批量删除</span>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -90,6 +90,7 @@
     </div>
     <!-- 表格区 -->
     <el-table
+      ref="tableRef"
       v-loading="loading"
       stripe
       border
@@ -103,6 +104,11 @@
       }"
       :row-class-name="tableRowCustom"
     >
+      <el-table-column type="selection" align="center" width="55">
+        <template v-slot="scope">
+          <el-checkbox v-model="scope.row.checked" />
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="checkedColumns.includes('来源')"
         key="数据源"
@@ -398,6 +404,8 @@ import { toThousands } from "@/utils";
 import { useRouter } from "vue-router";
 import ImportExcelDialog from "@/components/Dialogs/importExcelDialog.vue";
 import { getToken } from "@/utils/auth";
+import { ElMessage, type TableInstance } from "element-plus";
+import { handleBatchDeleteForm } from "@/utils/handleBatchDelete";
 const router = useRouter();
 const uploadDingTalkContractLedgerExcelUrl =
   import.meta.env.VITE_APP_API_URL_DEV +
@@ -425,6 +433,7 @@ type IExampleData = business.IAuditableEntity<business.IContract>;
 
 const loading: Ref<boolean> = ref(false);
 const exampleData: Ref<IExampleData[]> = ref([]);
+const tableRef = ref<Nullable<TableInstance>>(null);
 const queryForm: Ref<any> = ref({
   状态集合: undefined,
   数据源集合: undefined,
@@ -608,6 +617,15 @@ const handleImportDingTalkContractLedgerExcel = async (data: any) => {
       ElMessage.error("导入失败");
       console.error(err);
     });
+};
+
+const handleBatchDelete = () => {
+  handleBatchDeleteForm({
+    tableData: exampleData.value,
+    tableRef,
+    deleteApi: BusinessStandbookAPI.deleteContractLedgerRecord,
+    successCallback: initTableData, // 删除成功后重新加载表格数据
+  });
 };
 
 onMounted(() => {
