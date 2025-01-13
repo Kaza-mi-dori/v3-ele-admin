@@ -37,9 +37,16 @@
               <el-radio-group v-model="chartType">
                 <el-radio label="折线图" value="line" />
                 <el-radio label="柱状图" value="bar" />
+                <el-radio label="表格" value="table" />
               </el-radio-group>
             </div>
           </div>
+          <!-- <div class="setting-unit">
+            <div class="title-text">年份</div>
+            <div class="setting-content">
+              <el-input-number v-model="tableDataYear" :min="2020" />
+            </div>
+          </div> -->
         </div>
         <div class="graph-block">
           <div class="graph-title">
@@ -62,7 +69,45 @@
               }
             "
           >
-            <div id="graph-container" style="width: 100%; height: 650px" />
+            <div
+              v-show="chartType !== 'table'"
+              id="graph-container"
+              style="width: 100%; height: 650px"
+            />
+            <div v-show="chartType === 'table'" class="table-container">
+              <el-table
+                :data="currentPageData"
+                max-height="600px"
+                stripe
+                border
+                style="width: 100%; overflow-x: auto"
+              >
+                <el-table-column
+                  prop="日期"
+                  label="日期"
+                  width="100px"
+                  align="center"
+                />
+                <el-table-column
+                  v-for="item in dataIndexArray"
+                  :key="item"
+                  :prop="item.value"
+                  :label="item.label"
+                  align="center"
+                />
+              </el-table>
+              <el-pagination
+                v-if="tableData.length > 0"
+                v-model:current-page="currentPage"
+                class="mt-4 flex justify-end"
+                background
+                :page-size="pageSize"
+                :total="tableData.length"
+                layout="prev, pager, next, sizes"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -75,6 +120,7 @@ import { useDataIndexStoreHook } from "@/store/modules/dataIndex";
 import { DataIndicesAPI } from "@/api/dataIndices";
 import * as echarts from "echarts";
 import { getDateOfOneYear } from "@/utils/time";
+import { table } from "console";
 
 const dataIndexStore = useDataIndexStoreHook();
 const dataIndexTree = ref<any[]>([]);
@@ -84,12 +130,15 @@ const defaultProps = ref({
 });
 const chartType = ref("line");
 const chartRef = shallowRef<any>();
-
+const tableData = ref<any[]>([]);
+const tableDataYear = ref(new Date().getFullYear());
 /** 数据池 */
 const dataIndexSet = ref<Set<string>>(new Set());
 const dataPool = ref<any[]>([]);
 
 const dataIndexArray = ref<any[]>([]);
+const currentPage = ref(1);
+const pageSize = ref(10);
 
 const handleNodeClick = (data: any) => {
   console.log(data);
@@ -98,6 +147,21 @@ const handleNodeClick = (data: any) => {
 const handleNodeDragStart = (data: any) => {
   // console.log(data);
 };
+
+const handleSizeChange = (size: number) => {
+  pageSize.value = size;
+};
+
+const handleCurrentChange = (page: number) => {
+  currentPage.value = page;
+};
+
+const currentPageData = computed(() => {
+  return tableData.value.slice(
+    (currentPage.value - 1) * pageSize.value,
+    currentPage.value * pageSize.value
+  );
+});
 
 // 删除数据池中的数据
 const handleClose = (item: string) => {
@@ -149,7 +213,7 @@ const handleNodeDragEnd = (
 };
 
 function allowDrop(dropType: any) {
-  return dropType !== "inner";
+  return dropType === "none";
 }
 
 // tips：为了不触发拖拽效果，使用capture来在事件捕获阶段触发并阻止默认事件
@@ -159,6 +223,38 @@ const handleNodeDrop = (node: any, dropNode: any, dropType: any, ev: any) => {
   // 不再传递
   return false;
 };
+
+/**
+ * 初始化表格
+ * 将数据池中的数据展示在表格中, 并支持排序; 每一行应该是一个日期对应的数据，每列是一个数据index对应的数据
+ */
+function initTable() {
+  // tsx动态生成表格
+  const columns = dataIndexArray.value.map((item: any) => {
+    return {
+      prop: item.value,
+      label: item.label,
+    };
+  });
+  if (tableData.value.length === 0) {
+    const year = new Date().getFullYear();
+    tableData.value = getDateOfOneYear().map((item: any) => {
+      return {
+        日期: `${year}-${item}`,
+      };
+    });
+  }
+  tableData.value.forEach((item: any) => {
+    // 寻找日期
+    const dateData = dataPool.value.filter(
+      (item2: any) => item2.时间?.substring(0, 10) === item.日期
+    );
+    columns.forEach((column: any) => {
+      const data = dateData.find((item2: any) => item2.标识 === column.prop);
+      item[column.prop] = data ? data.数据 : "";
+    });
+  });
+}
 
 function initChart() {
   if (!chartRef.value) {
@@ -231,6 +327,7 @@ watch(
     });
     dataPool.value = res || [];
     initChart();
+    initTable();
   },
   { deep: true }
 );
@@ -238,13 +335,18 @@ watch(
 watch(
   () => chartType.value,
   () => {
-    initChart();
+    switch (chartType.value) {
+      case "line":
+      case "bar":
+        initChart();
+        break;
+    }
   }
 );
 
 onMounted(async () => {
   dataIndexTree.value = await dataIndexStore.getDataIndexTree();
-  console.log(dataIndexTree.value);
+  // console.log(dataIndexTree.value);
 });
 </script>
 
@@ -286,6 +388,7 @@ onMounted(async () => {
 
 .content-wrapper {
   @apply shadow-coolGray-100 flex-1 bg-white p-10px;
+  max-width: calc(100% - 250px - 0.5rem);
   .setting-block {
     @apply w-full;
     .setting-unit {
@@ -304,6 +407,9 @@ onMounted(async () => {
     @apply mt-10px pr-10px;
     .graph-wrapper {
       @apply border-1 border-light;
+    }
+    .table-container {
+      @apply w-full;
     }
   }
 }
