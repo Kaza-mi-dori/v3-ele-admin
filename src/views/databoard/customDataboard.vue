@@ -5,14 +5,20 @@
         <el-tree
           class="tree-menu"
           default-expand-all
-          node-key="id"
+          node-key="pId"
           :data="dataIndexTree"
           :props="defaultProps"
           draggable
           :allow-drag="(node: any) => !node.data.children"
+          :allow-drop="
+            (node: any, dropNode: any, dropType: any) => {
+              return dropType !== 'inner';
+            }
+          "
           @node-click="handleNodeClick"
           @node-drag-start="handleNodeDragStart"
           @node-drag-end="handleNodeDragEnd"
+          @node-drop.capture="handleNodeDrop"
         >
           <template v-slot="{ node, data }">
             <el-icon v-if="data.children && data.children.length" class="ml-2">
@@ -21,7 +27,9 @@
             <el-icon v-else>
               <Document />
             </el-icon>
-            <span class="ml-2">{{ node.label }}</span>
+            <el-tooltip :content="node.label" placement="top">
+              <span class="ml-2">{{ node.label }}</span>
+            </el-tooltip>
           </template>
         </el-tree>
       </div>
@@ -130,9 +138,26 @@ const pushIndexToPool = (node: any) => {
   }
 };
 
-const handleNodeDragEnd = (node: any) => {
+const handleNodeDragEnd = (
+  node: any,
+  dropNode: any,
+  dropType: any,
+  ev: any
+) => {
   // 将相应数据拖入数据池
   pushIndexToPool(node);
+  // 不再传递
+  if (dropType === "inner") {
+    return false;
+  }
+};
+
+// tips：为了不触发拖拽效果，使用capture来在事件捕获阶段触发并阻止默认事件
+const handleNodeDrop = (node: any, dropNode: any, dropType: any, ev: any) => {
+  ev.preventDefault();
+  ev.stopPropagation();
+  // 不再传递
+  return false;
 };
 
 function initChart() {
@@ -145,16 +170,30 @@ function initChart() {
     const datas = dataPool.value.filter(
       (item2: any) => item2.标识 === item.value
     );
-    series.push({
-      type: chartType.value,
-      name: item.label,
-      data: datas.map((item: any) => item.数据),
-    });
+    switch (chartType.value) {
+      case "line":
+        series.push({
+          type: chartType.value,
+          name: item.label,
+          data: datas.map((item: any) => item.数据),
+        });
+        break;
+      case "bar":
+        series.push({
+          type: chartType.value,
+          name: item.label,
+          data: datas.map((item: any) => item.数据),
+        });
+        break;
+    }
   });
   const dates = getDateOfOneYear();
   const option = {
     tooltip: {
       trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
     },
     legend: {
       data: dataIndexArray.value.map((item: any) => item.label),
@@ -205,7 +244,7 @@ watch(
 
 onMounted(async () => {
   dataIndexTree.value = await dataIndexStore.getDataIndexTree();
-  // console.log(dataIndexTree.value);
+  console.log(dataIndexTree.value);
 });
 </script>
 
