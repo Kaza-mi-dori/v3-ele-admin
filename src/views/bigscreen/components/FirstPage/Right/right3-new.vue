@@ -74,12 +74,12 @@ const initData = async () => {
   } else if (mode === 1) {
     // 获取营收和利润数据
     const revenueRes: any = await DataIndicesAPI.getAllDataIndicesList({
-      标识集合: ["194158fe0d4"], // 营收标识
+      标识集合: ["194158fe0d4"], // 年度营收标识
       页码: 1,
       页容量: 6,
     });
     const profitRes: any = await DataIndicesAPI.getAllDataIndicesList({
-      标识集合: ["194159067d5"], // 利润标识
+      标识集合: ["194159067d5"], // 年度利润标识
       页码: 1,
       页容量: 6,
     });
