@@ -134,7 +134,6 @@
 import { ref, defineExpose, defineProps } from "vue";
 import { ElMessageBox, ElMessage, UploadFiles } from "element-plus";
 import { getToken } from "@/utils/auth2";
-import { ta } from "element-plus/es/locale";
 
 const emit = defineEmits(["submit"]);
 const props = defineProps({

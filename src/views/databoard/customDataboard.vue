@@ -5,7 +5,7 @@
         <el-tree
           class="tree-menu"
           default-expand-all
-          node-key="id"
+          node-key="pId"
           :data="dataIndexTree"
           :props="defaultProps"
           draggable
@@ -13,6 +13,7 @@
           @node-click="handleNodeClick"
           @node-drag-start="handleNodeDragStart"
           @node-drag-end="handleNodeDragEnd"
+          @node-drop.capture="handleNodeDrop"
         >
           <template v-slot="{ node, data }">
             <el-icon v-if="data.children && data.children.length" class="ml-2">
@@ -130,9 +131,26 @@ const pushIndexToPool = (node: any) => {
   }
 };
 
-const handleNodeDragEnd = (node: any) => {
+const handleNodeDragEnd = (
+  node: any,
+  dropNode: any,
+  dropType: any,
+  ev: any
+) => {
   // 将相应数据拖入数据池
   pushIndexToPool(node);
+  // 不再传递
+  console.log(dropType);
+  if (dropType === "inner") {
+    return false;
+  }
+};
+
+// tips：为了不触发拖拽效果，使用capture来在事件捕获阶段触发并阻止默认事件
+const handleNodeDrop = (node: any, dropNode: any, dropType: any, ev: any) => {
+  ev.preventDefault();
+  // 不再传递
+  return false;
 };
 
 function initChart() {
@@ -205,7 +223,7 @@ watch(
 
 onMounted(async () => {
   dataIndexTree.value = await dataIndexStore.getDataIndexTree();
-  // console.log(dataIndexTree.value);
+  console.log(dataIndexTree.value);
 });
 </script>
 

@@ -93,11 +93,13 @@ export interface IDataItem {
 /**
  *  按名称1、名称2、名称3组织出树形结构(BFS)
  * @param data
+ * @param withPId 是否包含特殊id以区分每个节点
  * @returns
  */
 export function generateTreeData(data: IDataItem[]): any[] {
   const treeData: any[] = [];
   const typeMap = new Map();
+  let pId = 0;
   for (const item of data) {
     const type = item["类型"];
     const name1 = item["名称1"];
@@ -107,6 +109,7 @@ export function generateTreeData(data: IDataItem[]): any[] {
       typeMap.set(type, {
         label: type,
         id: "-1",
+        pId: "-1",
         children: [],
       });
       treeData.push(typeMap.get(type));
@@ -119,6 +122,7 @@ export function generateTreeData(data: IDataItem[]): any[] {
       typeNode.children.push({
         label: name1,
         ...item,
+        pId: pId++,
         children: [],
       });
     }
@@ -133,6 +137,7 @@ export function generateTreeData(data: IDataItem[]): any[] {
         label: name2,
         children: [],
         ...item,
+        pId: pId++,
       });
     }
     const name2NodeIndex = typeNode.children[name1NodeIndex].children.findIndex(
@@ -145,6 +150,7 @@ export function generateTreeData(data: IDataItem[]): any[] {
       typeNode.children[name1NodeIndex].children[name2NodeIndex].children.push({
         label: name3,
         ...item,
+        pId: pId++,
       });
     }
   }
