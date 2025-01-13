@@ -10,11 +10,7 @@
           :props="defaultProps"
           draggable
           :allow-drag="(node: any) => !node.data.children"
-          :allow-drop="
-            (node: any, dropNode: any, dropType: any) => {
-              return dropType !== 'inner';
-            }
-          "
+          :allow-drop="allowDrop"
           @node-click="handleNodeClick"
           @node-drag-start="handleNodeDragStart"
           @node-drag-end="handleNodeDragEnd"
@@ -151,6 +147,10 @@ const handleNodeDragEnd = (
     return false;
   }
 };
+
+function allowDrop(dropType: any) {
+  return dropType !== "inner";
+}
 
 // tips：为了不触发拖拽效果，使用capture来在事件捕获阶段触发并阻止默认事件
 const handleNodeDrop = (node: any, dropNode: any, dropType: any, ev: any) => {
