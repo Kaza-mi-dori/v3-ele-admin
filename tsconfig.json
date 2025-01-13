@@ -25,7 +25,10 @@
     "allowJs": true,
 
     // 类型声明相关配置
-    "types": ["node", "vite/client", "element-plus/global"]
+    "types": ["node", "vite/client", "element-plus/global"],
+
+    // 支持 jsx
+    "jsx": "preserve"
   },
 
   "include": ["mock/**/*.ts", "src/**/*.ts", "src/**/*.vue", "vite.config.ts"],
