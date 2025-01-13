@@ -358,12 +358,12 @@ const BusinessFormAPI = {
    * @param companyId 企业ID
    * @returns
    */
-  deleteTradePartnersReportForm(companyId: number) {
+  deleteTradePartnersReportForm(id: any) {
     return request2({
       url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow`,
       method: "delete",
       params: {
-        id: companyId,
+        id,
       },
     });
   },

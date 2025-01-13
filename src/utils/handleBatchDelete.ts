@@ -1,6 +1,6 @@
 import { ElMessageBox, ElMessage } from "element-plus";
 
-type DeleteFunction = (id: any) => Promise<void>;
+type DeleteFunction = (id: any) => Promise<any>;
 
 interface BatchDeleteParams {
   tableData: any[]; // 表格数据

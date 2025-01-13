@@ -360,6 +360,26 @@ export const constantRoutes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "purchaseDetailReportMng",
+        name: "PurchaseDetailReportMng",
+        component: () =>
+          import("@/views/datareport/purchaseDetailReport/index.vue"),
+        meta: {
+          title: "采购明细报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "sellDetailReportMng",
+        name: "SellDetailReportMng",
+        component: () =>
+          import("@/views/datareport/sellDetailReport/index.vue"),
+        meta: {
+          title: "销售明细报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
         path: "bargainReportMng",
         name: "BargainReportMng",
         component: () => import("@/views/datareport/bargainReport/index.vue"),
@@ -440,6 +460,24 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/business/settlement.vue"),
         meta: {
           title: "结算台账管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "purchaseDetailLedgerMng",
+        name: "PurchaseDetailLedgerMng",
+        component: () => import("@/views/business/purchaseRecord.vue"),
+        meta: {
+          title: "采购业务台账",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "sellRecordLedgerMng",
+        name: "SellRecordLedgerMng",
+        component: () => import("@/views/business/sellRecord.vue"),
+        meta: {
+          title: "销售业务台账",
           icon: "el-icon-coin",
         },
       },

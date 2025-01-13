@@ -56,7 +56,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="结算合同" prop="contractNum">
-                <el-select
+                <!-- <el-select
                   v-if="editing"
                   v-model="firmReportDetailForm.contractNum"
                   filterable
@@ -70,7 +70,13 @@
                     :label="item.label"
                     :value="item.value"
                   />
-                </el-select>
+                </el-select> -->
+                <contractSelector
+                  v-if="editing"
+                  v-model="firmReportDetailForm.contractNum"
+                  prop="合同编号"
+                  propQueryInList
+                />
                 <span v-else>{{ firmReportDetailForm.contractNum }}</span>
               </el-form-item>
             </el-col>
@@ -277,6 +283,7 @@
 
 <script setup lang="ts">
 import datePicker from "@/components/ElBasicPlus/datePicker.vue";
+import contractSelector from "@/components/Business/Selector/contract.vue";
 import upload from "@/components/ElBasicPlus/upload.vue";
 import pdfPNG from "@/assets/icons/pdf.png";
 import ExcelPNG from "@/assets/icons/excel.png";
