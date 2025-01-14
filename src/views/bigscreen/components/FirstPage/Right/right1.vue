@@ -26,6 +26,7 @@ import business from "@/views/bigscreen/img/business.png";
 import { ref } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { startOfYear, endOfYear } from "@/utils/time"; // 导入工具类
+import { useDataIndex } from "@/hooks/useDataIndex";
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -41,6 +42,25 @@ let oilData = ref({
   oilStorage: "0",
   oilBargain: "0",
 });
+
+const keywordMap = {
+  成品油库存量: "1944e9e1626",
+  // 成品油交易量: "19415920653",
+};
+
+const oilStorageHook = useDataIndex(
+  [keywordMap["成品油库存量"]],
+  1,
+  startOfYear(),
+  endOfYear()
+);
+
+// const oilBargainHook = useDataIndex(
+//   [keywordMap["成品油交易量"]],
+//   1,
+//   startOfYear(),
+//   endOfYear()
+// );
 
 const initData = async () => {
   queryForm.value = {
@@ -74,6 +94,16 @@ const initData = async () => {
     oilData.value = JSON.parse(JSON.stringify(oilData.value));
   }
   // console.log("oilData", oilData.value);
+  await oilStorageHook.fetchData();
+  if (oilStorageHook.result.value[keywordMap["成品油库存量"]]) {
+    oilData.value.oilStorage =
+      oilStorageHook.result.value[keywordMap["成品油库存量"]][0].数据;
+  }
+  // await oilBargainHook.fetchData();
+  // if (oilBargainHook.result.value[keywordMap["成品油交易量"]]) {
+  //   oilData.value.oilBargain =
+  //     oilBargainHook.result.value[keywordMap["成品油交易量"]][0].数据;
+  // }
 };
 
 onMounted(() => {
