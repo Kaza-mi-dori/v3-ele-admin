@@ -18,6 +18,7 @@ import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { DataIndicesAPI } from "@/api/dataIndices";
 import { useRouter } from "vue-router";
 import sassvariables from "@/styles/variables.module.scss";
+import { useDataIndex } from "@/hooks/useDataIndex";
 
 const mode = 1; // 获取数据方式：0-报表管理；1-指标管理
 
@@ -39,6 +40,20 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   页码: 1,
   页容量: 6,
 });
+
+const keywordMap = {
+  年度营收: "194158fe0d4",
+  年度利润: "194159067d5",
+};
+
+// 获取数据
+const { result, loading, error, fetchData } = useDataIndex(
+  Object.values(keywordMap),
+  6,
+  undefined,
+  undefined,
+  true
+);
 
 const handleClick = (tab: TabsPaneContext) => {
   activeName.value = tab.paneName;
@@ -72,20 +87,9 @@ const initData = async () => {
     );
     resData.value = res["当前记录"] || [];
   } else if (mode === 1) {
-    // 获取营收和利润数据
-    const revenueRes: any = await DataIndicesAPI.getAllDataIndicesList({
-      标识集合: ["194158fe0d4"], // 年度营收标识
-      页码: 1,
-      页容量: 6,
-    });
-    const profitRes: any = await DataIndicesAPI.getAllDataIndicesList({
-      标识集合: ["194159067d5"], // 年度利润标识
-      页码: 1,
-      页容量: 6,
-    });
-
-    const revenueDataList = revenueRes || [];
-    const profitDataList = profitRes || [];
+    await fetchData();
+    const revenueDataList = result.value[keywordMap["年度营收"]] || [];
+    const profitDataList = result.value[keywordMap["年度利润"]] || [];
 
     const allData: never[] = [];
 
@@ -108,10 +112,8 @@ const initData = async () => {
       });
     });
 
-    // 对营收和利润数据进行排序
-    resData.value = allData.sort((a, b) => {
-      return parseInt(a.year) - parseInt(b.year);
-    });
+    // 营收和利润数据
+    resData.value = allData;
   }
 };
 
