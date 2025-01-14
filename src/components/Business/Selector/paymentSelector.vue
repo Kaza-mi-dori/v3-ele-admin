@@ -51,7 +51,7 @@ const initValue = async (newVal: string | undefined) => {
   if (!newVal) return;
   // TODO 根据props.prop查询合同
   try {
-    const res: any = await BusinessStandbookAPI.getContractLedgerRecordList({
+    const res: any = await BusinessStandbookAPI.getPaymentLedgerRecordList({
       [props.propQueryInList ? props.prop + "集合" : props.prop]:
         props.propQueryInList ? [newVal] : newVal,
       页码: 1,
@@ -60,7 +60,7 @@ const initValue = async (newVal: string | undefined) => {
     const result = res["当前记录"].map((item: any) => {
       return {
         value: item[props.valueProp || props.prop],
-        label: item["合同名称"],
+        label: item["款项名称"],
       };
     });
     options.value = result;
@@ -69,8 +69,8 @@ const initValue = async (newVal: string | undefined) => {
   }
 };
 
-const queryContractSearch = async (query: string) => {
-  const res: any = await BusinessStandbookAPI.getContractLedgerRecordList({
+const queryPaymentSearch = async (query: string) => {
+  const res: any = await BusinessStandbookAPI.getPaymentLedgerRecordList({
     [props.propQueryInList ? props.prop + "集合" : props.prop]:
       props.propQueryInList ? [query] : query,
     页码: 1,
@@ -81,12 +81,11 @@ const queryContractSearch = async (query: string) => {
       value: item[props.valueProp || props.prop],
       label:
         item[props.valueProp || props.prop] +
-        (item["合同名称"] ? " " + item["合同名称"] : "") +
-        (item["相对人名称"] ? "/" + item["相对人名称"] : ""),
+        (item["款项名称"] ? " " + item["款项名称"] : ""),
     };
   });
   options.value = result;
 };
 
-const debouncedSearch = useDebounceFn(queryContractSearch, 800);
+const debouncedSearch = useDebounceFn(queryPaymentSearch, 800);
 </script>

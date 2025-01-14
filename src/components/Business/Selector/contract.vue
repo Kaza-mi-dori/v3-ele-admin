@@ -4,7 +4,7 @@
     filterable
     remote
     :remote-method="debouncedSearch"
-    placeholder="请输入合同编号选择合同"
+    :placeholder="`请输入${props.prop}搜索`"
     @change="handleChange"
   >
     <el-option
@@ -25,7 +25,11 @@ const number = ref("");
 const options = ref<any>([]);
 const props = defineProps<{
   value?: string;
+  // 值字段，如果没有传入则使用prop
+  valueProp?: string;
+  // 查询的属性
   prop: string;
+  // 是否查询集合
   propQueryInList?: boolean;
 }>();
 const emits: any = defineEmits(["input", "selected"]);
@@ -55,7 +59,7 @@ const initValue = async (newVal: string | undefined) => {
     });
     const result = res["当前记录"].map((item: any) => {
       return {
-        value: item[props.prop],
+        value: item[props.valueProp || props.prop],
         label: item["合同名称"],
       };
     });
@@ -74,9 +78,9 @@ const queryContractSearch = async (query: string) => {
   });
   const result = res["当前记录"].map((item: any) => {
     return {
-      value: item[props.prop],
+      value: item[props.valueProp || props.prop],
       label:
-        item[props.prop] +
+        item[props.valueProp || props.prop] +
         (item["合同名称"] ? " " + item["合同名称"] : "") +
         (item["相对人名称"] ? "/" + item["相对人名称"] : ""),
     };

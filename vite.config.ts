@@ -79,7 +79,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     plugins: [
       vue(),
-      vueJsx(),
+      // vueJsx(),
       env.VITE_MOCK_DEV_SERVER === "true" ? mockDevServerPlugin() : null,
       UnoCSS({
         hmrTopLevelAwait: false,

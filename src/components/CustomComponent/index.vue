@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>单行可编辑可校验表格</h1>
+  <div class="flex flex-gap-2">
+    <!-- <h1>单行可编辑可校验表格</h1>
     <EditableTable />
     <br />
     <h1>可校验表格</h1>
@@ -82,32 +82,72 @@
     />
     <br />
     <h1>通用表格</h1>
-    <GeneralDataTable />
+    <GeneralDataTable /> -->
+    <div
+      v-for="component of components"
+      :key="component.name"
+      class="w-300px text-center p-4 bg-white border-1 border-gray-200 rounded-md"
+    >
+      <h4>{{ component.name }}</h4>
+      <component :is="component.component" v-bind="component.props" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, DefineComponent } from "vue";
 import SearchBar from "./SearchBar.vue";
 import EditableTable from "./EditableTable.vue";
 import ValidatableTable from "./ValidatableTable/index.vue";
 import GeneralDataTable from "./GeneralDataTable.vue";
 import { valueEquals } from "element-plus";
-
-defineComponent({
-  components: {
-    EditableTable,
-    SearchBar,
-    GeneralDataTable,
-  },
-});
-
+import contractSelector from "../Business/Selector/contract.vue";
+import paymentSelector from "../Business/Selector/paymentSelector.vue";
+import companySelector from "../Business/Selector/companySelector.vue";
+import orderSelector from "../Business/Selector/orderSelector.vue";
 defineProps({
   itemList: {
     type: Array,
     required: true,
   },
 });
+
+// components是vue组件的数组
+const components = ref<any[]>([
+  {
+    name: "合同选择器",
+    component: contractSelector,
+    props: {
+      prop: "合同编号",
+      propQueryInList: true,
+    },
+  },
+  {
+    name: "订单选择器",
+    component: orderSelector,
+    props: {
+      prop: "订单编号",
+      propQueryInList: true,
+    },
+  },
+  {
+    name: "款项选择器",
+    component: paymentSelector,
+    props: {
+      prop: "合同编号",
+      valueProp: "款项编号",
+      propQueryInList: true,
+    },
+  },
+  {
+    name: "客商选择器(未完成)",
+    component: companySelector,
+    props: {
+      prop: "客商名称",
+      propQueryInList: false,
+    },
+  },
+]);
 </script>
 
 <style lang="scss" scoped></style>

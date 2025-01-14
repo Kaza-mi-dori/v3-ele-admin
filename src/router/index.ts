@@ -680,26 +680,26 @@ export const constantRoutes: RouteRecordRaw[] = [
       // todo 维护导入导出功能
     ],
   },
-  // {
-  //   path: "/customComponent",
-  //   name: "CustomComponent",
-  //   component: Layout,
-  //   meta: {
-  //     title: "自定义组件",
-  //     icon: "component",
-  //   },
-  //   children: [
-  //     {
-  //       path: "index",
-  //       name: "CustomComponentIndex",
-  //       component: () => import("@/components/CustomComponent/index.vue"),
-  //       meta: {
-  //         title: "自定义组件预览",
-  //         icon: "el-icon-coin",
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    path: "/customComponent",
+    name: "CustomComponent",
+    component: Layout,
+    meta: {
+      title: "开发测试用",
+      icon: "component",
+    },
+    children: [
+      {
+        path: "index",
+        name: "CustomComponentIndex",
+        component: () => import("@/components/CustomComponent/index.vue"),
+        meta: {
+          title: "自定义组件预览",
+          icon: "el-icon-coin",
+        },
+      },
+    ],
+  },
   // 系统管理(旧)
   {
     path: "/system",
