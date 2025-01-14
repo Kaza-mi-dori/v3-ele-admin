@@ -62,11 +62,11 @@
         'text-align': 'center',
       }"
     >
-      <!-- <el-table-column type="selection" align="center" width="55">
+      <el-table-column type="selection" align="center" width="55">
         <template v-slot="scope">
           <el-checkbox v-model="scope.row.checked" />
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <!-- <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
@@ -182,6 +182,7 @@ import BusinessStandbookAPI, {
 } from "@/api/businessStandBook";
 import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
+import { handleBatchDeleteForm } from "@/utils/handleBatchDelete";
 import { arrayToString } from "@/utils";
 import { onMounted } from "vue";
 
@@ -366,30 +367,11 @@ const handleAddRecord = () => {
 };
 
 const handleBatchDelete = () => {
-  // console.log("批量删除");
-  const selected = tableData.value.filter((item: any) => item.checked);
-  // console.log(selected);
-  if (!selected?.length) {
-    ElMessageBox.alert("请选择要删除的数据", "提示", {
-      confirmButtonText: "确定",
-      type: "warning",
-    });
-    return;
-  }
-  ElMessageBox.confirm("确定批量删除选中的数据吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  }).then(() => {
-    const ids = selected.map((item: any) => item.id);
-    // 批量调用删除接口
-    const deleteTasks = ids.map((id: any) =>
-      BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecord(id)
-    );
-    Promise.all(deleteTasks).then(() => {
-      tableRef?.value?.clearSelection();
-      initTableData();
-    });
+  handleBatchDeleteForm({
+    tableData: tableData.value,
+    tableRef,
+    deleteApi: BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecord,
+    successCallback: initTableData, // 删除成功后重新加载表格数据
   });
 };
 
