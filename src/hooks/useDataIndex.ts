@@ -8,7 +8,7 @@ import { DataIndicesAPI } from "@/api/dataIndices";
  * @param amounts 数据数，主要在某些地方要指明数据数
  * @param since 开始时间
  * @param to 结束时间
- * @returns res 返回数据列表
+ * @returns res 返回一个对象，对象的key是标识，value是数据列表
  */
 export const useDataIndex = (
   keyword: string[],
