@@ -105,6 +105,8 @@ import contractSelector from "../Business/Selector/contract.vue";
 import paymentSelector from "../Business/Selector/paymentSelector.vue";
 import companySelector from "../Business/Selector/companySelector.vue";
 import orderSelector from "../Business/Selector/orderSelector.vue";
+import userSelector from "../Business/Selector/userSelector.vue";
+
 defineProps({
   itemList: {
     type: Array,
@@ -144,6 +146,15 @@ const components = ref<any[]>([
     component: companySelector,
     props: {
       prop: "客商名称",
+      propQueryInList: false,
+    },
+  },
+  {
+    name: "用户选择器",
+    component: userSelector,
+    props: {
+      prop: "显示名",
+      valueProp: "id",
       propQueryInList: false,
     },
   },
