@@ -61,6 +61,9 @@
               :class="{
                 'gas-station': item.styleId === 'gasStation',
                 'oil-depot': item.styleId === 'oilDepot',
+                'oil-depot-zijian': getSubCategory(item) === 'oilDepotZijian',
+                'oil-depot-zulin': getSubCategory(item) === 'oilDepotZulin',
+                'oil-depot-jiameng': getSubCategory(item) === 'oilDepotJiameng',
                 organization: item.styleId === 'organization',
                 'charging-station': item.styleId === 'chargingStation',
               }"
@@ -116,6 +119,35 @@
       "
       @change="onToggleOilDepot"
     />
+    <!-- 油站统计 -->
+    <div
+      v-if="!showOilDepot"
+      class="oil-station-statistic"
+      style="
+        position: absolute;
+        font-size: 16px;
+        z-index: 1001;
+        bottom: 40px;
+        right: 10px;
+      "
+    >
+      <div class="oil-station-statistic-item">
+        <span>总数</span>
+        <span>{{ oilStationStatistic.total }}</span>
+      </div>
+      <div class="oil-station-statistic-item">
+        <span class="oil-depot-zijian">自建</span>
+        <span>{{ oilStationStatistic.zijian }}</span>
+      </div>
+      <div class="oil-station-statistic-item">
+        <span class="oil-depot-zulin">租赁</span>
+        <span>{{ oilStationStatistic.zulin }}</span>
+      </div>
+      <div class="oil-station-statistic-item">
+        <span class="oil-depot-jiameng">加盟</span>
+        <span>{{ oilStationStatistic.jiameng }}</span>
+      </div>
+    </div>
   </tlbs-map>
 </template>
 
@@ -225,6 +257,14 @@ const options = {
   maxZoom: 15,
 };
 
+// 统计数据
+const oilStationStatistic = ref({
+  total: 0,
+  zijian: 0,
+  zulin: 0,
+  jiameng: 0,
+});
+
 /** 显示弹窗的位置 */
 const windowVisible = ref(false);
 const windowCenter = ref({ lat: 0, lng: 0 });
@@ -292,20 +332,6 @@ const onClickGeo1 = (e: any) => {
   if (!geometry) return;
   const { x, y } = e.point;
   if (geometry) {
-    // 如果要分类做处理
-    // switch (geometry.styleId) {
-    //   case "gasStation":
-    //     console.log("gasStation");
-    //     break;
-    //   case "oilDepot":
-    //     console.log("oilDepot");
-    //     break;
-    //   case "chargingStation":
-    //     console.log("chargingStation");
-    //     break;
-    //   default:
-    //     console.log("default");
-    // }
     windowCenter.value = geometry.position;
     windowVisible.value = true;
     windowX.value = x;
@@ -341,12 +367,41 @@ function onToggleOilDepot() {
   }
 }
 
+// 获取次级属性(主要针对油站)
+const getSubCategory = (item: any) => {
+  if (item.styleId === "gasStation") {
+    if (item.properties) {
+      const subCategory = item.properties.description?.substring(0, 2);
+      switch (subCategory) {
+        case "自建":
+          return "oilDepotZijian";
+        case "租赁":
+          return "oilDepotZulin";
+        case "加盟":
+          return "oilDepotJiameng";
+      }
+    }
+  }
+  return null;
+};
+
 watch(
   () => props.markers,
   (newVal) => {
     // geometries.value.length = 0;
     allGeometries.value = [];
     newVal.forEach((item: any) => {
+      // 统计油站数量
+      if (item.type === MapElementEnumMap[MapElementEnum.GAS_STATION]) {
+        oilStationStatistic.value.total++;
+        if (item.description?.substring(0, 2) === "自建") {
+          oilStationStatistic.value.zijian++;
+        } else if (item.description?.substring(0, 2) === "租赁") {
+          oilStationStatistic.value.zulin++;
+        } else if (item.description?.substring(0, 2) === "加盟") {
+          oilStationStatistic.value.jiameng++;
+        }
+      }
       if (!item.lat || !item.lng) return;
       // // 1219 当前只标注油库\油船\组织结构
       // if (
@@ -380,8 +435,8 @@ watch(
         properties: item,
         content: item.label,
       });
-      onToggleOilDepot();
     });
+    onToggleOilDepot();
   },
   {
     immediate: true,
@@ -480,10 +535,28 @@ defineExpose({
 .oil-depot {
   color: #ffd700;
 }
+.oil-depot-zijian {
+  color: #fbff00;
+}
+.oil-depot-zulin {
+  color: #00f7ff;
+}
+.oil-depot-jiameng {
+  color: #f0b47d;
+}
 .organization {
   color: #ffffff;
 }
 .charging-station {
   color: #dc8148;
+}
+.oil-station-statistic {
+  @apply p-2 w-30;
+  // 透明
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  .oil-station-statistic-item {
+    @apply flex justify-between;
+  }
 }
 </style>
