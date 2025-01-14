@@ -4,6 +4,7 @@
       <el-tab-pane label="原油" name="YUANYOU" />
       <el-tab-pane label="汽柴油" name="QICHAIYOU" />
       <el-tab-pane label="化工产品" name="HUAGONG" />
+      <el-link class="el-link-more" @click="handleCheckMore">查看更多</el-link>
     </Tab>
     <div
       id="chart-middle-4"
@@ -22,11 +23,13 @@ import { DataDefinitionNameToMarkMap } from "@/enums/DataDefinitionEnum";
 import { ref, onMounted } from "vue";
 import { autoRetryWrapper } from "@/utils/asyncwork";
 import sassvariables from "@/styles/variables.module.scss";
+import { useRouter } from "vue-router";
 
 const YUANYOU = "YUANYOU";
 const HUAGONG = "HUAGONG";
 const QICHAIYOU = "QICHAIYOU";
 
+const router = useRouter();
 const activeName = ref<number | string | undefined>(YUANYOU);
 
 const chart = shallowRef<echarts.ECharts | null>(null);
@@ -153,6 +156,13 @@ const dataFilterOne = (data: DataRecord[]) => {
 };
 
 const dataSeries: Ref<DataRecord[]> = ref([]);
+
+const handleCheckMore = () => {
+  const route = router.resolve({
+    name: "CustomDataBoard",
+  });
+  window.open(route.href, "_blank");
+};
 
 const handleClick = (tab: TabsPaneContext) => {
   // console.log(tab);
@@ -337,5 +347,12 @@ onMounted(() => {
   flex: 1;
   flex-direction: column;
   height: 100%;
+}
+.el-link-more {
+  float: right;
+  margin-right: 1rem;
+  color: $bigscreen-primary-color-7;
+  font-size: 14px;
+  cursor: pointer;
 }
 </style>

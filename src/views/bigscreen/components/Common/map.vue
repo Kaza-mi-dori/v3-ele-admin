@@ -148,9 +148,9 @@ const multiMarker = ref<any>(null);
 // 中国内陆中心点经纬度：lat: 35, lng: 105
 // const center = ref({ lat: 35, lng: 105 });
 // 广西经纬度：lat: 39.91799, lng: 116.397027
-const center = ref({ lat: 22.8226, lng: 108.3734508 });
+const center = ref({ lat: 30, lng: 108.3734508 });
 // zoom小于3时，应该展示聚合
-const zoom = ref(5);
+const zoom = ref(3);
 const position1 = ref({ lat: 39.91799, lng: 116.397027 });
 const offset1 = ref({ x: 0, y: -30 });
 // const onClick = (e: Event) => {
@@ -331,7 +331,8 @@ function onToggleOilDepot() {
   });
   if (showOilDepot.value) {
     // 中心恢复到初始
-    setCenter(22.8226, 108.3734508);
+    // setCenter(22.8226, 108.3734508);
+    setCenter(30, 108);
     setZoom(5);
   } else {
     // 中心设为广西广东交界，缩放到7
