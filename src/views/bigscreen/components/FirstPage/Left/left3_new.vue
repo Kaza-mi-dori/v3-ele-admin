@@ -20,6 +20,7 @@ import block1 from "@/views/bigscreen/img/left_block1.png";
 import block2 from "@/views/bigscreen/img/left_block2.png";
 import block3 from "@/views/bigscreen/img/left_block3.png";
 import { startOfYear, endOfYear } from "@/utils/time"; // 导入工具类
+import { useDataIndex } from "@/hooks/useDataIndex";
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -31,9 +32,16 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   页容量: 20,
 });
 
+const keywordMap = {
+  累计采购: "1941591bce2",
+  累计销售: "19415920653",
+  毛利率: "19463e8525d",
+};
+
 let totalData = ref([
   {
     title: "累计采购",
+    keyword: keywordMap["累计采购"],
     bgImg: block1,
     yearTotal: 0,
     monthTotal: 0,
@@ -42,6 +50,7 @@ let totalData = ref([
   },
   {
     title: "累计销售",
+    keyword: keywordMap["累计销售"],
     bgImg: block2,
     yearTotal: 0,
     monthTotal: 0,
@@ -50,6 +59,7 @@ let totalData = ref([
   },
   {
     title: "毛利率",
+    keyword: keywordMap["毛利率"],
     bgImg: block3,
     yearTotal: 0,
     monthTotal: 0,
@@ -57,6 +67,15 @@ let totalData = ref([
     yearUnit: "%",
   },
 ]);
+
+// 获取数据
+const { result, loading, error, fetchData } = useDataIndex(
+  Object.values(keywordMap),
+  100,
+  undefined,
+  undefined,
+  true
+);
 
 const initData = async () => {
   queryForm.value = {
@@ -103,6 +122,7 @@ const initData = async () => {
   totalData.value = [
     {
       title: "累计采购",
+      keyword: keywordMap["累计采购"],
       bgImg: block1,
       yearTotal: Number(totals["累计采购"].yearTotal.toFixed(2)),
       monthTotal: totals["累计采购"].monthTotal,
@@ -111,6 +131,7 @@ const initData = async () => {
     },
     {
       title: "累计销售",
+      keyword: keywordMap["累计销售"],
       bgImg: block2,
       yearTotal: Number(totals["累计销售"].yearTotal.toFixed(2)),
       monthTotal: totals["累计销售"].monthTotal,
@@ -119,6 +140,7 @@ const initData = async () => {
     },
     {
       title: "毛利率",
+      keyword: keywordMap["毛利率"],
       bgImg: block3,
       yearTotal: Number(totals["累计毛利率"].yearTotal.toFixed(2)),
       monthTotal: totals["累计毛利率"].monthTotal,
@@ -126,6 +148,16 @@ const initData = async () => {
       yearUnit: "%",
     },
   ];
+  await fetchData();
+  // 将result.value中的数据赋值给totalData
+  for (const key in result.value) {
+    // 如果有数据，则取第一条
+    const item = totalData.value.find((item) => item.keyword === key);
+    if (item) {
+      console.log(result.value[key]);
+      item.yearTotal = parseFloat(result.value[key][0].数据);
+    }
+  }
 };
 
 onMounted(() => {
