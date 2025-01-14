@@ -199,7 +199,7 @@ const handleViewDetail = (row: business.ISellRecord) => {
   router.push({
     name: "ReportForm",
     query: {
-      type: "settlementDetail",
+      type: "sellDetailReport",
       id: row.id,
     },
   });
@@ -208,7 +208,7 @@ const handleAddRecord = () => {
   router.push({
     name: "ReportForm",
     query: {
-      type: "settlementDetail",
+      type: "sellDetailReport",
     },
   });
 };

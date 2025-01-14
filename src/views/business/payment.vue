@@ -43,7 +43,7 @@
               <el-dropdown-item>
                 <span>批量审核</span>
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item @click="handleBatchDelete">
                 <span class="text-red-5">批量删除</span>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -53,6 +53,7 @@
     </div>
     <!-- 表格区 -->
     <el-table
+      ref="tableRef"
       v-loading="loading"
       stripe
       border
@@ -240,6 +241,8 @@ import SearchBar from "@/components/CustomComponent/SearchBar.vue";
 import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
 import BusinessStandbookAPI from "@/api/businessStandBook";
+import { ElMessage, type TableInstance } from "element-plus";
+import { handleBatchDeleteForm } from "@/utils/handleBatchDelete";
 import { handleDeleteRow, handleAuditRow } from "@/hooks/useTableOp";
 import { ref, onMounted } from "vue";
 import type { Ref } from "vue";
@@ -259,6 +262,7 @@ const queryForm: Ref<any> = ref({
 
 const loading: Ref<boolean> = ref(false);
 const tableData: Ref<any[]> = ref([]);
+const tableRef = ref<Nullable<TableInstance>>(null);
 const pagination: Ref<any> = ref({
   total: 100,
   pageSizes: [10, 20, 30, 40, 50],
@@ -401,6 +405,15 @@ const initTableData = () => {
       ElMessage.error(err);
       loading.value = false;
     });
+};
+
+const handleBatchDelete = () => {
+  handleBatchDeleteForm({
+    tableData: tableData.value,
+    tableRef,
+    deleteApi: BusinessStandbookAPI.deletePaymentLedgerRecord,
+    successCallback: initTableData, // 删除成功后重新加载表格数据
+  });
 };
 
 onMounted(() => {
