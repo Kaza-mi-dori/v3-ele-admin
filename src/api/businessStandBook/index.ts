@@ -86,9 +86,7 @@ const BusinessStandbookAPI = {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow/DeleteBatch`,
       method: "delete",
-      data: {
-        integers: ids,
-      },
+      data: ids,
     });
   },
 

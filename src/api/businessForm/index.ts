@@ -172,9 +172,7 @@ const BusinessFormAPI = {
     return request2({
       url: `${BUSINESS_FORM_BASE_URL}/BusinessOperationsReportShow/DeleteBatch`,
       method: "delete",
-      data: {
-        integers: ids,
-      },
+      data: ids,
     });
   },
 
