@@ -21,7 +21,7 @@ export const handleDeleteRow = (row: any, api: any, callback: () => void) => {
     });
 };
 
-export const handleBatchDelete = (
+export const handleBatchDeleteRows = (
   rows: any[],
   api: any,
   callback: () => void
