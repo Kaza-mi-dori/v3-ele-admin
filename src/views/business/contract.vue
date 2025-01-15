@@ -651,7 +651,7 @@ const handleBatchDelete = () => {
   }
   handleBatchDeleteRows(
     selectedRows.value,
-    BusinessStandbookAPI.deleteContractLedgerRecordFormByIds,
+    BusinessStandbookAPI.deleteContractLedgerRecordByIds,
     initTableData
   );
 };

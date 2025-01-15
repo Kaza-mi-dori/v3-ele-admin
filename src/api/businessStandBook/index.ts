@@ -82,7 +82,7 @@ const BusinessStandbookAPI = {
    * @param ids 合同台账ID字符串，多个以英文逗号(,)分割
    * @returns
    */
-  deleteContractLedgerRecordFormByIds(ids: any[]) {
+  deleteContractLedgerRecordByIds(ids: any[]) {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow/DeleteBatch`,
       method: "delete",
