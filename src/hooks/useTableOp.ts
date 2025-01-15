@@ -35,7 +35,7 @@ export const handleBatchDeleteRows = (
     .then(() => {
       // 判断是否为有效数据，如果是则不允许删除(提示)
       const auditedRows = rows.filter(
-        (row) => row.audited || (row["状态"] && row["状态"] === "已审核")
+        (row) => row.audited || (row["状态"] && row["状态"] === "有效")
       );
       if (auditedRows.length > 0) {
         ElMessageBox.alert("已审核数据请联系管理员删除", "提示", {
