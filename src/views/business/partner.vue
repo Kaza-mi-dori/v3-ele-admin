@@ -61,11 +61,12 @@
         color: sassvariables['custom-table-header-color'],
         'text-align': 'center',
       }"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" align="center" width="55">
-        <template v-slot="scope">
+        <!-- <template v-slot="scope">
           <el-checkbox v-model="scope.row.checked" />
-        </template>
+        </template> -->
       </el-table-column>
       <!-- <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
@@ -180,9 +181,12 @@ import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import BusinessStandbookAPI, {
   type CustomerAndSupplierQuery,
 } from "@/api/businessStandBook";
-import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
+import {
+  handleAuditRow,
+  handleDeleteRow,
+  handleBatchDeleteRows,
+} from "@/hooks/useTableOp";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
-import { handleBatchDeleteForm } from "@/utils/handleBatchDelete";
 import { arrayToString } from "@/utils";
 import { onMounted } from "vue";
 
@@ -202,6 +206,7 @@ const queryForm: Ref<Partial<CustomerAndSupplierQuery> & PageQueryDev> = ref({
 
 const loading: Ref<boolean> = ref(false);
 const tableData = ref([]);
+const selectedRows: Ref<any[]> = ref([]);
 const tableRef = ref<Nullable<TableInstance>>(null);
 const pagination: Ref<any> = ref({
   total: 100,
@@ -305,6 +310,10 @@ const handleResetAudit = (row: any) => {
   );
 };
 
+const handleSelectionChange = (selection: any) => {
+  selectedRows.value = selection;
+};
+
 const initTableData = async () => {
   loading.value = true;
   try {
@@ -339,12 +348,15 @@ const handleAddRecord = () => {
 };
 
 const handleBatchDelete = () => {
-  handleBatchDeleteForm({
-    tableData: tableData.value,
-    tableRef,
-    deleteApi: BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecord,
-    successCallback: initTableData, // 删除成功后重新加载表格数据
-  });
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning("请选择要删除的数据");
+    return;
+  }
+  handleBatchDeleteRows(
+    selectedRows.value,
+    BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecordByIds,
+    initTableData
+  );
 };
 
 onMounted(() => {

@@ -65,11 +65,12 @@
         color: sassvariables['custom-table-header-color'],
         'text-align': 'center',
       }"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" align="center" width="55">
-        <template v-slot="scope">
+        <!-- <template v-slot="scope">
           <el-checkbox v-model="scope.row.checked" />
-        </template>
+        </template> -->
       </el-table-column>
       <!-- <el-table-column prop="name" label="名称" sortable>
         <template v-slot="scope">
@@ -242,8 +243,11 @@ import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
 import BusinessStandbookAPI from "@/api/businessStandBook";
 import { ElMessage, type TableInstance } from "element-plus";
-import { handleBatchDeleteForm } from "@/utils/handleBatchDelete";
-import { handleDeleteRow, handleAuditRow } from "@/hooks/useTableOp";
+import {
+  handleDeleteRow,
+  handleAuditRow,
+  handleBatchDeleteRows,
+} from "@/hooks/useTableOp";
 import { ref, onMounted } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
@@ -262,6 +266,7 @@ const queryForm: Ref<any> = ref({
 
 const loading: Ref<boolean> = ref(false);
 const tableData: Ref<any[]> = ref([]);
+const selectedRows: Ref<any[]> = ref([]);
 const tableRef = ref<Nullable<TableInstance>>(null);
 const pagination: Ref<any> = ref({
   total: 100,
@@ -389,6 +394,10 @@ const handleResetFilter = () => {
   initTableData();
 };
 
+const handleSelectionChange = (selection: any) => {
+  selectedRows.value = selection;
+};
+
 const initTableData = () => {
   loading.value = true;
   BusinessStandbookAPI.getPaymentLedgerRecordList({
@@ -408,12 +417,15 @@ const initTableData = () => {
 };
 
 const handleBatchDelete = () => {
-  handleBatchDeleteForm({
-    tableData: tableData.value,
-    tableRef,
-    deleteApi: BusinessStandbookAPI.deletePaymentLedgerRecord,
-    successCallback: initTableData, // 删除成功后重新加载表格数据
-  });
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning("请选择要删除的数据");
+    return;
+  }
+  handleBatchDeleteRows(
+    selectedRows.value,
+    BusinessStandbookAPI.deletePaymentLedgerRecordByIds,
+    initTableData
+  );
 };
 
 onMounted(() => {

@@ -202,6 +202,19 @@ const BusinessStandbookAPI = {
   },
 
   /**
+   * 客商台账记录批量删除
+   * @param ids 客商台账记录ID字符串，多个以英文逗号(,)分割
+   * @returns
+   */
+  deleteCustomerAndSupplierLedgerRecordByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/CustomerAndSupplierLedgerShow/DeleteBatch`,
+      method: "delete",
+      data: ids,
+    });
+  },
+
+  /**
    * 客商台账记录列表
    * @param data 查询条件
    * @returns 客商台账记录列表
@@ -388,6 +401,19 @@ const BusinessStandbookAPI = {
       params: {
         id: companyId,
       },
+    });
+  },
+
+  /**
+   * 款项台账记录批量删除
+   * @param ids 款项台账记录ID字符串，多个以英文逗号(,)分割
+   * @returns
+   */
+  deletePaymentLedgerRecordByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/PaymentLedgerShow/DeleteBatch`,
+      method: "delete",
+      data: ids,
     });
   },
 
