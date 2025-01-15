@@ -403,6 +403,7 @@ import {
   handleDeleteRow,
   handleAuditRow,
   handleBatchAuditRows,
+  handleBatchDeleteRows,
 } from "@/hooks/useTableOp";
 import { ref } from "vue";
 import type { Ref } from "vue";
@@ -411,7 +412,6 @@ import { useRouter } from "vue-router";
 import ImportExcelDialog from "@/components/Dialogs/importExcelDialog.vue";
 import { getToken } from "@/utils/auth";
 import { ElMessage, type TableInstance } from "element-plus";
-import { handleBatchDeleteForm } from "@/utils/handleBatchDelete";
 const router = useRouter();
 const uploadDingTalkContractLedgerExcelUrl =
   import.meta.env.VITE_APP_API_URL_DEV +
@@ -649,12 +649,11 @@ const handleBatchDelete = () => {
     ElMessage.warning("请选择要删除的数据");
     return;
   }
-  handleBatchDeleteForm({
-    tableData: exampleData.value,
-    tableRef,
-    deleteApi: BusinessStandbookAPI.deleteContractLedgerRecord,
-    successCallback: initTableData, // 删除成功后重新加载表格数据
-  });
+  handleBatchDeleteRows(
+    selectedRows.value,
+    BusinessStandbookAPI.deleteContractLedgerRecordFormByIds,
+    initTableData
+  );
 };
 
 onMounted(() => {
