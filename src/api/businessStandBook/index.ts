@@ -78,6 +78,21 @@ const BusinessStandbookAPI = {
   },
 
   /**
+   * 批量删除合同台账
+   * @param ids 合同台账ID字符串，多个以英文逗号(,)分割
+   * @returns
+   */
+  deleteContractLedgerRecordFormByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow/DeleteBatch`,
+      method: "delete",
+      data: {
+        integers: ids,
+      },
+    });
+  },
+
+  /**
    * 合同展示台账记录列表
    * @param data 查询条件
    * @returns 合同展示台账记录列表
