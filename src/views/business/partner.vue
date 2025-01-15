@@ -201,34 +201,6 @@ const queryForm: Ref<Partial<CustomerAndSupplierQuery> & PageQueryDev> = ref({
 });
 
 const loading: Ref<boolean> = ref(false);
-const exampleData: Ref<IExampleData[]> = ref([
-  {
-    name: "商品1",
-    from: "供应商1",
-    number: "123456",
-    type: "类型1",
-    status: "状态1",
-    audited: true,
-    dataFrom: "数据来源1",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-02",
-    createdBy: "管理员",
-    updatedBy: "管理员",
-  },
-  {
-    name: "商品2",
-    from: "供应商2",
-    number: "123457",
-    type: "类型2",
-    status: "状态2",
-    audited: false,
-    dataFrom: "数据来源2",
-    createdAt: "2021-09-03",
-    updatedAt: "2021-09-04",
-    createdBy: "管理员",
-    updatedBy: "管理员",
-  },
-]);
 const tableData = ref([]);
 const tableRef = ref<Nullable<TableInstance>>(null);
 const pagination: Ref<any> = ref({
