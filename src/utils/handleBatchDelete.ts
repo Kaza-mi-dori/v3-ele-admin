@@ -37,6 +37,18 @@ export const handleBatchDeleteForm = ({
     type: "warning",
   })
     .then(() => {
+      // 判断是否为有效数据，如果是则不允许删除(提示)
+      const auditedRows = selected.filter(
+        (row) => row.audited || (row["状态"] && row["状态"] === "有效")
+      );
+      if (auditedRows.length > 0) {
+        ElMessageBox.alert("已审核数据请联系管理员删除", "提示", {
+          confirmButtonText: "确定",
+          type: "warning",
+        });
+        return;
+      }
+
       const ids = selected.map((item: any) => item.id); // 获取选中项的ID
 
       // 批量调用删除接口
