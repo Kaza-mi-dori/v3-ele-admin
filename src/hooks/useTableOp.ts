@@ -106,6 +106,53 @@ export const handleClickRecord = (row: any, router: Router) => {
       id: row.id,
     },
   });
-  console.log(route);
   router.push(route);
+};
+
+/**
+ * 批量审核
+ * @param selectedRows 选中的行
+ */
+export const handleBatchAuditRows = (
+  selectedRows: any[],
+  api: any,
+  auditedProp: string,
+  auditedValue: any,
+  callback: () => void
+) => {
+  ElMessageBox.confirm(
+    `确定批量设置选中数据的审核状态为${auditedValue}吗？`,
+    "提示",
+    {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    }
+  )
+    .then(async () => {
+      /** 过滤掉已审核的数据 */
+      const auditedRows = selectedRows.filter(
+        (row) => row[auditedProp] !== auditedValue
+      );
+      /** 批量审核 */
+      const tasks = auditedRows.map((row) => {
+        return api({
+          ...row,
+          [auditedProp]: auditedValue,
+        });
+      });
+      const res = await Promise.allSettled(tasks);
+      const success = res.filter((r) => r.status === "fulfilled");
+      if (success.length > 0) {
+        ElMessage.success(
+          `共提交${auditedRows.length}条数据，${success.length}条数据审核成功`
+        );
+        callback();
+      } else {
+        ElMessage.error("批量审核失败");
+      }
+    })
+    .catch(() => {
+      ElMessage.info("已取消审核");
+    });
 };
