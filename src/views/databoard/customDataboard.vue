@@ -351,7 +351,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-@use "@/styles/index.scss" as *;
+@use "@/styles/gmixin.scss" as *;
 
 .g-main-mapper {
   @apply w-full;

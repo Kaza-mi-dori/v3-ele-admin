@@ -1052,7 +1052,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@use "@/styles/index.scss" as *;
+@use "@/styles/gmixin.scss" as *;
 
 .tree-wrapper {
   @include g-scrollbar-1;
