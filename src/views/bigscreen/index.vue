@@ -63,7 +63,32 @@ import {
   navItem,
   businessTypeRouteNameMap,
 } from "./components/constants";
+import {
+  PerformanceMonitor,
+  PerformanceInfo,
+} from "@/utils/perfomance-monitor";
+const performanceData = ref<PerformanceInfo>({
+  fps: 0,
+  frameTime: 0,
+  longFrames: 0,
+  memoryUsage: undefined,
+});
 
+const performanceMonitor = new PerformanceMonitor((info) => {
+  performanceData.value = info;
+
+  // 性能警告
+  if (info.fps < 20) {
+    console.warn("低帧率警告:", info.fps);
+  }
+  if (info.longFrames > 5) {
+    console.warn("卡顿帧数过多:", info.longFrames);
+  }
+  if (info.memoryUsage && info.memoryUsage.usedJSHeapSize > 100 * 1024 * 1024) {
+    console.warn("内存占用过高");
+  }
+});
+performanceMonitor.start();
 const businessstore = businessStore();
 const companystore = companyStore();
 const loading = ref(true);
