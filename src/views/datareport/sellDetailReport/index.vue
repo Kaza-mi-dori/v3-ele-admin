@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">合作伙伴报表</div>
+      <div class="__title">销售明细报表</div>
       <div class="__stat">
         <span class="__item">当前有</span>
         <span class="__item">
@@ -68,11 +68,12 @@
         color: sassvariables['custom-table-header-color'],
         'text-align': 'center',
       }"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" align="center" width="55">
-        <template v-slot="scope">
+        <!-- <template v-slot="scope">
           <el-checkbox v-model="scope.row.checked" />
-        </template>
+        </template> -->
       </el-table-column>
       <!-- <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
@@ -185,10 +186,13 @@ import type { Ref } from "vue";
 import { useRouter } from "vue-router";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
-import { handleDeleteRow, handleAuditRow } from "@/hooks/useTableOp";
+import {
+  handleDeleteRow,
+  handleAuditRow,
+  handleBatchDeleteRows,
+} from "@/hooks/useTableOp";
 import { onMounted } from "vue";
 import { getToken } from "@/utils/auth";
-import { handleBatchDeleteForm } from "@/utils/handleBatchDelete";
 
 const router = useRouter();
 
@@ -241,6 +245,7 @@ const exampleData: Ref<IExampleData[]> = ref([
   },
 ]);
 const tableData = ref([]);
+const selectedRows: Ref<any[]> = ref([]);
 const tableRef = ref<Nullable<TableInstance>>(null);
 const pagination: Ref<any> = ref({
   total: 100,
@@ -365,6 +370,10 @@ const handleResetFilter = () => {
   initTableData();
 };
 
+const handleSelectionChange = (selection: any) => {
+  selectedRows.value = selection;
+};
+
 const initTableData = async () => {
   loading.value = true;
   try {
@@ -447,12 +456,15 @@ const handleAddRecord = () => {
 };
 
 const handleBatchDelete = () => {
-  handleBatchDeleteForm({
-    tableData: tableData.value,
-    tableRef,
-    deleteApi: BusinessFormAPI.deleteTradePartnersReportForm,
-    successCallback: initTableData, // 删除成功后重新加载表格数据
-  });
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning("请选择要删除的数据");
+    return;
+  }
+  handleBatchDeleteRows(
+    selectedRows.value,
+    BusinessFormAPI.deleteTradePartnersReportFormByIds,
+    initTableData
+  );
 };
 
 onMounted(() => {

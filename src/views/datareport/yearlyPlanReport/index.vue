@@ -60,11 +60,12 @@
         color: sassvariables['custom-table-header-color'],
         'text-align': 'center',
       }"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" align="center" width="55">
-        <template v-slot="scope">
+        <!-- <template v-slot="scope">
           <el-checkbox v-model="scope.row.checked" />
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
@@ -127,9 +128,9 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { handleBatchDeleteRows } from "@/hooks/useTableOp";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { onMounted } from "vue";
-import { handleBatchDeleteForm } from "@/utils/handleBatchDelete";
 
 const router = useRouter();
 
@@ -175,6 +176,7 @@ const exampleData: Ref<IExampleData[]> = ref([
   },
 ]);
 const tableData = ref([]);
+const selectedRows: Ref<any[]> = ref([]);
 const tableRef = ref<Nullable<TableInstance>>(null);
 const pagination: Ref<any> = ref({
   total: 100,
@@ -256,6 +258,10 @@ const handleConfirmFilter = (value: any) => {
   initTableData();
 };
 
+const handleSelectionChange = (selection: any) => {
+  selectedRows.value = selection;
+};
+
 const initTableData = async () => {
   loading.value = true;
   try {
@@ -291,12 +297,15 @@ const handleAddRecord = () => {
 };
 
 const handleBatchDelete = () => {
-  handleBatchDeleteForm({
-    tableData: tableData.value,
-    tableRef,
-    deleteApi: BusinessFormAPI.deleteBusinessReportForm,
-    successCallback: initTableData, // 删除成功后重新加载表格数据
-  });
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning("请选择要删除的数据");
+    return;
+  }
+  handleBatchDeleteRows(
+    selectedRows.value,
+    BusinessFormAPI.deleteBusinessReportFormByIds,
+    initTableData
+  );
 };
 
 onMounted(() => {

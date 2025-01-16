@@ -27,6 +27,14 @@ export const BargainFormApi = {
       params: { id },
     });
   },
+  // 批量删除
+  deleteByIds(ids: any[]) {
+    return request2({
+      url: `${COMMON_URL}/DeleteBatch`,
+      method: "delete",
+      data: ids,
+    });
+  },
   // 查询
   query(data: any) {
     return request2({

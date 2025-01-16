@@ -66,6 +66,19 @@ const BusinessFormAPI = {
   },
 
   /**
+   * 企业概况表单批量删除
+   * @param ids 企业概况表单记录ID字符串，多个以英文逗号(,)分割
+   * @returns
+   */
+  deleteCompanyDescFormByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CompanyOverviewShow/DeleteBatch`,
+      method: "delete",
+      data: ids,
+    });
+  },
+
+  /**
    * 企业概况表单列表
    * @param data 查询条件
    * @returns 企业概况表单列表
@@ -164,8 +177,8 @@ const BusinessFormAPI = {
   },
 
   /**
-   * 批量删除业态经营报表
-   * @param ids 业态经营报表ID字符串，多个以英文逗号(,)分割
+   * 业态经营报表批量删除
+   * @param ids 业态经营报表记录ID字符串，多个以英文逗号(,)分割
    * @returns
    */
   deleteBusinessReportFormByIds(ids: any[]) {
@@ -272,6 +285,19 @@ const BusinessFormAPI = {
   },
 
   /**
+   * 企业经营报表批量删除
+   * @param ids 企业经营报表记录ID字符串，多个以英文逗号(,)分割
+   * @returns
+   */
+  deleteCompanyReportFormByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateOperationsReportShow/DeleteBatch`,
+      method: "delete",
+      data: ids,
+    });
+  },
+
+  /**
    * 企业经营报表列表
    * @param data 查询条件
    * @returns 企业经营报表列表
@@ -363,6 +389,19 @@ const BusinessFormAPI = {
       params: {
         id,
       },
+    });
+  },
+
+  /**
+   * 贸易伙伴报表批量删除
+   * @param ids 贸易伙伴报表记录ID字符串，多个以英文逗号(,)分割
+   * @returns
+   */
+  deleteTradePartnersReportFormByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/TradePartnersReportShow/DeleteBatch`,
+      method: "delete",
+      data: ids,
     });
   },
 
@@ -490,6 +529,19 @@ const BusinessFormAPI = {
       params: {
         id: companyId,
       },
+    });
+  },
+
+  /**
+   * 市场报价报表批量删除
+   * @param ids 市场报价报表记录ID字符串，多个以英文逗号(,)分割
+   * @returns
+   */
+  deleteMarketQuotationReportFormByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/MarketQuotationShow/DeleteBatch`,
+      method: "delete",
+      data: ids,
     });
   },
 

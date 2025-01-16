@@ -78,8 +78,8 @@ const BusinessStandbookAPI = {
   },
 
   /**
-   * 批量删除合同台账
-   * @param ids 合同台账ID字符串，多个以英文逗号(,)分割
+   * 合同展示台账批量删除
+   * @param ids 合同台账记录ID字符串，多个以英文逗号(,)分割
    * @returns
    */
   deleteContractLedgerRecordByIds(ids: any[]) {
@@ -509,6 +509,19 @@ const BusinessStandbookAPI = {
       params: {
         id: companyId,
       },
+    });
+  },
+
+  /**
+   * 结算台账记录批量删除
+   * @param ids 结算台账记录ID字符串，多个以英文逗号(,)分割
+   * @returns
+   */
+  deleteSettlementLedgerRecordByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/SettlementLedgerShow/DeleteBatch`,
+      method: "delete",
+      data: ids,
     });
   },
 
