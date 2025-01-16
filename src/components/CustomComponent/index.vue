@@ -100,19 +100,22 @@ import SearchBar from "./SearchBar.vue";
 import EditableTable from "./EditableTable.vue";
 import ValidatableTable from "./ValidatableTable/index.vue";
 import GeneralDataTable from "./GeneralDataTable.vue";
-import { valueEquals } from "element-plus";
 import contractSelector from "../Business/Selector/contract.vue";
 import paymentSelector from "../Business/Selector/paymentSelector.vue";
 import companySelector from "../Business/Selector/companySelector.vue";
 import orderSelector from "../Business/Selector/orderSelector.vue";
 import userSelector from "../Business/Selector/userSelector.vue";
-
+import multipleUserSelector from "../Business/Selector/multipleUserSelector.vue";
 defineProps({
   itemList: {
     type: Array,
     required: true,
   },
 });
+
+const stringValue = ref("");
+const numberValue = ref(0);
+const arrayValue = ref([]);
 
 // components是vue组件的数组
 const components = ref<any[]>([
@@ -156,6 +159,16 @@ const components = ref<any[]>([
       prop: "显示名",
       valueProp: "id",
       propQueryInList: false,
+    },
+  },
+  {
+    name: "用户选择器(多选)(未完成)",
+    component: multipleUserSelector,
+    props: {
+      prop: "显示名",
+      valueProp: "id",
+      propQueryInList: false,
+      multiple: true,
     },
   },
 ]);

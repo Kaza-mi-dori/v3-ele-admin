@@ -589,6 +589,7 @@ const handleConfirmFilter = (filter: any) => {
 };
 
 const handleSelectionChange = (selection: any) => {
+  console.log(selection);
   selectedRows.value = selection;
 };
 

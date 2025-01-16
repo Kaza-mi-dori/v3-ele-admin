@@ -42,13 +42,14 @@ export const handleBatchDeleteRows = (
           confirmButtonText: "确定",
           type: "warning",
         });
-        return;
       }
       // 删除数据
-      api(rows.map((row) => row.id)).then(() => {
-        ElMessage.success("删除成功");
-        callback();
-      });
+      else {
+        api(rows.map((row) => row.id)).then(() => {
+          ElMessage.success("删除成功");
+          callback();
+        });
+      }
     })
     .catch(() => {
       // 取消删除
