@@ -44,7 +44,12 @@
           <!-- <div class="setting-unit">
             <div class="title-text">年份</div>
             <div class="setting-content">
-              <el-input-number v-model="tableDataYear" :min="2020" />
+              <el-date-picker
+                v-model="tableDataYear"
+                type="year"
+                format="YYYY"
+                value-format="YYYY"
+              />
             </div>
           </div> -->
         </div>
@@ -390,10 +395,10 @@ onMounted(async () => {
   @apply shadow-coolGray-100 flex-1 bg-white p-10px;
   max-width: calc(100% - 250px - 0.5rem);
   .setting-block {
-    @apply w-full;
+    @apply w-full flex flex-gap-2;
     .setting-unit {
-      @apply flex flex-gap-4 items-center w-1/2;
-      // @apply border-dashed border-coolGray-400 border-b-1;
+      @apply flex flex-gap-4 items-center w-1/2 pb-5px;
+      @apply border-solid border-coolGray-200 border-b-1;
       @apply mb-5px;
       .title-text {
         @apply text-coolGray-500;

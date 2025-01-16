@@ -2,7 +2,81 @@ import request2 from "@/utils/request2";
 
 const BUSINESS_STANDBOOK_BASE_URL = "/Api/Business";
 
+const units = [
+  "ContractLedger",
+  "CustomerAndSupplierLedger",
+  "OrderLedger",
+  "PaymentLedger",
+  "SettlementLedger",
+  "ShipmentLedger",
+];
+
+const kari: any = {};
+
+units.forEach((unit) => {
+  const funcsPrefix = [
+    "add",
+    "edit",
+    "get",
+    "delete",
+    "list",
+    "export",
+    "import",
+    "batchDelete",
+    "batchAdd",
+    "batchAddOrChange",
+  ];
+  const funcsSuffix = [
+    "Record",
+    "Record",
+    "Record",
+    "Record",
+    "Record",
+    "Record",
+    "Record",
+    "Record",
+    "Record",
+    "Record",
+  ];
+  const methods = [
+    "post",
+    "patch",
+    "get",
+    "delete",
+    "post",
+    "get",
+    "post",
+    "delete",
+    "post",
+    "post",
+  ];
+  const urlSuffix = [
+    "",
+    "",
+    "",
+    "",
+    "Query",
+    "",
+    "",
+    "DeleteBatch",
+    "AddOrChangeBatch",
+    "ReadFromDingExcel",
+  ];
+  funcsPrefix.forEach((p, index) => {
+    const funcName = `${funcsPrefix[index]}${unit}${funcsSuffix[index]}`;
+    kari[funcName] = (data: any) =>
+      request2({
+        url: `${BUSINESS_STANDBOOK_BASE_URL}/${unit}Show/${urlSuffix[index]}`,
+        method: methods[index],
+        data,
+      });
+  });
+});
+
+console.log("生成kari", kari);
+
 const BusinessStandbookAPI = {
+  ...kari,
   /**
    * 合同展示台账记录新增
    * @param data 合同展示台账记录
@@ -141,6 +215,19 @@ const BusinessStandbookAPI = {
     return request2({
       url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow/ReadFromDingExcel`,
       method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 合同展示台账记录批量删除
+   * @param data 合同展示台账记录
+   * @returns
+   */
+  batchDeleteContractLedgerRecord(data: any) {
+    return request2({
+      url: `${BUSINESS_STANDBOOK_BASE_URL}/ContractLedgerShow/DeleteBatch`,
+      method: "delete",
       data,
     });
   },
