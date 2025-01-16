@@ -6,7 +6,7 @@
           <span class="__text">广投石化视频监控平台</span>
         </div>
         <div class="menu-box-list">
-          <div class="w-full flex justify-evenly items-center mb-2">
+          <div class="w-full flex flex-gap-2 justify-evenly items-center mb-2">
             <el-input
               v-model="searchValue"
               placeholder="搜索监控名称"
@@ -17,6 +17,12 @@
               @click="onRefresh"
             >
               <RefreshLeft />
+            </el-icon>
+            <el-icon
+              style="font-size: 22px; cursor: pointer"
+              @click="showAddMonitorDialog"
+            >
+              <Plus />
             </el-icon>
           </div>
           <el-tree
@@ -139,6 +145,48 @@
         </div>
       </div>
     </div>
+    <!-- 新增监控 -->
+    <el-dialog v-model="addMonitorDialog" title="新增监控" width="500px">
+      <el-form
+        ref="addMonitorFormRef"
+        :model="addMonitorForm"
+        :rules="addMonitorFormRules"
+        label-width="100px"
+      >
+        <el-form-item label="监控组" prop="group">
+          <el-select v-model="addMonitorForm.group" placeholder="请选择监控组">
+            <el-option label="监控组1" value="1" />
+            <el-option label="监控组2" value="2" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="监控名称" prop="name">
+          <el-input v-model="addMonitorForm.name" />
+        </el-form-item>
+        <el-form-item label="监控地址" prop="url">
+          <el-input v-model="addMonitorForm.url" />
+        </el-form-item>
+        <el-form-item label="协议" prop="protocol">
+          <el-select v-model="addMonitorForm.protocol" placeholder="请选择协议">
+            <el-option label="rtmp" value="rtmp" />
+            <el-option label="rtsp" value="rtsp" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="端口号" prop="port">
+          <el-input v-model="addMonitorForm.port" />
+        </el-form-item>
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addMonitorForm.username" />
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addMonitorForm.password" />
+        </el-form-item>
+        <el-form-item>
+          <div class="flex justify-end w-full">
+            <el-button type="primary" @click="addMonitor">确定</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -194,6 +242,51 @@ const maxShowMonitors = ref(4);
 const draggedNode = ref(null);
 const searchValue = ref<string | undefined>();
 const activeMonitorIndex = ref(-1);
+const addMonitorDialog = ref(false);
+const addMonitorName = ref("");
+const addMonitorUrl = ref("");
+const addMonitorForm = ref({
+  group: "",
+  name: "",
+  url: "",
+  protocol: "rtmp",
+  port: "",
+  username: "",
+  password: "",
+});
+const addMonitorFormRef = ref<InstanceType<typeof ElForm>>();
+const addMonitorFormRules = ref({
+  group: [{ required: true, message: "请选择监控组", trigger: "blur" }],
+  name: [{ required: true, message: "请输入监控名称", trigger: "blur" }],
+  url: [{ required: true, message: "请输入监控访问地址", trigger: "blur" }],
+  protocol: [{ required: true, message: "请选择协议", trigger: "blur" }],
+  port: [{ required: true, message: "请输入端口号", trigger: "blur" }],
+  username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+  password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+});
+const showAddMonitorDialog = () => {
+  addMonitorDialog.value = true;
+};
+
+const addMonitor = () => {
+  // console.log(addMonitorName.value, addMonitorUrl.value);
+  ElMessageBox.confirm("确定新增监控吗？", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      addMonitorFormRef.value?.validate((valid: boolean) => {
+        if (valid) {
+          ElMessage.warning("新增功能未开放");
+          console.log(addMonitorForm.value);
+        }
+      });
+    })
+    .catch(() => {
+      ElMessage.info("已取消新增");
+    });
+};
 
 const handleNodeClick = (data: any) => {
   console.log(data);
