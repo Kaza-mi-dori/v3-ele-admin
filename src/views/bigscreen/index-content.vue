@@ -140,10 +140,7 @@ const initTMapApi = () => {
   width: 15px;
 }
 .model1 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 .left2 {
   flex: 0.75;

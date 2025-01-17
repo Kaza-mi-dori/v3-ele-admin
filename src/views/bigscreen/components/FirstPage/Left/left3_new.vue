@@ -203,7 +203,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .left3-box {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
 }
 </style>

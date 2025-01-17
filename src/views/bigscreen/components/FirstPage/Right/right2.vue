@@ -157,10 +157,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model1 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 
 :deep(.el-progress.el-progress--line.el-progress--without-text.__progress)

@@ -821,7 +821,6 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .password-strength {
-  // display: flex;
   @apply flex mt-1 w-full items-center;
   .strength-item {
     height: 10px;

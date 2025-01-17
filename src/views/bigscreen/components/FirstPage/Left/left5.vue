@@ -82,10 +82,7 @@ $color-primary: #42cdff;
 $color-active: #fff;
 
 .model1 {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 
 :deep(.year-select) {

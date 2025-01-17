@@ -63,10 +63,7 @@ watch(
 
 <style lang="scss" scoped>
 .box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
+  @apply flex justify-between items-center p-5;
   .box__icon {
     width: 50px;
     height: 50px;
