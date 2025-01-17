@@ -124,8 +124,7 @@
 import { useDataIndexStoreHook } from "@/store/modules/dataIndex";
 import { DataIndicesAPI } from "@/api/dataIndices";
 import * as echarts from "echarts";
-import { getDateOfOneYear } from "@/utils/time";
-import { table } from "console";
+import { getDateOfOneYear, getDateOfOneYearToNow } from "@/utils/time";
 
 const dataIndexStore = useDataIndexStoreHook();
 const dataIndexTree = ref<any[]>([]);
@@ -243,7 +242,7 @@ function initTable() {
   });
   if (tableData.value.length === 0) {
     const year = new Date().getFullYear();
-    tableData.value = getDateOfOneYear().map((item: any) => {
+    tableData.value = getDateOfOneYearToNow(true).map((item: any) => {
       return {
         日期: `${year}-${item}`,
       };
