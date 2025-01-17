@@ -43,6 +43,10 @@
         </div>
       </div>
       <div class="bg-view__body">
+        <canvas
+          id="first-page-bg-canvas-1"
+          style="position: absolute; z-index: 0; top: 0; left: 0"
+        />
         <ScreenIndexContent style="position: relative" />
       </div>
     </div>
@@ -52,6 +56,7 @@
 
 <script setup lang="ts">
 import ScreenIndexContent from "./index-content.vue";
+import { RollingStarrySky } from "./components/Common/DynamicBG/rollingStarrySky";
 import { ref, computed } from "vue";
 import router from "@/router";
 import { businessStore, companyStore } from "@/store";
@@ -74,6 +79,7 @@ const performanceData = ref<PerformanceInfo>({
   memoryUsage: undefined,
 });
 
+const starrySky = new RollingStarrySky();
 const performanceMonitor = new PerformanceMonitor((info) => {
   performanceData.value = info;
 
@@ -275,6 +281,13 @@ onMounted(async () => {
     setTimeout(() => {
       loading.value = false;
       window.dispatchEvent(new Event("resize"));
+      const canvas = document.getElementById(
+        "first-page-bg-canvas-1"
+      ) as HTMLCanvasElement;
+      canvas.width = document.body.clientWidth;
+      canvas.height = document.body.clientHeight;
+      starrySky.setCanvas(canvas);
+      starrySky.init();
     }, 100);
   });
 });
@@ -432,6 +445,7 @@ onUpdated(() => {
   // height: 100%;
   // height: calc(100% - 66px);
   // overflow-y: auto; /* 纵向滚动条 */
+  position: relative;
   overflow-y: hidden;
   // margin: 20px 0;
   padding: 20px 0 10px 0;
