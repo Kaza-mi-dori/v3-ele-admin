@@ -38,10 +38,17 @@ const keywordMap = {
   毛利率: "19463e8525d",
 };
 
+const keywordMapMonth = {
+  月度采购: "19471d10915",
+  月度销售: "19471d14331",
+  月度毛利率: "19471dd5398",
+};
+
 let totalData = ref([
   {
     title: "累计采购",
     keyword: keywordMap["累计采购"],
+    keywordMonth: keywordMapMonth["月度采购"],
     bgImg: block1,
     yearTotal: 0,
     monthTotal: 0,
@@ -51,6 +58,7 @@ let totalData = ref([
   {
     title: "累计销售",
     keyword: keywordMap["累计销售"],
+    keywordMonth: keywordMapMonth["月度销售"],
     bgImg: block2,
     yearTotal: 0,
     monthTotal: 0,
@@ -60,6 +68,7 @@ let totalData = ref([
   {
     title: "毛利率",
     keyword: keywordMap["毛利率"],
+    keywordMonth: keywordMapMonth["月度毛利率"],
     bgImg: block3,
     yearTotal: 0,
     monthTotal: 0,
@@ -68,9 +77,23 @@ let totalData = ref([
   },
 ]);
 
-// 获取数据
+// 获取年度数据
 const { result, loading, error, fetchData } = useDataIndex(
   Object.values(keywordMap),
+  100,
+  undefined,
+  undefined,
+  true
+);
+
+// 获取月度数据
+const {
+  result: resultMonth,
+  loading: loadingMonth,
+  error: errorMonth,
+  fetchData: fetchDataMonth,
+} = useDataIndex(
+  Object.values(keywordMapMonth),
   100,
   undefined,
   undefined,
@@ -123,6 +146,7 @@ const initData = async () => {
     {
       title: "累计采购",
       keyword: keywordMap["累计采购"],
+      keywordMonth: keywordMapMonth["月度采购"],
       bgImg: block1,
       yearTotal: Number(totals["累计采购"].yearTotal.toFixed(2)),
       monthTotal: totals["累计采购"].monthTotal,
@@ -132,6 +156,7 @@ const initData = async () => {
     {
       title: "累计销售",
       keyword: keywordMap["累计销售"],
+      keywordMonth: keywordMapMonth["月度销售"],
       bgImg: block2,
       yearTotal: Number(totals["累计销售"].yearTotal.toFixed(2)),
       monthTotal: totals["累计销售"].monthTotal,
@@ -141,6 +166,7 @@ const initData = async () => {
     {
       title: "毛利率",
       keyword: keywordMap["毛利率"],
+      keywordMonth: keywordMapMonth["月度毛利率"],
       bgImg: block3,
       yearTotal: Number(totals["累计毛利率"].yearTotal.toFixed(2)),
       monthTotal: totals["累计毛利率"].monthTotal,
@@ -148,16 +174,27 @@ const initData = async () => {
       yearUnit: "%",
     },
   ];
-  await fetchData();
-  // 将result.value中的数据赋值给totalData
-  for (const key in result.value) {
-    // 如果有数据，则取第一条
-    const item = totalData.value.find((item) => item.keyword === key);
-    if (item) {
-      console.log(result.value[key]);
-      item.yearTotal = parseFloat(result.value[key][0].数据);
+  fetchData().then(() => {
+    // 将result.value中的数据赋值给totalData
+    for (const key in result.value) {
+      // 如果有数据，则取第一条
+      const item = totalData.value.find((item) => item.keyword === key);
+      if (item) {
+        item.yearTotal = parseFloat(result.value[key][0].数据);
+      }
     }
-  }
+  });
+  fetchDataMonth().then(() => {
+    console.log(resultMonth.value);
+    for (const key in resultMonth.value) {
+      const itemMonth = totalData.value.find(
+        (item) => item.keywordMonth === key
+      );
+      if (itemMonth) {
+        itemMonth.monthTotal = parseFloat(resultMonth.value[key][0].数据);
+      }
+    }
+  });
 };
 
 onMounted(() => {

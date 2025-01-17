@@ -33,8 +33,8 @@ export const useDataIndex = (
       const originData = res["当前记录"] || [];
       const sortedData = originData.sort((a: any, b: any) => {
         return descByTime
-          ? new Date(a.时间).getTime() - new Date(b.时间).getTime()
-          : new Date(b.时间).getTime() - new Date(a.时间).getTime();
+          ? new Date(b.时间).getTime() - new Date(a.时间).getTime()
+          : new Date(a.时间).getTime() - new Date(b.时间).getTime();
       });
       const groupedData = sortedData.reduce((acc: any, curr: any) => {
         acc[curr.标识] = acc[curr.标识] || [];
