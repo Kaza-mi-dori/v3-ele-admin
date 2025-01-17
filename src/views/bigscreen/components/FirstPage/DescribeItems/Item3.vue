@@ -9,7 +9,7 @@
       </div>
       <div class="box__amount">
         <span class="__desc">年贸易量</span>
-        <el-statistic :value="animatedAmount" />
+        <el-statistic class="animated-amount" :value="animatedAmount" />
         <span class="__unit">{{ props.unit }}</span>
       </div>
     </div>
@@ -129,12 +129,15 @@ $number-color: #2abfff;
       .__desc {
         margin-right: 10px;
         color: $title-text-color;
+        font-size: 0.9rem;
+      }
+      .animated-amount {
         font-size: 1rem;
       }
       .__unit {
-        margin-left: 10px;
+        margin-left: 5px;
         color: $title-text-color;
-        font-size: 1rem;
+        font-size: 0.8rem;
       }
     }
   }

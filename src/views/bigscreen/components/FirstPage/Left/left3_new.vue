@@ -185,7 +185,6 @@ const initData = async () => {
     }
   });
   fetchDataMonth().then(() => {
-    console.log(resultMonth.value);
     for (const key in resultMonth.value) {
       const itemMonth = totalData.value.find(
         (item) => item.keywordMonth === key

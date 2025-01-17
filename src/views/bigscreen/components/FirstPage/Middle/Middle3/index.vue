@@ -9,11 +9,11 @@
             <div>{{ titleArr[index].title }}</div>
           </div>
           <div class="revenue-total">
-            <div>营收</div>
+            <div>营收(万元)</div>
             <div class="revenue-num">{{ formatNumber(item.revenue) }}</div>
           </div>
           <div class="profit-total">
-            <div>利润</div>
+            <div>利润(万元)</div>
             <div class="profit-num">{{ formatNumber(item.profit) }}</div>
           </div>
         </div>
