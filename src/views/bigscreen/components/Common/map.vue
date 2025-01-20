@@ -510,8 +510,7 @@ defineExpose({
   }
 }
 .map-container {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   position: absolute;
 }
 .pop-content {

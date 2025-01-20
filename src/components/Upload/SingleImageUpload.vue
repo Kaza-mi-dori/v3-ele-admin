@@ -121,8 +121,7 @@ function handleDelete() {
 :deep(.el-upload--picture-card) {
   /*  width: var(--el-upload-picture-card-size);
   height: var(--el-upload-picture-card-size); */
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
 }
 
 .img-upload {
@@ -144,11 +143,7 @@ function handleDelete() {
     position: absolute;
     top: 0;
     left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    @apply flex items-center justify-center w-full h-full;
     color: #fff;
     background-color: var(--el-overlay-color-lighter);
     border-radius: 6px;

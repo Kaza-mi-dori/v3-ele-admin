@@ -68,8 +68,7 @@ watch(
     width: 50px;
     height: 50px;
     img {
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
     }
   }
   .box__content {

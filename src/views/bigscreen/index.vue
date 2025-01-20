@@ -331,7 +331,6 @@ onUpdated(() => {
   line-height: 1.5715;
   font-feature-settings: "tnum";
   // width: 100vw;
-  height: 100%;
   overflow: hidden;
   font-family:
     PingFangSC,
@@ -343,29 +342,21 @@ onUpdated(() => {
   overscroll-behavior: none;
   scroll-behavior: smooth;
   user-select: none;
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col h-full;
   &::-webkit-scrollbar {
     display: none;
   }
 }
 .bg-view-img {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   background-image: url(./img/bg.jpg);
   background-size: cover;
 }
 .bg-view__header {
-  width: 100%;
   height: 66px;
-  display: flex;
-  position: relative;
+  @apply w-full flex relative;
   .entry-container {
-    position: absolute;
-    z-index: 1;
-    display: flex;
-    bottom: 5px;
-    left: 5px;
+    @apply absolute z-1 flex bottom-[5px] left-[5px];
     .entry-container-item {
       text-align: center;
       color: $bigscreen-primary-color-1;
@@ -396,9 +387,7 @@ onUpdated(() => {
     top: 50%;
     transform: translateY(-50%);
     .weather-item__text {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @apply flex items-center justify-center;
       color: #fff;
       font-size: 1rem;
       .weather-item__text--1 {

@@ -664,8 +664,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .main-wrapper {
-  @apply p-10px;
-  height: 100%;
+  @apply p-10px h-full;
 }
 
 .title-block {

@@ -770,12 +770,9 @@ onMounted(() => {
 }
 
 .item-menu-block {
-  @apply flex bg-white mr-4;
-  flex: 1;
+  @apply flex flex-1 bg-white mr-4;
   .item-menu {
-    @apply mr-10px p-2 pr-15px;
-    display: flex;
-    flex-direction: column;
+    @apply mr-10px p-2 pr-15px flex flex-col;
     border-right: 1px solid #fefefe;
     .item {
       margin: 10px;

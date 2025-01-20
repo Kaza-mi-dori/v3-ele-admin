@@ -211,9 +211,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .process-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
+  @apply relative w-full h-full;
   .upload-block {
     position: absolute;
     bottom: 10px;

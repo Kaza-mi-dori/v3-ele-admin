@@ -204,9 +204,7 @@ const handleCurrentChange = (val: number) => {
 
 <style lang="scss" scoped>
 .bg-view-img2 {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  @apply flex flex-col w-full;
   // height: 100%;
   background-color: #030542;
 }
@@ -246,10 +244,7 @@ const handleCurrentChange = (val: number) => {
     }
   }
   .title {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @apply flex flex-1 justify-center items-center;
     .__title--text {
       font-size: 2rem;
       letter-spacing: 6px;
@@ -275,8 +270,7 @@ const handleCurrentChange = (val: number) => {
   scrollbar-width: none;
 }
 .breadcrumb-box {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
   color: #d5e2fb;
   img {
     width: 20px;

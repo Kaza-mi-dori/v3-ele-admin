@@ -19,7 +19,6 @@
 }
 
 iframe {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
 }
 </style>

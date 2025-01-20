@@ -176,8 +176,7 @@ onMounted(() => {
     justify-content: space-between;
     position: relative; // 让头部背景高度与头部一致
     .model-header__bg {
-      height: 100%;
-      width: 100%;
+      @apply w-full h-full;
       position: absolute;
       top: 0;
       bottom: 0;

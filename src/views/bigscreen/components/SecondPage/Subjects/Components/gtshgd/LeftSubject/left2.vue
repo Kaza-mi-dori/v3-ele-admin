@@ -121,7 +121,6 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
+  @apply w-full h-full;
 }
 </style>

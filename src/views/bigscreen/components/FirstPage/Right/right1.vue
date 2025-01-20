@@ -113,20 +113,17 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .box1 {
-  @apply flex items-center;
+  @apply flex items-center w-full;
   background-image: url("@/views/bigscreen/img/tag_bg.png");
   background-size: 100% 100%;
-  width: 100%;
   // height: 176px;
   .__left {
-    @apply flex;
+    @apply flex h-full;
     width: 50%;
-    height: 100%;
   }
   .__right {
-    @apply flex;
+    @apply flex h-full;
     width: 50%;
-    height: 100%;
   }
 }
 </style>

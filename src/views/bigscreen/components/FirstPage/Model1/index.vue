@@ -38,8 +38,7 @@ defineProps({
 <style lang="scss" scoped>
 .model-box {
   position: relative;
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   display: flex;
   flex-direction: column;
   .model-title {
@@ -49,8 +48,7 @@ defineProps({
     height: 50px;
     padding: 0 15px;
     .model-title__bg {
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -71,8 +69,7 @@ defineProps({
     flex: 1;
     position: relative;
     .model-body__bg {
-      width: 100%;
-      height: 100%; /* 确保背景图片覆盖整个容器 */
+      @apply w-full h-full; /* 确保背景图片覆盖整个容器 */
       position: absolute;
       top: 0;
       bottom: 0;
@@ -83,14 +80,12 @@ defineProps({
     }
     .model-body__content {
       position: relative;
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
     }
   }
   .model-footer {
     .model-footer__bg {
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
     }
   }
 }

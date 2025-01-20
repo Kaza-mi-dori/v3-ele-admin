@@ -199,8 +199,7 @@ onMounted(() => {
 }
 /* HTML: <div class="loader"></div> */
 .loader-container {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   display: flex;
   justify-content: center;
   align-items: center;

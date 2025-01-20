@@ -414,9 +414,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .m-container {
-  @apply flex pr-2 pb-2;
-  height: 100%;
-  width: 100%;
+  @apply flex pr-2 pb-2 w-full h-full;
   .menu-box {
     @apply relative;
     width: 300px;

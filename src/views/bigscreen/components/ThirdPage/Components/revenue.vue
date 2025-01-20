@@ -443,10 +443,7 @@ const handleCurrentRowChange = (val: any) => {
 
 <style lang="scss" scoped>
 .bg-view-img2 {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+  @apply flex flex-col w-full h-full;
   background-color: #030542;
 }
 .bg-view1__header {
@@ -484,10 +481,7 @@ const handleCurrentRowChange = (val: any) => {
     }
   }
   .title {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @apply flex justify-center items-center flex-1;
     .__title--text {
       font-size: 2rem;
       letter-spacing: 6px;

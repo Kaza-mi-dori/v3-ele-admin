@@ -202,14 +202,11 @@ onMounted(() => {
 }
 
 .icon-grid {
-  display: flex;
-  flex-wrap: wrap;
+  @apply flex flex-wrap;
 }
 
 .icon-grid-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @apply flex items-center justify-center;
   padding: 8px;
   margin: 4px;
   cursor: pointer;

@@ -329,8 +329,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   overflow-y: auto;
   background: url("@/assets/images/login-background-light.jpg") no-repeat center
     right;

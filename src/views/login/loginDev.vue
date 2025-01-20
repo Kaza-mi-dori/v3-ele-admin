@@ -255,22 +255,13 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .login {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+  @apply flex items-center justify-center w-full h-full;
   overflow-y: auto;
   background: url("@/assets/images/login-background-light.jpg") no-repeat center
     right;
 
   .login-header {
-    position: absolute;
-    top: 0;
-    display: flex;
-    justify-content: right;
-    width: 100%;
-    padding: 15px;
+    @apply top-0 flex justify-end absolute w-full p-[15px];
 
     .logo {
       width: 26px;

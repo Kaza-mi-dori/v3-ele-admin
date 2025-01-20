@@ -80,15 +80,9 @@ const totalData = ref([
   }
   .b-middle {
     flex: 1.4;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
+    @apply flex flex-col justify-between relative;
     .middle-item {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      justify-content: center;
+      @apply flex flex-1 items-center justify-center;
     }
     .flex-grow {
       flex: 5;

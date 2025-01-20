@@ -56,8 +56,7 @@ defineProps({
 <style lang="scss" scoped>
 .model-box {
   position: relative;
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   display: flex;
   flex-direction: column;
   .model-title {
@@ -67,8 +66,7 @@ defineProps({
     align-items: center;
     height: 50px;
     .model-title__bg {
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -115,14 +113,12 @@ defineProps({
     }
     .model-body__content {
       position: relative;
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
     }
   }
   .model-footer {
     .model-footer__bg {
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
     }
   }
 }

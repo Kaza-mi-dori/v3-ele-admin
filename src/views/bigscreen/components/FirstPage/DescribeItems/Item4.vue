@@ -49,8 +49,7 @@ const formatNumber = (num: number | string): string => {
 $bg-color-1: #ffffff;
 .box {
   position: relative; /* 确保父元素的布局设置好 */
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
@@ -62,8 +61,7 @@ $bg-color-1: #ffffff;
     position: absolute; /* 使图像脱离文档流 */
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    @apply w-full h-full;
     object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
   }
   .content-item {

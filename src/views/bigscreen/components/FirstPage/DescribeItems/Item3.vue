@@ -104,8 +104,7 @@ $number-color: #2abfff;
     height: 30px;
     text-align: right;
     img {
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
     }
   }
   .box__content {

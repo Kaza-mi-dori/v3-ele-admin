@@ -71,14 +71,12 @@ const formatNumber = (num: number | string): string => {
 <style lang="scss" scoped>
 .middle1-box {
   position: relative; /* 确保父元素的布局设置好 */
-  width: 100%; /* 父元素宽度占满父容器 */
-  height: 100%; /* 父元素高度占满父容器 */
+  @apply w-full h-full;
   .middle1-bg {
     position: absolute; /* 使图像脱离文档流 */
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    @apply w-full h-full;
     object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
   }
   .content-wrapper {

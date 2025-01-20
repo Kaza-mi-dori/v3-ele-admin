@@ -189,8 +189,7 @@ onMounted(() => {
 $number-color-1: #fffe95;
 
 .box {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   display: flex;
   flex-direction: column;
   justify-content: center;
