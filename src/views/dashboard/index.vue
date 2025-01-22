@@ -427,10 +427,9 @@ onMounted(() => {
   padding: 24px;
 
   .github-corner {
-    position: absolute;
+    @apply absolute z-1;
     top: 0;
     right: 0;
-    z-index: 1;
     border: 0;
   }
 }

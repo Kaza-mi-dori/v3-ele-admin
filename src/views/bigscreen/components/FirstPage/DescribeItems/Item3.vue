@@ -92,13 +92,11 @@ $title-text-color-bright: #b6d7db;
 $title-text-color: #9dc1d0;
 $number-color: #2abfff;
 .box {
+  @apply flex items-center cursor-pointer;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
   padding: 20px 5px;
   background-image: url("@/views/bigscreen/img/product_box.png");
   background-size: 100% 100%;
-  cursor: pointer;
   .box__icon {
     width: 30px;
     height: 30px;
@@ -121,7 +119,7 @@ $number-color: #2abfff;
       color: $title-text-color-bright;
     }
     .box__amount {
-      display: flex;
+      @apply flex;
       align-items: baseline;
       font-size: 1.2rem;
       color: $number-color;

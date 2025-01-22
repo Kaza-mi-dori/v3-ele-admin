@@ -191,8 +191,7 @@ onMounted(() => {
 .search-result ul li {
   padding: 10px;
   line-height: 40px;
-  text-align: left;
-  cursor: pointer;
+  @apply text-left cursor-pointer;
 }
 
 .search-result ul li.active {
@@ -204,14 +203,11 @@ onMounted(() => {
 }
 
 .dialog-footer {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
   justify-content: start;
 
   svg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @apply flex justify-center items-center;
     padding: 0 2px;
     margin-right: 0.4em;
     color: #909399;

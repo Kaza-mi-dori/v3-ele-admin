@@ -346,10 +346,10 @@ onMounted(() => {
   @apply flex flex-1 flex-col h-full;
 }
 .el-link-more {
+  @apply cursor-pointer;
   float: right;
   margin-right: 1rem;
   color: $bigscreen-primary-color-7;
   font-size: 14px;
-  cursor: pointer;
 }
 </style>

@@ -59,8 +59,7 @@ function back() {
 
 <style lang="scss" scoped>
 .page-container {
-  display: flex;
-  padding: 100px;
+  @apply flex p-[100px];
 
   .pic-404 {
     width: 600px;

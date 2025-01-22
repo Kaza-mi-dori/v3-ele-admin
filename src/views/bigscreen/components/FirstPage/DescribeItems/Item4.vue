@@ -48,31 +48,26 @@ const formatNumber = (num: number | string): string => {
 <style lang="scss" scoped>
 $bg-color-1: #ffffff;
 .box {
-  position: relative; /* 确保父元素的布局设置好 */
-  @apply w-full h-full;
-  justify-content: center;
-  align-items: center;
+  @apply justify-center items-center w-full h-full relative;
   box-sizing: border-box;
   color: white;
   font-size: 20px;
   padding: 15px 10px;
 
   .item3-bg {
-    position: absolute; /* 使图像脱离文档流 */
     top: 0;
     left: 0;
-    @apply w-full h-full;
+    @apply w-full h-full absolute;
     object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
   }
   .content-item {
-    flex: 1;
-    z-index: 1; /* 确保文字在背景图片上方 */
+    @apply flex-1 z-1;
     font-size: 16px;
   }
   .title-box,
   .annual-total,
   .monthly-total {
-    display: flex;
+    @apply flex;
   }
   .annual-total {
     margin-top: 5px;
@@ -103,8 +98,7 @@ $bg-color-1: #ffffff;
     }
   }
   .title-box {
-    display: flex;
-    align-items: center;
+    @apply flex items-center;
     font-size: 20px;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;

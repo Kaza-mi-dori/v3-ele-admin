@@ -171,7 +171,7 @@ function paint(
     margin: 8px;
 
     .eraser-option {
-      display: flex;
+      @apply flex;
 
       label {
         white-space: nowrap;

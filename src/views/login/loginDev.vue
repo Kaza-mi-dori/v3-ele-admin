@@ -277,7 +277,7 @@ onMounted(() => {
   }
 
   .login-content {
-    display: flex;
+    @apply flex;
     width: 960px;
     overflow: hidden;
     background-color: #fff;
@@ -285,7 +285,7 @@ onMounted(() => {
     box-shadow: var(--el-box-shadow-light);
 
     @media (width <= 768px) {
-      flex-direction: column;
+      @apply flex-col;
       max-width: 100%;
       height: 100vh;
       padding: 0 30px;
@@ -294,10 +294,8 @@ onMounted(() => {
     }
 
     .login-img {
-      display: flex;
+      @apply flex justify-center items-center;
       flex: 3;
-      align-items: center;
-      justify-content: center;
       background: linear-gradient(60deg, #165dff, #6aa1ff);
 
       @media (width <= 768px) {
@@ -306,10 +304,8 @@ onMounted(() => {
     }
 
     .login-form {
-      display: flex;
+      @apply flex flex-col justify-center;
       flex: 2;
-      flex-direction: column;
-      justify-content: center;
       min-width: 400px;
       padding: 30px;
 
@@ -319,18 +315,12 @@ onMounted(() => {
       }
 
       .form-title {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        @apply flex justify-center items-center relative text-center;
         padding: 0 0 20px;
-        text-align: center;
       }
 
       .input-wrapper {
-        display: flex;
-        align-items: center;
-        width: 100%;
+        @apply flex items-center w-full;
       }
 
       .captcha-img {
@@ -341,9 +331,7 @@ onMounted(() => {
       }
 
       .third-party-login {
-        display: flex;
-        justify-content: center;
-        width: 100%;
+        @apply flex justify-center w-full;
         color: var(--el-text-color-secondary);
 
         *:not(:first-child) {
@@ -358,10 +346,8 @@ onMounted(() => {
   }
 
   .login-footer {
-    position: absolute;
+    @apply w-full absolute text-center;
     bottom: 0;
-    width: 100%;
-    text-align: center;
   }
 }
 

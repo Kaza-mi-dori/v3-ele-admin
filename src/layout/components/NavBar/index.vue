@@ -27,14 +27,12 @@ function toggleSideBar() {
 
 <style lang="scss" scoped>
 .navbar {
-  display: flex;
-  justify-content: space-between;
+  @apply flex justify-between;
   height: $navbar-height;
   background: var(--el-bg-color);
 
   &__left {
-    display: flex;
-    align-items: center;
+    @apply flex items-center;
   }
 }
 </style>

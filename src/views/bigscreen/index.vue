@@ -381,8 +381,7 @@ onUpdated(() => {
   }
   /** 天气 */
   .weather-container {
-    position: absolute;
-    z-index: 1;
+    @apply absolute z-1;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
@@ -400,10 +399,9 @@ onUpdated(() => {
     }
   }
   .title {
-    flex: 1;
+    @apply flex-1 relative;
     height: 66px;
     width: max-content;
-    position: relative;
     // top: clamp(10px, 25px, 30%);
     margin-left: auto;
     margin-right: auto;
@@ -434,7 +432,7 @@ onUpdated(() => {
   // height: 100%;
   // height: calc(100% - 66px);
   // overflow-y: auto; /* 纵向滚动条 */
-  position: relative;
+  @apply relative;
   overflow-y: hidden;
   // margin: 20px 0;
   padding: 20px 0 10px 0;

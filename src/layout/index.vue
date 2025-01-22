@@ -125,11 +125,7 @@ watch(route, () => {
 
 <style lang="scss" scoped>
 .sidebar-container {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
+  @apply fixed top-0 bottom-0 left-0 z-[999];
   width: $sidebar-width;
   background-color: $menu-background;
   transition: width 0.28s;
@@ -140,25 +136,19 @@ watch(route, () => {
 }
 
 .main-container {
-  position: relative;
-  height: 100%;
+  @apply relative h-full overflow-y-auto;
   margin-left: $sidebar-width;
-  overflow-y: auto;
   transition: margin-left 0.28s;
 
   .fixed-header {
-    position: sticky;
-    top: 0;
-    z-index: 9;
+    @apply sticky top-0 z-9;
     transition: width 0.28s;
   }
 }
 
 .layout-top {
   .sidebar-container {
-    position: sticky;
-    z-index: 999;
-    display: flex;
+    @apply flex sticky z-[999];
     width: 100% !important;
     height: $navbar-height;
 
@@ -208,12 +198,11 @@ watch(route, () => {
   }
 
   .mix-container {
-    display: flex;
-    height: 100%;
+    @apply flex h-full;
     padding-top: $navbar-height;
 
     .mix-container-sidebar {
-      position: relative;
+      @apply relative;
       width: $sidebar-width;
       height: 100%;
       background-color: var(--menu-background);
@@ -229,11 +218,8 @@ watch(route, () => {
       }
 
       .sidebar-toggle {
-        position: absolute;
+        @apply flex justify-center items-center absolute;
         bottom: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         width: 100%;
         height: 50px;
         line-height: 50px;

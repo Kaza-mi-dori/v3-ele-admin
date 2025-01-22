@@ -105,9 +105,6 @@ onMounted(() => {
   @apply flex flex-1 flex-col h-full;
 }
 #chart2-left-2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @apply w-full h-full;
+  @apply flex justify-center items-center w-full h-full;
 }
 </style>

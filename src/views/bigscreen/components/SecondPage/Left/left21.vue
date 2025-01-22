@@ -126,13 +126,13 @@ const UDparamsFormatter = (data: string | number) => {
 }
 
 .cell2 {
-  text-align: left;
+  @apply text-left;
   padding-left: 10px;
 }
 
 .table td,
 .table th {
-  position: relative;
+  @apply relative;
 }
 
 .text-success {

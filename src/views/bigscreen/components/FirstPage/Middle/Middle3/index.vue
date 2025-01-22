@@ -119,24 +119,19 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .middle1-box {
-  position: relative; /* 确保父元素的布局设置好 */
-  @apply w-full h-full;
+  @apply w-full h-full relative;
   padding: 10px;
   .middle1-bg {
-    position: absolute; /* 使图像脱离文档流 */
     top: 0;
     left: 0;
-    @apply w-full h-full;
+    @apply w-full h-full absolute;
     object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
   }
   .content-wrapper {
-    display: flex;
-    justify-content: space-around; /* 平均分配每个div之间的空间 */
-    align-items: center;
+    @apply flex justify-around items-center;
   }
   .content-box {
-    @apply flex flex-1 justify-center;
-    z-index: 1; /* 确保文字在背景图片上方 */
+    @apply flex flex-1 justify-center z-1;
     color: #ffffff;
     font-size: 16px;
     // 为奇数孩子节点时给下面的孩子节点加动画
@@ -191,7 +186,7 @@ onMounted(() => {
   .title-box,
   .revenue-total,
   .profit-total {
-    display: flex;
+    @apply flex;
   }
   .revenue-total {
     margin-top: 5px;
@@ -200,8 +195,7 @@ onMounted(() => {
     margin-top: 3px;
   }
   .title-box {
-    display: flex;
-    align-items: center;
+    @apply flex items-center;
     font-size: 16px;
   }
   .title-icon {

@@ -47,9 +47,7 @@ const isMobile = computed(() => appStore.device === DeviceEnum.MOBILE);
 
 <style lang="scss" scoped>
 .navbar__right {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @apply flex items-center justify-center;
 
   & > * {
     display: inline-block;

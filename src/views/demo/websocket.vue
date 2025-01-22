@@ -263,9 +263,9 @@ onMounted(() => {
 }
 
 .message-receiver {
+  @apply text-left;
   margin-bottom: 5px;
   font-weight: bold;
-  text-align: left;
 }
 
 .tip-message {

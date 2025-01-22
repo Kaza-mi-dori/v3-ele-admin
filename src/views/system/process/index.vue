@@ -213,7 +213,7 @@ onMounted(() => {
 .process-container {
   @apply relative w-full h-full;
   .upload-block {
-    position: absolute;
+    @apply absolute;
     bottom: 10px;
     left: 10px;
     z-index: 1000;

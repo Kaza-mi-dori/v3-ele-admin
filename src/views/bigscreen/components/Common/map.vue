@@ -510,8 +510,7 @@ defineExpose({
   }
 }
 .map-container {
-  @apply w-full h-full;
-  position: absolute;
+  @apply w-full h-full absolute;
 }
 .pop-content {
   background-color: #303133;

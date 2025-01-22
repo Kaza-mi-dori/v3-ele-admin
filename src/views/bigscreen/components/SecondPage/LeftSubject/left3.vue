@@ -232,26 +232,21 @@ onMounted(() => {
 }
 
 :deep(.desc-box) {
-  display: flex;
+  @apply flex flex-1 justify-center items-start;
   gap: 0.5rem;
-  flex: 1;
   // flex-gap
-  justify-content: center;
-  align-items: flex-start;
   margin: 0 10px;
   .desc-box__icon {
     margin-bottom: 10px;
   }
   .desc-box__content {
-    display: flex;
-    flex-direction: column;
+    @apply flex flex-col;
     .desc-box__title {
       font-size: 16px;
       color: #5099e3;
     }
     .desc-box__amount {
-      display: flex;
-      align-items: flex-end;
+      @apply flex items-end;
       font-size: 1.1rem;
       .el-statistic__number {
         color: #2abfff;

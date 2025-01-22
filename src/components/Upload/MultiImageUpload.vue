@@ -246,7 +246,7 @@ const closePreview = () => {
 
 .show {
   :deep(.el-upload--picture-card) {
-    display: flex;
+    @apply flex;
   }
 }
 </style>

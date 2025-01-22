@@ -286,14 +286,11 @@ const boatNumOutputValue = useTransition(boatSource, {
 
 <style lang="scss" scoped>
 .middle2-box {
-  @apply w-full h-full;
-  text-align: center;
-  position: relative;
+  @apply w-full h-full text-center relative;
   // padding: 10px;
 }
 .map-box {
-  position: relative;
-  height: 100%;
+  @apply relative h-full;
   // width: 100%;
   // .map-img {
   //   width: 80%;
@@ -301,21 +298,18 @@ const boatNumOutputValue = useTransition(boatSource, {
   //   // height: 100%;
   // }
   .pos-item {
-    position: absolute;
+    @apply absolute;
   }
 }
 .total-box {
-  display: flex;
+  @apply flex relative;
   justify-content: flex-end;
-  position: relative;
   z-index: 100;
   // height: 30px;
   margin-top: -35px;
   margin-right: -10px;
   .total-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @apply flex justify-between items-center;
     padding: 0 10px;
     background-color: #062750;
     border: 1px #1d599a solid;
@@ -325,8 +319,7 @@ const boatNumOutputValue = useTransition(boatSource, {
   .content1,
   .content2,
   .content3 {
-    display: flex;
-    cursor: pointer;
+    @apply flex cursor-pointer;
   }
   .content2,
   .content3 {
@@ -339,9 +332,7 @@ const boatNumOutputValue = useTransition(boatSource, {
   }
 }
 .center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @apply flex justify-center items-center;
 }
 
 .pop-content {

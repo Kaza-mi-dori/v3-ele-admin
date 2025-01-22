@@ -311,18 +311,14 @@ defineExpose({
 <style lang="scss" scoped>
 .uploaded-block {
   .uploaded-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @apply flex items-center justify-between cursor-pointer;
     padding: 10px;
-    cursor: pointer;
     .uploaded-item-name {
       color: blue;
       flex: 1;
     }
     .uploaded-item-action {
-      display: flex;
-      align-items: center;
+      @apply flex items-center;
       .el-link {
         margin-left: 10px;
       }

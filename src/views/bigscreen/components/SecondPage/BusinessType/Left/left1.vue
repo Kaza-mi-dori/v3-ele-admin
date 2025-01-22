@@ -86,12 +86,10 @@ contractData.value.forEach((item) => {
   @apply flex flex-1 flex-col h-full;
 }
 .model-body {
-  flex: 1;
-  position: relative;
+  @apply flex-1 relative;
   .model-body__bg {
-    height: 100%;
+    @apply absolute h-full;
     margin: 10px;
-    position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
@@ -115,15 +113,10 @@ contractData.value.forEach((item) => {
       object-fit: cover; // 确保图片比例适用容器
     }
     .body-content {
-      position: absolute; // 使文字定位
+      @apply flex flex-col items-start justify-center absolute text-left;
       top: 50%; // 调整文字位置
       left: 15px; // 适当调整文字位置
       transform: translateY(-50%); // 垂直居中
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      text-align: left;
       font-size: 19px;
       padding-left: 15px;
       padding-top: 10px;
@@ -131,9 +124,7 @@ contractData.value.forEach((item) => {
       color: #ffffff;
     }
     .content-value {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @apply flex items-center justify-center;
       .content-num {
         font-size: 21px;
         font-weight: bold;

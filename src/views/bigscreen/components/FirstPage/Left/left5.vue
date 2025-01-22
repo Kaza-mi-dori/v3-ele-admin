@@ -129,13 +129,11 @@ $color-active: #fff;
 }
 
 .custom-tab {
-  display: flex;
+  @apply flex;
   background-size: 100% 100%;
   .__header {
-    width: 100%;
-    display: flex;
+    @apply flex items-center w-full;
     background-image: url("@/views/bigscreen/img/left_box2_top.png");
-    align-items: center;
     padding: 5px 0;
     .custom-tab-pane {
       width: 100px;
@@ -169,8 +167,7 @@ $color-active: #fff;
 .content {
   /** 设置背景 */
   background-image: url("@/views/bigscreen/img/left_box2_center.png");
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
 }
 .footer {
   height: 10px;

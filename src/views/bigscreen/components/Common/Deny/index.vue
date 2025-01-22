@@ -7,9 +7,6 @@
 
 <style lang="scss" scoped>
 .deny {
-  @apply w-full h-full;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @apply flex justify-center items-center w-full h-full;
 }
 </style>

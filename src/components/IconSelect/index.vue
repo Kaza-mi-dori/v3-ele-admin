@@ -206,10 +206,7 @@ onMounted(() => {
 }
 
 .icon-grid-item {
-  @apply flex items-center justify-center;
-  padding: 8px;
-  margin: 4px;
-  cursor: pointer;
+  @apply flex items-center justify-center p-2 m-1 cursor-pointer;
   border: 1px solid #dcdfe6;
   border-radius: 4px;
   transition: all 0.3s;

@@ -493,17 +493,15 @@ const handleCurrentChange = (currentPage: number) => {
   height: 60px;
 }
 .header-left {
+  @apply absolute z-1;
   font-size: 22px;
-  position: absolute;
   top: 20%;
   left: 3%;
-  z-index: 1;
 }
 .header-right {
-  position: absolute;
+  @apply absolute z-1;
   top: -10px;
   right: 5px;
-  z-index: 1;
 }
 :deep(.input-field) {
   background-color: #1c1e57 !important;

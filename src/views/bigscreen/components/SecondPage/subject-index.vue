@@ -63,22 +63,15 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .bg-view-img2 {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  @apply flex flex-col w-full;
   // height: 100%;
   background-color: #030542;
 }
 .bg-view1__header {
-  width: 100%;
   height: 66px;
-  display: flex;
-  position: relative;
+  @apply flex w-full relative;
   .title {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @apply flex flex-1 justify-center items-center;
     background-image: url(../../img/tit_bg.png);
     background-repeat: no-repeat;
     background-size: 80% 100%;

@@ -447,21 +447,15 @@ const handleCurrentRowChange = (val: any) => {
   background-color: #030542;
 }
 .bg-view1__header {
-  width: 100%;
+  @apply flex items-center w-full relative;
   height: 66px;
-  display: flex;
-  position: relative;
   background-image: url(../../img/tit_bg.png);
   background-repeat: no-repeat;
   background-size: 80% 100%;
   background-position: center;
-  align-items: center;
   .back-btn {
-    position: absolute;
+    @apply flex justify-center items-center absolute;
     left: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 8px 15px;
     background-image: url(../../img/back.png);
     background-repeat: no-repeat;
@@ -507,8 +501,7 @@ const handleCurrentRowChange = (val: any) => {
   scrollbar-width: none;
 }
 .breadcrumb-box {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
   color: #d5e2fb;
   img {
     width: 20px;
@@ -524,25 +517,22 @@ const handleCurrentRowChange = (val: any) => {
   margin-top: 20px;
 }
 .title-bg-container {
-  position: relative;
-  width: 100%;
+  @apply relative w-full;
 }
 .title-bg {
   width: 100%;
   height: 60px;
 }
 .header-left {
+  @apply absolute z-1;
   font-size: 22px;
-  position: absolute;
   top: 20%;
   left: 3%;
-  z-index: 1;
 }
 .header-right {
-  position: absolute;
+  @apply absolute z-1;
   top: -10px;
   right: 5px;
-  z-index: 1;
 }
 :deep(.input-field) {
   background-color: #1c1e57 !important;

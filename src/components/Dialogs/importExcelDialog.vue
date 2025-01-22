@@ -218,8 +218,7 @@ defineExpose({
       flex: 1;
     }
     .uploaded-item-action {
-      display: flex;
-      align-items: center;
+      @apply flex items-center;
       .el-link {
         margin-left: 10px;
       }

@@ -1268,13 +1268,11 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .status-tag {
-  @apply bg-amber-3;
-  position: absolute;
+  @apply bg-amber-3 absolute z-1;
   // color: #fefefe;
   top: -5px;
   right: 10px;
   box-shadow: 0 -2px rgba(0, 0, 0, 0.5);
-  z-index: 1;
   padding: 5px 20px;
   border-radius: 0 10px 10px;
 }

@@ -93,13 +93,13 @@ const tradePartners = ref([
 }
 
 .cell2 {
-  text-align: left;
+  @apply text-left;
   padding-left: 5px;
 }
 
 .table td,
 .table th {
-  position: relative;
+  @apply relative;
 }
 
 // .table-row {

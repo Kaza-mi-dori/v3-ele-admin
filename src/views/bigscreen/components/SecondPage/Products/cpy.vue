@@ -69,32 +69,21 @@ const totalData = ref([
 
 <style lang="scss" scoped>
 .bg-view-body {
-  flex: 1;
-  display: flex;
-  width: 100%;
   // height如果设为100%会导致左右定高，不设则会根据内容撑开
   // 定高可以自适应一屏，但是会使得中间地图无法保持比例，进而导致相对坐标不准确
-  height: 100%;
+  @apply flex flex-1 w-full h-full;
   .b-left,
   .b-middle,
   .b-right {
-    display: flex;
-    flex-direction: column;
+    @apply flex flex-col;
   }
   .b-left {
     flex: 1;
   }
   .b-middle {
-    flex: 1.4;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
+    @apply flex flex-1.4 flex-col justify-between relative;
     .middle-item {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      justify-content: center;
+      @apply flex flex-1 items-center justify-center;
     }
     .flex-grow {
       flex: 5;

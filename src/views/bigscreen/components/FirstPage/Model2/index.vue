@@ -70,34 +70,26 @@ const formatNumber = (num: number | string): string => {
 
 <style lang="scss" scoped>
 .middle1-box {
-  position: relative; /* 确保父元素的布局设置好 */
-  width: 100%; /* 父元素宽度占满父容器 */
-  height: 100%; /* 父元素高度占满父容器 */
+  @apply relative w-full h-full;
   .middle1-bg {
-    position: absolute; /* 使图像脱离文档流 */
+    @apply absolute w-full h-full;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
     object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
   }
   .content-wrapper {
-    display: flex;
-    height: 100%;
-    justify-content: center; /* 平均分配每个div之间的空间 */
-    align-items: center;
+    @apply flex justify-center items-center h-full;
     padding: 0 10px;
   }
   .content-box {
-    flex: 1;
-    z-index: 1; /* 确保文字在背景图片上方 */
+    @apply flex-1 z-1;
     color: #ffffff;
     font-size: 14px;
   }
   .title-box,
   .annual-total,
   .monthly-total {
-    display: flex;
+    @apply flex;
   }
   .annual-total {
     margin-top: 5px;
@@ -106,8 +98,7 @@ const formatNumber = (num: number | string): string => {
     margin-top: 3px;
   }
   .title-box {
-    display: flex;
-    align-items: center;
+    @apply flex items-center;
     font-size: 16px;
   }
   .title-icon {
