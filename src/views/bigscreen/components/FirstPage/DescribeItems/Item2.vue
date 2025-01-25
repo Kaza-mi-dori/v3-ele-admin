@@ -85,7 +85,7 @@ const formatNumber = (num: number | string): string => {
   if (Number(num) > 10000) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   } else {
-    return num.toString(); // 直接返回原始数字，不格式化
+    return num ? num.toString() : "-"; // 直接返回原始数字，不格式化
   }
 };
 
