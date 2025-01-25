@@ -59,15 +59,15 @@ const keywordMap = {
 const oilStorageHook = useDataIndex(
   [keywordMap["成品油库存量"]],
   1,
-  startOfYear(),
-  endOfYear()
+  startOfYear() + " 00:00:00",
+  endOfYear() + " 23:59:59"
 );
 
 const oilBargainHook = useDataIndex(
   [keywordMap["成品油交易量"]],
   1,
-  startOfYear(),
-  endOfYear()
+  startOfYear() + " 00:00:00",
+  endOfYear() + " 23:59:59"
 );
 
 const initData = async () => {

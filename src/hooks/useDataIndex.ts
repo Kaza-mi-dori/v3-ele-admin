@@ -21,14 +21,14 @@ export const useDataIndex = (
   const loading = ref<boolean>(false);
   const error = ref<any>(null);
 
-  const fetchData = async () => {
+  const fetchData = async (lSince?: string, lTo?: string) => {
     try {
       const res: any = await DataIndicesAPI.getDataIndicesList({
         标识集合: keyword,
         页码: 1,
         页容量: amount,
-        日期晚于: since,
-        日期早于: to,
+        时间晚于: lSince || since || null,
+        时间早于: lTo || to || null,
       });
       const originData = res["当前记录"] || [];
       const sortedData = originData.sort((a: any, b: any) => {

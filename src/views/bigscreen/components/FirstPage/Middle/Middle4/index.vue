@@ -179,7 +179,7 @@ const initChartMiddle4 = () => {
   // 根据数据渲染图表
   // 类目x轴
   const xAxisData = getDateOfOneYear();
-  // console.log(xAxisData);
+  // console.log("xAxisData"xAxisData);
   const series = categoryMap[activeName.value as keyof typeof categoryMap];
   const option = {
     tooltip: {
@@ -240,10 +240,11 @@ const initChartMiddle4 = () => {
     },
     smooth: false,
     series: series.map((item: string) => {
+      // console.log("item:", item);
       return {
         name: item,
         type: "line",
-        smooth: true,
+        // smooth: true,
         data: dataMap.value[item] ? dataFilterOne(dataMap.value[item]) : [],
         // markPoint: {
         //   data: [

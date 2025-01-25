@@ -44,7 +44,7 @@ const keywordMap = {
   化工及其他产品贸易累计合同数量: "1944e0de1ae",
   原油贸易累计合同数量: "1944e0c8e39",
   // "LNG贸易累计合同数量": "1944e0aa668",
-  // "煤炭贸易累计合同数量": "1944e0aa669",
+  煤炭贸易累计合同数量: "1949ddb47ed",
   // "燃料油贸易累计合同数量": "1944e0aa66a",
 };
 
@@ -79,7 +79,13 @@ const data = ref<any[]>([
     iconUrl: icon3,
   },
   { title: "LNG", value: 50, unit: "万吨", iconUrl: icon4 },
-  { title: "煤炭", value: 100, unit: "万吨", iconUrl: icon5 },
+  {
+    title: "煤炭",
+    value: 100,
+    unit: "万吨",
+    keyword: keywordMap["煤炭贸易累计合同数量"],
+    iconUrl: icon5,
+  },
   { title: "燃料油", value: 50, unit: "万吨", iconUrl: icon6 },
 ]);
 
@@ -113,7 +119,10 @@ async function initData() {
       item.value = 0;
     }
   });
-  await fetchData();
+  await fetchData(
+    `${props.year}-01-01 00:00:00`,
+    `${props.year}-12-31 23:59:59`
+  );
   // 将result.value中的数据赋值给totalData
   for (const key in result.value) {
     // 如果有数据，则取第一条
