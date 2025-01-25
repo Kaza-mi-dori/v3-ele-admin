@@ -108,7 +108,7 @@ const initData = async () => {
       allData.push({
         year,
         type: "profit",
-        value: parseFloat(item.数据)
+        value: parseFloat(item.数据),
       });
     });
 
@@ -138,7 +138,7 @@ const initChartRight3 = async () => {
   const revenueData: number[] = [];
   const profitData: number[] = [];
 
-  if(mode === 0) {
+  if (mode === 0) {
     // 按照日期字段（年份）从低到高排序
     const sortedData = resData.value.sort((a, b) => {
       return new Date(a.日期).getFullYear() - new Date(b.日期).getFullYear();
@@ -258,7 +258,7 @@ const initChartRight3 = async () => {
     series: [
       {
         type: "bar",
-        barWidth: "50%",
+        barWidth: "25%",
         barGap: "10%", // 柱体间距
         data: currentData, // 柱状图的值: 根据选中的页签显示对应的数据
         name: activeName.value === REVENUE ? "营收" : "利润",

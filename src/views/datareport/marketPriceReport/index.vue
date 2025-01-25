@@ -6,8 +6,8 @@
       <div class="__title">市场价格报表</div>
       <div class="__stat">
         <span class="__item">你有</span>
-        <span class="__item">统计指标一</span>
-        <span class="__item">统计指标二</span>
+        <!-- <span class="__item">统计指标一</span>
+        <span class="__item">统计指标二</span> -->
       </div>
     </div>
     <!-- 筛选操作区 -->

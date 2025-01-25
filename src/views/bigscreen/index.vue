@@ -284,10 +284,12 @@ onMounted(async () => {
       const canvas = document.getElementById(
         "first-page-bg-canvas-1"
       ) as HTMLCanvasElement;
-      canvas.width = document.body.clientWidth;
-      canvas.height = document.body.clientHeight;
-      starrySky.setCanvas(canvas);
-      starrySky.init();
+      if (canvas) {
+        canvas.width = document.body.clientWidth;
+        canvas.height = document.body.clientHeight;
+        starrySky.setCanvas(canvas);
+        starrySky.init();
+      }
     }, 100);
   });
 });

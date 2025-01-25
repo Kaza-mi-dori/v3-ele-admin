@@ -150,6 +150,7 @@ export const constantRoutes: RouteRecordRaw[] = [
           },
         ],
       },
+      // 经营主体二级页
       {
         path: "subject",
         name: "SubjectSubsidiary",
@@ -237,6 +238,15 @@ export const constantRoutes: RouteRecordRaw[] = [
             component: () =>
               import(
                 "@/views/bigscreen/components/ThirdPage/Components/profit.vue"
+              ),
+          },
+          // 关键指标分析二级页
+          {
+            path: "revenue",
+            name: "Revenue",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/revenue.vue"
               ),
           },
         ],

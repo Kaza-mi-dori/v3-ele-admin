@@ -4,7 +4,10 @@
       <Item1
         style="margin: 0 auto"
         :amount="oilData.oilStorage"
-        title="成品油库存量"
+        :title="
+          '成品油库存量' +
+          (oilDataDate.oilStorage ? `(${oilDataDate.oilStorage})` : '')
+        "
         :iconUrl="inventory"
       />
     </div>
@@ -12,7 +15,7 @@
       <Item1
         style="margin: 0 auto"
         :amount="oilData.oilBargain"
-        title="成品油交易量"
+        :title="'成品油交易量'"
         :iconUrl="business"
       />
     </div>
@@ -43,9 +46,14 @@ let oilData = ref({
   oilBargain: "0",
 });
 
+const oilDataDate = reactive({
+  oilStorage: "",
+  oilBargain: "",
+});
+
 const keywordMap = {
   成品油库存量: "1944e9e1626",
-  // 成品油交易量: "19415920653",
+  成品油交易量: "1944e0aa665",
 };
 
 const oilStorageHook = useDataIndex(
@@ -55,12 +63,12 @@ const oilStorageHook = useDataIndex(
   endOfYear()
 );
 
-// const oilBargainHook = useDataIndex(
-//   [keywordMap["成品油交易量"]],
-//   1,
-//   startOfYear(),
-//   endOfYear()
-// );
+const oilBargainHook = useDataIndex(
+  [keywordMap["成品油交易量"]],
+  1,
+  startOfYear(),
+  endOfYear()
+);
 
 const initData = async () => {
   queryForm.value = {
@@ -98,12 +106,19 @@ const initData = async () => {
   if (oilStorageHook.result.value[keywordMap["成品油库存量"]]) {
     oilData.value.oilStorage =
       oilStorageHook.result.value[keywordMap["成品油库存量"]][0].数据;
+    oilDataDate.oilStorage = oilStorageHook.result.value[
+      keywordMap["成品油库存量"]
+    ][0].时间?.substring(5, 10);
   }
-  // await oilBargainHook.fetchData();
-  // if (oilBargainHook.result.value[keywordMap["成品油交易量"]]) {
-  //   oilData.value.oilBargain =
-  //     oilBargainHook.result.value[keywordMap["成品油交易量"]][0].数据;
-  // }
+  await oilBargainHook.fetchData();
+  if (oilBargainHook.result.value[keywordMap["成品油交易量"]]) {
+    oilData.value.oilBargain = (
+      +oilBargainHook.result.value[keywordMap["成品油交易量"]][0].数据 * 10000
+    ).toFixed(0);
+    oilDataDate.oilBargain = oilBargainHook.result.value[
+      keywordMap["成品油交易量"]
+    ][0].时间?.substring(5, 10);
+  }
 };
 
 onMounted(() => {
