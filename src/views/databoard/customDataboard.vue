@@ -300,7 +300,11 @@ function initChart() {
     },
     xAxis: {
       type: "category",
-      data: dates,
+      // data: dates,
+      // 直接使用每个数据的时间
+      data: dataPool.value
+        .sort((a: any, b: any) => (a.时间 > b.时间 ? 1 : -1))
+        .map((item: any) => item.时间?.substring(0, 10)),
     },
     yAxis: {
       type: "value",

@@ -22,7 +22,7 @@ export const getDateOfOneYear = (givenYear?: string) => {
 
 /**
  * 返回当年1月1日到现在的日期
- * @param desc 是否降序
+ * @param desc 是否将最近日期排在最前面（默认否）
  * @returns
  */
 export const getDateOfOneYearToNow = (desc: boolean = false) => {

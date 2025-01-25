@@ -145,7 +145,6 @@ const getRandomDataOneMonth = () => {
 };
 
 const dataFilterOne = (data: DataRecord[]) => {
-  // console.log("data", data);
   return data.map((item) => {
     return {
       time: item.time,
