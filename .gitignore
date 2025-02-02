@@ -14,4 +14,7 @@ dist-ssr
 *.sln
 *.local
 
+# 面试复习
+.specstory
+
 stats.html

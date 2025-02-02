@@ -1,6 +1,5 @@
 import request from "@/utils/request";
 import request2 from "@/utils/request2";
-import { s } from "vite/dist/node/types.d-aGj9QkWt";
 
 const ROLE_BASE_URL = "/api/v1/roles";
 
