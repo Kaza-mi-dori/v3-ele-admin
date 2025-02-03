@@ -13,6 +13,11 @@ import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
 
+const props = defineProps<{
+  /** 数据 */
+  data?: any;
+}>();
+
 // 每个类别对应的数据系列
 const months = [
   "1月",

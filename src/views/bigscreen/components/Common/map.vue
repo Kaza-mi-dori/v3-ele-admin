@@ -148,6 +148,32 @@
         <span>{{ oilStationStatistic.jiameng }}</span>
       </div>
     </div>
+    <!-- 库存统计 -->
+    <div
+      v-else
+      class="oil-station-statistic"
+      style="
+        position: absolute;
+        width: 22rex;
+        font-size: 16px;
+        z-index: 1001;
+        bottom: 40px;
+        right: 10px;
+      "
+    >
+      <div class="oil-station-statistic-item">
+        <span>库存总量</span>
+        <span>{{ oilStockStatistic.total }}</span>
+      </div>
+      <div class="oil-station-statistic-item">
+        <span class="oil-depot-zulin">钦州永盛库</span>
+        <span>{{ oilStockStatistic.yongsheng }}</span>
+      </div>
+      <div class="oil-station-statistic-item">
+        <span class="oil-depot-jiameng">东莞盛源库</span>
+        <span>{{ oilStockStatistic.shengyuan }}</span>
+      </div>
+    </div>
   </tlbs-map>
 </template>
 
@@ -159,6 +185,7 @@ import gas from "@/views/bigscreen/img/oil2_medium.png";
 import enterprise from "@/views/bigscreen/img/enterprise.png";
 import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
 import { getDistrict } from "@/api/thirdSystem/tmap";
+import { useDataIndex } from "@/hooks/useDataIndex";
 import { inject } from "vue";
 
 const props = defineProps({
@@ -168,6 +195,27 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+const keywordMap = {
+  成品油库存量: "1944e9e1626",
+  盛源汽油库存量: "1944df2de3c",
+  盛源柴油库存量: "1944df32f1c",
+  永盛汽油库存量: "1944df20525",
+  永盛柴油库存量: "1944df2800d",
+};
+
+const totalOilStockHook = useDataIndex(
+  [
+    keywordMap["成品油库存量"],
+    keywordMap["盛源汽油库存量"],
+    keywordMap["盛源柴油库存量"],
+    keywordMap["永盛汽油库存量"],
+    keywordMap["永盛柴油库存量"],
+  ],
+  5,
+  undefined,
+  undefined
+);
 
 const emit = defineEmits(["clickGeo"]);
 
@@ -263,6 +311,11 @@ const oilStationStatistic = ref({
   zijian: 0,
   zulin: 0,
   jiameng: 0,
+});
+const oilStockStatistic = ref({
+  total: 0,
+  yongsheng: 0,
+  shengyuan: 0,
 });
 
 /** 显示弹窗的位置 */
@@ -471,7 +524,40 @@ onMounted(() => {
     if (zoomControl && zoomControl.parentElement) {
       zoomControl.parentElement.style.display = "none";
     }
-  }, 1000);
+  }, 2000);
+  totalOilStockHook.fetchData().then(() => {
+    oilStockStatistic.value.total = 0;
+    oilStockStatistic.value.yongsheng = 0;
+    oilStockStatistic.value.shengyuan = 0;
+    for (const key in totalOilStockHook.result.value) {
+      switch (key) {
+        case keywordMap["成品油库存量"]:
+          oilStockStatistic.value.total =
+            totalOilStockHook.result.value[key]?.[0]?.["数据"];
+          break;
+        case keywordMap["盛源汽油库存量"]:
+          oilStockStatistic.value.shengyuan += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+        case keywordMap["永盛汽油库存量"]:
+          oilStockStatistic.value.yongsheng += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+        case keywordMap["盛源柴油库存量"]:
+          oilStockStatistic.value.shengyuan += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+        case keywordMap["永盛柴油库存量"]:
+          oilStockStatistic.value.yongsheng += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+      }
+    }
+  });
 });
 
 watch(

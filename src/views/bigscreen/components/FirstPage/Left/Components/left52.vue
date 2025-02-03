@@ -45,7 +45,7 @@ const keywordMap = {
   原油贸易累计合同数量: "1944e0c8e39",
   // "LNG贸易累计合同数量": "1944e0aa668",
   煤炭贸易累计合同数量: "1949ddb47ed",
-  // "燃料油贸易累计合同数量": "1944e0aa66a",
+  燃料油贸易累计合同数量: "194a07f15e8",
 };
 
 const { result, loading, error, fetchData } = useDataIndex(
@@ -86,7 +86,13 @@ const data = ref<any[]>([
     keyword: keywordMap["煤炭贸易累计合同数量"],
     iconUrl: icon5,
   },
-  { title: "燃料油", value: 50, unit: "万吨", iconUrl: icon6 },
+  {
+    title: "燃料油",
+    value: 50,
+    keyword: keywordMap["燃料油贸易累计合同数量"],
+    unit: "万吨",
+    iconUrl: icon6,
+  },
 ]);
 
 const props = defineProps<{

@@ -8,7 +8,7 @@
       <div class="__left">
         <div class="text1">
           <span class="__number">{{ formatNumber(props.fulfilled) }}</span>
-          <span class="__unit">万元</span>
+          <span class="__unit">{{ props.unit || "万元" }}</span>
         </div>
         <div class="text2">
           <span class="__desc">同比</span>
@@ -30,14 +30,16 @@
         </div>
         <div class="text2">
           <span class="__desc">目标额</span>
-          <span class="__number">{{ formatNumber(props.target) }}万元</span>
+          <span class="__number">
+            {{ formatNumber(props.target) + (props.unit || "万元") }}
+          </span>
         </div>
         <div class="monthly-total">
           <div class="scale">月</div>
           <span class="month-num">
             {{ formatNumber(props.monthTotal) }}
           </span>
-          <span class="__unit">万元</span>
+          <span class="__unit">{{ props.unit || "万元" }}</span>
         </div>
       </div>
       <div class="__right">
@@ -74,6 +76,8 @@ const props = defineProps<{
   yoy: number;
   /** 本月累计 */
   monthTotal: number;
+  /** 单位 */
+  unit?: string;
 }>();
 
 const router = useRouter();

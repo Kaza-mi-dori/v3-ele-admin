@@ -24,8 +24,12 @@ const months = [
 ];
 
 const getRandomData = (month: string[]) => {
-  return month.map(() => Math.floor(Math.random() * 101) - 20); // 随机生成-20~-100之间的值
+  return props.data || month.map(() => 0); // 随机生成-20~-100之间的值
 };
+
+const props = defineProps<{
+  data?: any;
+}>();
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 const initChart = () => {

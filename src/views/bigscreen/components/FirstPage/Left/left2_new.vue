@@ -20,6 +20,7 @@ interface FinancialData {
   target: number;
   monthTotal: number;
   icon: string;
+  unit?: string;
 }
 
 let revenueData = ref<FinancialData>({
@@ -29,6 +30,7 @@ let revenueData = ref<FinancialData>({
   target: 0,
   monthTotal: 0,
   icon: Coin,
+  unit: "亿元",
 });
 
 let profitData = ref<FinancialData>({
@@ -38,6 +40,7 @@ let profitData = ref<FinancialData>({
   target: 0,
   monthTotal: 0,
   icon: WrappedGift,
+  unit: "万元",
 });
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
@@ -50,18 +53,27 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   页容量: 20,
 });
 
+const currentRevenue = ref(0); // 年度营收
+const currentProfit = ref(0); // 年度利润
+const lastYearRevenue = ref(0); // 去年营收
+const lastYearProfit = ref(0); // 去年利润
+const monthRevenue = ref(0); // 月度营收
+const monthProfit = ref(0); // 月度利润
+
 const commonQueryParams = {
   页码: 1,
   页容量: 1,
-  企业名称: "广投石化",
+  // 企业名称: "广投石化",
+  企业名称: "石化板块",
   状态集合: ["有效"],
-  类型集合: ["年"],
+  // 类型集合: ["年"],
+  类型集合: ["月"],
 };
 
 // 计算同比
 const calculateYoY = (current: number, lastYear: number): number => {
   return lastYear
-    ? Number((((current - lastYear) / lastYear) * 100).toFixed(2))
+    ? Number((((current - lastYear) / Math.abs(lastYear)) * 100).toFixed(2))
     : 0;
 };
 
@@ -80,9 +92,6 @@ const fetchLastYearData = async () => {
   };
 
   const resData = await fetchData(queryParams);
-
-  let lastYearRevenue = ref(0);
-  let lastYearProfit = ref(0);
 
   (resData?.["详情"] || []).forEach((item: any) => {
     if (item["业态类型"] === "总体") {
@@ -105,13 +114,12 @@ const initData = async () => {
 
   const resData = await fetchData(queryParams);
 
-  let currentRevenue = ref(0);
-  let currentProfit = ref(0);
-
   (resData?.["详情"] || []).forEach((item: any) => {
     if (item["业态类型"] === "总体") {
       currentRevenue.value = Number(item.累计营收金额) || 0;
       currentProfit.value = Number(item.累计利润金额) || 0;
+      monthRevenue.value = Number(item.当期营收金额) || 0;
+      monthProfit.value = Number(item.当期利润金额) || 0;
     }
   });
 
@@ -119,18 +127,20 @@ const initData = async () => {
   revenueData.value = {
     title: "累计营收",
     yoy: calculateYoY(currentRevenue.value, lastYearData.lastYearRevenue.value),
-    fulfilled: currentRevenue.value,
-    target: Number(resData.营收基准值) || 0,
-    monthTotal: currentRevenue.value,
+    fulfilled: +(currentRevenue.value / 10000).toFixed(2),
+    target: +(Number(resData.营收基准值) / 10000).toFixed(2),
+    monthTotal: +(monthRevenue.value / 10000).toFixed(2),
     icon: Coin,
+    unit: "亿元",
   };
   profitData.value = {
     title: "累计利润",
     yoy: calculateYoY(currentProfit.value, lastYearData.lastYearProfit.value),
     fulfilled: currentProfit.value,
     target: Number(resData.利润基准值) || 0,
-    monthTotal: currentProfit.value,
+    monthTotal: monthProfit.value,
     icon: WrappedGift,
+    unit: "万元",
   };
 };
 

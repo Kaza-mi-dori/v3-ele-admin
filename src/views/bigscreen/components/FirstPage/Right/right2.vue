@@ -66,16 +66,16 @@ interface Rank {
 
 const totalData: Ref<{}> = ref({
   name: "总金额",
-  value: 20000,
+  value: 134176,
   unit: "万元",
 });
 
 const rankData: Ref<Rank[]> = ref([
-  { order: 1, name: "A公司", value: 5000, unit: "万元" },
-  { order: 2, name: "B有限公司", value: 4000, unit: "万元" },
-  { order: 3, name: "C公司", value: 3000, unit: "万元" },
-  { order: 4, name: "D公司", value: 2000, unit: "万元" },
-  { order: 5, name: "E公司", value: 1000, unit: "万元" },
+  { order: 1, name: "中油北斗", value: 28640, unit: "万元" },
+  { order: 2, name: "必达能源", value: 6661, unit: "万元" },
+  { order: 3, name: "广硕能源", value: 6572, unit: "万元" },
+  { order: 4, name: "万宸石化", value: 6494, unit: "万元" },
+  { order: 5, name: "延长壳牌", value: 5044, unit: "万元" },
 ]);
 
 const rankDataToDisplay: Ref<Rank[]> = ref([]);
@@ -97,11 +97,11 @@ const getImageByRank = (order: number | undefined) => {
 watch(
   () => rankData.value,
   (newVal) => {
-    rankDataToDisplay.value = newVal.sort((a, b) => b.value - a.value);
-    rankDataToDisplay.value = rankDataToDisplay.value
+    rankDataToDisplay.value = newVal
+      .sort((a, b) => b.value - a.value)
       .map((item, index) => ({
         ...item,
-        ratio: item.value / totalData.value.value,
+        ratio: (item.value / totalData.value.value).toFixed(3),
         order: index + 1,
       }))
       .slice(0, 5);

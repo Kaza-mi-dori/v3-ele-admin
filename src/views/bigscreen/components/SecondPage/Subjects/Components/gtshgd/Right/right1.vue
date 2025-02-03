@@ -31,6 +31,10 @@
 import Model1 from "@/views/bigscreen/components/SecondPage/Model1/index.vue";
 import { ref } from "vue";
 
+const props = defineProps<{
+  data?: any;
+}>();
+
 const tradePartners = ref([
   { company: "公司A", amount: 96, ratio: 10.23 },
   { company: "公司B", amount: 82, ratio: 8.23 },
@@ -38,6 +42,12 @@ const tradePartners = ref([
   { company: "公司D", amount: 56, ratio: 5.23 },
   { company: "公司E", amount: 30, ratio: 3.23 },
 ]);
+
+onMounted(() => {
+  if (props.data) {
+    tradePartners.value = props.data;
+  }
+});
 </script>
 
 <style lang="scss" scoped>

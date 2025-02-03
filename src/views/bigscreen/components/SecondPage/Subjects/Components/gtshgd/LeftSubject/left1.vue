@@ -31,10 +31,16 @@ import greenBg from "@/views/bigscreen/img/green2_bg.png";
 import redBg from "@/views/bigscreen/img/red2_bg.png";
 import { ref } from "vue";
 import { useTransition } from "@vueuse/core";
+import { i } from "vite/dist/node/types.d-aGj9QkWt";
 
 // 定义背景图片数组
 const backgroundImages = [yellowBg, blueBg, greenBg, redBg];
 const numColors = ["#fed971", "#4fdefe", "#4df0b8", "#fe8787"];
+
+const props = defineProps<{
+  /** 数据 */
+  data?: any;
+}>();
 
 // 定义营收数据
 const contractData = ref([
@@ -57,27 +63,54 @@ const contractData = ref([
 
 const outputValues = ref([]);
 
-contractData.value.forEach((item) => {
-  const source = ref(0); // 初始值为 0
-  const decimalPlaces = item.value.toString().includes(".")
-    ? item.value.toString().split(".")[1].length
-    : 0; // 获取小数位数
+// contractData.value.forEach((item) => {
+//   const source = ref(0); // 初始值为 0
+//   const decimalPlaces = item.value.toString().includes(".")
+//     ? item.value.toString().split(".")[1].length
+//     : 0; // 获取小数位数
 
-  const output = useTransition(source, {
-    duration: 2000, // 动画持续时间
-  });
+//   const output = useTransition(source, {
+//     duration: 2000, // 动画持续时间
+//   });
 
-  // 使用 Intl.NumberFormat 添加分隔符，并保持小数位数
-  const formattedOutput = computed(() => {
-    const numberFormatter = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: decimalPlaces,
-      maximumFractionDigits: decimalPlaces,
+//   // 使用 Intl.NumberFormat 添加分隔符，并保持小数位数
+//   const formattedOutput = computed(() => {
+//     const numberFormatter = new Intl.NumberFormat("en-US", {
+//       minimumFractionDigits: decimalPlaces,
+//       maximumFractionDigits: decimalPlaces,
+//     });
+//     return numberFormatter.format(output.value);
+//   });
+
+//   source.value = Number(item.value); // 设置目标值
+//   outputValues.value.push(formattedOutput); // 存储格式化后的值
+// });
+
+onMounted(() => {
+  if (props.data) {
+    contractData.value = props.data;
+  }
+  contractData.value.forEach((item) => {
+    const source = ref(0); // 初始值为 0
+    const decimalPlaces = item.value.toString().includes(".")
+      ? item.value.toString().split(".")[1].length
+      : 0; // 获取小数位数
+
+    const output = useTransition(source, {
+      duration: 2000, // 动画持续时间
     });
-    return numberFormatter.format(output.value);
-  });
 
-  source.value = Number(item.value); // 设置目标值
-  outputValues.value.push(formattedOutput); // 存储格式化后的值
+    // 使用 Intl.NumberFormat 添加分隔符，并保持小数位数
+    const formattedOutput = computed(() => {
+      const numberFormatter = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: decimalPlaces,
+        maximumFractionDigits: decimalPlaces,
+      });
+      return numberFormatter.format(output.value);
+    });
+    source.value = Number(item.value); // 设置目标值
+    outputValues.value.push(formattedOutput); // 存储格式化后的值
+  });
 });
 </script>
 

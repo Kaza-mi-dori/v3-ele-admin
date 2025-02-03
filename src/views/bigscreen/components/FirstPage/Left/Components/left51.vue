@@ -15,21 +15,29 @@ const router = useRouter();
 const left51Ref = ref<HTMLElement>();
 const chartRef = shallowRef<echarts.ECharts>();
 const data = ref<any[]>([
+  // { title: "广投石化", value: [100, 50, 10, 20, 1000, 250] },
+  // { title: "广投石化广东分公司", value: [100, 50, 25, 40, 400, 125] },
+  // { title: "广投石化舟山", value: [0, 0, 0, 0, 0, 0] },
+  // { title: "永盛仓储", value: [0, 0, 0, 0, 0, 0] },
   { title: "广投石化", value: [100, 50, 10, 20, 1000, 250] },
-  { title: "广投石化广东分公司", value: [100, 50, 25, 40, 400, 125] },
-  { title: "广投石化舟山", value: [0, 0, 0, 0, 0, 0] },
-  { title: "永盛仓储", value: [0, 0, 0, 0, 0, 0] },
+  { title: "开燃公司", value: [100, 50, 25, 40, 400, 125] },
+  { title: "桂盛公司", value: [0, 0, 0, 0, 0, 0] },
+  { title: "恒润公司", value: [0, 0, 0, 0, 0, 0] },
 ]);
 const companyStore = companyStoreHook();
 
 // 获取数据
 async function getData() {
   const firms = [
+    // OurCompanyEnum.GTSHC,
+    // OurCompanyEnum.GDFGS,
+    // OurCompanyEnum.GTSHC_ZS,
+    // OurCompanyEnum.YSCC,
+    // OurCompanyEnum.YSSHC,
     OurCompanyEnum.GTSHC,
-    OurCompanyEnum.GDFGS,
-    OurCompanyEnum.GTSHC_ZS,
-    OurCompanyEnum.YSCC,
-    OurCompanyEnum.YSSHC,
+    OurCompanyEnum.KRY,
+    OurCompanyEnum.GSSHC,
+    OurCompanyEnum.HRY,
   ];
   const res = await Promise.allSettled(
     firms.map(
@@ -86,9 +94,12 @@ async function getData() {
 function dataFilterOne() {
   const order = {
     [OurCompanyEnum.GTSHC]: 1,
-    [OurCompanyEnum.GDFGS]: 2,
-    [OurCompanyEnum.GTSHC_ZS]: 3,
-    [OurCompanyEnum.YSCC]: 4,
+    // [OurCompanyEnum.GDFGS]: 2,
+    // [OurCompanyEnum.GTSHC_ZS]: 3,
+    // [OurCompanyEnum.YSCC]: 4,
+    [OurCompanyEnum.KRY]: 2,
+    [OurCompanyEnum.GSSHC]: 3,
+    [OurCompanyEnum.HRY]: 4,
   };
   data.value = data.value
     .map((item) => {
@@ -118,6 +129,10 @@ function onClickBar(params: any) {
   }
 }
 
+function onClickLabel(params: any) {
+  console.log(params);
+}
+
 // 初始化图表
 function initChart() {
   // 将数据整理为柱状图所需的格式
@@ -127,6 +142,8 @@ function initChart() {
     chartRef.value = echarts.init(left51Ref.value as HTMLDivElement);
     // 增加点击回调
     chartRef.value.on("click", "series", onClickBar);
+    // 点击series的label
+    chartRef.value.on("click", "series.label", onClickLabel);
   }
   chartRef.value.clear();
   console.log(data.value);

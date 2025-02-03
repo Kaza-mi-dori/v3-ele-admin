@@ -2,7 +2,7 @@
   <Model1 class="model1" title="结算交易分析">
     <div class="risk-warning" @click="handleRiskWarningClick">
       <span class="text">有</span>
-      <span class="risk-count">2</span>
+      <span class="risk-count">0</span>
       <span class="text">份合同处于有履约风险状态</span>
       <span>
         <el-icon><ArrowRight /></el-icon>
@@ -18,19 +18,29 @@ import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
 import sassvariables from "@/styles/variables.module.scss";
+import { getDateOfOneMonth } from "@/utils/time";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 const router = useRouter();
 
+const props = defineProps<{
+  data?: any;
+}>();
+
 // 每个类别对应的数据系列
-const dates = ["10-01", "10-02", "10-03", "10-04", "10-05", "10-06", "10-07"];
+const dates = getDateOfOneMonth(new Date().toISOString()).slice(22);
 
 // 随机生成收入数据
 const getRandomData = () => {
-  return dates.map(() => ({
-    tradingVolume: Math.floor(Math.random() * 11), // 销售量
-    transactionVolume: Math.floor(Math.random() * 101), // 销售金额
-  }));
+  return (
+    props.data ||
+    dates.map(() => ({
+      // tradingVolume: Math.floor(Math.random() * 11), // 销售量
+      // transactionVolume: Math.floor(Math.random() * 101), // 销售金额
+      tradingVolume: 0,
+      transactionVolume: 0,
+    }))
+  );
 };
 
 const initChart = () => {

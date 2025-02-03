@@ -14,6 +14,11 @@ import { onMounted } from "vue";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 
+const props = defineProps<{
+  /** 数据 */
+  data?: any;
+}>();
+
 const initChart2Left2 = () => {
   chart.value?.clear();
   chart.value = echarts.init(
@@ -76,10 +81,12 @@ const initChart2Left2 = () => {
             fontSize: 20,
           },
         },
-        data: Object.keys(ContractTypeEnumMap).map((key) => ({
-          value: Math.floor(Math.random() * 100),
-          name: ContractTypeEnumMap[key as keyof typeof ContractTypeEnumMap],
-        })),
+        data:
+          props.data ||
+          Object.keys(ContractTypeEnumMap).map((key) => ({
+            value: Math.floor(Math.random() * 100),
+            name: ContractTypeEnumMap[key as keyof typeof ContractTypeEnumMap],
+          })),
         // 添加center属性调整饼图位置
         center: ["42%", "50%"], //X轴位置调整为40%，Y轴位置保持在50%
       },

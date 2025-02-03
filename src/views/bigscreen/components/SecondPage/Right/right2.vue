@@ -18,6 +18,7 @@ import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
 import sassvariables from "@/styles/variables.module.scss";
+import { getDateOfOneMonth } from "@/utils/time";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 const router = useRouter();
@@ -27,7 +28,7 @@ const props = defineProps<{
 }>();
 
 // 每个类别对应的数据系列
-const dates = ["10-01", "10-02", "10-03", "10-04", "10-05", "10-06", "10-07"];
+const dates = getDateOfOneMonth(new Date().toISOString()).slice(22);
 
 // 随机生成收入数据
 const getRandomData = () => {

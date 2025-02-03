@@ -13,7 +13,7 @@
     <img style="position: absolute; top: 0" height="100vh" />
     <div class="bg-view1__header">
       <div class="title">
-        <div class="__title--text">广投石化{{ title }}驾驶舱</div>
+        <div class="__title--text">石化板块{{ title }}驾驶舱</div>
       </div>
     </div>
     <div class="bg-view1__body">

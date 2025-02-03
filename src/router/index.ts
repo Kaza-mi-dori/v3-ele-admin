@@ -192,6 +192,30 @@ export const constantRoutes: RouteRecordRaw[] = [
                 "@/views/bigscreen/components/SecondPage/Subjects/gtshgd.vue"
               ),
           },
+          {
+            path: "kry",
+            name: "Kry",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Subjects/kry.vue"
+              ),
+          },
+          {
+            path: "gsshc",
+            name: "Gsshc",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Subjects/gsshc.vue"
+              ),
+          },
+          {
+            path: "hry",
+            name: "Hry",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/Subjects/hry.vue"
+              ),
+          },
         ],
       },
       {

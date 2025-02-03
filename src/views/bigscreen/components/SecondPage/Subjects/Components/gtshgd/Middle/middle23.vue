@@ -29,12 +29,19 @@ const months = [
   "12月",
 ];
 
+const props = defineProps<{
+  data?: any;
+}>();
+
 // 随机生成收入数据
 const getRandomData = () => {
-  return months.map(() => ({
-    income: Math.floor(Math.random() * 101),
-    profit: Math.floor(Math.random() * 101),
-  }));
+  return (
+    props.data ||
+    months.map(() => ({
+      income: 0,
+      profit: 0,
+    }))
+  );
 };
 
 const chart = shallowRef<echarts.ECharts | null>(null);

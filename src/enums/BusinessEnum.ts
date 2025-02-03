@@ -97,6 +97,14 @@ export const enum OurCompanyEnum {
   YSCC = "永盛仓储",
   /** 永盛石化 */
   YSSHC = "永盛石化",
+  /** 开燃公司 */
+  KRY = "开燃公司",
+  /** 桂盛公司 */
+  GSSHC = "桂盛公司",
+  /** 恒润公司 */
+  HRY = "恒润公司",
+  /** 石化板块（特殊） */
+  SHBK = "石化板块",
 }
 
 export const OurCompanyEnumMap = {
@@ -105,6 +113,10 @@ export const OurCompanyEnumMap = {
   [OurCompanyEnum.GTSHC_ZS]: "广投石化舟山",
   [OurCompanyEnum.YSCC]: "永盛仓储",
   [OurCompanyEnum.YSSHC]: "永盛石化",
+  [OurCompanyEnum.KRY]: "开燃公司",
+  [OurCompanyEnum.GSSHC]: "桂盛公司",
+  [OurCompanyEnum.HRY]: "恒润公司",
+  [OurCompanyEnum.SHBK]: "石化板块",
 };
 
 // 全称map
@@ -114,6 +126,10 @@ export const OurCompanyFullNameMap = {
   [OurCompanyEnum.GTSHC_ZS]: "广投石化(舟山)有限公司",
   [OurCompanyEnum.YSCC]: "广西永盛仓储有限公司",
   [OurCompanyEnum.YSSHC]: "广西永盛石油化工有限公司",
+  [OurCompanyEnum.KRY]: "开燃公司",
+  [OurCompanyEnum.GSSHC]: "桂盛公司",
+  [OurCompanyEnum.HRY]: "恒润公司",
+  [OurCompanyEnum.SHBK]: "石化板块",
 };
 
 /** 合同类型枚举 */

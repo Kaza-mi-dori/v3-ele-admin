@@ -2,38 +2,9 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
-      <Left1
-        :data="[
-          {
-            label: '今日采购量',
-            value: '-',
-            unit: '万吨',
-          },
-          {
-            label: '今日销售量',
-            value: '-',
-            unit: '万吨',
-          },
-          {
-            label: '总库存量',
-            value: '5.73',
-            unit: '万吨',
-          },
-        ]"
-      />
+      <Left1 />
       <div class="b-space" />
-      <Left2
-        :data="[
-          {
-            name: '采购合同',
-            value: 30,
-          },
-          {
-            name: '销售合同',
-            value: 808,
-          },
-        ]"
-      />
+      <Left2 />
       <div class="b-space" />
       <Left3 />
     </div>
@@ -52,7 +23,7 @@
           :data="[
             {
               planned: 0,
-              actual: 287651.14,
+              actual: 3691.19,
             },
           ]"
         />
@@ -60,42 +31,14 @@
     </div>
     <div class="c-space" />
     <div class="b-right">
-      <Right1
-        :data="[
-          {
-            company: '中油北斗',
-            amount: 28640,
-            ratio: 10.23,
-          },
-          {
-            company: '必达能源',
-            amount: 6661,
-            ratio: 8.23,
-          },
-          {
-            company: '广硕能源',
-            amount: 6572,
-            ratio: 7.23,
-          },
-          {
-            company: '万宸石化',
-            amount: 6494,
-            ratio: 5.23,
-          },
-          {
-            company: '延长壳牌',
-            amount: 5044,
-            ratio: 3.23,
-          },
-        ]"
-      />
+      <Right1 />
       <div class="b-space" />
       <Right2 />
       <div class="b-space" />
       <Right3
         :data="[
           {
-            profit: -2284.19,
+            profit: 122.81,
           },
         ]"
       />
@@ -119,20 +62,20 @@ import { ref } from "vue";
 
 const totalData = ref([
   {
-    year: "78937.61",
-    month: "78937.61",
+    year: "-",
+    month: "-",
   },
   {
-    year: "118744.26",
-    month: "118744.26",
+    year: "3691.19",
+    month: "3691.19",
   },
   {
-    year: "287651.14",
-    month: "287651.14",
+    year: "3691.19",
+    month: "3691.19",
   },
   {
-    year: "-2284.19",
-    month: "-2284.19",
+    year: "122.81",
+    month: "122.81",
   },
 ]);
 </script>
@@ -154,7 +97,7 @@ const totalData = ref([
     flex: 1.4;
     @apply flex flex-col justify-between relative;
     .middle-item {
-      @apply flex flex-1 justify-center items-center;
+      @apply flex flex-1 items-center justify-center;
     }
     .flex-grow {
       flex: 5;
@@ -182,6 +125,6 @@ const totalData = ref([
   width: 15px;
 }
 // .model1 {
-// @apply flex flex-1 flex-col h-full;
+//   @apply flex flex-1 flex-col h-full;
 // }
 </style>

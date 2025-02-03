@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="title">
-          <div class="__title--text">广投石化驾驶舱</div>
+          <div class="__title--text">石化板块驾驶舱</div>
         </div>
       </div>
       <div class="bg-view__body">

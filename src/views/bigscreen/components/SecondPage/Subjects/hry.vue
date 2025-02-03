@@ -5,18 +5,18 @@
       <Left1
         :data="[
           {
-            label: '今日采购量',
-            value: '-',
-            unit: '万吨',
+            label: '今日收款',
+            value: '1696.36',
+            unit: '万元',
           },
           {
-            label: '今日销售量',
-            value: '-',
-            unit: '万吨',
+            label: '今日付款',
+            value: '3871.32',
+            unit: '万元',
           },
           {
             label: '总库存量',
-            value: '5.73',
+            value: '2.47',
             unit: '万吨',
           },
         ]"
@@ -26,11 +26,11 @@
         :data="[
           {
             name: '采购合同',
-            value: 30,
+            value: '10',
           },
           {
             name: '销售合同',
-            value: 808,
+            value: '18',
           },
         ]"
       />
@@ -52,7 +52,7 @@
           :data="[
             {
               planned: 0,
-              actual: 287651.14,
+              actual: 17354.43,
             },
           ]"
         />
@@ -60,42 +60,14 @@
     </div>
     <div class="c-space" />
     <div class="b-right">
-      <Right1
-        :data="[
-          {
-            company: '中油北斗',
-            amount: 28640,
-            ratio: 10.23,
-          },
-          {
-            company: '必达能源',
-            amount: 6661,
-            ratio: 8.23,
-          },
-          {
-            company: '广硕能源',
-            amount: 6572,
-            ratio: 7.23,
-          },
-          {
-            company: '万宸石化',
-            amount: 6494,
-            ratio: 5.23,
-          },
-          {
-            company: '延长壳牌',
-            amount: 5044,
-            ratio: 3.23,
-          },
-        ]"
-      />
+      <Right1 />
       <div class="b-space" />
       <Right2 />
       <div class="b-space" />
       <Right3
         :data="[
           {
-            profit: -2284.19,
+            profit: 86.62,
           },
         ]"
       />
@@ -105,34 +77,34 @@
 </template>
 
 <script setup lang="ts">
-import Left1 from "@/views/bigscreen/components/SecondPage/LeftSubject/left1.vue";
-import Left2 from "@/views/bigscreen/components/SecondPage/LeftSubject/left2.vue";
-import Left3 from "@/views/bigscreen/components/SecondPage/LeftSubject/left3.vue";
+import Left1 from "./Components/gtshgd/LeftSubject/left1.vue";
+import Left2 from "./Components/gtshgd/LeftSubject/left2.vue";
+import Left3 from "./Components/gtshgd/LeftSubject/left3.vue";
 import Model2 from "@/views/bigscreen/components/SecondPage/Model2/index.vue";
-import Middle2 from "@/views/bigscreen/components/SecondPage/Middle/Middle2/index.vue";
-import Middle3 from "@/views/bigscreen/components/SecondPage/Middle/middle3.vue";
-import Right1 from "@/views/bigscreen/components/SecondPage/Right/right1.vue";
-import Right2 from "@/views/bigscreen/components/SecondPage/Right/right2.vue";
-import Right3 from "@/views/bigscreen/components/SecondPage/Right/right3.vue";
+import Middle2 from "./Components/gtshgd/Middle/Middle2/index.vue";
+import Middle3 from "./Components/gtshgd/Middle/middle3.vue";
+import Right1 from "./Components/gtshgd/Right/right1.vue";
+import Right2 from "./Components/gtshgd/Right/right2.vue";
+import Right3 from "./Components/gtshgd/Right/right3.vue";
 
 import { ref } from "vue";
 
 const totalData = ref([
   {
-    year: "78937.61",
-    month: "78937.61",
+    year: "-",
+    month: "-",
   },
   {
-    year: "118744.26",
-    month: "118744.26",
+    year: "17354.43",
+    month: "17354.43",
   },
   {
-    year: "287651.14",
-    month: "287651.14",
+    year: "17354.43",
+    month: "17354.43",
   },
   {
-    year: "-2284.19",
-    month: "-2284.19",
+    year: "86.62",
+    month: "86.62",
   },
 ]);
 </script>
@@ -154,7 +126,7 @@ const totalData = ref([
     flex: 1.4;
     @apply flex flex-col justify-between relative;
     .middle-item {
-      @apply flex flex-1 justify-center items-center;
+      @apply flex flex-1 items-center justify-center;
     }
     .flex-grow {
       flex: 5;
@@ -182,6 +154,6 @@ const totalData = ref([
   width: 15px;
 }
 // .model1 {
-// @apply flex flex-1 flex-col h-full;
+//   @apply flex flex-1 flex-col h-full;
 // }
 </style>

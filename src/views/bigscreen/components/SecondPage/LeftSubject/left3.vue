@@ -74,6 +74,11 @@ import sellIcon from "@/views/bigscreen/img/left_icon1.png";
 import finishIcon from "@/views/bigscreen/img/left_icon2.png";
 import sassvariables from "@/styles/variables.module.scss";
 
+const props = defineProps<{
+  /** 数据 */
+  data?: any;
+}>();
+
 // 每个类别对应的数据系列(过去5年的年份)
 const categoryMap = new Array(5)
   .fill(new Date().getFullYear())

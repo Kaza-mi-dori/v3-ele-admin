@@ -38,6 +38,16 @@ const tradePartners = ref([
   { company: "公司D", amount: 56, ratio: 5.23 },
   { company: "公司E", amount: 30, ratio: 3.23 },
 ]);
+
+const props = defineProps<{
+  data?: any;
+}>();
+
+onMounted(() => {
+  if (props.data) {
+    tradePartners.value = props.data;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
