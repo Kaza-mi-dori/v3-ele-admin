@@ -4,7 +4,10 @@
       <Item1
         style="margin: 0 auto"
         :amount="oilData.oilStorage"
-        title="成品油库存量"
+        :title="
+          '成品油库存量' +
+          (oilDataDate.oilStorage ? `(${oilDataDate.oilStorage})` : '')
+        "
         :iconUrl="inventory"
       />
     </div>
@@ -12,7 +15,7 @@
       <Item1
         style="margin: 0 auto"
         :amount="oilData.oilBargain"
-        title="成品油交易量"
+        :title="'成品油交易量'"
         :iconUrl="business"
       />
     </div>
@@ -26,6 +29,7 @@ import business from "@/views/bigscreen/img/business.png";
 import { ref } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { startOfYear, endOfYear } from "@/utils/time"; // 导入工具类
+import { useDataIndex } from "@/hooks/useDataIndex";
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -41,6 +45,30 @@ let oilData = ref({
   oilStorage: "0",
   oilBargain: "0",
 });
+
+const oilDataDate = reactive({
+  oilStorage: "",
+  oilBargain: "",
+});
+
+const keywordMap = {
+  成品油库存量: "1944e9e1626",
+  成品油交易量: "1944e0aa665",
+};
+
+const oilStorageHook = useDataIndex(
+  [keywordMap["成品油库存量"]],
+  1,
+  startOfYear() + " 00:00:00",
+  endOfYear() + " 23:59:59"
+);
+
+const oilBargainHook = useDataIndex(
+  [keywordMap["成品油交易量"]],
+  1,
+  startOfYear() + " 00:00:00",
+  endOfYear() + " 23:59:59"
+);
 
 const initData = async () => {
   queryForm.value = {
@@ -74,6 +102,23 @@ const initData = async () => {
     oilData.value = JSON.parse(JSON.stringify(oilData.value));
   }
   // console.log("oilData", oilData.value);
+  await oilStorageHook.fetchData();
+  if (oilStorageHook.result.value[keywordMap["成品油库存量"]]) {
+    oilData.value.oilStorage =
+      oilStorageHook.result.value[keywordMap["成品油库存量"]][0].数据;
+    oilDataDate.oilStorage = oilStorageHook.result.value[
+      keywordMap["成品油库存量"]
+    ][0].时间?.substring(5, 10);
+  }
+  await oilBargainHook.fetchData();
+  if (oilBargainHook.result.value[keywordMap["成品油交易量"]]) {
+    oilData.value.oilBargain = (
+      +oilBargainHook.result.value[keywordMap["成品油交易量"]][0].数据 * 10000
+    ).toFixed(0);
+    oilDataDate.oilBargain = oilBargainHook.result.value[
+      keywordMap["成品油交易量"]
+    ][0].时间?.substring(5, 10);
+  }
 };
 
 onMounted(() => {
@@ -83,20 +128,17 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .box1 {
-  @apply flex items-center;
+  @apply flex items-center w-full;
   background-image: url("@/views/bigscreen/img/tag_bg.png");
   background-size: 100% 100%;
-  width: 100%;
   // height: 176px;
   .__left {
-    @apply flex;
+    @apply flex h-full;
     width: 50%;
-    height: 100%;
   }
   .__right {
-    @apply flex;
+    @apply flex h-full;
     width: 50%;
-    height: 100%;
   }
 }
 </style>

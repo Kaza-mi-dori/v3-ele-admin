@@ -9,7 +9,7 @@
       </div>
       <div class="box__amount">
         <span class="__desc">年贸易量</span>
-        <el-statistic :value="animatedAmount" />
+        <el-statistic class="animated-amount" :value="animatedAmount" />
         <span class="__unit">{{ props.unit }}</span>
       </div>
     </div>
@@ -92,20 +92,17 @@ $title-text-color-bright: #b6d7db;
 $title-text-color: #9dc1d0;
 $number-color: #2abfff;
 .box {
+  @apply flex items-center cursor-pointer;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
   padding: 20px 5px;
   background-image: url("@/views/bigscreen/img/product_box.png");
   background-size: 100% 100%;
-  cursor: pointer;
   .box__icon {
     width: 30px;
     height: 30px;
     text-align: right;
     img {
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
     }
   }
   .box__content {
@@ -122,19 +119,22 @@ $number-color: #2abfff;
       color: $title-text-color-bright;
     }
     .box__amount {
-      display: flex;
+      @apply flex;
       align-items: baseline;
       font-size: 1.2rem;
       color: $number-color;
       .__desc {
         margin-right: 10px;
         color: $title-text-color;
+        font-size: 0.9rem;
+      }
+      .animated-amount {
         font-size: 1rem;
       }
       .__unit {
-        margin-left: 10px;
+        margin-left: 5px;
         color: $title-text-color;
-        font-size: 1rem;
+        font-size: 0.8rem;
       }
     }
   }

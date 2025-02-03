@@ -115,16 +115,9 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model1 {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 #chart2-left-2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
+  @apply flex justify-center items-center w-full h-full;
 }
 </style>

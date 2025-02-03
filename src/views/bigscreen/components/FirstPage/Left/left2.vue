@@ -170,28 +170,19 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model-box {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @apply relative w-full h-full flex flex-col;
   .model-header {
-    display: flex;
-    justify-content: space-between;
-    position: relative; // 让头部背景高度与头部一致
+    // 让头部背景高度与头部一致
+    @apply flex justify-between relative;
     .model-header__bg {
-      height: 100%;
-      width: 100%;
-      position: absolute;
+      @apply w-full h-full absolute;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0;
     }
     .model-title {
-      position: relative;
-      display: flex;
-      align-items: center; /* 垂直居中 */
+      @apply flex items-center relative;
       height: 33px;
       padding: 0 15px;
       .model-title__text {
@@ -207,53 +198,38 @@ onMounted(() => {
     margin: auto 0;
   }
   .model-body {
-    flex: 1;
-    position: relative;
+    @apply flex-1 relative;
     .model-body__bg {
-      height: 100%;
+      @apply absolute h-full;
       margin: 10px;
-      position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0;
     }
     .model-body__content {
+      @apply flex justify-center items-center w-full relative;
       padding-left: 5px;
       padding-top: 5px;
       padding-bottom: 5px;
       overflow-x: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      width: 100%;
       // height: 100%;
       div {
-        flex: 1;
-        position: relative;
         // height: 80%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        @apply flex flex-1 justify-center items-center relative;
       }
       img {
+        @apply absolute h-full;
         // width: 100%;
         // 150%效果似乎更好
         width: 150%;
-        height: 100%;
-        position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
       }
       .body-content {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start; /* 水平居中 */
-        justify-content: center; /* 垂直居中 */
-        text-align: left; /* 文字居中 */
+        @apply flex flex-col items-start justify-center text-left;
         font-size: 16px;
         padding-left: 15px;
         padding-top: 10px;
@@ -261,9 +237,7 @@ onMounted(() => {
         color: #ffffff;
       }
       .content-value {
-        display: flex;
-        align-items: center; /* 使数值和单位垂直居中 */
-        justify-content: center;
+        @apply flex justify-center items-center;
         .content-num {
           font-size: 17px;
         }
@@ -275,10 +249,8 @@ onMounted(() => {
     }
   }
   .demo-date-picker {
-    display: flex;
-    width: 100%;
+    @apply flex flex-wrap w-full;
     padding: 0;
-    flex-wrap: wrap;
     margin-right: 15px;
   }
 }

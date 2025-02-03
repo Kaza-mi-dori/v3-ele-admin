@@ -65,24 +65,15 @@ const handleMouseoutText = () => {
 
 <style lang="scss" scoped>
 .model1 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-col h-full flex-1;
 }
 :deep(.el-carousel__container) {
   height: 180px;
 }
 .box1 {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  padding: 0 10px;
-  overflow: hidden;
+  @apply w-full h-full flex px-2 overflow-hidden;
   .item-img {
-    flex: 1;
-    text-align: center;
-    margin: auto;
+    @apply flex-1 text-center m-auto;
   }
   .scroll-area {
     flex: 1.1;
@@ -98,8 +89,7 @@ const handleMouseoutText = () => {
     line-height: 20px;
     /* 包裹文字内容的容器 */
     .text-content {
-      display: flex;
-      flex-direction: column;
+      @apply flex flex-col;
     }
     // 需要有间隔时间，否则会出现闪烁
     animation: scroll 25s ease-in forwards infinite;

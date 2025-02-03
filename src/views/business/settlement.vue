@@ -43,7 +43,7 @@
               <el-dropdown-item>
                 <span>批量审核</span>
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item @click="handleBatchDelete">
                 <span class="text-red-5">批量删除</span>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -53,6 +53,7 @@
     </div>
     <!-- 表格区 -->
     <el-table
+      ref="tableRef"
       v-loading="loading"
       stripe
       border
@@ -64,11 +65,12 @@
         color: sassvariables['custom-table-header-color'],
         'text-align': 'center',
       }"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" align="center" width="55">
-        <template v-slot="scope">
+        <!-- <template v-slot="scope">
           <el-checkbox v-model="scope.row.checked" />
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column
         prop="date"
@@ -166,7 +168,12 @@ import Filter from "@/components/Business/filter.vue";
 import SearchBar from "@/components/CustomComponent/SearchBar.vue";
 import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
-import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
+import {
+  handleAuditRow,
+  handleDeleteRow,
+  handleBatchDeleteRows,
+} from "@/hooks/useTableOp";
+import { ElMessage, type TableInstance } from "element-plus";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { useRouter } from "vue-router";
@@ -215,6 +222,8 @@ const exampleData: Ref<IExampleData[]> = ref([
   },
 ]);
 const tableData = ref<any[]>([]);
+const selectedRows: Ref<any[]> = ref([]);
+const tableRef = ref<Nullable<TableInstance>>(null);
 const pagination: Ref<any> = ref({
   total: 0,
   pageSizes: [10, 20, 30, 40, 50],
@@ -304,6 +313,10 @@ const filterItemList: Ref<business.IBuisnessFilterItem[]> = ref([
   },
 ]);
 
+const handleSelectionChange = (selection: any) => {
+  selectedRows.value = selection;
+};
+
 const initTableData = () => {
   loading.value = true;
   BusinessStandbookAPI.getSettlementLedgerRecordList(queryParams.value)
@@ -341,6 +354,18 @@ const handleResetFilter = () => {
   initTableData();
 };
 
+const handleBatchDelete = () => {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning("请选择要删除的数据");
+    return;
+  }
+  handleBatchDeleteRows(
+    selectedRows.value,
+    BusinessStandbookAPI.deleteSettlementLedgerRecordByIds,
+    initTableData
+  );
+};
+
 onMounted(() => {
   initTableData();
 });
@@ -348,8 +373,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .main-wrapper {
-  @apply p-10px;
-  height: 100%;
+  @apply p-10px h-full;
 }
 
 .title-block {

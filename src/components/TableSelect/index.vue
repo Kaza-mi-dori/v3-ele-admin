@@ -360,9 +360,7 @@ const popoverContentRef = ref();
 }
 
 .feedback {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 6px;
+  @apply flex justify-end mt-1.5;
 }
 // 隐藏全选按钮
 .radio :deep(.el-table__header th.el-table__cell:nth-child(1) .el-checkbox) {

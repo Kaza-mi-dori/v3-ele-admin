@@ -81,8 +81,13 @@ import paymentDetailForm from "@/views/business/detail/payment.vue";
 import singlePartnerDetailForm from "@/views/business/detail/partner.vue";
 import bargainReportDetailForm from "@/views/datareport/bargainReport/detail.vue";
 import fixedCostReportDetailForm from "@/views/datareport/fixedCostReport/detail.vue";
+import purchaseDetailReportDetailForm from "@/views/datareport/purchaseDetailReport/detail.vue";
+import sellDetailReportDetailForm from "@/views/datareport/sellDetailReport/detail.vue";
+import purchaseRecordDetailForm from "@/views/business/detail/purchaseRecord.vue";
+import sellRecordDetailForm from "@/views/business/detail/sellRecord.vue";
 import BusinessFormAPI from "@/api/businessForm";
 import BusinessStandbookAPI from "@/api/businessStandBook";
+import { BusinessDetailAPI } from "@/api/datasource/businessDetail";
 import { BargainFormApi } from "@/api/datasource/bargainForm";
 import { ElMessage } from "element-plus";
 import { stringToArray, arrayToString } from "@/utils";
@@ -122,6 +127,10 @@ const reportTypes = [
   { value: "singlePartnerDetail", label: "合作伙伴展示报表" },
   { value: "bargainReport", label: "贸易板块跟踪表" },
   { value: "fixedCostReport", label: "固定成本月表" },
+  { value: "purchaseDetailReport", label: "采购明细报表" },
+  { value: "sellDetailReport", label: "销售明细报表" },
+  { value: "purchaseRecordDetail", label: "采购台账记录" },
+  { value: "sellRecordDetail", label: "销售台账记录" },
 ];
 
 const handleEdit = () => {
@@ -1178,6 +1187,14 @@ watch(
       currentComponent.value = bargainReportDetailForm;
     } else if (value === "fixedCostReport") {
       currentComponent.value = fixedCostReportDetailForm;
+    } else if (value === "purchaseDetailReport") {
+      currentComponent.value = purchaseDetailReportDetailForm;
+    } else if (value === "sellDetailReport") {
+      currentComponent.value = sellDetailReportDetailForm;
+    } else if (value === "purchaseDetail") {
+      currentComponent.value = purchaseRecordDetailForm;
+    } else if (value === "sellDetail") {
+      currentComponent.value = sellRecordDetailForm;
     }
   },
   { immediate: true }
@@ -1186,42 +1203,50 @@ watch(
 watch(
   () => currentComponentType.value,
   (value) => {
-    if (value === "yearlyReport") {
-      currentComponent.value = yearlyReportDetailForm;
-    } else if (value === "marketPriceReport") {
-      currentComponent.value = marketPriceReportDetailForm;
-    } else if (value === "firmMngReport") {
-      currentComponent.value = firmMngReportDetailForm;
-    } else if (value === "firmReport") {
-      currentComponent.value = firmReportDetailForm;
-    } else if (value === "customReport") {
-      currentComponent.value = customReportDetailForm;
-    } else if (value === "partnerReport") {
-      currentComponent.value = partnerReportDetailForm;
-    } else if (value === "partnerDetail") {
-      currentComponent.value = partnerDetailForm;
-    } else if (value === "contractDetail") {
-      currentComponent.value = contractDetailForm;
-    } else if (value === "orderDetail") {
-      currentComponent.value = orderDetailForm;
-    } else if (value === "settlementDetail") {
-      currentComponent.value = settlementDetailForm;
-    } else if (value === "storageDetail") {
-      currentComponent.value = storageDetailForm;
-    } else if (value === "safetyDetail") {
-      currentComponent.value = safetyDetailForm;
-    } else if (value === "goodsDetail") {
-      currentComponent.value = goodsDetailForm;
-    } else if (value === "paymentDetail") {
-      currentComponent.value = paymentDetailForm;
-    } else if (value === "singlePartnerDetail") {
-      currentComponent.value = singlePartnerDetailForm;
-    } else if (value === "bargainReport") {
-      currentComponent.value = bargainReportDetailForm;
-    } else if (value === "fixedCostReport") {
-      currentComponent.value = fixedCostReportDetailForm;
-    }
+    router.push({
+      name: "ReportForm",
+      query: {
+        type: value,
+      },
+    });
   }
+  // (value) => {
+  //   if (value === "yearlyReport") {
+  //     currentComponent.value = yearlyReportDetailForm;
+  //   } else if (value === "marketPriceReport") {
+  //     currentComponent.value = marketPriceReportDetailForm;
+  //   } else if (value === "firmMngReport") {
+  //     currentComponent.value = firmMngReportDetailForm;
+  //   } else if (value === "firmReport") {
+  //     currentComponent.value = firmReportDetailForm;
+  //   } else if (value === "customReport") {
+  //     currentComponent.value = customReportDetailForm;
+  //   } else if (value === "partnerReport") {
+  //     currentComponent.value = partnerReportDetailForm;
+  //   } else if (value === "partnerDetail") {
+  //     currentComponent.value = partnerDetailForm;
+  //   } else if (value === "contractDetail") {
+  //     currentComponent.value = contractDetailForm;
+  //   } else if (value === "orderDetail") {
+  //     currentComponent.value = orderDetailForm;
+  //   } else if (value === "settlementDetail") {
+  //     currentComponent.value = settlementDetailForm;
+  //   } else if (value === "storageDetail") {
+  //     currentComponent.value = storageDetailForm;
+  //   } else if (value === "safetyDetail") {
+  //     currentComponent.value = safetyDetailForm;
+  //   } else if (value === "goodsDetail") {
+  //     currentComponent.value = goodsDetailForm;
+  //   } else if (value === "paymentDetail") {
+  //     currentComponent.value = paymentDetailForm;
+  //   } else if (value === "singlePartnerDetail") {
+  //     currentComponent.value = singlePartnerDetailForm;
+  //   } else if (value === "bargainReport") {
+  //     currentComponent.value = bargainReportDetailForm;
+  //   } else if (value === "fixedCostReport") {
+  //     currentComponent.value = fixedCostReportDetailForm;
+  //   }
+  // }
 );
 
 watchEffect(() => {
@@ -1243,13 +1268,11 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .status-tag {
-  @apply bg-amber-3;
-  position: absolute;
+  @apply bg-amber-3 absolute z-1;
   // color: #fefefe;
   top: -5px;
   right: 10px;
   box-shadow: 0 -2px rgba(0, 0, 0, 0.5);
-  z-index: 1;
   padding: 5px 20px;
   border-radius: 0 10px 10px;
 }

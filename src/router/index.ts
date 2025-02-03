@@ -150,6 +150,7 @@ export const constantRoutes: RouteRecordRaw[] = [
           },
         ],
       },
+      // 经营主体二级页
       {
         path: "subject",
         name: "SubjectSubsidiary",
@@ -237,6 +238,15 @@ export const constantRoutes: RouteRecordRaw[] = [
             component: () =>
               import(
                 "@/views/bigscreen/components/ThirdPage/Components/profit.vue"
+              ),
+          },
+          // 关键指标分析二级页
+          {
+            path: "revenue",
+            name: "Revenue",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/revenue.vue"
               ),
           },
         ],
@@ -360,6 +370,26 @@ export const constantRoutes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "purchaseDetailReportMng",
+        name: "PurchaseDetailReportMng",
+        component: () =>
+          import("@/views/datareport/purchaseDetailReport/index.vue"),
+        meta: {
+          title: "采购明细报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "sellDetailReportMng",
+        name: "SellDetailReportMng",
+        component: () =>
+          import("@/views/datareport/sellDetailReport/index.vue"),
+        meta: {
+          title: "销售明细报表管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
         path: "bargainReportMng",
         name: "BargainReportMng",
         component: () => import("@/views/datareport/bargainReport/index.vue"),
@@ -440,6 +470,24 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/business/settlement.vue"),
         meta: {
           title: "结算台账管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "purchaseDetailLedgerMng",
+        name: "PurchaseDetailLedgerMng",
+        component: () => import("@/views/business/purchaseRecord.vue"),
+        meta: {
+          title: "采购业务台账",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "sellRecordLedgerMng",
+        name: "SellRecordLedgerMng",
+        component: () => import("@/views/business/sellRecord.vue"),
+        meta: {
+          title: "销售业务台账",
           icon: "el-icon-coin",
         },
       },
@@ -642,26 +690,26 @@ export const constantRoutes: RouteRecordRaw[] = [
       // todo 维护导入导出功能
     ],
   },
-  // {
-  //   path: "/customComponent",
-  //   name: "CustomComponent",
-  //   component: Layout,
-  //   meta: {
-  //     title: "自定义组件",
-  //     icon: "component",
-  //   },
-  //   children: [
-  //     {
-  //       path: "index",
-  //       name: "CustomComponentIndex",
-  //       component: () => import("@/components/CustomComponent/index.vue"),
-  //       meta: {
-  //         title: "自定义组件预览",
-  //         icon: "el-icon-coin",
-  //       },
-  //     },
-  //   ],
-  // },
+  {
+    path: "/customComponent",
+    name: "CustomComponent",
+    component: Layout,
+    meta: {
+      title: "开发测试用",
+      icon: "component",
+    },
+    children: [
+      {
+        path: "index",
+        name: "CustomComponentIndex",
+        component: () => import("@/components/CustomComponent/index.vue"),
+        meta: {
+          title: "自定义组件预览",
+          icon: "el-icon-coin",
+        },
+      },
+    ],
+  },
   // 系统管理(旧)
   {
     path: "/system",

@@ -51,19 +51,15 @@ function updateValue(layout: string) {
 
 <style scoped>
 .layout-selector {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  width: 100%;
+  @apply flex flex-wrap justify-around w-full;
   height: 50px;
 }
 
 .layout-item {
-  position: relative;
+  @apply relative cursor-pointer;
   width: 18%;
   height: 45px;
   overflow: hidden;
-  cursor: pointer;
   background: #f0f2f5;
   border-radius: 4px;
 

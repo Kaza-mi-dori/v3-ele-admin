@@ -20,7 +20,7 @@
             <div
               class="entry-container-item"
               :class="{
-                active: item.name === activeEntry && item.name === '石化总览',
+                active: item.name === activeEntry && item.name === '石化板块',
               }"
               @click="handleEntryClick(item)"
             >
@@ -43,6 +43,10 @@
         </div>
       </div>
       <div class="bg-view__body">
+        <canvas
+          id="first-page-bg-canvas-1"
+          style="position: absolute; z-index: 0; top: 0; left: 0"
+        />
         <ScreenIndexContent style="position: relative" />
       </div>
     </div>
@@ -52,6 +56,7 @@
 
 <script setup lang="ts">
 import ScreenIndexContent from "./index-content.vue";
+import { RollingStarrySky } from "./components/Common/DynamicBG/rollingStarrySky";
 import { ref, computed } from "vue";
 import router from "@/router";
 import { businessStore, companyStore } from "@/store";
@@ -63,7 +68,33 @@ import {
   navItem,
   businessTypeRouteNameMap,
 } from "./components/constants";
+import {
+  PerformanceMonitor,
+  PerformanceInfo,
+} from "@/utils/perfomance-monitor";
+const performanceData = ref<PerformanceInfo>({
+  fps: 0,
+  frameTime: 0,
+  longFrames: 0,
+  memoryUsage: undefined,
+});
 
+const starrySky = new RollingStarrySky();
+const performanceMonitor = new PerformanceMonitor((info) => {
+  performanceData.value = info;
+
+  // 性能警告
+  if (info.fps < 20) {
+    console.warn("低帧率警告:", info.fps);
+  }
+  if (info.longFrames > 5) {
+    console.warn("卡顿帧数过多:", info.longFrames);
+  }
+  if (info.memoryUsage && info.memoryUsage.usedJSHeapSize > 100 * 1024 * 1024) {
+    console.warn("内存占用过高");
+  }
+});
+performanceMonitor.start();
 const businessstore = businessStore();
 const companystore = companyStore();
 const loading = ref(true);
@@ -93,12 +124,12 @@ const entryList = computed(() => {
       };
     });
   result.unshift({
-    name: "石化总览",
-    label: "石化总览",
+    name: "石化板块",
+    label: "石化板块",
   });
   return result;
 });
-const activeEntry = ref<string>("石化总览");
+const activeEntry = ref<string>("石化板块");
 
 const getGsMarkerList = async () => {
   const res: any = await GsLocationAPI.getAllMapElement();
@@ -147,7 +178,7 @@ const onWheelContent = (e: Event) => {
 // 点击入口
 const handleEntryClick = (item: any) => {
   // 往下跳
-  if (item.name === "石化总览") {
+  if (item.name === "石化板块") {
     activeEntry.value = item.label;
     return;
   }
@@ -250,6 +281,15 @@ onMounted(async () => {
     setTimeout(() => {
       loading.value = false;
       window.dispatchEvent(new Event("resize"));
+      const canvas = document.getElementById(
+        "first-page-bg-canvas-1"
+      ) as HTMLCanvasElement;
+      if (canvas) {
+        canvas.width = document.body.clientWidth;
+        canvas.height = document.body.clientHeight;
+        starrySky.setCanvas(canvas);
+        starrySky.init();
+      }
     }, 100);
   });
 });
@@ -293,7 +333,6 @@ onUpdated(() => {
   line-height: 1.5715;
   font-feature-settings: "tnum";
   // width: 100vw;
-  height: 100%;
   overflow: hidden;
   font-family:
     PingFangSC,
@@ -305,29 +344,21 @@ onUpdated(() => {
   overscroll-behavior: none;
   scroll-behavior: smooth;
   user-select: none;
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col h-full;
   &::-webkit-scrollbar {
     display: none;
   }
 }
 .bg-view-img {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   background-image: url(./img/bg.jpg);
   background-size: cover;
 }
 .bg-view__header {
-  width: 100%;
   height: 66px;
-  display: flex;
-  position: relative;
+  @apply w-full flex relative;
   .entry-container {
-    position: absolute;
-    z-index: 1;
-    display: flex;
-    bottom: 5px;
-    left: 5px;
+    @apply absolute z-1 flex bottom-[5px] left-[5px];
     .entry-container-item {
       text-align: center;
       color: $bigscreen-primary-color-1;
@@ -352,15 +383,12 @@ onUpdated(() => {
   }
   /** 天气 */
   .weather-container {
-    position: absolute;
-    z-index: 1;
+    @apply absolute z-1;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
     .weather-item__text {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @apply flex items-center justify-center;
       color: #fff;
       font-size: 1rem;
       .weather-item__text--1 {
@@ -373,10 +401,9 @@ onUpdated(() => {
     }
   }
   .title {
-    flex: 1;
+    @apply flex-1 relative;
     height: 66px;
     width: max-content;
-    position: relative;
     // top: clamp(10px, 25px, 30%);
     margin-left: auto;
     margin-right: auto;
@@ -407,6 +434,7 @@ onUpdated(() => {
   // height: 100%;
   // height: calc(100% - 66px);
   // overflow-y: auto; /* 纵向滚动条 */
+  @apply relative;
   overflow-y: hidden;
   // margin: 20px 0;
   padding: 20px 0 10px 0;

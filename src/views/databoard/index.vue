@@ -44,7 +44,9 @@
             <el-icon v-else>
               <Document />
             </el-icon>
-            <span class="ml-2">{{ node.label }}</span>
+            <el-tooltip :content="node.label" placement="top">
+              <span class="ml-2">{{ node.label }}</span>
+            </el-tooltip>
           </template>
         </el-tree>
       </div>
@@ -1052,7 +1054,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@use "@/styles/index.scss" as *;
+@use "@/styles/gmixin.scss" as *;
 
 .tree-wrapper {
   @include g-scrollbar-1;

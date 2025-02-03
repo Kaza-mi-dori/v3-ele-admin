@@ -4,6 +4,7 @@
       <el-tab-pane label="原油" name="YUANYOU" />
       <el-tab-pane label="汽柴油" name="QICHAIYOU" />
       <el-tab-pane label="化工产品" name="HUAGONG" />
+      <el-link class="el-link-more" @click="handleCheckMore">查看更多</el-link>
     </Tab>
     <div
       id="chart-middle-4"
@@ -22,11 +23,13 @@ import { DataDefinitionNameToMarkMap } from "@/enums/DataDefinitionEnum";
 import { ref, onMounted } from "vue";
 import { autoRetryWrapper } from "@/utils/asyncwork";
 import sassvariables from "@/styles/variables.module.scss";
+import { useRouter } from "vue-router";
 
 const YUANYOU = "YUANYOU";
 const HUAGONG = "HUAGONG";
 const QICHAIYOU = "QICHAIYOU";
 
+const router = useRouter();
 const activeName = ref<number | string | undefined>(YUANYOU);
 
 const chart = shallowRef<echarts.ECharts | null>(null);
@@ -142,7 +145,6 @@ const getRandomDataOneMonth = () => {
 };
 
 const dataFilterOne = (data: DataRecord[]) => {
-  // console.log("data", data);
   return data.map((item) => {
     return {
       time: item.time,
@@ -153,6 +155,13 @@ const dataFilterOne = (data: DataRecord[]) => {
 };
 
 const dataSeries: Ref<DataRecord[]> = ref([]);
+
+const handleCheckMore = () => {
+  const route = router.resolve({
+    name: "CustomDataBoard",
+  });
+  window.open(route.href, "_blank");
+};
 
 const handleClick = (tab: TabsPaneContext) => {
   // console.log(tab);
@@ -170,7 +179,7 @@ const initChartMiddle4 = () => {
   // 根据数据渲染图表
   // 类目x轴
   const xAxisData = getDateOfOneYear();
-  // console.log(xAxisData);
+  // console.log("xAxisData"xAxisData);
   const series = categoryMap[activeName.value as keyof typeof categoryMap];
   const option = {
     tooltip: {
@@ -231,10 +240,11 @@ const initChartMiddle4 = () => {
     },
     smooth: false,
     series: series.map((item: string) => {
+      // console.log("item:", item);
       return {
         name: item,
         type: "line",
-        smooth: true,
+        // smooth: true,
         data: dataMap.value[item] ? dataFilterOne(dataMap.value[item]) : [],
         // markPoint: {
         //   data: [
@@ -333,9 +343,13 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model1 {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
+}
+.el-link-more {
+  @apply cursor-pointer;
+  float: right;
+  margin-right: 1rem;
+  color: $bigscreen-primary-color-7;
+  font-size: 14px;
 }
 </style>

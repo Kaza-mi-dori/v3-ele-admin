@@ -203,30 +203,24 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model1 {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 
 .risk-warning {
-  display: flex;
-  align-items: center;
+  @apply flex items-center relative cursor-pointer;
   font-size: 16px;
   letter-spacing: 1px;
   color: #fff;
-  cursor: pointer;
   margin-top: 10px;
   margin-bottom: 5px;
   margin-left: 20px;
-  position: relative;
   z-index: 10; /* 确保点击事件能触发 */
   width: 55%; /* 避免遮挡右边图例导致点击不了 */
 }
 
 .risk-warning span {
   display: inline-flex;
-  align-items: center;
+  @apply items-center;
 }
 
 .risk-warning .text {

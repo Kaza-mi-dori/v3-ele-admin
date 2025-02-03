@@ -37,21 +37,13 @@ defineProps({
 
 <style lang="scss" scoped>
 .model-box {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col w-full h-full relative;
   .model-title {
-    position: relative;
-    display: flex;
-    align-items: center; /* 垂直居中 */
+    @apply flex items-center relative;
     height: 50px;
     padding: 0 15px;
     .model-title__bg {
-      width: 100%;
-      height: 100%;
-      position: absolute;
+      @apply w-full h-full absolute;
       top: 0;
       bottom: 0;
       left: 0;
@@ -68,12 +60,9 @@ defineProps({
     }
   }
   .model-body {
-    flex: 1;
-    position: relative;
+    @apply flex-1 relative;
     .model-body__bg {
-      width: 100%;
-      height: 100%; /* 确保背景图片覆盖整个容器 */
-      position: absolute;
+      @apply w-full h-full absolute; /* 确保背景图片覆盖整个容器 */
       top: 0;
       bottom: 0;
       left: 0;
@@ -82,15 +71,12 @@ defineProps({
       background-size: auto; /* 让图片保持原始大小 */
     }
     .model-body__content {
-      position: relative;
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full relative;
     }
   }
   .model-footer {
     .model-footer__bg {
-      width: 100%;
-      height: 100%;
+      @apply w-full h-full;
     }
   }
 }

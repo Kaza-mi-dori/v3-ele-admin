@@ -2,7 +2,7 @@
   <Model1 class="model1" title="结算交易分析">
     <div class="risk-warning" @click="handleRiskWarningClick">
       <span class="text">有</span>
-      <span class="risk-count">2</span>
+      <span class="risk-count">{{ props.data?.riskCount || 0 }}</span>
       <span class="text">份合同处于有履约风险状态</span>
       <span>
         <el-icon><ArrowRight /></el-icon>
@@ -22,15 +22,24 @@ import sassvariables from "@/styles/variables.module.scss";
 const chart = shallowRef<echarts.ECharts | null>(null);
 const router = useRouter();
 
+const props = defineProps<{
+  data?: any;
+}>();
+
 // 每个类别对应的数据系列
 const dates = ["10-01", "10-02", "10-03", "10-04", "10-05", "10-06", "10-07"];
 
 // 随机生成收入数据
 const getRandomData = () => {
-  return dates.map(() => ({
-    tradingVolume: Math.floor(Math.random() * 11), // 销售量
-    transactionVolume: Math.floor(Math.random() * 101), // 销售金额
-  }));
+  return props.data
+    ? props.data.map((item: any) => ({
+        tradingVolume: item.tradingVolume, // 销售量
+        transactionVolume: item.transactionVolume, // 销售金额
+      }))
+    : dates.map(() => ({
+        tradingVolume: 0, // 销售量
+        transactionVolume: 0, // 销售金额
+      }));
 };
 
 const initChart = () => {
@@ -203,30 +212,24 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model1 {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 
 .risk-warning {
-  display: flex;
-  align-items: center;
+  @apply flex items-center relative cursor-pointer;
   font-size: 16px;
   letter-spacing: 1px;
   color: #fff;
-  cursor: pointer;
   margin-top: 10px;
   margin-bottom: 5px;
   margin-left: 20px;
-  position: relative;
   z-index: 10; /* 确保点击事件能触发 */
   width: 55%; /* 避免遮挡右边图例导致点击不了 */
 }
 
 .risk-warning span {
   display: inline-flex;
-  align-items: center;
+  @apply items-center;
 }
 
 .risk-warning .text {

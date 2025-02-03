@@ -73,10 +73,7 @@ const UDparamsFormatter = (data: string | number) => {
 
 <style lang="scss" scoped>
 .model1 {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 
 .table-wrapper {
@@ -129,13 +126,13 @@ const UDparamsFormatter = (data: string | number) => {
 }
 
 .cell2 {
-  text-align: left;
+  @apply text-left;
   padding-left: 10px;
 }
 
 .table td,
 .table th {
-  position: relative;
+  @apply relative;
 }
 
 .text-success {

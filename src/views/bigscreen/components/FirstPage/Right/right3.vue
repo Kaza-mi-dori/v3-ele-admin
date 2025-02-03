@@ -63,24 +63,13 @@ const handleType = (index: number) => {
 
 <style lang="scss" scoped>
 .background-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+  @apply relative w-full h-full flex flex-wrap justify-center items-center;
 }
 .background-image {
-  display: block;
-  width: 100%;
-  height: auto;
+  @apply block w-full h-auto;
 }
 .icon-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
+  @apply absolute w-full h-full z-1;
 }
 .entry-icon {
   width: 17%;

@@ -179,9 +179,7 @@ onMounted(() => {
     .result-item {
       line-height: 36px;
       width: calc(25% - 1rem);
-      text-align: left;
-      cursor: pointer;
-      @apply flex items-center w-200px items-center;
+      @apply flex items-center w-200px items-center text-left cursor-pointer;
       border: 1px solid #e5e5e5;
       border-radius: 5px;
       .__icon {
@@ -211,14 +209,11 @@ onMounted(() => {
 }
 
 .dialog-footer {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
   justify-content: start;
 
   svg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @apply flex justify-center items-center;
     padding: 0 2px;
     margin-right: 0.4em;
     color: #909399;

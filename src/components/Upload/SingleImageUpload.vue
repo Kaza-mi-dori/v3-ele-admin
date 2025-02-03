@@ -121,14 +121,11 @@ function handleDelete() {
 :deep(.el-upload--picture-card) {
   /*  width: var(--el-upload-picture-card-size);
   height: var(--el-upload-picture-card-size); */
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
 }
 
 .img-upload {
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
+  @apply relative overflow-hidden cursor-pointer;
   border: 1px var(--el-border-color) solid;
   border-radius: 5px;
 
@@ -141,18 +138,10 @@ function handleDelete() {
   }
 
   &__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    @apply top-0 left-0 flex items-center justify-center w-full h-full absolute opacity-0;
     color: #fff;
     background-color: var(--el-overlay-color-lighter);
     border-radius: 6px;
-    opacity: 0;
     transition: opacity var(--el-transition-duration);
 
     &:hover {

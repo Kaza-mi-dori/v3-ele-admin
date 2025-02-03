@@ -88,34 +88,24 @@ const initTMapApi = () => {
 
 <style lang="scss" scoped>
 .bg-view-body {
-  flex: 1;
-  display: flex;
-  position: relative;
-  width: 100%;
   // height如果设为100%会导致左右定高，不设则会根据内容撑开
   // 定高可以自适应一屏，但是会使得中间地图无法保持比例，进而导致相对坐标不准确
-  height: 100%;
+  @apply flex-1 flex relative w-full h-full;
   // padding-bottom: 20px;
   .b-left,
   .b-middle,
   .b-right {
-    display: flex;
-    flex-direction: column;
+    @apply flex flex-col;
   }
   .b-left {
     flex: 1;
   }
   .b-middle {
     flex: 1.4;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
+    @apply flex flex-col justify-between relative;
     .middle-item {
-      display: flex;
       // flex: 1;
-      align-items: center;
-      justify-content: center;
+      @apply flex items-center justify-center;
     }
     .flex-grow {
       flex: 3;
@@ -140,10 +130,7 @@ const initTMapApi = () => {
   width: 15px;
 }
 .model1 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 .left2 {
   flex: 0.75;

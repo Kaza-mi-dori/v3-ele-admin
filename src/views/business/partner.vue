@@ -61,12 +61,13 @@
         color: sassvariables['custom-table-header-color'],
         'text-align': 'center',
       }"
+      @selection-change="handleSelectionChange"
     >
-      <!-- <el-table-column type="selection" align="center" width="55">
-        <template v-slot="scope">
+      <el-table-column type="selection" align="center" width="55">
+        <!-- <template v-slot="scope">
           <el-checkbox v-model="scope.row.checked" />
-        </template>
-      </el-table-column> -->
+        </template> -->
+      </el-table-column>
       <!-- <el-table-column type="index" label="序号" width="60" align="center">
         <template v-slot="scope">
           <el-link type="primary" @click="handleViewDetail(scope.row)">
@@ -180,7 +181,11 @@ import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import BusinessStandbookAPI, {
   type CustomerAndSupplierQuery,
 } from "@/api/businessStandBook";
-import { handleAuditRow, handleDeleteRow } from "@/hooks/useTableOp";
+import {
+  handleAuditRow,
+  handleDeleteRow,
+  handleBatchDeleteRows,
+} from "@/hooks/useTableOp";
 import { ElMessage, ElMessageBox, type TableInstance } from "element-plus";
 import { arrayToString } from "@/utils";
 import { onMounted } from "vue";
@@ -200,35 +205,8 @@ const queryForm: Ref<Partial<CustomerAndSupplierQuery> & PageQueryDev> = ref({
 });
 
 const loading: Ref<boolean> = ref(false);
-const exampleData: Ref<IExampleData[]> = ref([
-  {
-    name: "商品1",
-    from: "供应商1",
-    number: "123456",
-    type: "类型1",
-    status: "状态1",
-    audited: true,
-    dataFrom: "数据来源1",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-02",
-    createdBy: "管理员",
-    updatedBy: "管理员",
-  },
-  {
-    name: "商品2",
-    from: "供应商2",
-    number: "123457",
-    type: "类型2",
-    status: "状态2",
-    audited: false,
-    dataFrom: "数据来源2",
-    createdAt: "2021-09-03",
-    updatedAt: "2021-09-04",
-    createdBy: "管理员",
-    updatedBy: "管理员",
-  },
-]);
 const tableData = ref([]);
+const selectedRows: Ref<any[]> = ref([]);
 const tableRef = ref<Nullable<TableInstance>>(null);
 const pagination: Ref<any> = ref({
   total: 100,
@@ -332,6 +310,10 @@ const handleResetAudit = (row: any) => {
   );
 };
 
+const handleSelectionChange = (selection: any) => {
+  selectedRows.value = selection;
+};
+
 const initTableData = async () => {
   loading.value = true;
   try {
@@ -366,31 +348,15 @@ const handleAddRecord = () => {
 };
 
 const handleBatchDelete = () => {
-  // console.log("批量删除");
-  const selected = tableData.value.filter((item: any) => item.checked);
-  // console.log(selected);
-  if (!selected?.length) {
-    ElMessageBox.alert("请选择要删除的数据", "提示", {
-      confirmButtonText: "确定",
-      type: "warning",
-    });
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning("请选择要删除的数据");
     return;
   }
-  ElMessageBox.confirm("确定批量删除选中的数据吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  }).then(() => {
-    const ids = selected.map((item: any) => item.id);
-    // 批量调用删除接口
-    const deleteTasks = ids.map((id: any) =>
-      BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecord(id)
-    );
-    Promise.all(deleteTasks).then(() => {
-      tableRef?.value?.clearSelection();
-      initTableData();
-    });
-  });
+  handleBatchDeleteRows(
+    selectedRows.value,
+    BusinessStandbookAPI.deleteCustomerAndSupplierLedgerRecordByIds,
+    initTableData
+  );
 };
 
 onMounted(() => {
@@ -400,8 +366,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .main-wrapper {
-  @apply p-10px;
-  height: 100%;
+  @apply p-10px h-full;
 }
 
 .title-block {

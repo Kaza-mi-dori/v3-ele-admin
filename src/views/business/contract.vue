@@ -77,10 +77,10 @@
               <el-dropdown-item @click="showImportDingTalkContractLedgerDialog">
                 <span>导入钉钉台账</span>
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item @click="handleBatchAudit">
                 <span>批量审核</span>
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item @click="handleBatchDelete">
                 <span class="text-red-5">批量删除</span>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -90,11 +90,13 @@
     </div>
     <!-- 表格区 -->
     <el-table
+      ref="tableRef"
       v-loading="loading"
       stripe
       border
       class="w-full"
       :data="exampleData"
+      row-key="id"
       element-loading-text="拼命加载中"
       :header-cell-style="{
         'background-color': sassvariables['custom-table-header-background'],
@@ -102,7 +104,13 @@
         'text-align': 'center',
       }"
       :row-class-name="tableRowCustom"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" align="center" width="55">
+        <!-- <template v-slot="scope">
+          <el-checkbox v-model="scope.row.checked" />
+        </template> -->
+      </el-table-column>
       <el-table-column
         v-if="checkedColumns.includes('来源')"
         key="数据源"
@@ -391,13 +399,19 @@ import SearchBar from "@/components/CustomComponent/SearchBar.vue";
 import business from "@/types/business";
 import sassvariables from "@/styles/variables.module.scss";
 import BusinessStandbookAPI from "@/api/businessStandBook";
-import { handleDeleteRow, handleAuditRow } from "@/hooks/useTableOp";
+import {
+  handleDeleteRow,
+  handleAuditRow,
+  handleBatchAuditRows,
+  handleBatchDeleteRows,
+} from "@/hooks/useTableOp";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { toThousands } from "@/utils";
 import { useRouter } from "vue-router";
 import ImportExcelDialog from "@/components/Dialogs/importExcelDialog.vue";
 import { getToken } from "@/utils/auth";
+import { ElMessage, type TableInstance } from "element-plus";
 const router = useRouter();
 const uploadDingTalkContractLedgerExcelUrl =
   import.meta.env.VITE_APP_API_URL_DEV +
@@ -425,6 +439,8 @@ type IExampleData = business.IAuditableEntity<business.IContract>;
 
 const loading: Ref<boolean> = ref(false);
 const exampleData: Ref<IExampleData[]> = ref([]);
+const selectedRows: Ref<any[]> = ref([]);
+const tableRef = ref<Nullable<TableInstance>>(null);
 const queryForm: Ref<any> = ref({
   状态集合: undefined,
   数据源集合: undefined,
@@ -572,6 +588,11 @@ const handleConfirmFilter = (filter: any) => {
   initTableData();
 };
 
+const handleSelectionChange = (selection: any) => {
+  console.log(selection);
+  selectedRows.value = selection;
+};
+
 const initTableData = () => {
   loading.value = true;
   BusinessStandbookAPI.getContractLedgerRecordList({
@@ -610,6 +631,32 @@ const handleImportDingTalkContractLedgerExcel = async (data: any) => {
     });
 };
 
+const handleBatchAudit = () => {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning("请选择要审核的数据");
+    return;
+  }
+  handleBatchAuditRows(
+    selectedRows.value,
+    BusinessStandbookAPI.editContractLedgerRecord,
+    "状态",
+    "有效",
+    initTableData
+  );
+};
+
+const handleBatchDelete = () => {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning("请选择要删除的数据");
+    return;
+  }
+  handleBatchDeleteRows(
+    selectedRows.value,
+    BusinessStandbookAPI.deleteContractLedgerRecordByIds,
+    initTableData
+  );
+};
+
 onMounted(() => {
   initTableData();
 });
@@ -617,8 +664,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .main-wrapper {
-  @apply p-10px;
-  height: 100%;
+  @apply p-10px h-full;
 }
 
 .title-block {

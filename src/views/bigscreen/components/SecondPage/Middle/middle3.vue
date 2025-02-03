@@ -10,6 +10,10 @@ import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
 
+const props = defineProps<{
+  data?: any;
+}>();
+
 // 每个类别对应的数据系列
 const months = [
   "1月",
@@ -28,10 +32,15 @@ const months = [
 
 // 随机生成收入数据
 const getRandomData = () => {
-  return months.map(() => ({
-    planned: Math.floor(Math.random() * 101), // 计划经营收入
-    actual: Math.floor(Math.random() * 101), // 实际经营收入
-  }));
+  return props.data
+    ? props.data.map((item: any) => ({
+        planned: item.planned,
+        actual: item.actual,
+      }))
+    : months.map(() => ({
+        planned: 0, // 计划经营收入
+        actual: 0, // 实际经营收入
+      }));
 };
 
 const chart = shallowRef<echarts.ECharts | null>(null);
@@ -143,9 +152,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model1 {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 </style>

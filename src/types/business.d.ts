@@ -215,6 +215,40 @@ namespace business {
     description: string; // 备注
   }
 
+  // 销售台账
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface ISellRecord {
+    id: string;
+    公司名称: string;
+    日期: string;
+    合同编号: string;
+    商品名称: string;
+    商品类型: string;
+    数量: string;
+    含税单价: string;
+    金额: string;
+    不含税单价: string;
+    税率: string;
+    税额: string;
+  }
+
+  // 采购台账
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface IPurchaseRecord {
+    id: string;
+    公司名称: string;
+    日期: string;
+    合同编号: string;
+    商品名称: string;
+    商品类型: string;
+    数量: string;
+    含税单价: string;
+    金额: string;
+    不含税单价: string;
+    税率: string;
+    税额: string;
+  }
+
   // 泛型，某个类型T和可审计项的组合
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type IAuditableEntity<T> = T & IAuditable;

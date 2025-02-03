@@ -5,6 +5,7 @@
 <script setup lang="ts">
 // 固定几个选择
 import { useAttrs, ref } from "vue";
+
 const attrs = useAttrs();
 const shortcuts = ref([
   {

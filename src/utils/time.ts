@@ -20,6 +20,21 @@ export const getDateOfOneYear = (givenYear?: string) => {
   return dateArr;
 };
 
+/**
+ * 返回当年1月1日到现在的日期
+ * @param desc 是否将最近日期排在最前面（默认否）
+ * @returns
+ */
+export const getDateOfOneYearToNow = (desc: boolean = false) => {
+  const dateArr = getDateOfOneYear();
+  const today = new Date().toISOString().split("T")[0].substring(5);
+  if (desc) {
+    return dateArr.filter((item) => item <= today).reverse();
+  } else {
+    return dateArr.filter((item) => item <= today);
+  }
+};
+
 // 返回近30天日期
 export const getDateOfOneMonth = (givenDate: string) => {
   // const date = new Date();

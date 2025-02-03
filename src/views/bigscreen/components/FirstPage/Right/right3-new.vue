@@ -15,8 +15,12 @@ import * as echarts from "echarts";
 import type { TabsPaneContext } from "element-plus";
 import { ref, onMounted } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
+import { DataIndicesAPI } from "@/api/dataIndices";
 import { useRouter } from "vue-router";
 import sassvariables from "@/styles/variables.module.scss";
+import { useDataIndex } from "@/hooks/useDataIndex";
+
+const mode = 1; // 获取数据方式：0-报表管理；1-指标管理
 
 const REVENUE = "REVENUE";
 const PROFIT = "PROFIT";
@@ -37,6 +41,20 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   页容量: 6,
 });
 
+const keywordMap = {
+  年度营收: "194158fe0d4",
+  年度利润: "194159067d5",
+};
+
+// 获取数据
+const { result, loading, error, fetchData } = useDataIndex(
+  Object.values(keywordMap),
+  6,
+  undefined,
+  undefined,
+  true
+);
+
 const handleClick = (tab: TabsPaneContext) => {
   activeName.value = tab.paneName;
   initChartRight3(); // 切换页签时重新初始化图表
@@ -56,17 +74,47 @@ const clickBarCb = (params: any) => {
 let resData = ref([]);
 
 const initData = async () => {
-  queryForm.value = {
-    页码: 1,
-    页容量: 6,
-    企业名称: "广投石化",
-    状态集合: ["有效"],
-    类型集合: ["年"],
-  };
-  const res: any = await BusinessFormAPI.getCompanyReportFormList(
-    queryForm.value
-  );
-  resData.value = res["当前记录"] || [];
+  if (mode === 0) {
+    queryForm.value = {
+      页码: 1,
+      页容量: 6,
+      企业名称: "广投石化",
+      状态集合: ["有效"],
+      类型集合: ["年"],
+    };
+    const res: any = await BusinessFormAPI.getCompanyReportFormList(
+      queryForm.value
+    );
+    resData.value = res["当前记录"] || [];
+  } else if (mode === 1) {
+    await fetchData();
+    const revenueDataList = result.value[keywordMap["年度营收"]] || [];
+    const profitDataList = result.value[keywordMap["年度利润"]] || [];
+
+    const allData: never[] = [];
+
+    // 将数据分别保存到对应的变量中
+    revenueDataList.forEach((item: any) => {
+      const year = new Date(item.时间).getFullYear().toString();
+      allData.push({
+        year,
+        type: "revenue",
+        value: parseFloat(item.数据),
+      });
+    });
+
+    profitDataList.forEach((item: any) => {
+      const year = new Date(item.时间).getFullYear().toString();
+      allData.push({
+        year,
+        type: "profit",
+        value: parseFloat(item.数据),
+      });
+    });
+
+    // 营收和利润数据
+    resData.value = allData;
+  }
 };
 
 const initChartRight3 = async () => {
@@ -83,39 +131,60 @@ const initChartRight3 = async () => {
   // 获取数据
   await initData();
 
-  // 按照日期字段（年份）从低到高排序
-  const sortedData = resData.value.sort((a, b) => {
-    return new Date(a.日期).getFullYear() - new Date(b.日期).getFullYear();
-  });
-
   // 用于存储最终图表数据
-  const years: string[] = [];
+  let years: string[] = [];
+  const revenueYears: string[] = [];
+  const profitYears: string[] = [];
   const revenueData: number[] = [];
   const profitData: number[] = [];
 
-  sortedData.forEach((item) => {
-    const year = new Date(item.日期).getFullYear().toString();
-    const details = item.内容?.详情 || [];
+  if (mode === 0) {
+    // 按照日期字段（年份）从低到高排序
+    const sortedData = resData.value.sort((a, b) => {
+      return new Date(a.日期).getFullYear() - new Date(b.日期).getFullYear();
+    });
 
-    // 查找业态类型为"总体"的数据
-    const overallRevenue =
-      details.find((detail: any) => detail["业态类型"] === "总体")?.[
-        "累计营收金额"
-      ] || 0;
-    const overallProfit =
-      details.find((detail: any) => detail["业态类型"] === "总体")?.[
-        "累计利润金额"
-      ] || 0;
+    sortedData.forEach((item) => {
+      const year = new Date(item.日期).getFullYear().toString();
+      const details = item.内容?.详情 || [];
 
-    // 将年份添加到x轴数据
-    if (!years.includes(year)) {
-      years.push(year);
-    }
+      // 查找业态类型为"总体"的数据
+      const overallRevenue =
+        details.find((detail: any) => detail["业态类型"] === "总体")?.[
+          "累计营收金额"
+        ] || 0;
+      const overallProfit =
+        details.find((detail: any) => detail["业态类型"] === "总体")?.[
+          "累计利润金额"
+        ] || 0;
 
-    // 对应年份的营收和利润数据
-    revenueData.push(parseFloat(overallRevenue));
-    profitData.push(parseFloat(overallProfit));
-  });
+      // 将年份添加到x轴数据
+      if (!years.includes(year)) {
+        years.push(year);
+      }
+
+      // 对应年份的营收和利润数据
+      revenueData.push(parseFloat(overallRevenue));
+      profitData.push(parseFloat(overallProfit));
+    });
+  } else if (mode === 1) {
+    resData.value.forEach((item: any) => {
+      const { year, type, value } = item;
+
+      if (type === "revenue") {
+        if (!revenueYears.includes(year)) {
+          revenueYears.push(year);
+        }
+        revenueData.push(value);
+      } else if (type === "profit") {
+        if (!profitYears.includes(year)) {
+          profitYears.push(year);
+        }
+        profitData.push(value);
+      }
+      years = activeName.value === REVENUE ? revenueYears : profitYears;
+    });
+  }
 
   const gradientColors = [
     {
@@ -189,7 +258,7 @@ const initChartRight3 = async () => {
     series: [
       {
         type: "bar",
-        barWidth: "50%",
+        barWidth: "25%",
         barGap: "10%", // 柱体间距
         data: currentData, // 柱状图的值: 根据选中的页签显示对应的数据
         name: activeName.value === REVENUE ? "营收" : "利润",
@@ -228,9 +297,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model1 {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 </style>

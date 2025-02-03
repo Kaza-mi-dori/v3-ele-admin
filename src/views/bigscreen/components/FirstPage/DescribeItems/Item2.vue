@@ -85,7 +85,7 @@ const formatNumber = (num: number | string): string => {
   if (Number(num) > 10000) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   } else {
-    return num.toString(); // 直接返回原始数字，不格式化
+    return num ? num.toString() : "-"; // 直接返回原始数字，不格式化
   }
 };
 
@@ -189,21 +189,14 @@ onMounted(() => {
 $number-color-1: #fffe95;
 
 .box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  @apply flex flex-col justify-center items-center w-full h-full;
   box-sizing: border-box;
   // background-color: rgba(0, 0, 0, 0.5);
   // border-radius: 10px;
   color: white;
   font-size: 20px;
   .__header {
-    width: 100%;
-    display: flex;
-    align-items: center;
+    @apply flex items-center w-full;
     padding: 5px;
     background-image: url("@/views/bigscreen/img/left_box1_top.png");
     background-size: 100% 100%;
@@ -214,16 +207,11 @@ $number-color-1: #fffe95;
       border-radius: 50%;
     }
     .__title {
-      @apply ml-2;
-      flex: 1;
+      @apply ml-2 flex-1;
     }
   }
   .__content {
-    width: 100%;
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @apply flex flex-1 justify-center items-center w-full;
     background-image: url("@/views/bigscreen/img/left_box1_center.png");
     background-size: 100% 100%;
     .__left {
@@ -232,8 +220,7 @@ $number-color-1: #fffe95;
         margin-bottom: 10px;
       }
       .monthly-total {
-        display: flex;
-        align-items: center;
+        @apply flex items-center;
         margin-top: 5px;
         font-size: 1em;
         .scale {
@@ -293,11 +280,10 @@ $number-color-1: #fffe95;
 }
 
 .text2 {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
   font-size: 0.8em;
   .__desc {
-    text-align: left;
+    @apply text-left;
     width: 3em;
     margin-right: 5px;
   }

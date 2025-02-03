@@ -67,7 +67,7 @@ watch(password, handleInput, { immediate: true });
 
 <style lang="scss" scoped>
 .password-strength {
-  display: flex;
+  @apply flex;
   .strength-item {
     width: 20px;
     height: 5px;

@@ -13,7 +13,7 @@ const attrs = useAttrs();
 <style lang="scss" scoped>
 .el-tabs {
   :deep(.el-tabs__header) {
-    justify-content: center;
+    @apply justify-center;
     margin-bottom: 5px;
   }
   :deep(.el-tabs__nav-wrap) {

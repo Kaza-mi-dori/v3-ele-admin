@@ -417,8 +417,7 @@ onMounted(() => {
 }
 
 .contextmenu {
-  position: absolute;
-  z-index: 99;
+  @apply absolute z-99;
   font-size: 12px;
   background: var(--el-bg-color-overlay);
   border-radius: 4px;
@@ -435,10 +434,7 @@ onMounted(() => {
 }
 
 .scroll-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
+  @apply relative w-full overflow-hidden whitespace-nowrap;
 
   .el-scrollbar__bar {
     bottom: 0;

@@ -690,9 +690,7 @@ onMounted(() => {
   @apply flex bg-white mr-4;
   flex: 1;
   .item-menu {
-    @apply mr-10px p-2 pr-15px;
-    display: flex;
-    flex-direction: column;
+    @apply flex flex-col mr-10px p-2 pr-15px;
     border-right: 1px solid #fefefe;
     .item {
       margin: 10px;

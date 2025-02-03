@@ -115,9 +115,8 @@ onUnmounted(() => {
     .panel-header {
       padding: 10px;
       background-color: $sidebar-logo-background;
-      text-align: center;
       line-height: 1.5rem;
-      @apply relative w-full;
+      @apply relative w-full text-center;
       .title {
         width: 10rem;
         margin: 0 auto;

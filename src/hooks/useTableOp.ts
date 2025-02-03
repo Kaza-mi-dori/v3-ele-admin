@@ -21,7 +21,7 @@ export const handleDeleteRow = (row: any, api: any, callback: () => void) => {
     });
 };
 
-export const handleBatchDelete = (
+export const handleBatchDeleteRows = (
   rows: any[],
   api: any,
   callback: () => void
@@ -35,20 +35,21 @@ export const handleBatchDelete = (
     .then(() => {
       // 判断是否为有效数据，如果是则不允许删除(提示)
       const auditedRows = rows.filter(
-        (row) => row.audited || (row["状态"] && row["状态"] === "已审核")
+        (row) => row.audited || (row["状态"] && row["状态"] === "有效")
       );
       if (auditedRows.length > 0) {
         ElMessageBox.alert("已审核数据请联系管理员删除", "提示", {
           confirmButtonText: "确定",
           type: "warning",
         });
-        return;
       }
       // 删除数据
-      api(rows.map((row) => row.id)).then(() => {
-        ElMessage.success("删除成功");
-        callback();
-      });
+      else {
+        api(rows.map((row) => row.id)).then(() => {
+          ElMessage.success("删除成功");
+          callback();
+        });
+      }
     })
     .catch(() => {
       // 取消删除
@@ -106,6 +107,53 @@ export const handleClickRecord = (row: any, router: Router) => {
       id: row.id,
     },
   });
-  console.log(route);
   router.push(route);
+};
+
+/**
+ * 批量审核
+ * @param selectedRows 选中的行
+ */
+export const handleBatchAuditRows = (
+  selectedRows: any[],
+  api: any,
+  auditedProp: string,
+  auditedValue: any,
+  callback: () => void
+) => {
+  ElMessageBox.confirm(
+    `确定批量设置选中数据的审核状态为${auditedValue}吗？`,
+    "提示",
+    {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    }
+  )
+    .then(async () => {
+      /** 过滤掉已审核的数据 */
+      const auditedRows = selectedRows.filter(
+        (row) => row[auditedProp] !== auditedValue
+      );
+      /** 批量审核 */
+      const tasks = auditedRows.map((row) => {
+        return api({
+          ...row,
+          [auditedProp]: auditedValue,
+        });
+      });
+      const res = await Promise.allSettled(tasks);
+      const success = res.filter((r) => r.status === "fulfilled");
+      if (success.length > 0) {
+        ElMessage.success(
+          `共提交${auditedRows.length}条数据，${success.length}条数据审核成功`
+        );
+        callback();
+      } else {
+        ElMessage.error("批量审核失败");
+      }
+    })
+    .catch(() => {
+      ElMessage.info("已取消审核");
+    });
 };

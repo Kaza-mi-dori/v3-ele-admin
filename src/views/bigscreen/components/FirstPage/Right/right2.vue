@@ -157,10 +157,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .model1 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  @apply flex flex-1 flex-col h-full;
 }
 
 :deep(.el-progress.el-progress--line.el-progress--without-text.__progress)
@@ -181,16 +178,13 @@ onMounted(() => {
 }
 
 .rank-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; // 确保每一列有间距并对齐
+  @apply flex justify-between items-center;
   margin-bottom: 5px;
 
   .order {
     width: 30px;
     height: 25px;
-    display: flex;
-    align-items: center;
+    @apply flex items-center;
     font-size: 14px;
     font-weight: bold;
     padding-left: 5px;

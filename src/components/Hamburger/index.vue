@@ -29,12 +29,10 @@ function toggleClick() {
 
 <style scoped lang="scss">
 .hamburger {
-  vertical-align: middle;
-  cursor: pointer;
-  transform: scaleX(-1);
+  @apply cursor-pointer align-middle scale-x-[-1];
 }
 
 .hamburger.is-active {
-  transform: scaleX(1);
+  @apply scale-x-100;
 }
 </style>

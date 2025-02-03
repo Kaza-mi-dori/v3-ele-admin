@@ -14,7 +14,7 @@
     <Item3
       v-for="item in data"
       :key="item.title"
-      style="width: 30%; margin: 8px"
+      style="width: 30%; margin: 8px 1%"
       :title="item.title"
       :amount="item.value + ''"
       :unit="item.unit"
@@ -33,17 +33,59 @@ import icon5 from "@/views/bigscreen/img/product_icon5.png";
 import icon6 from "@/views/bigscreen/img/product_icon6.png";
 import Item3 from "@/views/bigscreen/components/FirstPage/DescribeItems/Item3.vue";
 import { businessStoreHook } from "@/store/modules/business";
+import { useDataIndex } from "@/hooks/useDataIndex";
 
 const businessStore = businessStoreHook();
 
 async function initChart() {}
 
+const keywordMap = {
+  成品油贸易累计合同数量: "1944e0aa665",
+  化工及其他产品贸易累计合同数量: "1944e0de1ae",
+  原油贸易累计合同数量: "1944e0c8e39",
+  // "LNG贸易累计合同数量": "1944e0aa668",
+  煤炭贸易累计合同数量: "1949ddb47ed",
+  // "燃料油贸易累计合同数量": "1944e0aa66a",
+};
+
+const { result, loading, error, fetchData } = useDataIndex(
+  Object.values(keywordMap),
+  6,
+  undefined,
+  undefined,
+  true
+);
+
 const data = ref<any[]>([
-  { title: "成品油", value: 100, unit: "万吨", iconUrl: icon1 },
-  { title: "化工产品", value: 50, unit: "万吨", iconUrl: icon2 },
-  { title: "原油", value: 100, unit: "万吨", iconUrl: icon3 },
+  {
+    title: "成品油",
+    value: 100,
+    unit: "万吨",
+    keyword: keywordMap["成品油贸易累计合同数量"],
+    iconUrl: icon1,
+  },
+  {
+    title: "化工产品",
+    value: 50,
+    unit: "万吨",
+    keyword: keywordMap["化工及其他产品贸易累计合同数量"],
+    iconUrl: icon2,
+  },
+  {
+    title: "原油",
+    value: 100,
+    unit: "万吨",
+    keyword: keywordMap["原油贸易累计合同数量"],
+    iconUrl: icon3,
+  },
   { title: "LNG", value: 50, unit: "万吨", iconUrl: icon4 },
-  { title: "煤炭", value: 100, unit: "万吨", iconUrl: icon5 },
+  {
+    title: "煤炭",
+    value: 100,
+    unit: "万吨",
+    keyword: keywordMap["煤炭贸易累计合同数量"],
+    iconUrl: icon5,
+  },
   { title: "燃料油", value: 50, unit: "万吨", iconUrl: icon6 },
 ]);
 
@@ -77,6 +119,18 @@ async function initData() {
       item.value = 0;
     }
   });
+  await fetchData(
+    `${props.year}-01-01 00:00:00`,
+    `${props.year}-12-31 23:59:59`
+  );
+  // 将result.value中的数据赋值给totalData
+  for (const key in result.value) {
+    // 如果有数据，则取第一条
+    const item = data.value.find((item) => item.keyword === key);
+    if (item) {
+      item.value = parseFloat(result.value[key][0].数据);
+    }
+  }
 }
 
 watch(

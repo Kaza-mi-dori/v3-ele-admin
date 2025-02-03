@@ -233,8 +233,7 @@ onMounted(() => {
 
 <style scoped>
 .message-container {
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col;
 }
 
 .message {
@@ -254,8 +253,7 @@ onMounted(() => {
 }
 
 .message-content {
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col;
 }
 
 .message-sender {
@@ -265,9 +263,9 @@ onMounted(() => {
 }
 
 .message-receiver {
+  @apply text-left;
   margin-bottom: 5px;
   font-weight: bold;
-  text-align: left;
 }
 
 .tip-message {

@@ -57,11 +57,10 @@ const isSidebarOpened = computed(() => appStore.sidebar.opened);
     padding-right: 5px;
     position: relative;
     .resize-trigger {
+      @apply absolute cursor-pointer;
       font-size: 12px;
-      position: absolute;
       right: 20px;
       bottom: 10px;
-      cursor: pointer;
       color: var(--el-text-color-primary);
       :hover {
         @apply cursor-pointer bg-gray-10 border-radius-10;

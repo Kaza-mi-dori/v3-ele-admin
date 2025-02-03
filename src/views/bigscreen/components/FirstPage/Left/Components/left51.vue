@@ -17,8 +17,8 @@ const chartRef = shallowRef<echarts.ECharts>();
 const data = ref<any[]>([
   { title: "广投石化", value: [100, 50, 10, 20, 1000, 250] },
   { title: "广投石化广东分公司", value: [100, 50, 25, 40, 400, 125] },
-  { title: "广投石化舟山", value: [100, 50, 50, 40, 200, 125] },
-  { title: "永盛仓储", value: [100, 50, 5, 10, 2000, 500] },
+  { title: "广投石化舟山", value: [0, 0, 0, 0, 0, 0] },
+  { title: "永盛仓储", value: [0, 0, 0, 0, 0, 0] },
 ]);
 const companyStore = companyStoreHook();
 
@@ -331,8 +331,8 @@ watch(
   }
 );
 
-onMounted(() => {
-  getData();
+onMounted(async () => {
+  await getData();
   initChart();
   // 监听窗口变化，重置图表
   window.addEventListener("resize", () => {

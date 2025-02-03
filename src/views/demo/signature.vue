@@ -157,8 +157,7 @@ function paint(
 </template>
 <style scoped lang="scss">
 .canvas-dom {
-  width: 100%;
-  height: 100%;
+  @apply w-full h-full;
   padding: 0 20px;
   background-color: #fff;
 
@@ -167,14 +166,12 @@ function paint(
   }
 
   header {
-    display: flex;
+    @apply flex items-center w-full;
     flex-flow: row nowrap;
-    align-items: center;
-    width: 100%;
     margin: 8px;
 
     .eraser-option {
-      display: flex;
+      @apply flex;
 
       label {
         white-space: nowrap;
