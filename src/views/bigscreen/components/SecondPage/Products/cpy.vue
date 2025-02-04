@@ -2,11 +2,40 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
-      <Left1 />
+      <Left1
+        :outContractData="[
+          {
+            label: '合同总金额',
+            value: '117093.04',
+            unit: '万元',
+          },
+          {
+            label: '合同总数',
+            value: '733',
+            unit: '份',
+          },
+          {
+            label: '采购合同数',
+            value: '30',
+            unit: '份',
+          },
+          {
+            label: '销售合同数',
+            value: '703',
+            unit: '份',
+          },
+        ]"
+      />
       <div class="b-space" />
-      <Left2 />
+      <Left2
+        :outContractData="{
+          fulfilled: 192.32,
+          unfulfilled: 12.42,
+          total: 204.74,
+        }"
+      />
       <div class="b-space" />
-      <Left3 />
+      <Left3 :outContractData="[703, 30, 0, 0, 0, 0]" />
     </div>
     <div class="c-space" />
     <div class="b-middle">
@@ -24,7 +53,35 @@
     </div>
     <div class="c-space" />
     <div class="b-right">
-      <Right1 />
+      <Right1
+        :outTradePartners="[
+          {
+            company: '必达能源',
+            amount: 6661,
+            ratio: 6661 / 97188.68,
+          },
+          {
+            company: '广西万宸',
+            amount: 6279,
+            ratio: 6279 / 97188.68,
+          },
+          {
+            company: '延长壳牌（广东）',
+            amount: 5043,
+            ratio: 5043 / 97188.68,
+          },
+          {
+            company: '启通石化',
+            amount: 3584,
+            ratio: 3584 / 97188.68,
+          },
+          {
+            company: '与桂同行',
+            amount: 3120,
+            ratio: 3120 / 97188.68,
+          },
+        ]"
+      />
       <div class="b-space" />
       <Right2 />
       <div class="b-space" />
@@ -49,20 +106,20 @@ import { ref } from "vue";
 
 const totalData = ref([
   {
-    year: "25438",
-    month: "25438",
+    year: "89199",
+    month: "89199",
   },
   {
-    year: "25438",
-    month: "25438",
+    year: "97188",
+    month: "97188",
   },
   {
-    year: "25438",
-    month: "25438",
+    year: "97188",
+    month: "97188",
   },
   {
-    year: "25438",
-    month: "25438",
+    year: "-",
+    month: "-",
   },
 ]);
 </script>

@@ -6,13 +6,13 @@
         :data="[
           {
             label: '今日采购量',
-            value: '-',
+            value: '0',
             unit: '万吨',
           },
           {
             label: '今日销售量',
-            value: '-',
-            unit: '万吨',
+            value: '2696.58',
+            unit: '吨',
           },
           {
             label: '总库存量',
@@ -35,7 +35,13 @@
         ]"
       />
       <div class="b-space" />
-      <Left3 />
+      <Left3
+        :data="{
+          history: [0, 0, 1764002, 2324936, 285900],
+          planAmount: 0,
+          sellAmount: 285900,
+        }"
+      />
     </div>
     <div class="c-space" />
     <div class="b-middle">
@@ -51,8 +57,16 @@
         <Middle3
           :data="[
             {
-              planned: 0,
+              planned: 280000.0,
               actual: 287651.14,
+            },
+            {
+              planned: 300000.0,
+              actual: 0,
+            },
+            {
+              planned: 320000.0,
+              actual: 0,
             },
           ]"
         />
@@ -62,30 +76,48 @@
     <div class="b-right">
       <Right1
         :data="[
+          { order: 1, name: '香港荣盛', value: 11.28, unit: '亿元' },
           {
-            company: '中油北斗',
-            amount: 28640,
-            ratio: 10.23,
+            order: 2,
+            name: 'GALAXY UNIVERSAL LIMITED',
+            value: 9.02,
+            unit: '亿元',
           },
           {
-            company: '必达能源',
-            amount: 6661,
-            ratio: 8.23,
+            order: 3,
+            name: 'DYNAMIC TRADING CO., LIMITED',
+            value: 7.13,
+            unit: '亿元',
           },
           {
-            company: '广硕能源',
-            amount: 6572,
-            ratio: 7.23,
+            order: 4,
+            name: 'GATHER STRENGTH INTERNATIONAL TRADING PTE. LTD.',
+            value: 4.25,
+            unit: '亿元',
           },
           {
-            company: '万宸石化',
-            amount: 6494,
-            ratio: 5.23,
+            order: 5,
+            name: '浙江浙石化销售有限公司',
+            value: 4.01,
+            unit: '亿元',
           },
           {
-            company: '延长壳牌',
-            amount: 5044,
-            ratio: 3.23,
+            order: 6,
+            name: '荣和君泰（大连）国际贸易有限公司',
+            value: 1.73,
+            unit: '亿元',
+          },
+          {
+            order: 7,
+            name: '荣和君泰（大连）国际贸易有限公司',
+            value: 0.56,
+            unit: '亿元',
+          },
+          {
+            order: 8,
+            name: '荣和君泰（大连）国际贸易有限公司',
+            value: 0.52,
+            unit: '亿元',
           },
         ]"
       />

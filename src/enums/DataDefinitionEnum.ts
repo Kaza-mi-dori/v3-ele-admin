@@ -8,4 +8,5 @@ export const DataDefinitionNameToMarkMap: Record<string, any> = {
   丁二烯: "193af66a0f4",
   布伦特日价: "193aa56025c",
   WTI日价: "193a8f18b5f",
+  "俄罗斯到岸价(山东)": "193b9f35581",
 };

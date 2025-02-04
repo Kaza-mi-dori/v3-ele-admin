@@ -36,6 +36,14 @@ import { useTransition } from "@vueuse/core";
 const backgroundImages = [yellowBg, blueBg, greenBg, redBg];
 const numColors = ["#fed971", "#4fdefe", "#4df0b8", "#fe8787"];
 
+const props = defineProps<{
+  outContractData?: {
+    label: string;
+    value: string;
+    unit: string;
+  }[];
+}>();
+
 // 定义合同数据
 const contractData = ref([
   {
@@ -62,27 +70,54 @@ const contractData = ref([
 
 const outputValues = ref([]);
 
-contractData.value.forEach((item) => {
-  const source = ref(0); // 初始值为 0
-  const decimalPlaces = item.value.toString().includes(".")
-    ? item.value.toString().split(".")[1].length
-    : 0; // 获取小数位数
+onMounted(() => {
+  if (props.outContractData) {
+    console.log("props.outContractData", props.outContractData);
+    contractData.value = [
+      {
+        label: "合同总金额",
+        value: props.outContractData[0].value,
+        unit: props.outContractData[0].unit,
+      },
+      {
+        label: "合同总数",
+        value: props.outContractData[1].value,
+        unit: props.outContractData[1].unit,
+      },
+      {
+        label: "采购合同数",
+        value: props.outContractData[2].value,
+        unit: props.outContractData[2].unit,
+      },
+      {
+        label: "销售合同数",
+        value: props.outContractData[3].value,
+        unit: props.outContractData[3].unit,
+      },
+    ];
+    contractData.value.forEach((item) => {
+      const source = ref(0); // 初始值为 0
+      const decimalPlaces = item.value.toString().includes(".")
+        ? item.value.toString().split(".")[1].length
+        : 0; // 获取小数位数
 
-  const output = useTransition(source, {
-    duration: 2000, // 动画持续时间
-  });
+      const output = useTransition(source, {
+        duration: 2000, // 动画持续时间
+      });
 
-  // 使用 Intl.NumberFormat 添加分隔符，并保持小数位数
-  const formattedOutput = computed(() => {
-    const numberFormatter = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: decimalPlaces,
-      maximumFractionDigits: decimalPlaces,
+      // 使用 Intl.NumberFormat 添加分隔符，并保持小数位数
+      const formattedOutput = computed(() => {
+        const numberFormatter = new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: decimalPlaces,
+          maximumFractionDigits: decimalPlaces,
+        });
+        return numberFormatter.format(output.value);
+      });
+
+      source.value = Number(item.value); // 设置目标值
+      outputValues.value.push(formattedOutput); // 存储格式化后的值
     });
-    return numberFormatter.format(output.value);
-  });
-
-  source.value = Number(item.value); // 设置目标值
-  outputValues.value.push(formattedOutput); // 存储格式化后的值
+  }
 });
 </script>
 

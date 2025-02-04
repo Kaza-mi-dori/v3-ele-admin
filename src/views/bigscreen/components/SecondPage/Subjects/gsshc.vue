@@ -2,11 +2,46 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
-      <Left1 />
+      <Left1
+        :data="[
+          {
+            label: '累计采购金额',
+            value: '69.13',
+            unit: '亿元',
+          },
+          {
+            label: '累计销售金额',
+            value: '61.72',
+            unit: '亿元',
+          },
+          {
+            label: '合同履行金额',
+            value: '61.22',
+            unit: '亿元',
+          },
+        ]"
+      />
       <div class="b-space" />
-      <Left2 />
+      <Left2
+        :data="[
+          {
+            name: '采购合同',
+            value: 221,
+          },
+          {
+            name: '销售合同',
+            value: 251,
+          },
+        ]"
+      />
       <div class="b-space" />
-      <Left3 />
+      <Left3
+        :data="{
+          history: [0, 0, 0, 617213.38, 0],
+          planAmount: 0,
+          sellAmount: 617213.38,
+        }"
+      />
     </div>
     <div class="c-space" />
     <div class="b-middle">
@@ -31,7 +66,35 @@
     </div>
     <div class="c-space" />
     <div class="b-right">
-      <Right1 />
+      <Right1
+        :data="[
+          {
+            company: '安元实业',
+            amount: 189872.0,
+            ratio: Number((189872 / 577800).toFixed(3)),
+          },
+          {
+            company: '深圳宝峰',
+            amount: 39952.0,
+            ratio: Number((39952 / 577800).toFixed(3)),
+          },
+          {
+            company: '胜帮（杭州）能源',
+            amount: 39871.25,
+            ratio: Number((39871.25 / 577800).toFixed(3)),
+          },
+          {
+            company: '新疆西部物产贸易',
+            amount: 30217.3,
+            ratio: Number((30217.3 / 577800).toFixed(3)),
+          },
+          {
+            company: '大榭能源化工（淮北）',
+            amount: 28161.6,
+            ratio: Number((28161.6 / 577800).toFixed(3)),
+          },
+        ]"
+      />
       <div class="b-space" />
       <Right2 />
       <div class="b-space" />

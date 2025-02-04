@@ -1,7 +1,7 @@
 <template>
   <Model1 class="model1" title="历年销售趋势">
     <!-- 标签页区 -->
-    <Tab v-model="activeName" @tab-click="handleClick">
+    <!-- <Tab v-model="activeName" @tab-click="handleClick">
       <el-tab-pane
         :label="BusinessEnum.CPY"
         :name="BusinessEnumMap[BusinessEnum.CPY]"
@@ -18,7 +18,7 @@
         :label="BusinessEnum.HGCP"
         :name="BusinessEnumMap[BusinessEnum.HGCP]"
       />
-    </Tab>
+    </Tab> -->
     <!-- 指标区 -->
     <div class="flex mt-4">
       <div class="desc-box">
@@ -88,13 +88,13 @@ const activeName = ref<number | string | undefined>(BusinessEnum.CPY);
 
 // 随机生成分类数量数据
 const getRandomCategoryData = (categories: any[]) => {
-  return categories.map(() => Math.floor(Math.random() * 101)); // 随机生成0-100之间的值
+  return props.data?.history || categories.map(() => 0); // 随机生成0-100之间的值
 };
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 
-const planAmount = ref(552);
-const sellAmount = ref(226.42);
+const planAmount = ref(props.data?.planAmount || 0);
+const sellAmount = ref(props.data?.sellAmount || 0);
 const finishRate = computed(() => {
   return +((sellAmount.value / planAmount.value) * 100).toFixed(2);
 });

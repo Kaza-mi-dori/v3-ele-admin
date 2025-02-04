@@ -100,7 +100,7 @@ export const enum OurCompanyEnum {
   /** 开燃公司 */
   KRY = "开燃公司",
   /** 桂盛公司 */
-  GSSHC = "桂盛公司",
+  GSSHC = "桂盛桂轩",
   /** 恒润公司 */
   HRY = "恒润公司",
   /** 石化板块（特殊） */
@@ -114,7 +114,7 @@ export const OurCompanyEnumMap = {
   [OurCompanyEnum.YSCC]: "永盛仓储",
   [OurCompanyEnum.YSSHC]: "永盛石化",
   [OurCompanyEnum.KRY]: "开燃公司",
-  [OurCompanyEnum.GSSHC]: "桂盛公司",
+  [OurCompanyEnum.GSSHC]: "桂盛桂轩",
   [OurCompanyEnum.HRY]: "恒润公司",
   [OurCompanyEnum.SHBK]: "石化板块",
 };
@@ -127,7 +127,7 @@ export const OurCompanyFullNameMap = {
   [OurCompanyEnum.YSCC]: "广西永盛仓储有限公司",
   [OurCompanyEnum.YSSHC]: "广西永盛石油化工有限公司",
   [OurCompanyEnum.KRY]: "开燃公司",
-  [OurCompanyEnum.GSSHC]: "桂盛公司",
+  [OurCompanyEnum.GSSHC]: "桂盛桂轩",
   [OurCompanyEnum.HRY]: "恒润公司",
   [OurCompanyEnum.SHBK]: "石化板块",
 };

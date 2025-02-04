@@ -15,7 +15,10 @@
       <Item1
         style="margin: 0 auto"
         :amount="oilData.oilBargain"
-        :title="'成品油交易量'"
+        :title="
+          '成品油交易量' +
+          (oilDataDate.oilBargain ? `(${oilDataDate.oilBargain})` : '')
+        "
         :iconUrl="business"
       />
     </div>

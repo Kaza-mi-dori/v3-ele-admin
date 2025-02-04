@@ -40,7 +40,7 @@ const initChart2Left2 = () => {
       right: 5,
     },
     // 颜色
-    color: ["#4BB5EF", "#335ECA", "#E95881", "#E46F44", "#E99F32", "#54DBE3"],
+    color: ["#4BB5EF", "#E95881", "#E46F44", "#335ECA", "#E99F32", "#54DBE3"],
     grid: {
       left: "10",
       right: 0,

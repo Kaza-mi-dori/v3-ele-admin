@@ -11,6 +11,14 @@ import { onMounted } from "vue";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 
+const props = defineProps<{
+  outContractData?: {
+    fulfilled: number;
+    unfulfilled: number;
+    total: number;
+  };
+}>();
+
 const initChart2Left2 = () => {
   chart.value?.clear();
   chart.value = echarts.init(
@@ -51,14 +59,14 @@ const initChart2Left2 = () => {
         },
         data: [
           {
-            value: 194.32,
+            value: props.outContractData?.fulfilled || 192.32,
             name: "已履行",
             itemStyle: {
               color: "#5cafff",
             },
           },
           {
-            value: 27.44,
+            value: props.outContractData?.unfulfilled || 12.42,
             name: "未履行",
             itemStyle: {
               color: "#fc377e",

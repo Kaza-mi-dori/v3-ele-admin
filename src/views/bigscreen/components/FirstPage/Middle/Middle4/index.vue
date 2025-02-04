@@ -3,6 +3,7 @@
     <Tab v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="原油" name="YUANYOU" />
       <el-tab-pane label="汽柴油" name="QICHAIYOU" />
+      <el-tab-pane label="燃料油" name="RANLIAOYOU" />
       <el-tab-pane label="化工产品" name="HUAGONG" />
       <el-link class="el-link-more" @click="handleCheckMore">查看更多</el-link>
     </Tab>
@@ -28,6 +29,7 @@ import { useRouter } from "vue-router";
 const YUANYOU = "YUANYOU";
 const HUAGONG = "HUAGONG";
 const QICHAIYOU = "QICHAIYOU";
+const RANLIAOYOU = "RANLIAOYOU";
 
 const router = useRouter();
 const activeName = ref<number | string | undefined>(YUANYOU);
@@ -54,6 +56,14 @@ const allData: Ref<Record<any, DataRecord[]>> = ref({
     { time: "2月", value: 2300 },
     { time: "3月", value: 4210 },
     { time: "4月", value: 2500 },
+    { time: "5月", value: 2600 },
+    { time: "6月", value: 2700 },
+  ],
+  RANLIAOYOU: [
+    { time: "1月", value: 2200 },
+    { time: "2月", value: 2300 },
+    { time: "3月", value: 3200 },
+    { time: "4月", value: 4100 },
     { time: "5月", value: 2600 },
     { time: "6月", value: 2700 },
   ],
@@ -106,6 +116,7 @@ const getDateOfOneMonth = () => {
 const categoryMap = {
   YUANYOU: ["WTI日价", "布伦特日价"],
   HUAGONG: ["乙烯焦油华南价"],
+  RANLIAOYOU: ["俄罗斯到岸价(山东)"],
   QICHAIYOU: ["#92汽油", "#95汽油", "#0柴油"],
 };
 
@@ -113,6 +124,17 @@ const dataMap: Ref<Record<string, any>> = ref({
   [categoryMap.YUANYOU[0]]: undefined,
   [categoryMap.YUANYOU[1]]: undefined,
   [categoryMap.HUAGONG[0]]: undefined,
+  [categoryMap.RANLIAOYOU[0]]: undefined,
+  [categoryMap.QICHAIYOU[0]]: undefined,
+  [categoryMap.QICHAIYOU[1]]: undefined,
+  [categoryMap.QICHAIYOU[2]]: undefined,
+});
+
+const dataMap2: Ref<Record<string, any>> = ref({
+  [categoryMap.YUANYOU[0]]: undefined,
+  [categoryMap.YUANYOU[1]]: undefined,
+  [categoryMap.HUAGONG[0]]: undefined,
+  [categoryMap.RANLIAOYOU[0]]: undefined,
   [categoryMap.QICHAIYOU[0]]: undefined,
   [categoryMap.QICHAIYOU[1]]: undefined,
   [categoryMap.QICHAIYOU[2]]: undefined,
@@ -170,6 +192,32 @@ const handleClick = (tab: TabsPaneContext) => {
   initChartMiddle4();
 };
 
+const getMinYAxis = (activeName: string) => {
+  switch (activeName) {
+    case YUANYOU:
+      return 60;
+    case HUAGONG:
+      return 2000;
+    case RANLIAOYOU:
+      return 4000;
+    case QICHAIYOU:
+      return 6000;
+  }
+};
+
+const getMaxYAxis = (activeName: string) => {
+  switch (activeName) {
+    case YUANYOU:
+      return 100;
+    case HUAGONG:
+      return 5000;
+    case RANLIAOYOU:
+      return 10000;
+    case QICHAIYOU:
+      return 10000;
+  }
+};
+
 /** 根据dataSeries.value 获取相应数据渲染图表 */
 const initChartMiddle4 = () => {
   chart.value?.clear();
@@ -181,7 +229,32 @@ const initChartMiddle4 = () => {
   const xAxisData = getDateOfOneYear();
   // console.log("xAxisData"xAxisData);
   const series = categoryMap[activeName.value as keyof typeof categoryMap];
+  const dataSeries: any = [];
+  // 从dataMap中和dataMap2中获取数据
+  for (let i = 0; i < series.length; i++) {
+    const item = series[i];
+    dataSeries.push({
+      name: item,
+      type: "line",
+      data: dataMap.value[item] ? dataFilterOne(dataMap.value[item]) : [],
+      // 粗细
+      lineStyle: {
+        width: 3,
+      },
+      smooth: true,
+    });
+    dataSeries.push({
+      name: item + ` ${new Date().getFullYear() - 1}`,
+      type: "line",
+      data: dataMap2.value[item] ? dataFilterOne(dataMap2.value[item]) : [],
+      lineStyle: {
+        width: 1,
+      },
+      smooth: true,
+    });
+  }
   const option = {
+    color: ["#FFC000", "#FFD966", "#70AD47", "#A9D18E", "#FF0000", "#F4B183"],
     tooltip: {
       trigger: "axis",
     },
@@ -191,8 +264,15 @@ const initChartMiddle4 = () => {
       bottom: "2%",
       containLabel: true,
     },
+    // 前三个深后三个浅
     legend: {
-      data: series,
+      // data: series,
+      data: [
+        ...series,
+        ...series.map(
+          (item: string) => item + ` ${new Date().getFullYear() - 1}`
+        ),
+      ],
       icon: "rect",
       top: 20,
       right: 40,
@@ -216,6 +296,8 @@ const initChartMiddle4 = () => {
       },
     },
     yAxis: {
+      min: getMinYAxis(activeName.value),
+      max: getMaxYAxis(activeName.value),
       type: "value",
       name: activeName.value === YUANYOU ? "美元/桶" : "元/吨",
       // 读取
@@ -238,28 +320,16 @@ const initChartMiddle4 = () => {
         },
       },
     },
-    smooth: false,
-    series: series.map((item: string) => {
-      // console.log("item:", item);
-      return {
-        name: item,
-        type: "line",
-        // smooth: true,
-        data: dataMap.value[item] ? dataFilterOne(dataMap.value[item]) : [],
-        // markPoint: {
-        //   data: [
-        //     {
-        //       type: "max",
-        //       name: "最大值",
-        //     },
-        //     {
-        //       type: "min",
-        //       name: "最小值",
-        //     },
-        //   ],
-        // },
-      };
-    }),
+    smooth: true,
+    // series: series.map((item: string) => {
+    //   return {
+    //     name: item,
+    //     type: "line",
+    //     // smooth: true,
+    //     data: dataMap.value[item] ? dataFilterOne(dataMap.value[item]) : [],
+    //   };
+    // }),
+    series: dataSeries,
   };
   chart.value.setOption(option);
 };
@@ -294,13 +364,41 @@ const processChartData = (data: any) => {
   }
 };
 
+const processChartData2 = (data: any) => {
+  for (const category in categoryMap as Record<string, string[]>) {
+    categoryMap[category as keyof typeof categoryMap].forEach(
+      (item: string) => {
+        // item: WTI日价
+        if (dataMap2.value[item] === undefined) {
+          dataMap2.value[item] = data
+            .filter(
+              (record: any) =>
+                record["标识"] === DataDefinitionNameToMarkMap[item]
+            )
+            .map((record: any) => {
+              return {
+                time: record["时间"].substring(5, 10),
+                value: record["数据"],
+                unit: record["单位"],
+              };
+            })
+            .sort((a: any, b: any) => {
+              return new Date(a.time).getTime() - new Date(b.time).getTime();
+            });
+        }
+      }
+    );
+  }
+};
+
 /**
  * 根据配置项，分别获取每个标识对应数据的当年数据
  */
-const initData = () => {
+const initData = async () => {
   // dataSeries.value = allData.value[activeName.value as string];
   // const marks: any[] = [];
   const fetchDataTask: any[] = [];
+  const fetchDataTaskLastYear: any[] = [];
   for (const category in categoryMap as Record<string, string[]>) {
     // 对每个类别的标识进行获取数据后放到dataMap中
     fetchDataTask.push(
@@ -317,13 +415,30 @@ const initData = () => {
         }
       )
     );
+    // 获取去年数据
+    fetchDataTaskLastYear.push(
+      ...categoryMap[category as keyof typeof categoryMap].map(
+        (item: string) => {
+          return autoRetryWrapper(
+            DataIndicesAPI.getDataIndicesList({
+              标识集合: [DataDefinitionNameToMarkMap[item]],
+              时间晚于: new Date().getFullYear() - 1 + "-01-01 00:00:00",
+              页码: 1,
+              页容量: 1000,
+            })
+          );
+        }
+      )
+    );
     // console.log("fetchDataTask", fetchDataTask);
   }
-  Promise.all(fetchDataTask).then((res) => {
-    const data = res.map((item: any) => item["当前记录"]);
-    processChartData(data.flat());
-    initChartMiddle4();
-  });
+  const res = await Promise.all(fetchDataTask);
+  const data = res.map((item: any) => item["当前记录"]);
+  processChartData(data.flat());
+  const resLastYear = await Promise.all(fetchDataTaskLastYear);
+  const dataLastYear = resLastYear.map((item: any) => item["当前记录"]);
+  processChartData2(dataLastYear.flat());
+  initChartMiddle4();
 };
 
 onMounted(() => {

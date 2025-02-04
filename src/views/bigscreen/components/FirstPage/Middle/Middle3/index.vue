@@ -187,6 +187,7 @@ onMounted(() => {
   .revenue-total,
   .profit-total {
     @apply flex;
+    font-size: 14px;
   }
   .revenue-total {
     margin-top: 5px;
@@ -207,6 +208,7 @@ onMounted(() => {
   .revenue-num,
   .profit-num {
     margin: 0 5px;
+    font-size: 14px;
   }
   .revenue-num {
     color: #d6e337;

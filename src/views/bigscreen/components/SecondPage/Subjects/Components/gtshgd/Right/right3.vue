@@ -10,6 +10,10 @@ import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
 
+const props = defineProps<{
+  data?: any;
+}>();
+
 const months = [
   "1月",
   "2月",
@@ -24,12 +28,10 @@ const months = [
 ];
 
 const getRandomData = (month: string[]) => {
-  return props.data || month.map(() => 0); // 随机生成-20~-100之间的值
+  return props.data
+    ? props.data.map((item: any) => item.profit)
+    : month.map(() => 0);
 };
-
-const props = defineProps<{
-  data?: any;
-}>();
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 const initChart = () => {

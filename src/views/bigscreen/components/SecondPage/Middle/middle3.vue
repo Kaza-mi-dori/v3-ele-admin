@@ -88,7 +88,7 @@ const initChart = () => {
     },
     yAxis: {
       type: "value",
-      name: "单位：万元",
+      name: "单位：亿元",
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
@@ -116,7 +116,7 @@ const initChart = () => {
       {
         name: "计划经营收入",
         type: "bar",
-        data: data.map((item) => item.planned),
+        data: data.map((item) => item.planned / 10000),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: sassvariables["bigscreen-primary-color-9"] },
@@ -128,7 +128,7 @@ const initChart = () => {
       {
         name: "实际经营收入",
         type: "bar",
-        data: data.map((item) => item.actual),
+        data: data.map((item) => item.actual / 10000),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: sassvariables["bigscreen-primary-color-3"] },

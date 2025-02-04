@@ -47,6 +47,28 @@
           id="first-page-bg-canvas-1"
           style="position: absolute; z-index: 0; top: 0; left: 0"
         />
+        <div
+          class="scroll-text"
+          style="
+            position: absolute;
+            z-index: 1000;
+            top: -3px;
+            font-size: 20px;
+            text-align: center;
+            color: red;
+          "
+        >
+          1. 不准开展背离主业的贸易业务。 2.
+          不准参与特定利益关系企业间开展的无商业目的的贸易业务。 3.
+          不准在贸易业务中人为增加不必要的交易环节。 4.
+          不准开展任何形式的融资性贸易。 5.
+          不准开展对交易标的没有控制权的空转、走单等贸易业务。 6.
+          不准开展无商业实质的循环贸易。 7.
+          不准开展有悖于交易常识的异常贸易业务。 8.
+          不准开展风险较高的非标仓单交易。 9.
+          不准违反会计准则规定确认代理贸易收入。 10.
+          不准在内控机制缺乏的情况下开展贸易业务。
+        </div>
         <ScreenIndexContent style="position: relative" />
       </div>
     </div>
@@ -115,14 +137,32 @@ const mapRef = ref<any>();
 const gsMarkerList = ref<any[]>([]);
 /** 二级入口(主营产品)列表 */
 const entryList = computed(() => {
-  const result = Object.keys(BusinessEnumMap)
-    .filter((item) => item !== "其他" && item !== "仓储" && item !== "油站运营")
-    .map((key) => {
-      return {
-        name: key,
-        label: BusinessEnumMap[key as keyof typeof BusinessEnumMap],
-      };
-    });
+  // const result = Object.keys(BusinessEnumMap)
+  //   .filter((item) => item !== "其他" && item !== "仓储" && item !== "油站运营")
+  //   .map((key) => {
+  //     return {
+  //       name: key,
+  //       label: BusinessEnumMap[key as keyof typeof BusinessEnumMap],
+  //     };
+  //   });
+  const result = [
+    {
+      name: "Gtsh",
+      label: "广投石化",
+    },
+    {
+      name: "Kry",
+      label: "开燃公司",
+    },
+    {
+      name: "Gsshc",
+      label: "桂盛桂轩",
+    },
+    {
+      name: "Hry",
+      label: "恒润公司",
+    },
+  ];
   result.unshift({
     name: "石化板块",
     label: "石化板块",
@@ -182,20 +222,24 @@ const handleEntryClick = (item: any) => {
     activeEntry.value = item.label;
     return;
   }
-  const businessType = businessTypes2.find((type) => type.label === item.label);
-  const routeName =
-    businessTypeRouteNameMap[
-      businessType?.name as keyof typeof businessTypeRouteNameMap
-    ];
-  if (businessType) {
-    const route = router.resolve({
-      // name: "Business",
-      name: routeName,
-      query: { businessName: businessType.name },
-    });
-    console.log("route", route);
-    window.open(route.href, "_blank");
-  }
+  // const businessType = businessTypes2.find((type) => type.label === item.label);
+  // const routeName =
+  //   businessTypeRouteNameMap[
+  //     businessType?.name as keyof typeof businessTypeRouteNameMap
+  //   ];
+  // if (businessType) {
+  //   const route = router.resolve({
+  //     // name: "Business",
+  //     name: routeName,
+  //     query: { businessName: businessType.name },
+  //   });
+  //   window.open(route.href, "_blank");
+  // }
+  // 0204 改动为按企业名称
+  const route = router.resolve({
+    name: item.name,
+  });
+  window.open(route.href, "_blank");
 };
 
 // 根据路由决定显示内容
@@ -442,5 +486,24 @@ onUpdated(() => {
     display: none;
   }
   scrollbar-width: none;
+}
+
+.scroll-text {
+  width: auto;
+  overflow-x: auto;
+  white-space: nowrap;
+  animation-name: leftToRight;
+  animation-duration: 60s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  font-weight: 900;
+  @keyframes leftToRight {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 }
 </style>

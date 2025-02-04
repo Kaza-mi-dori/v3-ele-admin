@@ -2,11 +2,40 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
-      <Left1 />
+      <Left1
+        :outContractData="[
+          {
+            label: '合同总金额',
+            value: '2293.40',
+            unit: '万元',
+          },
+          {
+            label: '合同总数',
+            value: '3',
+            unit: '份',
+          },
+          {
+            label: '采购合同数',
+            value: '1',
+            unit: '份',
+          },
+          {
+            label: '销售合同数',
+            value: '2',
+            unit: '份',
+          },
+        ]"
+      />
       <div class="b-space" />
-      <Left2 />
+      <Left2
+        :outContractData="{
+          fulfilled: 192.32,
+          unfulfilled: 12.42,
+          total: 204.74,
+        }"
+      />
       <div class="b-space" />
-      <Left3 />
+      <Left3 :outContractData="[1, 0, 0, 0, 0, 0]" />
     </div>
     <div class="c-space" />
     <div class="b-middle">
@@ -24,7 +53,20 @@
     </div>
     <div class="c-space" />
     <div class="b-right">
-      <Right1 />
+      <Right1
+        :outTradePartners="[
+          {
+            company: '燕山东润',
+            amount: 2210,
+            ratio: 2210 / 2293.4,
+          },
+          {
+            company: '南京汇景',
+            amount: 83.1,
+            ratio: 83.1 / 2293.4,
+          },
+        ]"
+      />
       <div class="b-space" />
       <Right2 />
       <div class="b-space" />

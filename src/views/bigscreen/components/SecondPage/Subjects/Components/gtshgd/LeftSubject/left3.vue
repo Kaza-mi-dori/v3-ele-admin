@@ -70,6 +70,10 @@ import sellIcon from "@/views/bigscreen/img/left_icon1.png";
 import finishIcon from "@/views/bigscreen/img/left_icon2.png";
 import sassvariables from "@/styles/variables.module.scss";
 
+const props = defineProps<{
+  data?: any;
+}>();
+
 // 每个类别对应的数据系列(过去5年的年份)
 const categoryMap = new Array(5)
   .fill(new Date().getFullYear())
@@ -79,20 +83,20 @@ const activeName = ref<number | string | undefined>(BusinessEnum.CPY);
 
 // 随机生成分类数量数据
 const getRandomCategoryData = (categories: any[]) => {
-  return categories.map(() => Math.floor(Math.random() * 101)); // 随机生成0-100之间的值
+  return props.data?.history || categories.map(() => 0); // 随机生成0-100之间的值
 };
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 
-const planAmount = ref(552);
-const sellAmount = ref(226.42);
+const planAmount = ref(props.data?.planAmount || 0);
+const sellAmount = ref(props.data?.sellAmount || 0);
 const finishRate = computed(() => {
   return +((sellAmount.value / planAmount.value) * 100).toFixed(2);
 });
-const animatedPlanAmount = useTransition(planAmount, {
+const animatedPlanAmount = useTransition(planAmount.value, {
   duration: 1500,
 });
-const animatedSellAmount = useTransition(sellAmount, {
+const animatedSellAmount = useTransition(sellAmount.value, {
   duration: 1500,
 });
 const animatedFinishRate = useTransition(finishRate, {

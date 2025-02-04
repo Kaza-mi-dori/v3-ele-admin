@@ -99,7 +99,7 @@ const initData = async () => {
       allData.push({
         year,
         type: "revenue",
-        value: parseFloat(item.数据),
+        value: parseFloat(item.数据) / 10000,
       });
     });
 
@@ -108,7 +108,7 @@ const initData = async () => {
       allData.push({
         year,
         type: "profit",
-        value: parseFloat(item.数据),
+        value: parseFloat(item.数据) / 10000,
       });
     });
 
@@ -164,8 +164,8 @@ const initChartRight3 = async () => {
       }
 
       // 对应年份的营收和利润数据
-      revenueData.push(parseFloat(overallRevenue));
-      profitData.push(parseFloat(overallProfit));
+      revenueData.push(parseFloat(overallRevenue) / 10000);
+      profitData.push(parseFloat(overallProfit) / 10000);
     });
   } else if (mode === 1) {
     resData.value.forEach((item: any) => {
@@ -204,6 +204,12 @@ const initChartRight3 = async () => {
     { start: "#69EBC9", end: "#AA3DD5" },
   ];
 
+  const gradientColors2 = [
+    { start: "#E28F78", end: "#E05633" },
+    { start: "#08DDD4", end: "#02B4F2" },
+    { start: "#49EBC9", end: "#4A3DD5" },
+  ];
+
   // 判断当前激活的tab页签，并根据选中的 tab 渲染不同的数据
   const currentData = activeName.value === REVENUE ? revenueData : profitData;
 
@@ -211,6 +217,16 @@ const initChartRight3 = async () => {
     tooltip: {
       trigger: "axis",
     },
+    // legend: {
+    //   data: ["目标", "实际"],
+    //   textStyle: {
+    //     fontSize: 14,
+    //     color: sassvariables["bigscreen-primary-color-7"],
+    //   },
+    //   // 图例位置
+    //   top: "10%",
+    //   right: "10%",
+    // },
     grid: {
       left: "3%",
       right: "4%",
@@ -232,7 +248,7 @@ const initChartRight3 = async () => {
     },
     yAxis: {
       type: "value",
-      name: "单位：万元",
+      name: "单位：亿元",
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
@@ -261,7 +277,8 @@ const initChartRight3 = async () => {
         barWidth: "25%",
         barGap: "10%", // 柱体间距
         data: currentData, // 柱状图的值: 根据选中的页签显示对应的数据
-        name: activeName.value === REVENUE ? "营收" : "利润",
+        // name: activeName.value === REVENUE ? "营收" : "利润",
+        name: "实际",
         // 显示标签
         label: {
           show: true,
@@ -270,11 +287,51 @@ const initChartRight3 = async () => {
           textStyle: {
             fontSize: "1rem",
           },
+          // 格式化标签
+          formatter: ({ value }: { value: number }) => {
+            const num = value.toFixed(1);
+            return `${num}`;
+          },
         },
         itemStyle: {
           color: (params: any) => {
             const color =
               gradientColors[params.dataIndex % gradientColors.length];
+            return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: color.start },
+              { offset: 1, color: color.end },
+            ]);
+          },
+        },
+      },
+      {
+        type: "bar",
+        barWidth: "25%",
+        barGap: "10%", // 柱体间距
+        data:
+          activeName.value === REVENUE
+            ? [512.8, null, null]
+            : [1.06, null, null], // 柱状图的值: 根据选中的页签显示对应的数据
+        // name: activeName.value === REVENUE ? "目标" : "实际",
+        name: "计划值",
+        // 显示标签
+        label: {
+          show: true,
+          position: "top",
+          color: "#fff",
+          textStyle: {
+            fontSize: "1rem",
+          },
+          // 格式化标签
+          formatter: ({ value }: { value: number }) => {
+            const num = value.toFixed(1);
+            return `${num}\n(计划值)`;
+          },
+        },
+        itemStyle: {
+          color: (params: any) => {
+            const color =
+              gradientColors2[params.dataIndex % gradientColors.length];
             return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               { offset: 0, color: color.start },
               { offset: 1, color: color.end },

@@ -5,19 +5,19 @@
       <Left1
         :data="[
           {
-            label: '今日收款',
-            value: '1696.36',
+            label: '采购总金额',
+            value: '34031.42',
             unit: '万元',
           },
           {
-            label: '今日付款',
-            value: '3871.32',
+            label: '销售总金额',
+            value: '31284.96',
             unit: '万元',
           },
           {
-            label: '总库存量',
-            value: '2.47',
-            unit: '万吨',
+            label: '销售合同数',
+            value: '135',
+            unit: '份',
           },
         ]"
       />
@@ -35,7 +35,13 @@
         ]"
       />
       <div class="b-space" />
-      <Left3 />
+      <Left3
+        :data="{
+          history: [0, 0, 0, 322966.85, 31284.96],
+          planAmount: 0,
+          sellAmount: 31284.96,
+        }"
+      />
     </div>
     <div class="c-space" />
     <div class="b-middle">
@@ -60,7 +66,35 @@
     </div>
     <div class="c-space" />
     <div class="b-right">
-      <Right1 />
+      <Right1
+        :data="[
+          {
+            company: '东恒启卓',
+            amount: 34859.01,
+            ratio: '-',
+          },
+          {
+            company: '置诚化工商贸',
+            amount: 24051.41,
+            ratio: '-',
+          },
+          {
+            company: '豫东石油',
+            amount: 18550.29,
+            ratio: '-',
+          },
+          {
+            company: '中化石油湖北',
+            amount: 10328.67,
+            ratio: '-',
+          },
+          {
+            company: '岚桥石化',
+            amount: 10379.05,
+            ratio: '-',
+          },
+        ]"
+      />
       <div class="b-space" />
       <Right2 />
       <div class="b-space" />

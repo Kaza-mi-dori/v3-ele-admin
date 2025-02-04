@@ -21,7 +21,7 @@ const data = ref<any[]>([
   // { title: "永盛仓储", value: [0, 0, 0, 0, 0, 0] },
   { title: "广投石化", value: [100, 50, 10, 20, 1000, 250] },
   { title: "开燃公司", value: [100, 50, 25, 40, 400, 125] },
-  { title: "桂盛公司", value: [0, 0, 0, 0, 0, 0] },
+  { title: "桂盛桂轩", value: [0, 0, 0, 0, 0, 0] },
   { title: "恒润公司", value: [0, 0, 0, 0, 0, 0] },
 ]);
 const companyStore = companyStoreHook();
@@ -71,17 +71,17 @@ async function getData() {
         累计利润目标完成率: profitRate,
       } = totalRow || {};
       item.value = [
-        +revenue,
-        +profit,
+        +(revenue / 10000).toFixed(2),
+        +(profit / 10000).toFixed(2),
         +revenueRate,
         +profitRate,
         +(
-          firmData.value["内容"]?.["营收基准值"] ||
-          (revenueRate ? (revenue / revenueRate).toFixed(2) : 0)
+          (firmData.value["内容"]?.["营收基准值"] ||
+            (revenueRate ? (revenue / revenueRate).toFixed(2) : 0)) / 10000
         ),
         +(
-          firmData.value["内容"]?.["利润基准值"] ||
-          (profitRate ? (profit / profitRate).toFixed(2) : 0)
+          (firmData.value["内容"]?.["利润基准值"] ||
+            (profitRate ? (profit / profitRate).toFixed(2) : 0)) / 10000
         ),
       ];
     } else {
@@ -93,13 +93,13 @@ async function getData() {
 // 数据整理
 function dataFilterOne() {
   const order = {
-    [OurCompanyEnum.GTSHC]: 1,
+    [OurCompanyEnum.GTSHC]: 4,
     // [OurCompanyEnum.GDFGS]: 2,
     // [OurCompanyEnum.GTSHC_ZS]: 3,
     // [OurCompanyEnum.YSCC]: 4,
-    [OurCompanyEnum.KRY]: 2,
-    [OurCompanyEnum.GSSHC]: 3,
-    [OurCompanyEnum.HRY]: 4,
+    [OurCompanyEnum.KRY]: 3,
+    [OurCompanyEnum.GSSHC]: 2,
+    [OurCompanyEnum.HRY]: 1,
   };
   data.value = data.value
     .map((item) => {
@@ -146,14 +146,14 @@ function initChart() {
     chartRef.value.on("click", "series.label", onClickLabel);
   }
   chartRef.value.clear();
-  console.log(data.value);
+  // console.log(data.value);
   const option = {
     tooltip: {
       trigger: "axis",
     },
     barWidth: "25%",
     // 系列之间的距离
-    barGap: "0%",
+    barGap: "25%",
     // 标题
     title: {
       text: `各主体营收及利润/${props.year}`,
@@ -196,15 +196,15 @@ function initChart() {
       },
     },
     // x轴单位
-    xAxis: {
+    yAxis: {
       type: "value",
-      name: "单位:万元",
+      name: "单位:亿元",
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontWeight: "bold",
       },
       ameLocation: "end", // 将单位文字放到坐标轴末尾位置
-      nameGap: 5, // 调整单位文字和坐标轴的间距，负值可以让它向左移动
+      nameGap: 12, // 调整单位文字和坐标轴的间距，负值可以让它向左移动
       axisLabel: {
         fontSize: 14,
         fontWeight: "bold",
@@ -224,7 +224,7 @@ function initChart() {
         },
       },
     },
-    yAxis: {
+    xAxis: {
       type: "category",
       data: data.value.map((item) => item.title),
       axisLabel: {
@@ -264,8 +264,8 @@ function initChart() {
             itemStyle: {
               color: "crimson",
             },
-            xAxis: item.value[0],
-            yAxis: item.title,
+            xAxis: item.title,
+            yAxis: item.value[0],
             value: item.value[4]
               ? ((item.value[0] / item.value[4]) * 100).toFixed(0) + "%"
               : "0%",

@@ -10,6 +10,10 @@ import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
 
+const props = defineProps<{
+  outContractData?: number[];
+}>();
+
 // 每个类别对应的数据系列
 const categoryMap = ["销售", "采购", "运输", "仓储", "装卸", "其他"];
 
@@ -109,7 +113,7 @@ const initChartMiddle4 = () => {
         type: "bar",
         barWidth: "50%",
         barGap: "5%", // 柱体间距
-        data: data,
+        data: props.outContractData || data,
         itemStyle: {
           color: (params: any) => {
             const color =

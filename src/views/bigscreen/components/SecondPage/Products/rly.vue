@@ -2,11 +2,40 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
-      <Left1 />
+      <Left1
+        :outContractData="[
+          {
+            label: '合同总金额',
+            value: '17535.00',
+            unit: '万元',
+          },
+          {
+            label: '合同总数',
+            value: '1',
+            unit: '份',
+          },
+          {
+            label: '采购合同数',
+            value: '0',
+            unit: '份',
+          },
+          {
+            label: '销售合同数',
+            value: '0',
+            unit: '份',
+          },
+        ]"
+      />
       <div class="b-space" />
-      <Left2 />
+      <Left2
+        :outContractData="{
+          fulfilled: 0,
+          unfulfilled: 17535,
+          total: 17535,
+        }"
+      />
       <div class="b-space" />
-      <Left3 />
+      <Left3 :outContractData="[1, 0, 0, 0, 0, 0]" />
     </div>
     <div class="c-space" />
     <div class="b-middle">
@@ -24,7 +53,15 @@
     </div>
     <div class="c-space" />
     <div class="b-right">
-      <Right1 />
+      <Right1
+        :outTradePartners="[
+          {
+            company: '中油北斗（陕西）',
+            amount: 17535,
+            ratio: 17535 / 17535,
+          },
+        ]"
+      />
       <div class="b-space" />
       <Right2 />
       <div class="b-space" />
@@ -49,8 +86,8 @@ import { ref } from "vue";
 
 const totalData = ref([
   {
-    year: "25438",
-    month: "25438",
+    year: "0",
+    month: "0",
   },
   {
     year: "25438",
@@ -61,8 +98,8 @@ const totalData = ref([
     month: "25438",
   },
   {
-    year: "25438",
-    month: "25438",
+    year: "-",
+    month: "-",
   },
 ]);
 </script>

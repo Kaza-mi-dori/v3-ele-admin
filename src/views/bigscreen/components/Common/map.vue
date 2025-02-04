@@ -68,7 +68,15 @@
                 'charging-station': item.styleId === 'chargingStation',
               }"
               :data-name="item.properties.label"
-              style="font-size: 14px; transform: translateY(-14px)"
+              :style="{
+                fontSize: '14px',
+                transform:
+                  item.styleId === 'oilDepot'
+                    ? 'translateY(-4px)'
+                    : item.styleId === 'organization'
+                      ? 'translateY(-48px)'
+                      : 'translateY(-14px)',
+              }"
               @click="onClickGeo1"
             >
               {{ item.properties && item.properties.label }}
@@ -162,16 +170,28 @@
       "
     >
       <div class="oil-station-statistic-item">
-        <span>库存总量</span>
-        <span>{{ oilStockStatistic.total }}</span>
+        <span class="oil-depot-jiameng">库存总量</span>
+        <span>{{ oilStockStatistic.total }}吨</span>
+      </div>
+      <div class="oil-station-statistic-item">
+        <span class="oil-depot-zulin">东莞盛源库</span>
+        <span>{{ oilStockStatistic.shengyuan }}吨</span>
       </div>
       <div class="oil-station-statistic-item">
         <span class="oil-depot-zulin">钦州永盛库</span>
-        <span>{{ oilStockStatistic.yongsheng }}</span>
+        <span>{{ oilStockStatistic.yongsheng }}吨</span>
       </div>
       <div class="oil-station-statistic-item">
-        <span class="oil-depot-jiameng">东莞盛源库</span>
-        <span>{{ oilStockStatistic.shengyuan }}</span>
+        <span class="oil-depot-zulin">钦州广明库</span>
+        <span>{{ oilStockStatistic.guangming }}吨</span>
+      </div>
+      <div class="oil-station-statistic-item">
+        <span class="oil-depot-zulin">来宾古瓦库</span>
+        <span>{{ oilStockStatistic.guwa }}吨</span>
+      </div>
+      <div class="oil-station-statistic-item">
+        <span class="oil-depot-zulin">恒润厂区库</span>
+        <span>{{ oilStockStatistic.hengrun }}吨</span>
       </div>
     </div>
   </tlbs-map>
@@ -181,7 +201,9 @@
 import { ref } from "vue";
 import boat from "@/views/bigscreen/img/boat2.png";
 import oil from "@/views/bigscreen/img/oil_medium.png";
-import gas from "@/views/bigscreen/img/oil2_medium.png";
+// import gas from "@/views/bigscreen/img/oil2_medium.png";
+// import oil from "@/views/bigscreen/img/product_icon3.png";
+import gas from "@/views/bigscreen/img/product_icon3.png";
 import enterprise from "@/views/bigscreen/img/enterprise.png";
 import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
 import { getDistrict } from "@/api/thirdSystem/tmap";
@@ -202,6 +224,12 @@ const keywordMap = {
   盛源柴油库存量: "1944df32f1c",
   永盛汽油库存量: "1944df20525",
   永盛柴油库存量: "1944df2800d",
+  古瓦汽油库存量: "194d01a22cd",
+  古瓦柴油库存量: "194d019da43",
+  广明汽油库存量: "194d01a8a4a",
+  广明柴油库存量: "194d01ab28b",
+  恒润汽油库存量: "194d01b3637",
+  恒润柴油库存量: "194d01af131",
 };
 
 const totalOilStockHook = useDataIndex(
@@ -211,8 +239,14 @@ const totalOilStockHook = useDataIndex(
     keywordMap["盛源柴油库存量"],
     keywordMap["永盛汽油库存量"],
     keywordMap["永盛柴油库存量"],
+    keywordMap["古瓦汽油库存量"],
+    keywordMap["古瓦柴油库存量"],
+    keywordMap["广明汽油库存量"],
+    keywordMap["广明柴油库存量"],
+    keywordMap["恒润汽油库存量"],
+    keywordMap["恒润柴油库存量"],
   ],
-  5,
+  11,
   undefined,
   undefined
 );
@@ -316,6 +350,9 @@ const oilStockStatistic = ref({
   total: 0,
   yongsheng: 0,
   shengyuan: 0,
+  guwa: 0,
+  guangming: 0,
+  hengrun: 0,
 });
 
 /** 显示弹窗的位置 */
@@ -552,6 +589,36 @@ onMounted(() => {
           break;
         case keywordMap["永盛柴油库存量"]:
           oilStockStatistic.value.yongsheng += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+        case keywordMap["恒润汽油库存量"]:
+          oilStockStatistic.value.hengrun += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+        case keywordMap["恒润柴油库存量"]:
+          oilStockStatistic.value.hengrun += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+        case keywordMap["广明汽油库存量"]:
+          oilStockStatistic.value.guangming += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+        case keywordMap["广明柴油库存量"]:
+          oilStockStatistic.value.guangming += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+        case keywordMap["古瓦汽油库存量"]:
+          oilStockStatistic.value.guwa += Number(
+            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+          );
+          break;
+        case keywordMap["古瓦柴油库存量"]:
+          oilStockStatistic.value.guwa += Number(
             totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
           );
           break;

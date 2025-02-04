@@ -2,11 +2,46 @@
   <div class="bg-view-body">
     <div class="c-space" />
     <div class="b-left">
-      <Left1 />
+      <Left1
+        :data="[
+          {
+            label: '合同总金额',
+            value: '949',
+            unit: '万元',
+          },
+          {
+            label: '已履行金额',
+            value: '755',
+            unit: '万元',
+          },
+          {
+            label: '未履行金额',
+            value: '194.3',
+            unit: '万元',
+          },
+        ]"
+      />
       <div class="b-space" />
-      <Left2 />
+      <Left2
+        :data="[
+          {
+            name: '采购合同',
+            value: '0',
+          },
+          {
+            name: '销售合同',
+            value: '19',
+          },
+        ]"
+      />
       <div class="b-space" />
-      <Left3 />
+      <Left3
+        :data="{
+          history: [0, 0, 0, 31860, 949],
+          planAmount: 0,
+          sellAmount: 949,
+        }"
+      />
     </div>
     <div class="c-space" />
     <div class="b-middle">
@@ -31,7 +66,35 @@
     </div>
     <div class="c-space" />
     <div class="b-right">
-      <Right1 />
+      <Right1
+        :data="[
+          {
+            company: '广西庚辰石化有限公司',
+            amount: 249.14,
+            ratio: Number((249.14 / 949) * 100).toFixed(2),
+          },
+          {
+            company: '广西建富成品油销售有限公司',
+            amount: 162.9,
+            ratio: Number((162.9 / 949) * 100).toFixed(2),
+          },
+          {
+            company: '广西中油海航能源有限公司',
+            amount: 106.2,
+            ratio: Number((106.2 / 949) * 100).toFixed(2),
+          },
+          {
+            company: '广西高投石油化工',
+            amount: 85.49,
+            ratio: Number((85.49 / 949) * 100).toFixed(2),
+          },
+          {
+            company: '佳孚石化',
+            amount: 24.92,
+            ratio: Number((24.92 / 949) * 100).toFixed(2),
+          },
+        ]"
+      />
       <div class="b-space" />
       <Right2 />
       <div class="b-space" />

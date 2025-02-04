@@ -30,12 +30,12 @@ export const businessTypes2: navItem[] = [
 ];
 
 export const businessTypeRouteNameMap = {
-  chemicalProduct: "Cpy",
-  crudeOil: "Mt",
-  fuelOil: "Yy",
+  chemicalProduct: "Hgcp",
+  crudeOil: "Yy",
+  fuelOil: "Rly",
   refinedOilProduct: "Cpy",
   LNG: "Lng",
-  coal: "Rly",
+  coal: "Mt",
 };
 
 /** 经营主体 */

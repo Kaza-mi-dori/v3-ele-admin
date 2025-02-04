@@ -9,7 +9,11 @@
       </div>
       <div class="box__amount">
         <span class="__desc">年贸易量</span>
-        <el-statistic class="animated-amount" :value="animatedAmount" />
+        <el-statistic
+          class="animated-amount"
+          :precision="2"
+          :value="animatedAmount"
+        />
         <span class="__unit">{{ props.unit }}</span>
       </div>
     </div>
@@ -63,6 +67,7 @@ function handleClick() {
     businessTypeRouteNameMap[
       businessName as keyof typeof businessTypeRouteNameMap
     ];
+  // console.log(businessName, routeName);
   const route = router.resolve({
     // name: "Business",
     name: routeName,
@@ -75,7 +80,8 @@ watch(
   () => props.amount,
   (val) => {
     // 将字符串转换为数字
-    source.value = parseInt(val, 10);
+    source.value = +parseFloat(val).toFixed(2);
+    // source.value = val;
     // 确保转换后的值不会是 NaN
     if (isNaN(source.value)) {
       source.value = 0;

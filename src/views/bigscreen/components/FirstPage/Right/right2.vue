@@ -1,7 +1,7 @@
 <template>
   <div>
     <Model1 class="model1" title="贸易伙伴交易金额排行">
-      <div
+      <!-- <div
         id="chart-right-2"
         style="
           width: 100%;
@@ -37,12 +37,9 @@
             <span>{{ item.value }}</span>
             <span>{{ item.unit }}</span>
           </el-progress>
-          <div class="__value">
-            <span>{{ (item.ratio || 0) * 100 }}</span>
-            <span>%</span>
-          </div>
         </div>
-      </div>
+      </div> -->
+      <div id="chart-right-2" style="height: 200px" />
     </Model1>
   </div>
 </template>
@@ -54,6 +51,7 @@ import no3 from "@/views/bigscreen/img/no3.png";
 import no4 from "@/views/bigscreen/img/no4.png";
 import Model1 from "../../FirstPage/Model1/index.vue";
 import * as echarts from "echarts";
+import sassvariables from "@/styles/variables.module.scss";
 import { ref, computed } from "vue";
 
 interface Rank {
@@ -64,18 +62,53 @@ interface Rank {
   ratio?: number;
 }
 
-const totalData: Ref<{}> = ref({
+const totalData = ref({
   name: "总金额",
-  value: 134176,
-  unit: "万元",
+  value: 35.66,
+  unit: "亿元",
 });
 
+const chart = shallowRef<echarts.ECharts | null>(null);
+
 const rankData: Ref<Rank[]> = ref([
-  { order: 1, name: "中油北斗", value: 28640, unit: "万元" },
-  { order: 2, name: "必达能源", value: 6661, unit: "万元" },
-  { order: 3, name: "广硕能源", value: 6572, unit: "万元" },
-  { order: 4, name: "万宸石化", value: 6494, unit: "万元" },
-  { order: 5, name: "延长壳牌", value: 5044, unit: "万元" },
+  { order: 1, name: "香港荣盛", value: 11.28, unit: "亿元" },
+  {
+    order: 2,
+    name: "GALAXY UNIVERSAL LIMITED",
+    value: 9.02,
+    unit: "亿元",
+  },
+  {
+    order: 3,
+    name: "DYNAMIC TRADING CO., LIMITED",
+    value: 7.13,
+    unit: "亿元",
+  },
+  {
+    order: 4,
+    name: "GATHER STRENGTH INTERNATIONAL TRADING PTE. LTD.",
+    value: 4.25,
+    unit: "亿元",
+  },
+  { order: 5, name: "浙江浙石化销售有限公司", value: 4.01, unit: "亿元" },
+  {
+    order: 6,
+    name: "荣和君泰（大连）国际贸易有限公司",
+    value: 1.73,
+    unit: "亿元",
+  },
+  {
+    order: 7,
+    name: "荣和君泰（大连）国际贸易有限公司",
+    value: 0.56,
+    unit: "亿元",
+  },
+  {
+    order: 8,
+    name: "荣和君泰（大连）国际贸易有限公司",
+    value: 0.52,
+    unit: "亿元",
+  },
 ]);
 
 const rankDataToDisplay: Ref<Rank[]> = ref([]);
@@ -110,7 +143,15 @@ watch(
 );
 
 const initChart = (data: any) => {
-  const myChart = echarts.init(document.getElementById("chart-right-2"));
+  if (!chart.value) {
+    chart.value = echarts.init(
+      document.getElementById("chart-right-2") as HTMLDivElement
+    );
+    // 绑定事件
+    // chart.value.on("click", "series.bar", clickBarCb);
+  }
+  // 清空图表
+  chart.value.clear();
   const option = {
     tooltip: {
       trigger: "axis",
@@ -120,27 +161,78 @@ const initChart = (data: any) => {
     },
     grid: {
       left: "3%",
-      right: "4%",
+      right: "2%",
       bottom: "3%",
       containLabel: true,
     },
     xAxis: {
-      type: "value",
-      boundaryGap: [0, 0.01],
+      type: "category",
+      data: rankData.value.map((item: any) => item.name),
+      axisLine: {
+        lineStyle: {
+          color: sassvariables["bigscreen-primary-color-8"],
+        },
+      },
+      axisLabel: {
+        fontSize: 14,
+        color: sassvariables["bigscreen-primary-color-7"],
+        interval: 0,
+        formatter: (value: string) => {
+          if (value.length > 4) {
+            return value.slice(0, 4) + "...";
+          }
+          return value;
+        },
+      },
     },
     yAxis: {
-      type: "category",
-      data: data.map((item: any) => item.name),
+      // type: "category",
+      type: "value",
+      name: "单位：亿元",
+      nameTextStyle: {
+        color: sassvariables["bigscreen-primary-color-7"],
+        fontSize: 15,
+      },
+      axisLine: {
+        show: true, // 显示坐标轴线
+        lineStyle: {
+          color: sassvariables["bigscreen-primary-color-8"],
+        },
+      },
+      splitLine: {
+        show: true, // 显示分割线
+        lineStyle: {
+          type: "dashed", // 虚线
+          color: sassvariables["bigscreen-primary-color-8"],
+        },
+      },
+      axisLabel: {
+        fontSize: 14,
+        color: sassvariables["bigscreen-primary-color-7"],
+      },
     },
     series: [
       {
-        name: "2011年",
+        name: "交易金额",
         type: "bar",
-        data: data.map((item: any) => item.value),
+        data: rankData.value.map((item) => item.value),
+        label: {
+          show: true,
+          position: "top",
+          color: "#fff",
+          textStyle: {
+            fontSize: "1rem",
+          },
+          // 格式化标签
+          formatter: ({ value }: { value: number }) => {
+            const num = value.toFixed(1);
+            return `${num}`;
+          },
+        },
       },
     ],
   };
-  myChart.setOption(option);
+  chart.value.setOption(option);
 };
 
 onMounted(() => {
@@ -151,7 +243,10 @@ onMounted(() => {
     { name: "中石油", value: 4000 },
     { name: "中石化", value: 5000 },
   ];
-  // initChart(data);
+  initChart(data);
+  window.addEventListener("resize", () => {
+    chart.value?.resize();
+  });
 });
 </script>
 
@@ -199,7 +294,7 @@ onMounted(() => {
     color: #7b9eeb;
     text-align: left; // 确保公司名称左对齐
     flex-grow: 1; // 让公司名称部分占满剩余的空间
-    max-width: 100px; // 设置最大宽度
+    max-width: 200px; // 设置最大宽度
     white-space: nowrap; // 禁止换行
     overflow: hidden; // 隐藏溢出的内容
     text-overflow: ellipsis; // 超出部分显示省略号
