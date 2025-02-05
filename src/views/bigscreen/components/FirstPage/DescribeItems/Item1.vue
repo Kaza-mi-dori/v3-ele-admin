@@ -8,7 +8,8 @@
         {{ props.title }}
       </div>
       <div class="box__amount" :style="{ color: props.amountColor }">
-        <el-statistic :value="animatedAmount" />
+        <el-statistic :value="animatedAmount" :suffix="props.unit || ''" />
+        <!-- <span>{{ props.unit || "" }}</span> -->
       </div>
     </div>
   </div>
@@ -28,6 +29,7 @@ const props = withDefaults(
     iconWidth?: number;
     iconHeight?: number;
     height?: number;
+    unit?: string;
   }>(),
   {
     amountColor: "rgb(16,253,254)",

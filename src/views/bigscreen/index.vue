@@ -53,12 +53,12 @@
             position: absolute;
             z-index: 1000;
             top: -3px;
-            font-size: 20px;
+            font-size: 28px;
             text-align: center;
             color: red;
           "
         >
-          1. 不准开展背离主业的贸易业务。 2.
+          十不准：“1. 不准开展背离主业的贸易业务。 2.
           不准参与特定利益关系企业间开展的无商业目的的贸易业务。 3.
           不准在贸易业务中人为增加不必要的交易环节。 4.
           不准开展任何形式的融资性贸易。 5.
@@ -67,7 +67,7 @@
           不准开展有悖于交易常识的异常贸易业务。 8.
           不准开展风险较高的非标仓单交易。 9.
           不准违反会计准则规定确认代理贸易收入。 10.
-          不准在内控机制缺乏的情况下开展贸易业务。
+          不准在内控机制缺乏的情况下开展贸易业务。”
         </div>
         <ScreenIndexContent style="position: relative" />
       </div>
@@ -481,7 +481,7 @@ onUpdated(() => {
   @apply relative;
   overflow-y: hidden;
   // margin: 20px 0;
-  padding: 20px 0 10px 0;
+  padding: 40px 0 10px 0;
   ::-webkit-scrollbar {
     display: none;
   }
@@ -493,13 +493,14 @@ onUpdated(() => {
   overflow-x: auto;
   white-space: nowrap;
   animation-name: leftToRight;
-  animation-duration: 60s;
+  animation-duration: 100s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  animation-delay: 0.1s;
   font-weight: 900;
   @keyframes leftToRight {
     0% {
-      transform: translateX(100%);
+      transform: translateX(100vw);
     }
     100% {
       transform: translateX(-100%);

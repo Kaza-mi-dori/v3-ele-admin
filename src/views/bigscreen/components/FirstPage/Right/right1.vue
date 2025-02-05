@@ -9,6 +9,7 @@
           (oilDataDate.oilStorage ? `(${oilDataDate.oilStorage})` : '')
         "
         :iconUrl="inventory"
+        unit="吨"
       />
     </div>
     <div class="__right">
@@ -20,6 +21,7 @@
           (oilDataDate.oilBargain ? `(${oilDataDate.oilBargain})` : '')
         "
         :iconUrl="business"
+        unit="吨"
       />
     </div>
   </div>

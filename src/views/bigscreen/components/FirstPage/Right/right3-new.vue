@@ -276,38 +276,6 @@ const initChartRight3 = async () => {
         type: "bar",
         barWidth: "25%",
         barGap: "10%", // 柱体间距
-        data: currentData, // 柱状图的值: 根据选中的页签显示对应的数据
-        // name: activeName.value === REVENUE ? "营收" : "利润",
-        name: "实际",
-        // 显示标签
-        label: {
-          show: true,
-          position: "top",
-          color: "#fff",
-          textStyle: {
-            fontSize: "1rem",
-          },
-          // 格式化标签
-          formatter: ({ value }: { value: number }) => {
-            const num = value.toFixed(1);
-            return `${num}`;
-          },
-        },
-        itemStyle: {
-          color: (params: any) => {
-            const color =
-              gradientColors[params.dataIndex % gradientColors.length];
-            return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: color.start },
-              { offset: 1, color: color.end },
-            ]);
-          },
-        },
-      },
-      {
-        type: "bar",
-        barWidth: "25%",
-        barGap: "10%", // 柱体间距
         data:
           activeName.value === REVENUE
             ? [512.8, null, null]
@@ -332,6 +300,38 @@ const initChartRight3 = async () => {
           color: (params: any) => {
             const color =
               gradientColors2[params.dataIndex % gradientColors.length];
+            return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: color.start },
+              { offset: 1, color: color.end },
+            ]);
+          },
+        },
+      },
+      {
+        type: "bar",
+        barWidth: "25%",
+        barGap: "10%", // 柱体间距
+        data: currentData, // 柱状图的值: 根据选中的页签显示对应的数据
+        // name: activeName.value === REVENUE ? "营收" : "利润",
+        name: "实际",
+        // 显示标签
+        label: {
+          show: true,
+          position: "top",
+          color: "#fff",
+          textStyle: {
+            fontSize: "1rem",
+          },
+          // 格式化标签
+          formatter: ({ value }: { value: number }) => {
+            const num = value.toFixed(1);
+            return `${num}`;
+          },
+        },
+        itemStyle: {
+          color: (params: any) => {
+            const color =
+              gradientColors[params.dataIndex % gradientColors.length];
             return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               { offset: 0, color: color.start },
               { offset: 1, color: color.end },

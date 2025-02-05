@@ -170,14 +170,16 @@ function initChart() {
         { offset: 1, color: sassvariables["bigscreen-primary-color-4"] },
       ]),
       // 比上面淡一些
-      "#96704b",
+      // "#96704b",
+      "rgba(165,123,82, 0.3)",
       // 半透明
       // "rgba(255, 255, 255, 0.9)",
       new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: sassvariables["bigscreen-primary-color-7"] },
         { offset: 1, color: sassvariables["bigscreen-primary-color-8"] },
       ]),
-      "#334c6e",
+      // "#334c6e",
+      "rgba(51, 76, 110, 0.3)",
       // 半透明
       // "rgba(255, 255, 255, 0.9)",
     ],
@@ -196,34 +198,70 @@ function initChart() {
       },
     },
     // x轴单位
-    yAxis: {
-      type: "value",
-      name: "单位:亿元",
-      nameTextStyle: {
-        color: sassvariables["bigscreen-primary-color-7"],
-        fontWeight: "bold",
-      },
-      ameLocation: "end", // 将单位文字放到坐标轴末尾位置
-      nameGap: 12, // 调整单位文字和坐标轴的间距，负值可以让它向左移动
-      axisLabel: {
-        fontSize: 14,
-        fontWeight: "bold",
-        color: sassvariables["bigscreen-primary-color-7"],
-      },
-      axisLine: {
-        show: true, // 显示坐标轴线
-        lineStyle: {
-          color: sassvariables["bigscreen-primary-color-8"],
+    yAxis: [
+      {
+        // min: -100,
+        // max: 600,
+        // interval: 100,
+        type: "value",
+        name: "单位:亿元",
+        nameTextStyle: {
+          color: sassvariables["bigscreen-primary-color-7"],
+          fontWeight: "bold",
+        },
+        ameLocation: "end", // 将单位文字放到坐标轴末尾位置
+        nameGap: 12, // 调整单位文字和坐标轴的间距，负值可以让它向左移动
+        axisLabel: {
+          fontSize: 14,
+          fontWeight: "bold",
+          color: sassvariables["bigscreen-primary-color-7"],
+        },
+        axisLine: {
+          show: true, // 显示坐标轴线
+          lineStyle: {
+            color: sassvariables["bigscreen-primary-color-8"],
+          },
+        },
+        splitLine: {
+          show: false, // 显示分割线
+          lineStyle: {
+            type: "dashed", // 虚线
+            color: sassvariables["bigscreen-primary-color-8"],
+          },
         },
       },
-      splitLine: {
-        show: false, // 显示分割线
-        lineStyle: {
-          type: "dashed", // 虚线
-          color: sassvariables["bigscreen-primary-color-8"],
-        },
-      },
-    },
+      // {
+      //   // min: -1,
+      //   // max: 2,
+      //   // interval: 0.5,
+      //   type: "value",
+      //   name: "单位:亿元",
+      //   nameTextStyle: {
+      //     color: sassvariables["bigscreen-primary-color-7"],
+      //     fontWeight: "bold",
+      //   },
+      //   ameLocation: "end", // 将单位文字放到坐标轴末尾位置
+      //   nameGap: 12, // 调整单位文字和坐标轴的间距，负值可以让它向左移动
+      //   axisLabel: {
+      //     fontSize: 14,
+      //     fontWeight: "bold",
+      //     color: sassvariables["bigscreen-primary-color-7"],
+      //   },
+      //   axisLine: {
+      //     show: true, // 显示坐标轴线
+      //     lineStyle: {
+      //       color: sassvariables["bigscreen-primary-color-8"],
+      //     },
+      //   },
+      //   splitLine: {
+      //     show: false, // 显示分割线
+      //     lineStyle: {
+      //       type: "dashed", // 虚线
+      //       color: sassvariables["bigscreen-primary-color-8"],
+      //     },
+      //   },
+      // },
+    ],
     xAxis: {
       type: "category",
       data: data.value.map((item) => item.title),
@@ -299,6 +337,7 @@ function initChart() {
         name: "未完成营收",
         type: "bar",
         stack: "revenue",
+        // 使用第二条y轴
         // 如果小于0，则显示0
         data: data.value.map((item) =>
           item.value[4] - item.value[0] < 0 ? 0 : item.value[4] - item.value[0]
@@ -309,6 +348,7 @@ function initChart() {
         type: "bar",
         stack: "profit",
         data: data.value.map((item) => item.value[1]),
+        // yAxisIndex: 1,
         label: {
           show: true,
           position: "inside",
@@ -326,6 +366,7 @@ function initChart() {
         name: "未完成利润",
         type: "bar",
         stack: "profit",
+        // yAxisIndex: 1,
         // 如果小于0，则显示0
         data: data.value.map((item) =>
           item.value[5] - item.value[1] < 0 ? 0 : item.value[5] - item.value[1]

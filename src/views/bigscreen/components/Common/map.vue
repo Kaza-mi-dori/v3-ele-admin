@@ -448,11 +448,11 @@ function onToggleOilDepot() {
   if (showOilDepot.value) {
     // 中心恢复到初始
     // setCenter(22.8226, 108.3734508);
-    setCenter(30, 108);
+    setCenter(30, 112);
     setZoom(5);
   } else {
     // 中心设为广西广东交界，缩放到7
-    setCenter(23.91799, 112.397027);
+    setCenter(23.91799, 118.397027);
     setZoom(7);
   }
 }
