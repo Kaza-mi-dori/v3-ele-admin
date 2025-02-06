@@ -55,7 +55,7 @@ const initChart = () => {
       orient: "horizontal", // 水平排列
       top: 20,
       right: 40,
-      data: ["累计利润"], // 显示的文本
+      data: ["累计利润", "当月利润"], // 显示的文本
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"], // 文字颜色
         fontSize: 14, // 文字大小
@@ -63,9 +63,9 @@ const initChart = () => {
       icon: "rect", // 设置为矩形
       itemWidth: 15, // 设置矩形宽度
       itemHeight: 10, // 设置矩形高度
-      itemStyle: {
-        color: "#DB8943",
-      },
+      // itemStyle: {
+      //   color: "#DB8943",
+      // },
     },
     grid: {
       left: "3%",
