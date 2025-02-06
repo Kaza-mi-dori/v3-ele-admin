@@ -55,8 +55,8 @@ $bg-color-1: #ffffff;
   padding: 15px 10px;
 
   .item3-bg {
-    @apply w-full h-full absolute top-0 left-0;
-    object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
+    /* 使图像覆盖整个父容器，并保持比例 */
+    @apply w-full h-full absolute top-0 left-0 object-cover;
   }
   .content-item {
     @apply flex-1 z-1;

@@ -105,7 +105,7 @@ contractData.value.forEach((item) => {
     img {
       width: 120%;
       height: 100%;
-      object-fit: cover; // 确保图片比例适用容器
+      @apply object-cover;
     }
     .body-content {
       @apply flex flex-col items-start justify-center absolute text-left pl-[15px];

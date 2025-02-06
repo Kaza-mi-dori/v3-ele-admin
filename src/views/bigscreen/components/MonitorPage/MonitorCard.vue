@@ -75,8 +75,7 @@ watch(
 
 <style lang="scss" scoped>
 .card-video {
-  object-fit: cover;
-  @apply border-1 w-full h-full;
+  @apply border-1 w-full h-full object-cover;
   border-color: #e2e8f0;
 }
 </style>

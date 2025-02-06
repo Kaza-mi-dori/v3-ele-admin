@@ -122,8 +122,7 @@ onMounted(() => {
   @apply w-full h-full relative;
   padding: 10px;
   .middle1-bg {
-    @apply w-full h-full absolute top-0 left-0;
-    object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
+    @apply w-full h-full absolute top-0 left-0 object-cover;
   }
   .content-wrapper {
     @apply flex justify-around items-center;
