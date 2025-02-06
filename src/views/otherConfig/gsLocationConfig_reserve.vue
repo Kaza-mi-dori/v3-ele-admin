@@ -693,7 +693,7 @@ onMounted(() => {
     @apply flex flex-col mr-10px p-2 pr-15px;
     border-right: 1px solid #fefefe;
     .item {
-      margin: 10px;
+      @apply m-2.5
       padding: 10px;
       border: 1px solid #ccc;
     }

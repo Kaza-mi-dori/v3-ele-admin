@@ -60,11 +60,7 @@ defineProps({
     @apply flex justify-center items-center relative;
     height: 50px;
     .model-title__bg {
-      @apply w-full h-full absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      @apply w-full h-full absolute top-0 bottom-0 left-0 right-0;
     }
     .model-title__text {
       font-size: 24px;
@@ -93,11 +89,7 @@ defineProps({
   .model-body {
     @apply flex-1 relative;
     .model-body__bg {
-      @apply absolute w-full h-full;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      @apply absolute w-full h-full top-0 bottom-0 left-0 right-0;
       background-repeat: repeat; /* 水平和垂直方向重复 */
       background-size: auto; /* 让图片保持原始大小 */
     }

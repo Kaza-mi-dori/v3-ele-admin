@@ -332,8 +332,7 @@ onMounted(() => {
     right;
 
   .login-header {
-    @apply flex w-full absolute;
-    top: 0;
+    @apply flex w-full absolute top-0;
     justify-content: right;
     padding: 15px;
 

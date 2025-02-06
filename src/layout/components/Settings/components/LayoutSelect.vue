@@ -72,9 +72,8 @@ function updateValue(layout: string) {
   }
 
   &.mix div:nth-child(2) {
+    @apply bottom-0 left-0;
     position: absolute;
-    bottom: 0;
-    left: 0;
     width: 30%;
     height: 70%;
     background: #1b2a47;
@@ -88,9 +87,8 @@ function updateValue(layout: string) {
   }
 
   &.left div:nth-child(2) {
+    @apply top-0 right-0;
     position: absolute;
-    top: 0;
-    right: 0;
     width: 70%;
     height: 30%;
     background: #fff;

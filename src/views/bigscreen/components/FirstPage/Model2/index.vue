@@ -72,9 +72,7 @@ const formatNumber = (num: number | string): string => {
 .middle1-box {
   @apply relative w-full h-full;
   .middle1-bg {
-    @apply absolute w-full h-full;
-    top: 0;
-    left: 0;
+    @apply absolute w-full h-full top-0 left-0;
     object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
   }
   .content-wrapper {

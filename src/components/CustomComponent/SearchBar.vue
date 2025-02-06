@@ -415,8 +415,7 @@ const handleReset = () => {
     width: 50%;
   }
   &::before {
-    @apply content-[''] absolute h-4 w-0.5 bg-blue-4 top-30%;
-    left: 0;
+    @apply content-[''] absolute h-4 w-0.5 bg-blue-4 top-30% left-0;
   }
   // 奇数行为灰底，偶数行为白底
   // &:nth-child(odd) {

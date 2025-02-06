@@ -316,15 +316,15 @@ onBeforeMount(() => {
 }
 
 .sticky-header {
+  @apply left-0;
   position: sticky;
-  left: 0;
   background-color: #f5f7fa; /* 确保固定列背景色不被覆盖 */
   z-index: 1; /* 确保固定列在其他内容之上 */
 }
 
 .sticky-cell {
+  @apply left-0;
   position: sticky;
-  left: 0;
   background-color: #f5f7fa; /* 确保固定列背景色不被覆盖 */
   z-index: 1; /* 确保固定列在其他内容之上 */
 }

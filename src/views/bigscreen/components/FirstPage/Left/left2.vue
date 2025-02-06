@@ -175,11 +175,7 @@ onMounted(() => {
     // 让头部背景高度与头部一致
     @apply flex justify-between relative;
     .model-header__bg {
-      @apply w-full h-full absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      @apply w-full h-full absolute top-0 bottom-0 left-0 right-0;
     }
     .model-title {
       @apply flex items-center relative;
@@ -200,12 +196,7 @@ onMounted(() => {
   .model-body {
     @apply flex-1 relative;
     .model-body__bg {
-      @apply absolute h-full;
-      margin: 10px;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      @apply absolute h-full m-2.5 top-0 bottom-0 left-0 right-0;
     }
     .model-body__content {
       @apply flex justify-center items-center w-full relative;
@@ -219,14 +210,10 @@ onMounted(() => {
         @apply flex flex-1 justify-center items-center relative;
       }
       img {
-        @apply absolute h-full;
+        @apply absolute h-full top-0 bottom-0 left-0 right-0;
         // width: 100%;
         // 150%效果似乎更好
         width: 150%;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
       }
       .body-content {
         @apply flex flex-col items-start justify-center text-left;

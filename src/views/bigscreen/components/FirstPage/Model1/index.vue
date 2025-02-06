@@ -43,11 +43,7 @@ defineProps({
     height: 50px;
     padding: 0 15px;
     .model-title__bg {
-      @apply w-full h-full absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      @apply w-full h-full absolute top-0 bottom-0 left-0 right-0;
     }
     .model-title__text {
       font-size: 18px;
@@ -62,11 +58,7 @@ defineProps({
   .model-body {
     @apply flex-1 relative;
     .model-body__bg {
-      @apply w-full h-full absolute; /* 确保背景图片覆盖整个容器 */
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      @apply w-full h-full absolute top-0 bottom-0 left-0 right-0; /* 确保背景图片覆盖整个容器 */
       background-repeat: repeat; /* 水平和垂直方向重复 */
       background-size: auto; /* 让图片保持原始大小 */
     }

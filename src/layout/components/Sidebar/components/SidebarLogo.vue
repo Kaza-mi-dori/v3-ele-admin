@@ -103,8 +103,8 @@ onUnmounted(() => {
   }
 
   .panel {
+    @apply top-0;
     position: fixed;
-    top: 0;
     width: 80%;
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -123,9 +123,9 @@ onUnmounted(() => {
         font-size: 1.2rem;
         position: relative;
         &::before {
+          @apply left-0;
           content: "";
           position: absolute;
-          left: 0;
           top: 50%;
           transform: translateY(-50%);
           width: 1rem;

@@ -237,8 +237,8 @@ onMounted(() => {
 }
 
 .message {
+  @apply m-2.5;
   padding: 10px;
-  margin: 10px;
   border-radius: 5px;
 }
 

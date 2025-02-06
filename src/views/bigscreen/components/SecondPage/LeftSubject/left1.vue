@@ -98,20 +98,15 @@ onMounted(() => {
 .model-body {
   @apply flex-1 relative;
   .model-body__bg {
-    @apply absolute h-full;
-    margin: 10px;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    @apply absolute h-full m-2.5 top-0 bottom-0 left-0 right-0;
   }
   .model-body__content {
     // 四宫格布局
     @apply flex items-center w-full flex-wrap pl-4 pr-4 pt-4;
     .item-box {
+      @apply m-2.5;
       position: relative; // 文字定位在图片上
       width: calc(33% - 25px);
-      margin: 10px;
       height: 85px;
     }
     .item-box:nth-child(2n-1) {

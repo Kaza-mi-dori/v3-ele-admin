@@ -73,9 +73,7 @@ const formatNumber = (num: number | string): string => {
   /* 确保父元素的布局设置好 */
   @apply w-full h-full relative;
   .middle1-bg {
-    @apply w-full h-full absolute;
-    top: 0;
-    left: 0;
+    @apply w-full h-full absolute top-0 left-0;
     object-fit: cover; /* 使图像覆盖整个父容器，并保持比例 */
   }
   .content-wrapper {

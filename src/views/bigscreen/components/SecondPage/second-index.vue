@@ -192,10 +192,8 @@ onMounted(() => {
 }
 /* HTML: <div class="loader"></div> */
 .loader-container {
-  @apply flex justify-center items-center w-full h-full absolute;
+  @apply flex justify-center items-center w-full h-full absolute top-0 left-0;
   background-color: rgba(0, 0, 0, 0.7);
-  top: 0;
-  left: 0;
   z-index: 1000;
 }
 /* HTML: <div class="loader"></div> */
