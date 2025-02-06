@@ -279,10 +279,9 @@ onMounted(() => {
   .order {
     width: 30px;
     height: 25px;
-    @apply flex items-center;
+    @apply flex items-center pl-[5px];
     font-size: 14px;
     font-weight: bold;
-    padding-left: 5px;
     margin-right: 10px;
     color: #fff;
     background-size: 100% 100%;

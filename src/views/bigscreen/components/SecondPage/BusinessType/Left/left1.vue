@@ -108,12 +108,11 @@ contractData.value.forEach((item) => {
       object-fit: cover; // 确保图片比例适用容器
     }
     .body-content {
-      @apply flex flex-col items-start justify-center absolute text-left;
+      @apply flex flex-col items-start justify-center absolute text-left pl-[15px];
       top: 50%; // 调整文字位置
       left: 15px; // 适当调整文字位置
       transform: translateY(-50%); // 垂直居中
       font-size: 19px;
-      padding-left: 15px;
       padding-top: 10px;
       padding-bottom: 10px;
       color: #ffffff;

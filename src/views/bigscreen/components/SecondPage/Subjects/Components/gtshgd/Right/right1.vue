@@ -103,8 +103,7 @@ onMounted(() => {
 }
 
 .cell2 {
-  @apply text-left;
-  padding-left: 5px;
+  @apply text-left pl-[5px];
 }
 
 .table td,

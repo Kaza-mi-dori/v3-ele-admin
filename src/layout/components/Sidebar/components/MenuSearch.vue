@@ -190,7 +190,7 @@ onMounted(() => {
         border-radius: 5px 0 0 5px;
       }
       .__title {
-        padding-left: 0.5rem;
+        @apply pl-2;
         flex: 1;
         font-size: 1rem;
         text-align: center;

@@ -199,8 +199,7 @@ onMounted(() => {
       @apply absolute h-full m-2.5 top-0 bottom-0 left-0 right-0;
     }
     .model-body__content {
-      @apply flex justify-center items-center w-full relative;
-      padding-left: 5px;
+      @apply flex justify-center items-center w-full relative pl-[5px];
       padding-top: 5px;
       padding-bottom: 5px;
       overflow-x: hidden;
@@ -216,9 +215,8 @@ onMounted(() => {
         width: 150%;
       }
       .body-content {
-        @apply flex flex-col items-start justify-center text-left;
+        @apply flex flex-col items-start justify-center text-left pl-[15px];
         font-size: 16px;
-        padding-left: 15px;
         padding-top: 10px;
         padding-bottom: 10px;
         color: #ffffff;

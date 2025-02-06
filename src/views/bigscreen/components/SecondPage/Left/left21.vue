@@ -126,8 +126,7 @@ const UDparamsFormatter = (data: string | number) => {
 }
 
 .cell2 {
-  @apply text-left;
-  padding-left: 10px;
+  @apply text-left pl-2.5;
 }
 
 .table td,

@@ -112,16 +112,16 @@ $color-active: #fff;
     margin-right: 10px;
 
     &:not(:nth-child(2)).is-active {
+      @apply pl-2.5;
       color: $color-active;
       background-size: 100% 100%;
-      padding-left: 10px;
       padding-right: 20px;
       background-image: url("@/views/bigscreen/img/left_tab2.png");
     }
     &:nth-child(2).is-active {
+      @appply pl-[5px];
       color: $color-active;
       background-size: 100% 100%;
-      padding-left: 5px;
       padding-right: 20px;
       background-image: url("@/views/bigscreen/img/left_tab1.png") !important;
     }
