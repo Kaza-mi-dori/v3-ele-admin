@@ -445,14 +445,10 @@ onUpdated(() => {
     }
   }
   .title {
-    @apply flex-1 relative;
+    @apply flex-1 relative m-auto;
     height: 66px;
     width: max-content;
     // top: clamp(10px, 25px, 30%);
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    margin-bottom: auto;
     .__title--text {
       margin: auto 0;
       // margin-top: 8px;

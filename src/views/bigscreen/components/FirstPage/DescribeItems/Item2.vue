@@ -224,11 +224,10 @@ $number-color-1: #fffe95;
         margin-bottom: 10px;
       }
       .monthly-total {
-        @apply flex items-center;
-        margin-top: 5px;
+        @apply flex items-center mt-[5px];
         font-size: 1em;
         .scale {
-          margin-right: 5px;
+          @apply mr-[5px];
           font-size: 0.9em;
           &::after {
             // 下划线
