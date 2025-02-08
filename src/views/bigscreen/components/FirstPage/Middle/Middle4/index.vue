@@ -294,6 +294,31 @@ const initChartMiddle4 = () => {
           color: sassvariables["bigscreen-primary-color-7"],
         },
       },
+      axisTick: {
+        show: false,
+      },
+      axisLabel: {
+        // interval: 0,
+        formatter: (value: string) => {
+          const dates = value.split("-");
+          return `${dates[0]}月${dates[1]}日`;
+        },
+        customValues: [
+          "01-01",
+          "02-01",
+          "03-01",
+          "04-01",
+          "05-01",
+          "06-01",
+          "07-01",
+          "08-01",
+          "09-01",
+          "10-01",
+          "11-01",
+          "12-01",
+          "12-31",
+        ],
+      },
     },
     yAxis: {
       min: getMinYAxis(activeName.value),
@@ -320,7 +345,6 @@ const initChartMiddle4 = () => {
         },
       },
     },
-    smooth: true,
     // series: series.map((item: string) => {
     //   return {
     //     name: item,

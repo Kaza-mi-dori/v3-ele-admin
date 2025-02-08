@@ -165,8 +165,8 @@
         width: 22rex;
         font-size: 16px;
         z-index: 1001;
-        bottom: 40px;
-        right: 10px;
+        bottom: 10px;
+        left: 10px;
       "
     >
       <div class="oil-station-statistic-item">
@@ -452,7 +452,7 @@ function onToggleOilDepot() {
     setZoom(5);
   } else {
     // 中心设为广西广东交界，缩放到7
-    setCenter(23.91799, 118.397027);
+    setCenter(23.91799, 110.397027);
     setZoom(7);
   }
 }
@@ -560,6 +560,14 @@ onMounted(() => {
     // 如果找到了，则找其父元素，并隐藏
     if (zoomControl && zoomControl.parentElement) {
       zoomControl.parentElement.style.display = "none";
+    }
+
+    // 寻找class为tmap-scale-control的元素
+    const scaleControl = document.querySelector(
+      ".tmap-scale-control"
+    ) as HTMLElement;
+    if (scaleControl && scaleControl.parentElement) {
+      scaleControl.parentElement.style.display = "none";
     }
   }, 2000);
   totalOilStockHook.fetchData().then(() => {
