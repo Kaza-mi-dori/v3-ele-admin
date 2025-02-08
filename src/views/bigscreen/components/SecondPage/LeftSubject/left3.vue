@@ -1,7 +1,7 @@
 <template>
   <Model1 class="model1" title="历年销售趋势">
     <!-- 标签页区 -->
-    <!-- <Tab v-model="activeName" @tab-click="handleClick">
+    <Tab v-model="activeName" @tab-click="handleClick">
       <el-tab-pane
         :label="BusinessEnum.CPY"
         :name="BusinessEnumMap[BusinessEnum.CPY]"
@@ -18,7 +18,7 @@
         :label="BusinessEnum.HGCP"
         :name="BusinessEnumMap[BusinessEnum.HGCP]"
       />
-    </Tab> -->
+    </Tab>
     <!-- 指标区 -->
     <div class="flex mt-4">
       <div class="desc-box">
