@@ -183,19 +183,16 @@ onMounted(() => {
       border: 1px solid #e5e5e5;
       border-radius: 5px;
       .__icon {
-        text-align: center;
+        @apply text-center;
         width: 32px;
         color: white;
         background-color: #4880ff;
         border-radius: 5px 0 0 5px;
       }
       .__title {
-        @apply pl-2;
-        flex: 1;
+        @apply flex-1 pl-2 overflow-hidden text-center;
         font-size: 1rem;
-        text-align: center;
         text-overflow: ellipsis;
-        overflow: hidden;
         white-space: nowrap;
       }
       &.active {

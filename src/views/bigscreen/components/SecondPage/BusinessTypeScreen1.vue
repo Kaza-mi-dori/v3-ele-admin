@@ -78,7 +78,7 @@ const totalData = ref([
     @apply flex flex-col;
   }
   .b-left {
-    flex: 1;
+    @apply flex-1;
   }
   .b-middle {
     flex: 1.4;
@@ -94,16 +94,16 @@ const totalData = ref([
     }
   }
   .b-right {
-    flex: 1;
+    @apply flex-1;
   }
 }
 .b-space {
-  width: 0;
   height: 20px;
+  @apply w-0;
 }
 .c-space {
   width: 30px;
-  height: 0;
+  @apply h-0;
 }
 .bg-view-body > .c-space:first-child {
   width: 15px;

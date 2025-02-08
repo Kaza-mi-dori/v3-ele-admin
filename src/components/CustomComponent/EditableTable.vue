@@ -232,6 +232,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .inactive {
-  display: none;
+  @apply hidden;
 }
 </style>

@@ -364,12 +364,11 @@ onMounted(() => {
   box-shadow: 0 1px 1px var(--el-box-shadow-light);
 
   .tags-item {
-    display: inline-block;
     padding: 3px 8px;
     margin: 4px 0 0 5px;
     font-size: 12px;
-    cursor: pointer;
     border: 1px solid var(--el-border-color-light);
+    @apply inline-block cursor-pointer;
 
     &:hover {
       color: var(--el-color-primary);
@@ -385,8 +384,8 @@ onMounted(() => {
 
     .tag-close-icon {
       vertical-align: -0.15em;
-      cursor: pointer;
       border-radius: 50%;
+      @apply cursor-pointer;
 
       &:hover {
         color: #fff;
@@ -399,7 +398,7 @@ onMounted(() => {
       background-color: var(--el-color-primary);
 
       &::before {
-        display: inline-block;
+        @apply inline-block;
         width: 8px;
         height: 8px;
         margin-right: 5px;
@@ -425,7 +424,7 @@ onMounted(() => {
 
   li {
     padding: 8px 16px;
-    cursor: pointer;
+    @apply cursor-pointer;
 
     &:hover {
       background: var(--el-fill-color-light);
@@ -437,7 +436,7 @@ onMounted(() => {
   @apply relative w-full overflow-hidden whitespace-nowrap;
 
   .el-scrollbar__bar {
-    bottom: 0;
+    @apply bottom-0;
   }
 
   .el-scrollbar__wrap {

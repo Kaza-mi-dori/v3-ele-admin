@@ -258,23 +258,19 @@ onMounted(() => {
 
 .message-sender {
   margin-bottom: 5px;
-  font-weight: bold;
-  text-align: right;
+  @apply text-right font-bold;
 }
 
 .message-receiver {
-  @apply text-left;
+  @apply text-left font-bold;
   margin-bottom: 5px;
-  font-weight: bold;
 }
 
 .tip-message {
-  align-self: center;
   padding: 5px 10px;
   margin-bottom: 5px;
-  font-style: italic;
-  text-align: center;
   background-color: #f0f0f0;
   border-radius: 5px;
+  @apply self-center italic text-center;
 }
 </style>

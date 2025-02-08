@@ -23,6 +23,6 @@ const attrs = useAttrs();
 
 <style lang="scss" scoped>
 .desc-button-content {
-  text-align: center;
+  @apply text-center;
 }
 </style>

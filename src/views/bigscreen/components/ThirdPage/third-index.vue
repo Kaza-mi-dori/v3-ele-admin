@@ -210,8 +210,7 @@ const handleCurrentChange = (val: number) => {
 }
 .bg-view1__header {
   height: 66px;
-  @apply flex items-center w-full;
-  position: relative;
+  @apply flex items-center w-full relative;
   background-image: url(../../img/tit_bg.png);
   background-repeat: no-repeat;
   background-size: 80% 100%;
@@ -240,10 +239,9 @@ const handleCurrentChange = (val: number) => {
   .title {
     @apply flex flex-1 justify-center items-center;
     .__title--text {
+      @apply text-center font-bold relative;
       font-size: 2rem;
       letter-spacing: 6px;
-      font-weight: bold;
-      text-align: center;
       background: linear-gradient(
         to bottom,
         rgb(251, 254, 254),
@@ -251,7 +249,6 @@ const handleCurrentChange = (val: number) => {
       );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      position: relative;
     }
   }
 }
@@ -259,7 +256,7 @@ const handleCurrentChange = (val: number) => {
   flex-grow: 1;
   padding: 20px 50px 20px 50px;
   ::-webkit-scrollbar {
-    display: none;
+    @apply hidden;
   }
   scrollbar-width: none;
 }
@@ -283,7 +280,7 @@ const handleCurrentChange = (val: number) => {
   @apply relative w-full;
 }
 .title-bg {
-  width: 100%;
+  @apply w-full;
   height: 60px;
 }
 .header-left {
@@ -316,12 +313,12 @@ const handleCurrentChange = (val: number) => {
   font-size: 16px;
   letter-spacing: 1px;
   &:hover {
-    opacity: 0.8;
+    @apply opacity-80;
   }
 }
 .reset-button {
+  @apply bg-transparent;
   margin-left: 7px;
-  background-color: transparent;
   color: #bbd4fe;
   font-size: 16px;
   border: 2px solid #3550ab;
@@ -380,7 +377,7 @@ const handleCurrentChange = (val: number) => {
 }
 
 :deep(.el-table tr) {
-  background-color: transparent;
+  @apply bg-transparent;
 }
 
 :deep(.el-table th.el-table__cell.is-leaf) {

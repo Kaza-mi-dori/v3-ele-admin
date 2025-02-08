@@ -145,7 +145,7 @@ function handleDelete() {
     transition: opacity var(--el-transition-duration);
 
     &:hover {
-      opacity: 1;
+      @apply opacity-100;
     }
   }
 }

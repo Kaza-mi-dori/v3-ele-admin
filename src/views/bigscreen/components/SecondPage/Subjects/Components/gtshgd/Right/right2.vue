@@ -229,8 +229,7 @@ onMounted(() => {
 }
 
 .risk-warning span {
-  display: inline-flex;
-  @apply items-center;
+  @apply inline-flex items-center;
 }
 
 .risk-warning .text {
@@ -239,11 +238,11 @@ onMounted(() => {
 
 .risk-warning .risk-count {
   color: #e8325c;
-  font-weight: bold;
   margin: 0 5px;
+  @apply font-bold;
 }
 
 .risk-warning:hover {
-  opacity: 0.7;
+  @apply opacity-70;
 }
 </style>

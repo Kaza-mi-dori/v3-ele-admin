@@ -298,33 +298,31 @@ function downloadFile(file: UploadUserFile) {
 </script>
 <style lang="scss" scoped>
 .el-upload-list__item .el-icon--close {
-  position: absolute;
+  @apply absolute cursor-pointer opacity-75;
   top: 50%;
   right: 5px;
   color: var(--el-text-color-regular);
-  cursor: pointer;
-  opacity: 0.75;
   transition: opacity var(--el-transition-duration);
   transform: translateY(-50%);
 }
 
 :deep(.el-upload-list) {
-  margin: 0;
+  @apply m-0;
 }
 
 :deep(.el-upload-list__item) {
-  margin: 0;
+  @apply m-0;
 }
 
 .show-upload-btn {
   :deep(.el-upload) {
-    display: inline-flex;
+    @apply inline-flex;
   }
 }
 
 .hide-upload-btn {
   :deep(.el-upload) {
-    display: none;
+    @apply hidden;
   }
 }
 </style>

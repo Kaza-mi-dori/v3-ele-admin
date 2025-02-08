@@ -1207,7 +1207,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 :deep(.el-table__cell) {
   .el-form-item {
-    margin: 0;
+    @apply m-0;
   }
   .el-form-item__content > .el-form-item__error {
     position: static !important;

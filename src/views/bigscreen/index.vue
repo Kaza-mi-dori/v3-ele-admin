@@ -377,7 +377,6 @@ onUpdated(() => {
   line-height: 1.5715;
   font-feature-settings: "tnum";
   // width: 100vw;
-  overflow: hidden;
   font-family:
     PingFangSC,
     Microsoft YaHei,
@@ -388,9 +387,9 @@ onUpdated(() => {
   overscroll-behavior: none;
   scroll-behavior: smooth;
   user-select: none;
-  @apply flex flex-col h-full;
+  @apply flex flex-col h-full overflow-hidden;
   &::-webkit-scrollbar {
-    display: none;
+    @apply hidden;
   }
 }
 .bg-view-img {
@@ -404,14 +403,13 @@ onUpdated(() => {
   .entry-container {
     @apply absolute z-1 flex bottom-[5px] left-[5px];
     .entry-container-item {
-      text-align: center;
+      @apply text-center cursor-pointer;
       color: $bigscreen-primary-color-1;
       background-image: url("./img/new-nav2.png");
       background-size: 100% 100%;
       font-size: 1rem;
       padding: 5px 5px;
       min-width: 90px;
-      cursor: pointer;
       &:hover {
         color: #fff;
         background-image: url("./img/nav2_over.png");
@@ -427,8 +425,7 @@ onUpdated(() => {
   }
   /** 天气 */
   .weather-container {
-    @apply absolute z-1;
-    right: 20px;
+    @apply absolute z-1 right-5;
     top: 50%;
     transform: translateY(-50%);
     .weather-item__text {
@@ -450,13 +447,12 @@ onUpdated(() => {
     width: max-content;
     // top: clamp(10px, 25px, 30%);
     .__title--text {
+      @apply text-center font-bold relative;
       margin: auto 0;
       // margin-top: 8px;
       font-size: 2.5rem;
       letter-spacing: 6px;
       // line-height: px;
-      font-weight: bold;
-      text-align: center;
       // color: #70b9fd;
       // 字体颜色从rgb(163,243,250)到rgb(78,149,253)的均匀渐变
       background: linear-gradient(
@@ -466,7 +462,6 @@ onUpdated(() => {
       );
       -webkit-background-clip: text; /* 兼容性设置 */
       -webkit-text-fill-color: transparent; /* 兼容性设置 */
-      position: relative;
     }
   }
 }
@@ -474,12 +469,11 @@ onUpdated(() => {
   // height: 100%;
   // height: calc(100% - 66px);
   // overflow-y: auto; /* 纵向滚动条 */
-  @apply relative;
-  overflow-y: hidden;
+  @apply relative overflow-y-hidden;
   // margin: 20px 0;
   padding: 40px 0 10px 0;
   ::-webkit-scrollbar {
-    display: none;
+    @apply hidden;
   }
   scrollbar-width: none;
 }

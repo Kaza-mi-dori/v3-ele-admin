@@ -787,7 +787,7 @@ onMounted(() => {
 
 .map-block {
   flex: 0 0 auto;
-  position: relative;
+  @apply relative;
   .map {
     background-image: url("@/views/bigscreen/img/country_map_bg.png");
     background-size: 100% 100%;

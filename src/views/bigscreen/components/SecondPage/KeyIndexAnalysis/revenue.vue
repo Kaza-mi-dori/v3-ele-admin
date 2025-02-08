@@ -243,7 +243,7 @@ onMounted(() => {
 }
 .c-space {
   width: 30px;
-  height: 0;
+  @apply h-0;
 }
 .bg-view-body > .c-space:first-child {
   width: 15px;

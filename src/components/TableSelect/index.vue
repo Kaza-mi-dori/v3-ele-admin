@@ -356,7 +356,7 @@ const popoverContentRef = ref();
 <style scoped lang="scss">
 .reference :deep(.el-input__wrapper),
 .reference :deep(.el-input__inner) {
-  cursor: pointer;
+  @apply cursor-pointer;
 }
 
 .feedback {
@@ -364,6 +364,6 @@ const popoverContentRef = ref();
 }
 // 隐藏全选按钮
 .radio :deep(.el-table__header th.el-table__cell:nth-child(1) .el-checkbox) {
-  visibility: hidden;
+  @apply invisible;
 }
 </style>

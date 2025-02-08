@@ -142,7 +142,7 @@ function resolvePath(routePath: string) {
 <style lang="scss">
 .hideSidebar {
   .submenu-title-noDropdown {
-    position: relative;
+    @apply relative;
     padding: 0 !important;
 
     .el-tooltip {
@@ -154,16 +154,12 @@ function resolvePath(routePath: string) {
     }
 
     & > span {
-      display: inline-block;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-      visibility: hidden;
+      @apply inline-block overflow-hidden invisible w-0 h-0;
     }
   }
 
   .el-sub-menu {
-    overflow: hidden;
+    @apply overflow-hidden;
 
     & > .el-sub-menu__title {
       padding: 0 !important;
@@ -173,7 +169,7 @@ function resolvePath(routePath: string) {
       }
 
       .el-sub-menu__icon-arrow {
-        display: none;
+        @apply hidden;
       }
     }
   }
@@ -183,11 +179,7 @@ function resolvePath(routePath: string) {
 
     .el-sub-menu {
       & > .el-sub-menu__title > span {
-        display: inline-block;
-        width: 0;
-        height: 0;
-        overflow: hidden;
-        visibility: hidden;
+        @apply overflow-hidden invisible inline-block w-0 h-0;
       }
     }
   }

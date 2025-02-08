@@ -184,8 +184,8 @@ onMounted(() => {
 
 <style scoped>
 .search-result {
+  @apply overflow-y-auto;
   max-height: 400px;
-  overflow-y: auto;
 }
 
 .search-result ul li {

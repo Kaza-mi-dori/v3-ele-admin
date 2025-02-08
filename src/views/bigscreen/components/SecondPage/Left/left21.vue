@@ -83,24 +83,21 @@ const UDparamsFormatter = (data: string | number) => {
 }
 
 .table {
-  width: 100%;
+  @apply w-full m-0 overflow-y-auto border-separate;
   height: 360px;
-  border-collapse: separate; /* 使用 separate 以支持 border-spacing */
+  /* 使用 separate 以支持 border-spacing */
   border-spacing: 2px 1px; /* 设置单元格之间的外间距：左右2px，上下1px */
-  margin: 0;
   background-color: #050b47;
-  overflow-y: auto;
 }
 
 .table tbody {
-  width: 100%;
+  @apply w-full overflow-y-auto;
   height: 340px; /* 设置高度，留出thead的高度 */
-  overflow-y: auto;
 }
 
 .table-header,
 .table-cell {
-  text-align: center;
+  @apply text-center;
   border: 2px solid #1a4790; /* 单元格边框 */
   font-size: 15px;
   letter-spacing: 1px;

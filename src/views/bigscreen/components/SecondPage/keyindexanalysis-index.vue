@@ -51,24 +51,18 @@ onMounted(() => {
   background-color: #030542;
 }
 .bg-view1__header {
-  width: 100%;
+  @apply w-full flex relative;
   height: 66px;
-  display: flex;
-  position: relative;
   .title {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @apply flex flex-1 justify-center items-center;
     background-image: url(../../img/tit_bg.png);
     background-repeat: no-repeat;
     background-size: 80% 100%;
     background-position: center;
     .__title--text {
+      @apply text-center font-bold relative;
       font-size: 2rem;
       letter-spacing: 6px;
-      font-weight: bold;
-      text-align: center;
       background: linear-gradient(
         to bottom,
         rgb(251, 254, 254),
@@ -77,7 +71,6 @@ onMounted(() => {
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      position: relative;
     }
   }
 }
@@ -88,7 +81,7 @@ onMounted(() => {
   padding: 20px 0 20px 0;
   // height: calc(100% - 66px);
   ::-webkit-scrollbar {
-    display: none;
+    @apply hidden;
   }
   scrollbar-width: none;
 }

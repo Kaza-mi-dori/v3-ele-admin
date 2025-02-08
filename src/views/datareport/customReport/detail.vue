@@ -228,9 +228,9 @@ onMounted(() => {
   @apply block mb-20px w-full bg-white;
   &.__title {
     font-size: 16px;
-    font-weight: bold;
     margin-bottom: 10px;
     border-bottom: 1px solid #ebeef5;
+    @apply font-bold;
   }
   &.__content {
     padding: 10px;

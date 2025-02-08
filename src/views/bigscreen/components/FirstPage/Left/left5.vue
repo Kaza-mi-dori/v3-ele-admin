@@ -108,7 +108,7 @@ $color-active: #fff;
   }
   .el-tabs__item.is-top {
     /** 选中时根据是否为第一个元素设置不同背景图 */
-    padding: 0;
+    @apply p-0;
     margin-right: 10px;
 
     &:not(:nth-child(2)).is-active {
@@ -136,11 +136,10 @@ $color-active: #fff;
     background-image: url("@/views/bigscreen/img/left_box2_top.png");
     padding: 5px 0;
     .custom-tab-pane {
+      @apply text-center cursor-pointer;
       width: 100px;
       font-size: 0.9rem;
-      text-align: center;
       color: $color-primary;
-      cursor: pointer;
       transition: all 0.3s;
       &:not(:nth-child(1)).is-active {
         color: $color-active;
@@ -159,7 +158,7 @@ $color-active: #fff;
       z-index: 1;
       margin: 0 1rem;
       font-family: 黑体;
-      text-align: center;
+      @apply text-center;
     }
   }
 }

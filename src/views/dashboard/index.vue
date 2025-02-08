@@ -423,12 +423,10 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dashboard-container {
-  position: relative;
-  padding: 24px;
+  @apply p-6 relative;
 
   .github-corner {
-    @apply absolute z-1 top-0 right-0;
-    border: 0;
+    @apply absolute z-1 top-0 right-0 border-0;
   }
 }
 .icon-monitor {

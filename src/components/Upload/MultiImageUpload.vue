@@ -240,7 +240,7 @@ const closePreview = () => {
 <style lang="scss" scoped>
 .hide {
   :deep(.el-upload--picture-card) {
-    display: none;
+    @apply hidden;
   }
 }
 

@@ -311,43 +311,34 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .table-container {
-  overflow-x: auto;
-  width: 100%;
+  @apply w-full overflow-x-auto;
 }
 
 .sticky-header {
-  @apply left-0;
-  position: sticky;
+  @apply left-0 sticky z-1;
   background-color: #f5f7fa; /* 确保固定列背景色不被覆盖 */
-  z-index: 1; /* 确保固定列在其他内容之上 */
 }
 
 .sticky-cell {
-  @apply left-0;
-  position: sticky;
+  @apply left-0 sticky z-1;
   background-color: #f5f7fa; /* 确保固定列背景色不被覆盖 */
-  z-index: 1; /* 确保固定列在其他内容之上 */
 }
 
 .g-input-table-1 {
-  border-collapse: collapse;
-  border-spacing: 0;
+  @apply border-collapse border-spacing-0 table-fixed;
   margin-top: 20px;
   // min-width: 100%;
   // 边框
   border: 1px solid #7c7d81;
-  table-layout: fixed;
   :deep(tr) {
     &.__header {
       background-color: #f5f7fa;
       th {
+        @apply font-bold text-center whitespace-nowrap;
         padding: 10px 0;
-        text-align: center;
-        font-weight: bold;
         color: #303133;
         border-right: 1px solid #7c7d81;
         border-bottom: 1px solid #7c7d81;
-        white-space: nowrap;
         &:last-child {
           border-right: none;
         }
@@ -355,38 +346,23 @@ onBeforeMount(() => {
     }
     &.__row {
       td {
+        @apply text-center whitespace-nowrap;
         line-height: 32px;
-        text-align: center;
         color: #46474b;
         border-bottom: 1px solid #7c7d81;
         border-right: 1px solid #7c7d81;
-        white-space: nowrap;
         // 对于el-input的样式
         .el-input {
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          border: none;
-          background-color: transparent;
+          @apply w-full m-0 p-0 border-none bg-transparent;
           .el-input__inner {
-            border: none;
-            background-color: transparent;
-            padding: 0;
-            text-align: center;
+            @apply p-0 border-none text-center bg-transparent;
           }
         }
         // 对于el-select的样式
         .el-select {
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          border: none;
-          background-color: transparent;
+          @apply w-full m-0 p-0 border-none bg-transparent;
           .el-input__inner {
-            border: none;
-            background-color: transparent;
-            padding: 0;
-            text-align: center;
+            @apply p-0 text-center border-none bg-transparent;
           }
         }
         &:last-child {
@@ -399,8 +375,7 @@ onBeforeMount(() => {
 
 // 美化滚动条
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  @apply w-2.5 h-2.5;
 }
 
 ::-webkit-scrollbar-thumb {

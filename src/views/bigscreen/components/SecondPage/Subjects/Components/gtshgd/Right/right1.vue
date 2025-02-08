@@ -62,24 +62,21 @@ onMounted(() => {
 }
 
 .table {
-  width: 100%;
+  @apply w-full m-0 overflow-y-auto border-separate;
   height: 190px;
-  border-collapse: separate; /* 使用 separate 以支持 border-spacing */
+  /* 使用 separate 以支持 border-spacing */
   border-spacing: 2px 1px; /* 设置单元格之间的外间距：左右2px，上下1px */
-  margin: 0;
   background-color: #050b47;
-  overflow-y: auto;
 }
 
 .table tbody {
-  width: 100%;
+  @apply w-full overflow-y-auto;
   height: 170px; /* 设置高度，留出thead的高度 */
-  overflow-y: auto;
 }
 
 .table-header,
 .table-cell {
-  text-align: center;
+  @apply text-center;
   border: 2px solid #1a4790; /* 单元格边框 */
   font-size: 16px;
   letter-spacing: 1px;
@@ -88,8 +85,8 @@ onMounted(() => {
 .table-header {
   background-color: #0f2465;
   font-size: 17px;
-  font-weight: bold;
   color: #3184d6;
+  @apply font-bold;
 }
 
 .table-cell {
@@ -108,7 +105,7 @@ onMounted(() => {
 
 .table td,
 .table th {
-  position: relative;
+  @apply relative;
 }
 
 // .table-row {

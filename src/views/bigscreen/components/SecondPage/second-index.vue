@@ -166,10 +166,9 @@ onMounted(() => {
     background-size: 80% 100%;
     background-position: center;
     .__title--text {
+      @apply text-center font-bold relative;
       font-size: 2rem;
       letter-spacing: 6px;
-      font-weight: bold;
-      text-align: center;
       background: linear-gradient(
         to bottom,
         rgb(251, 254, 254),
@@ -177,7 +176,6 @@ onMounted(() => {
       );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      position: relative;
     }
   }
 }
@@ -186,7 +184,7 @@ onMounted(() => {
   // overflow-y: hidden;
   padding: 20px 50px 50px 50px;
   ::-webkit-scrollbar {
-    display: none;
+    @apply hidden;
   }
   scrollbar-width: none;
 }

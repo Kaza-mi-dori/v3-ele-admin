@@ -85,10 +85,10 @@ $bg-color-1: #ffffff;
     .scale {
       margin-right: 5px;
       &::after {
+        @apply w-full;
         // 下划线
         content: "";
         display: block;
-        width: 100%;
         height: 1px;
         background-color: $bg-color-1;
       }

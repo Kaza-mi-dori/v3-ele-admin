@@ -146,7 +146,7 @@ const handleDelete = (row: RowData) => {
 
 <style lang="scss" scoped>
 :deep(.wrapped-item) {
-  margin: 0;
+  @apply m-0;
   .el-form-item__content > .el-form-item__error {
     position: static !important;
   }

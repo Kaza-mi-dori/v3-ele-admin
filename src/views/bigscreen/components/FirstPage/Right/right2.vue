@@ -279,9 +279,8 @@ onMounted(() => {
   .order {
     width: 30px;
     height: 25px;
-    @apply flex items-center pl-[5px];
+    @apply flex items-center pl-[5px] font-bold;
     font-size: 14px;
-    font-weight: bold;
     margin-right: 10px;
     color: #fff;
     background-size: 100% 100%;
@@ -289,13 +288,12 @@ onMounted(() => {
   }
 
   .__name {
+    @apply text-left overflow-hidden;
     font-size: 14px;
     color: #7b9eeb;
-    text-align: left; // 确保公司名称左对齐
     flex-grow: 1; // 让公司名称部分占满剩余的空间
     max-width: 200px; // 设置最大宽度
     white-space: nowrap; // 禁止换行
-    overflow: hidden; // 隐藏溢出的内容
     text-overflow: ellipsis; // 超出部分显示省略号
   }
 
@@ -307,8 +305,8 @@ onMounted(() => {
   .__value {
     font-size: 14px;
     color: #7b9eeb;
-    text-align: right; // 确保百分比右对齐
     min-width: 45px; // 设置一个最小宽度，以保证有足够空间显示百分比
+    @apply text-right;
   }
 }
 </style>

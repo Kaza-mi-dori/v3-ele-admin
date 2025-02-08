@@ -198,7 +198,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .reference :deep(.el-input__wrapper),
 .reference :deep(.el-input__inner) {
-  cursor: pointer;
+  @apply cursor-pointer;
 }
 
 .icon-grid {

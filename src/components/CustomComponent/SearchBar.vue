@@ -407,12 +407,11 @@ const handleReset = () => {
   }
 }
 .condition-block {
-  @apply lh-8 h-10 pl-10px pr-10px bg-white flex justify-between items-center relative;
+  @apply w-full lh-8 h-10 pl-10px pr-10px bg-white flex justify-between items-center relative;
   // width: 50%;
   // 根据屏幕宽度自适应宽度, 大于768px时，每行显示两个条件，小于768px时，每行显示一个条件
-  width: 100%;
   @media (min-width: 768px) {
-    width: 50%;
+    @apply w-6/12;
   }
   &::before {
     @apply content-[''] absolute h-4 w-0.5 bg-blue-4 top-30% left-0;

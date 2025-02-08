@@ -187,10 +187,10 @@ onMounted(async () => {
 
 <style scoped>
 .label {
-  float: left;
+  @apply float-left;
 }
 .value {
-  float: right;
+  @apply float-right;
   color: #999;
   font-size: 0.9em;
 }

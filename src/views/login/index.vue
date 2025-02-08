@@ -326,8 +326,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .login {
-  @apply flex justify-center items-center w-full h-full;
-  overflow-y: auto;
+  @apply flex justify-center items-center w-full h-full overflow-y-auto;
   background: url("@/assets/images/login-background-light.jpg") no-repeat center
     right;
 
@@ -344,15 +343,14 @@ onMounted(() => {
     .title {
       margin: auto 5px;
       font-size: 24px;
-      font-weight: bold;
       color: #3b82f6;
+      @apply font-bold;
     }
   }
 
   .login-content {
-    @apply flex;
+    @apply flex overflow-hidden;
     width: 960px;
-    overflow: hidden;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: var(--el-box-shadow-light);
@@ -372,7 +370,7 @@ onMounted(() => {
       background: linear-gradient(60deg, #165dff, #6aa1ff);
 
       @media (width <= 768px) {
-        display: none;
+        @apply hidden;
       }
     }
 
@@ -397,8 +395,8 @@ onMounted(() => {
       }
 
       .captcha-img {
+        @apply cursor-pointer;
         height: 48px;
-        cursor: pointer;
         border-top-right-radius: 6px;
         border-bottom-right-radius: 6px;
       }
@@ -412,15 +410,14 @@ onMounted(() => {
         }
 
         .icon {
-          cursor: pointer;
+          @apply cursor-pointer;
         }
       }
     }
   }
 
   .login-footer {
-    @apply absolute w-full text-center;
-    bottom: 0;
+    @apply absolute w-full text-center bottom-0;
   }
 }
 
@@ -432,8 +429,7 @@ onMounted(() => {
 
 :deep(.el-input) {
   .el-input__wrapper {
-    padding: 0;
-    background-color: transparent;
+    @apply p-0 bg-transparent;
     box-shadow: none;
 
     &.is-focus,

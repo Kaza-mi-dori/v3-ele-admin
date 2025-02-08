@@ -218,7 +218,7 @@ $number-color-1: #fffe95;
     background-image: url("@/views/bigscreen/img/left_box1_center.png");
     background-size: 100% 100%;
     .__left {
-      text-align: center;
+      @apply text-center;
       .text1 {
         margin-bottom: 10px;
       }
@@ -244,16 +244,16 @@ $number-color-1: #fffe95;
       .month-num {
         color: $number-color-1;
         font-size: 0.9em;
-        font-weight: bold;
         /** 勾边 */
         margin: 0 5px;
+        @apply font-bold;
       }
     }
     .__right {
       width: 40%;
       height: 150px;
       .text {
-        text-align: center;
+        @apply text-center;
         font-size: 14px;
         color: #66a8cb;
         margin-top: -5px;
@@ -272,9 +272,9 @@ $number-color-1: #fffe95;
   .__number {
     color: $number-color-1;
     font-size: 1.2em;
-    font-weight: bold;
     /** 勾边 */
     margin: 0 5px;
+    @apply font-bold;
   }
   .__unit {
     font-size: 0.8em;

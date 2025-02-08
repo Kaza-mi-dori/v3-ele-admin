@@ -81,10 +81,10 @@ const handleMouseoutText = () => {
     @apply flex-1 text-center m-auto;
   }
   .scroll-area {
+    @apply overflow-hidden;
     flex: 1.1;
     max-height: 230px;
     margin: auto;
-    overflow: hidden;
   }
   .item-text {
     flex: 1;

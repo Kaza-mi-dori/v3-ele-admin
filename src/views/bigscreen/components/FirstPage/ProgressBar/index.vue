@@ -80,7 +80,7 @@ watch(
       @apply text-sm;
       color: #7194db;
       &:first-child {
-        font-weight: bold;
+        @apply font-bold;
       }
     }
   }

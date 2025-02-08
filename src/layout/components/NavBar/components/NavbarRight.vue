@@ -50,13 +50,11 @@ const isMobile = computed(() => appStore.device === DeviceEnum.MOBILE);
   @apply flex items-center justify-center;
 
   & > * {
-    display: inline-block;
     min-width: 40px;
     height: $navbar-height;
     line-height: $navbar-height;
     color: var(--el-text-color);
-    text-align: center;
-    cursor: pointer;
+    @apply inline-block text-center cursor-pointer;
 
     &:hover {
       background: rgb(0 0 0 / 10%);

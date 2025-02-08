@@ -19,12 +19,12 @@ const attrs = useAttrs();
   :deep(.el-tabs__nav-wrap) {
     flex: none;
     &::after {
-      display: none;
+      @apply hidden;
     }
   }
   :deep(.el-tabs__item) {
+    @apply text-center;
     padding: 0 20px !important;
-    text-align: center;
     color: white;
     font-size: 1.1em;
     // border: 1px solid $bigscreen-primary-color-1 !important;
@@ -36,12 +36,9 @@ const attrs = useAttrs();
         height: 3px;
         color: $bigscreen-primary-color-1 !important;
         background-color: $bigscreen-primary-color-1;
-        position: absolute;
-        bottom: 0;
-        left: 8px;
-        right: 0;
         width: calc(100% - 16px);
         transition: transform 0.3s;
+        @apply bottom-0 left-2 right-0 absolute;
       }
     }
     &:hover {

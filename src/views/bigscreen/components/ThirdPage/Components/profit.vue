@@ -475,10 +475,9 @@ const handleCurrentRowChange = (val: any) => {
   .title {
     @apply flex justify-center items-center flex-1;
     .__title--text {
+      @apply text-center font-bold relative;
       font-size: 2rem;
       letter-spacing: 6px;
-      font-weight: bold;
-      text-align: center;
       background: linear-gradient(
         to bottom,
         rgb(251, 254, 254),
@@ -486,7 +485,6 @@ const handleCurrentRowChange = (val: any) => {
       );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      position: relative;
     }
   }
 }
@@ -494,7 +492,7 @@ const handleCurrentRowChange = (val: any) => {
   flex-grow: 1;
   margin: 20px 50px 50px 50px;
   ::-webkit-scrollbar {
-    display: none;
+    @apply hidden;
   }
   scrollbar-width: none;
 }
@@ -559,12 +557,12 @@ const handleCurrentRowChange = (val: any) => {
   font-size: 16px;
   letter-spacing: 1px;
   &:hover {
-    opacity: 0.8;
+    @apply opacity-80;
   }
 }
 .reset-button {
+  @apply bg-transparent;
   margin-left: 7px;
-  background-color: transparent;
   color: #bbd4fe;
   font-size: 16px;
   border: 2px solid #3550ab;
@@ -627,7 +625,7 @@ const handleCurrentRowChange = (val: any) => {
 }
 
 :deep(.el-table tr) {
-  background-color: transparent;
+  @apply bg-transparent;
 }
 
 :deep(.el-table th.el-table__cell.is-leaf) {
@@ -650,7 +648,7 @@ const handleCurrentRowChange = (val: any) => {
 :deep(.el-pagination.is-background .el-pagination__sizes) {
   .el-select {
     .el-select__wrapper {
-      background-color: transparent;
+      @apply bg-transparent;
       .el-select__placeholder {
         color: #fefefe;
       }
@@ -676,7 +674,7 @@ const handleCurrentRowChange = (val: any) => {
 }
 
 :deep(.el-pagination.is-background .el-pager li) {
-  background-color: transparent;
+  @apply bg-transparent;
   border: 1px solid #4e6ab2;
   color: #fefefe;
 }
@@ -686,7 +684,7 @@ const handleCurrentRowChange = (val: any) => {
 }
 
 :deep(.el-table__inner-wrapper:before) {
-  display: none;
+  @apply hidden;
 }
 
 :deep(.el-select__wrapper) {

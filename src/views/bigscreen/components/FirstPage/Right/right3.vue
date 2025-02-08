@@ -72,8 +72,8 @@ const handleType = (index: number) => {
   @apply absolute w-full h-full z-1;
 }
 .entry-icon {
+  @apply cursor-pointer;
   width: 17%;
-  cursor: pointer;
   transition: transform 0.2s ease-in-out;
 }
 .entry-icon:first-child {

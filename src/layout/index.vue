@@ -165,7 +165,7 @@ watch(route, () => {
     }
 
     :deep(.el-menu--collapse) {
-      width: 100%;
+      @apply w-full;
     }
   }
 
@@ -218,8 +218,7 @@ watch(route, () => {
       }
 
       .sidebar-toggle {
-        @apply flex justify-center items-center absolute;
-        bottom: 0;
+        @apply flex justify-center items-center absolute bottom-0;
         width: 100%;
         height: 50px;
         line-height: 50px;

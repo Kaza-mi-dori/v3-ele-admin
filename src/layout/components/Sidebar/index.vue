@@ -55,11 +55,10 @@ const isSidebarOpened = computed(() => appStore.sidebar.opened);
     height: calc(100vh - $navbar-height);
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
     padding-right: 5px;
-    position: relative;
+    @apply relative;
     .resize-trigger {
-      @apply absolute cursor-pointer;
+      @apply absolute cursor-pointer right-5;
       font-size: 12px;
-      right: 20px;
       bottom: 10px;
       color: var(--el-text-color-primary);
       :hover {

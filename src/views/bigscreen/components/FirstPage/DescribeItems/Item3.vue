@@ -106,14 +106,14 @@ $number-color: #2abfff;
   .box__icon {
     width: 30px;
     height: 30px;
-    text-align: right;
+    @apply text-right;
     img {
       @apply w-full h-full;
     }
   }
   .box__content {
+    @apply text-left;
     margin-left: 10px;
-    text-align: left;
     font-family:
       PingFangSC,
       Microsoft YaHei,

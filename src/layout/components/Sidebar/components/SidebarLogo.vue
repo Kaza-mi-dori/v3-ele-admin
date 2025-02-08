@@ -97,9 +97,9 @@ onUnmounted(() => {
     flex-shrink: 0; /* 防止容器在空间不足时缩小 */
     margin-left: 10px;
     font-size: 14px;
-    font-weight: bold;
     // color: white;
     color: black;
+    @apply font-bold;
   }
 
   .panel {
@@ -121,11 +121,10 @@ onUnmounted(() => {
         width: 10rem;
         margin: 0 auto;
         font-size: 1.2rem;
-        position: relative;
+        @apply relative;
         &::before {
-          @apply left-0;
+          @apply left-0 absolute;
           content: "";
-          position: absolute;
           top: 50%;
           transform: translateY(-50%);
           width: 1rem;
@@ -145,8 +144,8 @@ onUnmounted(() => {
           }
         }
         &::after {
+          @apply absolute;
           content: "";
-          position: absolute;
           right: 0;
           top: 50%;
           transform: translateY(-50%);

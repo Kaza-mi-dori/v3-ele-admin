@@ -50,9 +50,9 @@ defineProps({
       color: #fff;
       z-index: 1; /* 确保文字在背景图片上方 */
       font-family: 黑体;
-      text-align: center; /* 防止内容过多时对齐异常 */
       height: 50px;
       margin-top: 5px;
+      @apply text-center;
     }
   }
   .model-body {

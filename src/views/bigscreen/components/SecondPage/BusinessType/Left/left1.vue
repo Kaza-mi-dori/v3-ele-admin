@@ -94,8 +94,7 @@ contractData.value.forEach((item) => {
     // 四宫格布局
     @apply flex items-center w-full flex-wrap pl-4 pr-4 pt-4;
     .item-box {
-      @apply m-2.5;
-      position: relative; // 文字定位在图片上
+      @apply m-2.5 relative;
       width: calc(33% - 25px);
       height: 85px;
     }
@@ -121,7 +120,7 @@ contractData.value.forEach((item) => {
       @apply flex items-center justify-center;
       .content-num {
         font-size: 21px;
-        font-weight: bold;
+        @apply font-bold;
       }
       .content-unit {
         margin-left: 5px;

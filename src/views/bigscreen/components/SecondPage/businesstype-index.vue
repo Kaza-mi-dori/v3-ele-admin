@@ -58,10 +58,9 @@ onMounted(() => {
     background-size: 80% 100%;
     background-position: center;
     .__title--text {
+      @apply text-center font-bold relative;
       font-size: 2rem;
       letter-spacing: 6px;
-      font-weight: bold;
-      text-align: center;
       background: linear-gradient(
         to bottom,
         rgb(251, 254, 254),
@@ -70,7 +69,6 @@ onMounted(() => {
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      position: relative;
     }
   }
 }
@@ -81,7 +79,7 @@ onMounted(() => {
   padding: 20px 0 20px 0;
   // height: calc(100% - 66px);
   ::-webkit-scrollbar {
-    display: none;
+    @apply hidden;
   }
   scrollbar-width: none;
 }

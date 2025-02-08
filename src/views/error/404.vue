@@ -62,8 +62,8 @@ function back() {
   @apply flex p-[100px];
 
   .pic-404 {
+    @apply overflow-hidden;
     width: 600px;
-    overflow: hidden;
 
     &__parent {
       width: 100%;
@@ -187,26 +187,25 @@ function back() {
   }
 
   .bullshit {
+    @apply overflow-hidden;
     width: 300px;
     padding: 30px 0;
-    overflow: hidden;
 
     &__oops {
       margin-bottom: 20px;
       font-size: 32px;
-      font-weight: bold;
       line-height: 40px;
       color: #1482f0;
       opacity: 0;
       animation-name: slideUp;
       animation-duration: 0.5s;
       animation-fill-mode: forwards;
+      @apply font-bold;
     }
 
     &__headline {
       margin-bottom: 10px;
       font-size: 20px;
-      font-weight: bold;
       line-height: 24px;
       color: #222;
       opacity: 0;
@@ -214,6 +213,7 @@ function back() {
       animation-duration: 0.5s;
       animation-delay: 0.1s;
       animation-fill-mode: forwards;
+      @apply font-bold;
     }
 
     &__info {
@@ -229,6 +229,7 @@ function back() {
     }
 
     &__return-home {
+      @apply text-center cursor-pointer;
       display: block;
       float: left;
       width: 110px;
@@ -236,8 +237,6 @@ function back() {
       font-size: 14px;
       line-height: 36px;
       color: #fff;
-      text-align: center;
-      cursor: pointer;
       background: #1482f0;
       border-radius: 100px;
       opacity: 0;

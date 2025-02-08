@@ -105,11 +105,11 @@ function generateElementIconCode(symbol: any) {
 
 <style lang="scss" scoped>
 .icons-container {
+  @apply overflow-hidden;
   margin: 10px 20px 0;
-  overflow: hidden;
 
   .grid {
-    position: relative;
+    @apply relative;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
@@ -121,8 +121,7 @@ function generateElementIconCode(symbol: any) {
     margin: 20px;
     font-size: 30px;
     color: var(--el-text-color-regular);
-    text-align: center;
-    cursor: pointer;
+    @apply text-center cursor-pointer;
   }
 
   span {

@@ -184,9 +184,8 @@ onMounted(() => {
       .model-title__text {
         font-size: 18px;
         color: #fff;
-        z-index: 1; /* 确保文字在背景图片上方 */
         font-family: 黑体;
-        text-align: center; /* 防止内容过多时对齐异常 */
+        @apply z-1 text-center;
       }
     }
   }
@@ -234,13 +233,12 @@ onMounted(() => {
     }
   }
   .demo-date-picker {
-    @apply flex flex-wrap w-full;
-    padding: 0;
+    @apply flex flex-wrap w-full p-0;
     margin-right: 15px;
   }
 }
 :deep(.el-input__prefix) {
-  display: none;
+  @apply hidden;
 }
 :deep(.el-input__wrapper) {
   background-color: #0d2555;

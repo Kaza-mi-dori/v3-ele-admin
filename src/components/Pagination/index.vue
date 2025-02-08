@@ -73,7 +73,7 @@ function handleCurrentChange(val: number) {
   padding: 12px;
 
   &.hidden {
-    display: none;
+    @apply hidden;
   }
 }
 </style>

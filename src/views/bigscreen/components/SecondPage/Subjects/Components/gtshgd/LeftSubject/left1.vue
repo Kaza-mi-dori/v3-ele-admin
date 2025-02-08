@@ -127,8 +127,7 @@ onMounted(() => {
     // 四宫格布局
     @apply flex items-center w-full flex-wrap pl-4 pr-4 pt-4;
     .item-box {
-      @apply m-2.5;
-      position: relative; // 文字定位在图片上
+      @apply m-2.5 relative;
       width: calc(33% - 25px);
       height: 85px;
     }
@@ -137,8 +136,7 @@ onMounted(() => {
     }
     img {
       width: 120%;
-      height: 100%;
-      @apply object-cover;
+      @apply h-full object-cover;
     }
     .body-content {
       @apply flex flex-col justify-center items-start absolute text-left pl-[15px];
@@ -154,7 +152,7 @@ onMounted(() => {
       @apply flex justify-center items-center;
       .content-num {
         font-size: 21px;
-        font-weight: bold;
+        @apply font-bold;
       }
       .content-unit {
         margin-left: 5px;
