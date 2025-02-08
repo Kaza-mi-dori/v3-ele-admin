@@ -48,8 +48,7 @@ const formatNumber = (num: number | string): string => {
 <style lang="scss" scoped>
 $bg-color-1: #ffffff;
 .box {
-  @apply justify-center items-center w-full h-full relative;
-  box-sizing: border-box;
+  @apply justify-center items-center w-full h-full relative box-border;
   color: white;
   font-size: 20px;
   padding: 15px 10px;

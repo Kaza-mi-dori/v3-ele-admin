@@ -193,8 +193,7 @@ onMounted(() => {
 $number-color-1: #fffe95;
 
 .box {
-  @apply flex flex-col justify-center items-center w-full h-full;
-  box-sizing: border-box;
+  @apply flex flex-col justify-center items-center w-full h-full box-border;
   // background-color: rgba(0, 0, 0, 0.5);
   // border-radius: 10px;
   color: white;
