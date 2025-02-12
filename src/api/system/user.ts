@@ -410,13 +410,14 @@ export const UserAPI_2 = {
    *
    * @returns 登录用户昵称、头像信息，包括角色和权限
    */
-  getInfo(token: string) {
+  // @ts-ignore 忽略token参数 因为token参数是可选
+  getInfo() {
     return request2<any, any>({
       url: `${USER_BASE_URL_2}/Other/Login`,
       method: "get",
-      params: {
-        token: token,
-      },
+      // params: {
+      //   token: token,
+      // },
     });
   },
 
