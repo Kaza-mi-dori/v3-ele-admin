@@ -161,6 +161,7 @@
 <script setup lang="ts">
 import oil from "@/views/bigscreen/img/oil.png";
 import gas from "@/views/bigscreen/img/oil2.png";
+import { useRoute } from "vue-router";
 import { GsLocationAPI } from "@/api/config/gsLocation";
 import { ref } from "vue";
 import { useTransition } from "@vueuse/core";
@@ -204,6 +205,9 @@ const getPos = (pos: number, base: number) => {
   return (pos / base) * 100 + "%";
 };
 
+const route = useRoute();
+const routeName = route.name;
+
 /** 获取地图元素 */
 const initTableData = async () => {
   // const params = {
@@ -238,8 +242,43 @@ const initTableData = async () => {
   //   };
   // });
   const res: any = await GsLocationAPI.getAllMapElement();
-  const list = res["当前记录"];
+  const allList = res["当前记录"];
+  let list = ref<any[]>([]);
 
+  const filterAndProcessList = (list: any, enterprise: any) => {
+    const filteredList = allList.filter(
+      (item: { 所属企业: any }) => item.所属企业 === enterprise
+    );
+    getGsMarkerList(filteredList);
+  };
+
+  // 使用一个函数来处理过滤和调用getGsMarkerList的逻辑
+  const processEnterpriseList = (enterprise: any) => {
+    list.value = allList.filter(
+      (item: { 所属企业: any }) => item.所属企业 === enterprise
+    );
+    filterAndProcessList(list.value, enterprise);
+  };
+
+  switch (routeName) {
+    case "Gtsh":
+      processEnterpriseList("广投石化");
+      break;
+    case "Kry":
+      processEnterpriseList("开燃公司");
+      break;
+    case "Gsshc":
+      processEnterpriseList("桂盛桂轩");
+      break;
+    case "Hry":
+      processEnterpriseList("恒润公司");
+      break;
+    default:
+      break;
+  }
+};
+
+const getGsMarkerList = (list: any[]) => {
   for (let i = 0; i < list.length; i++) {
     const item = list[i];
     const newItem = {
@@ -250,6 +289,7 @@ const initTableData = async () => {
       iconName: item.类型 === "加油站" ? "gas" : "oil",
       xOffSet: item.坐标 ? item.坐标.split(",")[0] : null,
       yOffSet: item.坐标 ? item.坐标.split(",")[1] : null,
+      enterprise: item.所属企业,
     };
     gsMarkerList.value.push({
       ...newItem,
