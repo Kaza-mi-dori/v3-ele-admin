@@ -27,21 +27,50 @@
       }"
     >
       <div :style="{ cursor: 'pointer', textAlign: 'center' }">
-        <img
-          :src="
-            item.styleId === 'gasStation'
-              ? oil
-              : item.styleId === 'oilDepot'
-                ? gas
-                : item.styleId === 'organization'
-                  ? enterprise
-                  : boat
-          "
-          :style="{
-            width: '20px',
-            height: '30px',
-          }"
-        />
+        <div class="relative w-30px h-65px m-auto">
+          <img
+            :src="
+              item.styleId === 'gasStation'
+                ? oil
+                : item.styleId === 'oilDepot'
+                  ? gas
+                  : item.styleId === 'organization'
+                    ? enterprise
+                    : boat
+            "
+            :style="{
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              width: '100%',
+              height: '40px',
+              opacity: '0.8',
+            }"
+          />
+          <div
+            v-if="item.styleId === 'oilDepot'"
+            class="absolute bottom-0 left-0 w-100%"
+            :style="{
+              height: 'calc(0.49 * 40px)',
+              'clip-path': 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+              backgroundColor: 'rgba(18,150,219, 0.7)',
+              borderRadius: '3px 3px 0 0',
+            }"
+          />
+          <div v-if="item.styleId === 'oilDepot'" class="relative top-0 w-50px">
+            <svg width="80" height="30">
+              <path
+                d="M15 30 L20 20 L50 20"
+                stroke="#cfffff"
+                stroke-width="2"
+                fill="none"
+              />
+              <text x="20" y="15" text-anchor="start" fill="#cfffff">
+                {{ item.stock || "-" }}万吨
+              </text>
+            </svg>
+          </div>
+        </div>
         <el-popover
           popper-class="dark-popper"
           placement="top"
@@ -203,7 +232,7 @@ import boat from "@/views/bigscreen/img/boat2.png";
 import oil from "@/views/bigscreen/img/oil_medium.png";
 // import gas from "@/views/bigscreen/img/oil2_medium.png";
 // import oil from "@/views/bigscreen/img/product_icon3.png";
-import gas from "@/views/bigscreen/img/product_icon3.png";
+import gas from "@/views/bigscreen/img/oil_icon_2.png";
 import enterprise from "@/views/bigscreen/img/enterprise.png";
 import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
 import { getDistrict } from "@/api/thirdSystem/tmap";
@@ -272,10 +301,12 @@ const offset1 = ref({ x: 0, y: -30 });
 // };
 const styleId = "style1";
 const control = {
-  scale: {},
-  zoom: {
-    position: "bottomRight",
-  },
+  showControl: false,
+  showCompass: false,
+  // scale: {},
+  // zoom: {
+  //   position: "bottomRight",
+  // },
 };
 // const geometries = [
 //   { styleId: "marker", position: { lat: 39.91799, lng: 116.397027 } },
@@ -475,6 +506,34 @@ const getSubCategory = (item: any) => {
   return null;
 };
 
+// 获取油库库存
+const getOilDepotStock = (item: any) => {
+  if (item.styleId === "oilDepot") {
+    // 根据item.label判断是哪个油库
+    switch (item.content) {
+      case "盛源油库":
+        return (oilStockStatistic.value.shengyuan / 10000).toFixed(2);
+      case "钦州油库":
+        return (
+          (oilStockStatistic.value.guangming +
+            oilStockStatistic.value.yongsheng) /
+          10000
+        ).toFixed(2);
+      case "古瓦油库":
+        return (oilStockStatistic.value.guwa / 10000).toFixed(2);
+      case "恒润厂区油库":
+        return (oilStockStatistic.value.hengrun / 10000).toFixed(2);
+      // case "日照港油库":
+      //   return oilStockStatistic.value.guwa;
+      // case "广明油库":
+      //   return oilStockStatistic.value.guangming;
+      default:
+        return 0;
+    }
+  }
+  return 0;
+};
+
 watch(
   () => props.markers,
   (newVal) => {
@@ -493,13 +552,6 @@ watch(
         }
       }
       if (!item.lat || !item.lng) return;
-      // // 1219 当前只标注油库\油船\组织结构
-      // if (
-      //   item.type !== MapElementEnumMap[MapElementEnum.OIL_DEPOT] &&
-      //   item.type !== MapElementEnumMap[MapElementEnum.OIL_SHIP] &&
-      //   item.type !== MapElementEnumMap[MapElementEnum.ORGANIZATION]
-      // )
-      //   return;
       const lat = +item.lat;
       const lng = +item.lng;
       if (isNaN(lat) || isNaN(lng)) return;
@@ -525,6 +577,7 @@ watch(
         properties: item,
         content: item.label,
       });
+      // TODO 根据当前组织名筛选
     });
     onToggleOilDepot();
   },
@@ -544,6 +597,7 @@ const getDistrictData = async () => {
 
 onMounted(() => {
   // getDistrictData();
+  // 隐藏logo和缩放控件
   setTimeout(() => {
     // 寻找class为logo-text的元素
     const logoText = document.querySelector(".logo-text") as HTMLElement;
@@ -570,6 +624,7 @@ onMounted(() => {
       scaleControl.parentElement.style.display = "none";
     }
   }, 2000);
+  // 获取油库库存计算
   totalOilStockHook.fetchData().then(() => {
     oilStockStatistic.value.total = 0;
     oilStockStatistic.value.yongsheng = 0;
@@ -632,6 +687,12 @@ onMounted(() => {
           break;
       }
     }
+    // 计算油库库存
+    allGeometries.value.forEach((item) => {
+      if (item.styleId === "oilDepot") {
+        item.stock = getOilDepotStock(item);
+      }
+    });
   });
 });
 

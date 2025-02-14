@@ -149,6 +149,9 @@ import Right3 from "@/views/bigscreen/components/SecondPage/Right/right3.vue";
 
 import { ref } from "vue";
 
+// TODO 统一获取数据后单向传递
+const subData = reactive({});
+
 const totalData = ref([
   {
     year: "78937.61",

@@ -36,6 +36,7 @@ const title = ref("");
 const loading = ref(true);
 const hasPermission = ref(true);
 const starrySky = new StarrySky();
+
 onMounted(() => {
   setTimeout(() => {
     loading.value = false;
