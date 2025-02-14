@@ -91,6 +91,17 @@
           </el-link>
         </template>
       </el-table-column>
+      <el-table-column
+        prop="所属企业"
+        label="所属企业"
+        align="center"
+        width="150"
+        sortable
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.所属企业 }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="描述" label="描述" sortable>
         <template v-slot="scope">
           <span>{{ scope.row.描述 }}</span>
@@ -156,6 +167,16 @@
             placeholder="在大屏地图上的坐标"
           />
         </el-form-item>
+        <el-form-item label="所属企业" prop="enterprise">
+          <el-select v-model="itemForm.enterprise" placeholder="请选择">
+            <el-option
+              v-for="(value, key) in OurCompanyEnumMap"
+              :key="key"
+              :label="key"
+              :value="value"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
       <template v-slot:footer>
         <span class="dialog-footer">
@@ -184,7 +205,11 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { ElMessage, ElForm } from "element-plus";
 import { useRouter } from "vue-router";
-import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
+import {
+  MapElementEnumMap,
+  MapElementEnum,
+  OurCompanyEnumMap,
+} from "@/enums/BusinessEnum";
 
 const router = useRouter();
 
@@ -212,12 +237,14 @@ const itemForm = ref({
   name: "",
   description: "",
   location: "",
+  enterprise: "",
 });
 const itemFormRef = ref<InstanceType<typeof ElForm>>();
 const rules = ref({
   type: [{ required: true, message: "请选择类别", trigger: "blur" }],
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
   description: [{ required: true, message: "请输入描述", trigger: "blur" }],
+  enterprise: [{ required: true, message: "请选择所属企业", trigger: "blur" }],
 });
 const submitItemLoading = ref(false);
 const GAS_ENUM_VALUE = MapElementEnumMap[MapElementEnum.GAS_STATION];
@@ -251,6 +278,7 @@ const handleUpdateDetail = (row: any) => {
     name: row.名称,
     description: row.描述,
     location: row.坐标,
+    enterprise: row.所属企业,
   };
 };
 const handleAddRecord = () => {
@@ -260,6 +288,7 @@ const handleAddRecord = () => {
     name: "",
     description: "",
     location: "",
+    enterprise: "",
   };
   dialogVisible.value = true;
 };
@@ -340,6 +369,7 @@ const onSubmitItemForm = async () => {
         描述: itemForm.value.description,
         坐标: itemForm.value.location,
         类型: itemForm.value.type,
+        所属企业: itemForm.value.enterprise,
       };
       const op = itemForm.value.id
         ? GsLocationAPI.updateMapElement
@@ -355,6 +385,7 @@ const onSubmitItemForm = async () => {
         type: undefined,
         name: "",
         description: "",
+        enterprise: "",
       };
     }
   });

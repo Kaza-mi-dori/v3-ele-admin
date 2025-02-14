@@ -80,6 +80,11 @@
               <span>{{ currentItem.description }}</span>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item label="所属企业">
+              <span>{{ currentItem.enterprise }}</span>
+            </el-form-item>
+          </el-col>
         </el-form>
         <div v-if="!isPositionEdit" class="bottom-op mt-8 text-align-end">
           <el-button
@@ -134,6 +139,16 @@
             type="textarea"
             placeholder="请输入描述, 大屏上将显示这里的内容"
           />
+        </el-form-item>
+        <el-form-item label="所属企业" prop="enterprise">
+          <el-select v-model="itemForm.enterprise" placeholder="请选择">
+            <el-option
+              v-for="(value, key) in OurCompanyEnumMap"
+              :key="key"
+              :label="key"
+              :value="value"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <template v-slot:footer>
@@ -196,7 +211,11 @@ import oil from "@/views/bigscreen/img/oil.png";
 import gas from "@/views/bigscreen/img/oil2.png";
 import * as echarts from "echarts";
 import "echarts/extension/bmap/bmap";
-import { MapElementEnumMap, MapElementEnum } from "@/enums/BusinessEnum";
+import {
+  MapElementEnumMap,
+  MapElementEnum,
+  OurCompanyEnumMap,
+} from "@/enums/BusinessEnum";
 import { ElMessage } from "element-plus";
 import { GsLocationAPI } from "@/api/config/gsLocation";
 import { getGeoCode } from "@/api/thirdSystem/tmap";
@@ -212,6 +231,7 @@ interface ItemFormType {
   type: number | undefined | string;
   xOffSet: number | undefined;
   yOffSet: number | undefined;
+  enterprise: number | undefined | string;
 }
 
 interface BackEndFormType {
@@ -221,6 +241,7 @@ interface BackEndFormType {
   描述: string;
   坐标: string;
   图标: string;
+  所属企业: string;
 }
 
 const dialogVisible = ref(false);
@@ -232,12 +253,16 @@ const itemForm = ref<ItemFormType>({
   type: undefined,
   xOffSet: 0,
   yOffSet: 0,
+  enterprise: undefined,
 });
 const itemFormRef = ref<Nullable<FormInstance>>(null);
 const rules = {
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
   description: [{ required: true, message: "请输入描述", trigger: "blur" }],
   type: [{ required: true, message: "请选择类别", trigger: "change" }],
+  enterprise: [
+    { required: true, message: "请选择所属企业", trigger: "change" },
+  ],
 };
 const submitItemLoading = ref(false);
 // 修改地址抽屉
@@ -307,6 +332,7 @@ interface CurrentItem {
   iconName?: string;
   xOffSet?: number | null;
   yOffSet?: number | null;
+  enterprise: string;
 }
 
 interface PointPos {
@@ -496,6 +522,7 @@ const addStorage = () => {
     iconName: "oil",
     xOffSet: 0,
     yOffSet: 0,
+    enterprise: "",
   });
 };
 
@@ -537,6 +564,7 @@ const onSubmitChangeCurrentItemForm = async () => {
     描述: currentItem.value?.description as string,
     坐标: `${currentItem.value?.xOffSet},${currentItem.value?.yOffSet}`,
     图标: currentItem.value?.iconName as string,
+    所属企业: currentItem.value?.enterprise as string,
   };
   GsLocationAPI.updateMapElement(submitData)
     .then((res) => {
@@ -570,6 +598,7 @@ const onSubmitAddressForm = () => {
     描述: currentItem.value?.description,
     坐标: `${addressForm.value.lng},${addressForm.value.lat}`,
     图标: currentItem.value?.iconName,
+    所属企业: itemForm.value.enterprise,
   };
   GsLocationAPI.updateMapElement(submitData)
     .then((res) => {
@@ -607,6 +636,7 @@ const onSubmitItemForm = () => {
         描述: itemForm.value.description,
         坐标: `${itemForm.value.xOffSet},${itemForm.value.yOffSet}`,
         图标: itemForm.value.type === GAS_ENUM_VALUE ? "gas" : "oil",
+        所属企业: itemForm.value.enterprise,
       };
       const op = itemForm.value.id
         ? GsLocationAPI.updateMapElement
@@ -644,6 +674,7 @@ const onSubmitItemForm = () => {
                 : "oil",
             xOffSet: itemForm.value.xOffSet,
             yOffSet: itemForm.value.yOffSet,
+            enterprise: itemForm.value.enterprise,
           };
           gsListdata.value[index].children.push(item);
           // 重置表单
@@ -654,6 +685,7 @@ const onSubmitItemForm = () => {
             type: undefined,
             xOffSet: 0,
             yOffSet: 0,
+            enterprise: "",
           };
           itemFormRef.value?.resetFields();
           dialogVisible.value = false;
@@ -740,6 +772,7 @@ const initListData = async () => {
       iconName: item.类型 === "加油站" ? "gas" : "oil",
       xOffSet: item.坐标 ? item.坐标.split(",")[0] : null,
       yOffSet: item.坐标 ? item.坐标.split(",")[1] : null,
+      enterprise: item.所属企业,
     };
     gsListdata.value[index].children.push(newItem);
     gsMarkerList.value.push({
