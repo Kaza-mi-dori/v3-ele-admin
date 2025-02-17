@@ -57,7 +57,10 @@
               borderRadius: '3px 3px 0 0',
             }"
           />
-          <div v-if="item.styleId === 'oilDepot'" class="relative top-0 w-50px">
+          <div
+            v-if="item.styleId === 'oilDepot' && item.stock"
+            class="relative top-0 w-50px"
+          >
             <svg width="80" height="30">
               <path
                 d="M15 30 L20 20 L50 20"
@@ -65,8 +68,15 @@
                 stroke-width="2"
                 fill="none"
               />
-              <text x="20" y="15" text-anchor="start" fill="#cfffff">
-                {{ item.stock || "-" }}万吨
+              <text
+                x="20"
+                y="15"
+                class="oil-stock-text"
+                fill="none"
+                font-size="14px"
+                text-anchor="start"
+              >
+                {{ item.stock ? item.stock + "万吨" : "-" }}
               </text>
             </svg>
           </div>
@@ -579,6 +589,76 @@ watch(
       });
       // TODO 根据当前组织名筛选
     });
+    // 获取油库库存计算
+    totalOilStockHook.fetchData().then(() => {
+      oilStockStatistic.value.total = 0;
+      oilStockStatistic.value.yongsheng = 0;
+      oilStockStatistic.value.shengyuan = 0;
+      for (const key in totalOilStockHook.result.value) {
+        switch (key) {
+          case keywordMap["成品油库存量"]:
+            oilStockStatistic.value.total =
+              totalOilStockHook.result.value[key]?.[0]?.["数据"];
+            break;
+          case keywordMap["盛源汽油库存量"]:
+            oilStockStatistic.value.shengyuan += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+          case keywordMap["永盛汽油库存量"]:
+            oilStockStatistic.value.yongsheng += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+          case keywordMap["盛源柴油库存量"]:
+            oilStockStatistic.value.shengyuan += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+          case keywordMap["永盛柴油库存量"]:
+            oilStockStatistic.value.yongsheng += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+          case keywordMap["恒润汽油库存量"]:
+            oilStockStatistic.value.hengrun += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+          case keywordMap["恒润柴油库存量"]:
+            oilStockStatistic.value.hengrun += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+          case keywordMap["广明汽油库存量"]:
+            oilStockStatistic.value.guangming += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+          case keywordMap["广明柴油库存量"]:
+            oilStockStatistic.value.guangming += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+          case keywordMap["古瓦汽油库存量"]:
+            oilStockStatistic.value.guwa += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+          case keywordMap["古瓦柴油库存量"]:
+            oilStockStatistic.value.guwa += Number(
+              totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
+            );
+            break;
+        }
+      }
+      // 计算油库库存
+      allGeometries.value.forEach((item) => {
+        if (item.styleId === "oilDepot") {
+          item.stock = getOilDepotStock(item);
+        }
+      });
+    });
     onToggleOilDepot();
   },
   {
@@ -624,76 +704,6 @@ onMounted(() => {
       scaleControl.parentElement.style.display = "none";
     }
   }, 2000);
-  // 获取油库库存计算
-  totalOilStockHook.fetchData().then(() => {
-    oilStockStatistic.value.total = 0;
-    oilStockStatistic.value.yongsheng = 0;
-    oilStockStatistic.value.shengyuan = 0;
-    for (const key in totalOilStockHook.result.value) {
-      switch (key) {
-        case keywordMap["成品油库存量"]:
-          oilStockStatistic.value.total =
-            totalOilStockHook.result.value[key]?.[0]?.["数据"];
-          break;
-        case keywordMap["盛源汽油库存量"]:
-          oilStockStatistic.value.shengyuan += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-        case keywordMap["永盛汽油库存量"]:
-          oilStockStatistic.value.yongsheng += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-        case keywordMap["盛源柴油库存量"]:
-          oilStockStatistic.value.shengyuan += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-        case keywordMap["永盛柴油库存量"]:
-          oilStockStatistic.value.yongsheng += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-        case keywordMap["恒润汽油库存量"]:
-          oilStockStatistic.value.hengrun += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-        case keywordMap["恒润柴油库存量"]:
-          oilStockStatistic.value.hengrun += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-        case keywordMap["广明汽油库存量"]:
-          oilStockStatistic.value.guangming += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-        case keywordMap["广明柴油库存量"]:
-          oilStockStatistic.value.guangming += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-        case keywordMap["古瓦汽油库存量"]:
-          oilStockStatistic.value.guwa += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-        case keywordMap["古瓦柴油库存量"]:
-          oilStockStatistic.value.guwa += Number(
-            totalOilStockHook.result.value[key]?.[0]?.["数据"] ?? 0
-          );
-          break;
-      }
-    }
-    // 计算油库库存
-    allGeometries.value.forEach((item) => {
-      if (item.styleId === "oilDepot") {
-        item.stock = getOilDepotStock(item);
-      }
-    });
-  });
 });
 
 watch(
@@ -777,6 +787,20 @@ defineExpose({
   border-radius: 10px;
   .oil-station-statistic-item {
     @apply flex justify-between;
+  }
+}
+.oil-stock-text {
+  transform: translateZ(0);
+  will-change: transform;
+  animation: oil-stock-text-animation 1s linear;
+  fill: #cfffff;
+  @keyframes oil-stock-text-animation {
+    from {
+      fill-opacity: 0;
+    } /* 完全透明 */
+    to {
+      fill-opacity: 1;
+    } /* 完全不透明 */
   }
 }
 </style>
