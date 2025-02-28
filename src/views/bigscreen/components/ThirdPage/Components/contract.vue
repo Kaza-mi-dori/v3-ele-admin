@@ -31,7 +31,7 @@
         :data="tableDataDisplay"
         style="width: 100%"
         height="480"
-        @current-change="handleCurrentChange"
+        @current-change="handleClickRow"
       >
         <el-table-column label="签订时间" prop="签署日期" />
         <el-table-column label="合同类型" prop="合同类型" />
@@ -317,7 +317,7 @@ async function initTableData() {
       initChart1(); // 在数据加载后更新图表
       initChart2();
     })
-    .catch((err) => {
+    .catch((err: any) => {
       console.error(err);
     });
 }
@@ -328,7 +328,7 @@ const calculateContractTypeData = () => {
 
   // 计算每种合同类型的总金额
   tableData.value.forEach((item) => {
-    const type = item["合同类型"];
+    const type = item["合同类型"] || "其他";
     const amount = parseFloat(item["含税金额"]);
 
     if (!typeMap[type]) {
@@ -339,6 +339,7 @@ const calculateContractTypeData = () => {
   });
 
   // 转换为ECharts需要的数据格式
+  // console.log("tableData.value", tableData.value);
   const chartData = Object.keys(typeMap).map((type) => {
     return {
       name: type,
@@ -402,11 +403,24 @@ const size = ref<ComponentSize>("default");
 
 const handleSizeChange = (pageSize: number) => {
   pagination.value.pageSize = pageSize;
-  initTableData();
+  // initTableData();
 };
 const handleCurrentChange = (currentPage: number) => {
   pagination.value.currentPage = currentPage;
-  initTableData();
+  // initTableData();
+};
+
+const handleClickRow = (row: any) => {
+  const route = router.resolve({
+    name: "ReportForm",
+    query: {
+      type: "contractDetail",
+      id: row.id,
+    },
+  });
+  setTimeout(() => {
+    window.open(route.href, "_blank");
+  }, 100);
 };
 </script>
 
@@ -623,10 +637,15 @@ const handleCurrentChange = (currentPage: number) => {
 
 :deep(.el-pagination.is-background .btn-prev, ) {
   background-color: #272a9b !important;
+  color: white;
+  &[aria-disabled="true"] {
+    background-color: #272a9b !important;
+  }
 }
 
 :deep(.el-pagination.is-background .btn-next) {
   background-color: #272a9b !important;
+  color: white;
 }
 
 :deep(.el-pagination.is-background .el-pager li.is-active) {

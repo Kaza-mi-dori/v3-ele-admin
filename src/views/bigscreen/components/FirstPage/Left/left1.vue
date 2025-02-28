@@ -97,8 +97,8 @@ const handleMouseoutText = () => {
       @apply flex flex-col;
     }
     // 需要有间隔时间，否则会出现闪烁
-    animation: scroll 25s ease-in forwards infinite;
-    // animation-delay: 0.5s;
+    animation: scroll 25s linear forwards infinite;
+    animation-delay: 1s;
     @keyframes scroll {
       0% {
         transform: translateY(0);

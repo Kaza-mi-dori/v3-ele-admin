@@ -1,6 +1,5 @@
 import request2 from "@/utils/request2";
 import request from "@/utils/request";
-import { pa } from "element-plus/es/locale";
 
 const BUSINESS_FORM_BASE_URL = "/Api/Business";
 

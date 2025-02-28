@@ -150,6 +150,28 @@ export const constantRoutes: RouteRecordRaw[] = [
           },
         ],
       },
+      // 油库仓储三级页
+      {
+        path: "singleStorage",
+        name: "SingleStorage",
+        meta: {
+          hidden: true,
+        },
+        component: () =>
+          import("@/views/bigscreen/components/SecondPage/Storage/index.vue"),
+      },
+      // 企业仓储二级页
+      {
+        path: "companyStorage",
+        name: "CompanyStorage",
+        meta: {
+          hidden: true,
+        },
+        component: () =>
+          import(
+            "@/views/bigscreen/components/SecondPage/CompanyStorage/index.vue"
+          ),
+      },
       // 经营主体二级页
       {
         path: "subject",
@@ -616,6 +638,16 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/otherConfig/dataDefinitionMng.vue"),
         meta: {
           title: "数据定义管理",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "dynamicFormDefinitionMng",
+        name: "DynamicFormDefinitionMng",
+        component: () =>
+          import("@/views/otherConfig/dynamicForm/definitionMng.vue"),
+        meta: {
+          title: "动态表单定义管理",
           icon: "el-icon-coin",
         },
       },

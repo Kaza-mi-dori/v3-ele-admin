@@ -1,5 +1,5 @@
 import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
+// import vueJsx from "@vitejs/plugin-vue-jsx";
 import { type UserConfig, type ConfigEnv, loadEnv, defineConfig } from "vite";
 
 import AutoImport from "unplugin-auto-import/vite";
