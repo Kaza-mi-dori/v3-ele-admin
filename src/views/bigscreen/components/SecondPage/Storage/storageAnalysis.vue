@@ -1,18 +1,22 @@
 <template>
   <div class="dashboard">
-    <el-select
-      v-model="oilWarehouse"
-      style="width: 200px"
-      placeholder="请选择油库"
-      @change="handleOilWarehouseChange"
-    >
-      <el-option
-        v-for="item in oilWarehouseList"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
-    </el-select>
+    <div class="select-oil-warehouse-container">
+      <el-select
+        v-model="oilWarehouse"
+        class="select-oil-warehouse"
+        style="width: 200px"
+        placeholder="请选择油库"
+        @change="handleOilWarehouseChange"
+      >
+        <el-option
+          v-for="item in oilWarehouseList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </div>
+
     <DashboardHeader :stats="stats" />
 
     <div class="grid-container">
@@ -231,12 +235,25 @@ const handleOilWarehouseChange = () => {
   margin-top: 20px;
 }
 
+.select-oil-warehouse-container {
+  @apply flex justify-end;
+}
+
 :deep(.el-select) {
   .el-select__wrapper {
-    background: #0a1a3e;
     border: 1px solid #1e3a8a;
     .el-select__placeholder {
       color: #fff;
+    }
+  }
+  &.select-oil-warehouse {
+    float: right;
+    border: 1px solid #1e3a8a !important;
+    border-radius: 5px;
+    .el-select__wrapper {
+      background: #222590;
+      border-radius: 5px;
+      --el-border-color: #222590;
     }
   }
 }

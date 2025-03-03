@@ -172,6 +172,18 @@ export const constantRoutes: RouteRecordRaw[] = [
             "@/views/bigscreen/components/SecondPage/CompanyStorage/index.vue"
           ),
       },
+      // 石化板块仓储二级页
+      {
+        path: "blockStorage",
+        name: "BlockStorage",
+        meta: {
+          hidden: true,
+        },
+        component: () =>
+          import(
+            "@/views/bigscreen/components/SecondPage/BlockStorage/index.vue"
+          ),
+      },
       // 经营主体二级页
       {
         path: "subject",

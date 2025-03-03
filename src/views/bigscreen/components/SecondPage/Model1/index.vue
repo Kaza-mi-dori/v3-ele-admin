@@ -58,12 +58,12 @@ defineProps({
   @apply flex flex-col w-full h-full relative;
   .model-title {
     @apply flex justify-center items-center relative;
-    height: 50px;
+    height: 40px;
     .model-title__bg {
       @apply w-full h-full absolute top-0 bottom-0 left-0 right-0;
     }
     .model-title__text {
-      font-size: 24px;
+      font-size: 1.3rem;
       color: #fff;
       // 勾边
       // text-shadow: 0 0 5px #000;
@@ -98,6 +98,7 @@ defineProps({
     }
   }
   .model-footer {
+    height: 20px;
     .model-footer__bg {
       @apply w-full h-full;
     }

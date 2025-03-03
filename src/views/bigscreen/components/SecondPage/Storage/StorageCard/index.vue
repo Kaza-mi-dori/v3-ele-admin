@@ -98,7 +98,7 @@ defineProps({
     background: #0a1a3e;
     position: relative;
     .__remaining-bar {
-      @apply w-[calc(100%-1px)] absolute bottom-0;
+      @apply w-[calc(100%-2px)] absolute bottom-0 left-1px;
       border-radius: 5px;
     }
   }
