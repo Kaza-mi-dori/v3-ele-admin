@@ -1,6 +1,6 @@
 <template>
   <div class="box1">
-    <div class="__left">
+    <!-- <div class="__left">
       <Item1
         style="margin: 0 auto"
         :amount="oilData.oilStorage"
@@ -23,14 +23,42 @@
         :iconUrl="business"
         unit="吨"
       />
-    </div>
-    <!-- <OilContainer1
+    </div> -->
+    <OilContainer1
       :isShowTitle="true"
       :percent="50"
       :value="100"
       :name="'原油'"
       :unit="'吨'"
-    /> -->
+    />
+    <OilContainer1
+      :isShowTitle="true"
+      :percent="75"
+      :value="142"
+      :name="'燃料油'"
+      :unit="'吨'"
+    />
+    <OilContainer1
+      :isShowTitle="true"
+      :percent="22"
+      :value="100"
+      :name="'#0柴油'"
+      :unit="'吨'"
+    />
+    <OilContainer1
+      :isShowTitle="true"
+      :percent="42"
+      :value="1410"
+      :name="'#92汽油'"
+      :unit="'吨'"
+    />
+    <OilContainer1
+      :isShowTitle="true"
+      :percent="52"
+      :value="1050"
+      :name="'#95汽油'"
+      :unit="'吨'"
+    />
   </div>
 </template>
 
@@ -83,6 +111,7 @@ const oilBargainHook = useDataIndex(
   endOfYear() + " 23:59:59"
 );
 
+// TODO 重写给组件赋值逻辑 0303
 const initData = async () => {
   queryForm.value = {
     页码: 1,
@@ -145,17 +174,17 @@ onMounted(() => {
   background-image: url("@/views/bigscreen/img/tag_bg.png");
   background-size: 100% 100%;
   // height: 176px;
-  .__left {
-    @apply flex h-full;
-    width: 50%;
-  }
-  .__right {
-    @apply flex h-full;
-    width: 50%;
-  }
-  // padding: 5px 0px;
-  // display: grid;
-  // grid-template-columns: repeat(5, 1fr);
-  // gap: 10px;
+  // .__left {
+  //   @apply flex h-full;
+  //   width: 50%;
+  // }
+  // .__right {
+  //   @apply flex h-full;
+  //   width: 50%;
+  // }
+  padding: 5px 0px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
 }
 </style>

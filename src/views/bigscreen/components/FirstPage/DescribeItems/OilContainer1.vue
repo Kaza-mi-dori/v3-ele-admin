@@ -6,7 +6,7 @@
     <div class="right">
       <div class="label">{{ props.value }}</div>
       <div class="remain-bar-container">
-        <span class="remain-bar-label">{{ props.percent }}%</span>
+        <div class="remain-bar-label">{{ props.percent }}%</div>
         <div class="remain-bar" :style="{ height: `${props.percent}%` }" />
       </div>
     </div>
@@ -44,18 +44,21 @@ const props = defineProps<{
     }
   }
   .right {
+    @apply text-center;
     padding-bottom: 10px;
     .label {
       @apply text-sm text-yellow-500;
       // 文字方向纵向
     }
     .remain-bar-container {
-      @apply w-full h-50px bg-gray-200 relative;
+      @apply w-55px h-55px bg-gray-200 relative text-center;
       .remain-bar {
-        @apply w-full h-50px bg-gray-200;
+        @apply w-full bg-red-400 absolute bottom-0 left-0;
+        height: 0;
+        transition: height 1s linear;
       }
       .remain-bar-label {
-        @apply absolute top-[1/2] left-0 text-sm text-white;
+        @apply absolute flex items-center justify-center h-full w-full text-sm text-black font-bold z-1;
       }
     }
   }
