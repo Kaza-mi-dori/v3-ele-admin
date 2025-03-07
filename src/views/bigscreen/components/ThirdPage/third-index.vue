@@ -20,15 +20,16 @@
 <script setup lang="ts">
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { ComponentSize } from "element-plus";
+import { OurCompanyEnum, OurCompanyEnumMap } from "@/enums/BusinessEnum";
 import sassvariables from "@/styles/variables.module.scss";
 import Deny from "@/views/bigscreen/components/Common/Deny/index.vue";
 
 const router = useRouter();
 const hasPermission = ref(true);
 // 页面动态显示内容，由参数决定
-const title: Ref<string> = ref("广投石化驾驶舱");
+const title: Ref<string> = ref("驾驶舱通用页面");
 const moduleName: Ref<string> = ref("合同台账");
 const filters: Ref<any> = ref({
   /** 日期起始值 */
@@ -177,9 +178,58 @@ const goBack = () => {
   }
 };
 
+interface ThirdPageQuery {
+  title?: string;
+  moduleName?: string;
+  year?: string;
+  month?: string;
+  companyId?: string;
+}
+
+const companyIdToName = (companyId: string) => {
+  switch (companyId) {
+    case "1":
+      return OurCompanyEnumMap[OurCompanyEnum.SHBK];
+    case "2":
+      return OurCompanyEnumMap[OurCompanyEnum.GTSHC];
+    case "3":
+      return OurCompanyEnumMap[OurCompanyEnum.GDFGS];
+    case "4":
+      return OurCompanyEnumMap[OurCompanyEnum.GTSHC_ZS];
+    case "5":
+      return OurCompanyEnumMap[OurCompanyEnum.GTSHC_ZS];
+    default:
+      return "";
+  }
+};
+
 onBeforeMount(() => {
   // hasPermission.value = true;
   // TODO 验证权限
+  const route = useRoute();
+  // 获取路由参数
+  const query = route.query;
+  // 捕获/thirdPage/(.*)?
+  const path = route.path;
+  if (path.includes("/thirdPage/")) {
+    const params = path.split("/")[3];
+    switch (params) {
+      case "contract":
+        title.value = "合同台账";
+        break;
+      case "revenue":
+        const companyId = query.companyId;
+        console.log(companyId);
+        if (companyId) {
+          title.value = `${companyIdToName(companyId as string)}营收与利润分析`;
+        } else {
+          title.value = "营收与利润分析";
+        }
+        break;
+      default:
+        title.value = "驾驶舱通用页面";
+    }
+  }
 });
 
 onMounted(() => {

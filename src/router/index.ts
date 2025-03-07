@@ -252,6 +252,7 @@ export const constantRoutes: RouteRecordRaw[] = [
           },
         ],
       },
+      // 业务类型二级页
       {
         path: "businessType/:typeName",
         name: "BusinessType",
@@ -262,6 +263,36 @@ export const constantRoutes: RouteRecordRaw[] = [
           import(
             "@/views/bigscreen/components/SecondPage/businesstype-index.vue"
           ),
+      },
+      // 关键指标分析二级页
+      {
+        path: "keyIndexAnalysis",
+        name: "KeyIndexAnalysis",
+        meta: {
+          hidden: true,
+        },
+        component: () =>
+          import(
+            "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/index.vue"
+          ),
+        children: [
+          {
+            path: "revenue",
+            name: "Revenue",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/revenue.vue"
+              ),
+          },
+          // {
+          //   path: "profit",
+          //   name: "Profit",
+          //   component: () =>
+          //     import(
+          //       "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/profit.vue"
+          //     ),
+          // },
+        ],
       },
       {
         path: "thirdPage",
@@ -281,14 +312,14 @@ export const constantRoutes: RouteRecordRaw[] = [
               ),
           },
           // 营收分析
-          {
-            name: "RevenueAnalysis",
-            path: "revenueAnalysis",
-            component: () =>
-              import(
-                "@/views/bigscreen/components/ThirdPage/Components/revenue.vue"
-              ),
-          },
+          // {
+          //   name: "RevenueAnalysis",
+          //   path: "revenueAnalysis",
+          //   component: () =>
+          //     import(
+          //       "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/revenue.vue"
+          //     ),
+          // },
           // 利润分析
           {
             name: "ProfitAnalysis",
@@ -296,15 +327,6 @@ export const constantRoutes: RouteRecordRaw[] = [
             component: () =>
               import(
                 "@/views/bigscreen/components/ThirdPage/Components/profit.vue"
-              ),
-          },
-          // 关键指标分析二级页
-          {
-            path: "revenue",
-            name: "Revenue",
-            component: () =>
-              import(
-                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/revenue.vue"
               ),
           },
         ],

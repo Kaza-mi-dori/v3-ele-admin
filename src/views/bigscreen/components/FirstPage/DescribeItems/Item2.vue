@@ -80,6 +80,10 @@ const props = defineProps<{
   unit?: string;
 }>();
 
+const emit = defineEmits<{
+  (e: "click"): void;
+}>();
+
 const router = useRouter();
 
 const graphRef = ref<HTMLElement>();
@@ -106,13 +110,14 @@ const fulfilledPercent = computed(() => {
 });
 
 function handleClick(params: any) {
-  const route = router.resolve({
-    name: props.title === "累计营收" ? "RevenueAnalysis" : "ProfitAnalysis",
-    query: {
-      module: props.title,
-    },
-  });
-  window.open(route.href, "_blank");
+  // const route = router.resolve({
+  //   name: props.title === "累计营收" ? "RevenueAnalysis" : "ProfitAnalysis",
+  //   query: {
+  //     module: props.title,
+  //   },
+  // });
+  // window.open(route.href, "_blank");
+  emit("click");
 }
 
 function initChart() {

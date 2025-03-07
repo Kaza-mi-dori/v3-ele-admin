@@ -1,12 +1,21 @@
 <template>
   <div class="flex flex-gap-2 w-full justify-between h-full">
-    <DescribeItem2 v-bind="revenueData" style="flex: 1" />
-    <DescribeItem2 v-bind="profitData" style="flex: 1" />
+    <DescribeItem2
+      v-bind="revenueData"
+      style="flex: 1"
+      @click="handleClickDescribeItem('revenue')"
+    />
+    <DescribeItem2
+      v-bind="profitData"
+      style="flex: 1"
+      @click="handleClickDescribeItem('profit')"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import DescribeItem2 from "../DescribeItems/Item2.vue";
 import Coin from "@/views/bigscreen/img/left_icon1.png";
 import WrappedGift from "@/views/bigscreen/img/left_icon2.png";
@@ -59,6 +68,20 @@ const lastYearRevenue = ref(0); // 去年营收
 const lastYearProfit = ref(0); // 去年利润
 const monthRevenue = ref(0); // 月度营收
 const monthProfit = ref(0); // 月度利润
+
+const router = useRouter();
+
+const handleClickDescribeItem = (type: string) => {
+  const route = router.resolve({
+    // name: type === "revenue" ? "RevenueAnalysis" : "ProfitAnalysis",
+    name: type === "revenue" ? "Revenue" : "Profit",
+    query: {
+      module: type,
+      companyName: "石化板块",
+    },
+  });
+  window.open(route.href, "_blank");
+};
 
 const commonQueryParams = {
   页码: 1,
