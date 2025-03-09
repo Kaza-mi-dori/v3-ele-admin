@@ -433,7 +433,7 @@ const initGraph4 = () => {
     tooltip: {
       trigger: "axis",
     },
-    legend: {
+     {
       show: true,
       top: "3%",
       textStyle: {

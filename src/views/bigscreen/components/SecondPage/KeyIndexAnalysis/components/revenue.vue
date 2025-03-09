@@ -31,10 +31,23 @@
                   />
                 </div>
               </div>
-              <div
-                id="revenue-analysis-chart-1"
-                style="height: 250px; width: calc(100% - 33%)"
-              />
+              <div class="relative w-[calc(100%-33%)]">
+                <div
+                  id="revenue-analysis-chart-1"
+                  style="height: 250px; width: 100%"
+                />
+                <!-- 柱状图/折线图切换开关 -->
+                <div class="flex justify-end absolute top-2 right-12 w-full">
+                  <el-radio-group
+                    v-model="graphType"
+                    size="small"
+                    fill="darkBlue"
+                  >
+                    <el-radio-button label="柱状图" value="bar" />
+                    <el-radio-button label="折线图" value="line" />
+                  </el-radio-group>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -187,6 +200,7 @@ const subOrgTableData = ref([
 ]);
 
 const chart1 = shallowRef();
+const graphType = ref("bar"); // chart1的柱状图/折线图切换开关
 const chart2 = shallowRef();
 const chart3 = shallowRef();
 const chart4 = shallowRef();
@@ -196,6 +210,9 @@ const liquidFill = shallowRef();
 const fulfilledPercent = ref(20);
 const datatime = ref();
 const dataTimeText = computed(() => {
+  if (!datatime.value) {
+    return "";
+  }
   return new Date(datatime.value).toLocaleDateString("zh-CN", {
     year: "numeric",
     month: "long",
@@ -267,13 +284,15 @@ const initChart1 = () => {
     );
   }
   chart1.value.clear();
-  // 完成率水滴图
+  // 柱状图
   const option = {
     legend: {
       show: true,
-      icon: "circle",
+      // icon: "circle",
+      top: "3%",
+      data: ["计划经营收入", "实际经营收入"],
       textStyle: {
-        color: "white",
+        color: sassvariables["bigscreen-primary-color-7"],
       },
     },
     grid: {
@@ -336,29 +355,28 @@ const initChart1 = () => {
     series: [
       {
         type: "bar",
+        name: "计划经营收入",
         barWidth: "25%",
+        barGap: "35%",
         markLine: {
           lineStyle: {
             type: "dashed",
             color: sassvariables["bigscreen-primary-color-7"],
           },
         },
-        data: [
-          {
-            value: 100,
-            name: "完成率",
-          },
-        ],
+        // 渐变绿色
+        color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [
+          { offset: 0, color: "#22FF22" },
+          { offset: 1, color: sassvariables["bigscreen-primary-color-7"] },
+        ]),
+        data: [100, 200],
       },
       {
         type: "bar",
+        name: "实际经营收入",
         barWidth: "25%",
-        data: [
-          {
-            value: 100,
-            name: "完成量",
-          },
-        ],
+        barGap: "35%",
+        data: [110, 220],
         markLine: {
           lineStyle: {
             type: "dashed",
@@ -734,6 +752,19 @@ onMounted(() => {
   }
 }
 
+:deep(.el-radio-button.el-radio-button--small) {
+  .el-radio-button__inner {
+    background-color: rgb(32, 32, 40);
+    color: #fff;
+    border-color: rgb(32, 32, 40);
+    &:hover {
+      background-color: accent-blue;
+      border-color: accent-blue;
+      color: #fff;
+    }
+  }
+}
+
 .bg-view-body {
   flex: 1;
   display: flex;
@@ -807,18 +838,23 @@ onMounted(() => {
   @apply w-full m-0 overflow-y-auto border-separate;
   height: 190px;
   /* 使用 separate 以支持 border-spacing */
-  border-spacing: 2px 1px; /* 设置单元格之间的外间距：左右2px，上下1px */
+  border-spacing: 2px 1px; /* 设置单元格之间的外间距：左右px，上下1px */
   background-color: #050b47;
   tbody {
     @apply w-full overflow-y-auto;
     height: 170px; /* 设置高度，留出thead的高度 */
+    tr {
+      @apply h-10;
+    }
   }
   th,
   td {
     @apply text-center;
-    border: 2px solid #1a4790; /* 单元格边框 */
     font-size: 16px;
     letter-spacing: 1px;
+  }
+  th {
+    @apply text-white;
   }
 }
 </style>
