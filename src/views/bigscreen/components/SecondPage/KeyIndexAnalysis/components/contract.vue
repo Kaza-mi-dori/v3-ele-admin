@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading" class="w-full">
-    <div class="search-bar mb-4 ml-4">
+    <!-- <div class="search-bar mb-4 ml-4">
       <div class="flex gap-2">
         <el-date-picker
           v-model="datatime"
@@ -11,25 +11,26 @@
       </div>
       <TextTab v-model="timeTabValue" style="transform: translateY(30%)" />
       <span class="text-date-desc">数据截止日期：{{ dataTimeText }}</span>
-    </div>
-    <div class="bg-view-body pl-4 pr-4 min-h-[100vh]">
+    </div> -->
+    <DashboardHeader :stats="stats" />
+    <div class="bg-view-body pl-4 pr-4">
       <div class="grid grid-cols-3 gap-4 flex-1">
         <Model1 class="model1" title="采购合同各企业占比">
           <div
             id="contract-analysis-chart-1"
-            style="height: 300px; width: 100%"
+            style="height: 400px; width: 100%"
           />
         </Model1>
         <Model1 class="model1" title="销售合同各企业占比">
           <div
             id="contract-analysis-chart-2"
-            style="height: 300px; width: 100%"
+            style="height: 400px; width: 100%"
           />
         </Model1>
         <Model1 class="model1" title="仓储合同各企业占比">
           <div
             id="contract-analysis-chart-3"
-            style="height: 300px; width: 100%"
+            style="height: 400px; width: 100%"
           />
         </Model1>
       </div>
@@ -42,23 +43,23 @@
               <div class="flex gap-2 justify-center">
                 <div
                   id="contract-analysis-chart-4"
-                  style="height: 300px; width: 50%"
+                  style="height: 400px; width: 50%"
                 />
                 <div
                   id="contract-analysis-chart-5"
-                  style="height: 300px; width: 50%"
+                  style="height: 400px; width: 50%"
                 />
               </div>
             </div>
           </div>
         </Model1>
-        <Model1 class="model1" title="仓储合同各企业占比">
+        <Model1 class="model1" title="违规合同各企业占比">
           <div class="model-body">
             <div class="model-body__content">
               <div class="flex gap-2 justify-center">
                 <div
                   id="contract-analysis-chart-6"
-                  style="height: 300px; width: 100%"
+                  style="height: 400px; width: 100%"
                 />
               </div>
             </div>
@@ -72,10 +73,8 @@
 <script setup lang="ts">
 import Model1 from "../../Model1/index.vue";
 import TextTab from "@/views/bigscreen/components/SecondPage/Common/TextTab/index.vue";
-import DetailTable1 from "@/views/bigscreen/components/Common/Table/detailTable1.vue";
-import Left1 from "@/views/bigscreen/components/SecondPage/Left/left1.vue";
-import Left2 from "@/views/bigscreen/components/SecondPage/Left/left2.vue";
-import Right1 from "@/views/bigscreen/components/SecondPage/Right/right1.vue";
+import DashboardHeader from "@/views/bigscreen/components/SecondPage/Common/IndexHeader2/index.vue";
+import icon2 from "@/views/bigscreen/img/product_icon2.png";
 import { ref, onMounted, shallowRef } from "vue";
 import * as echarts from "echarts";
 import "echarts-liquidfill";
@@ -83,45 +82,42 @@ import MetricItem from "@/views/bigscreen/components/SecondPage/Common/MetricIte
 import sassvariables from "@/styles/variables.module.scss";
 import { getDateOfOneYear, getDateOfOneYearToNow } from "@/utils/time";
 
-const totalData = ref([
+const stats = ref([
   {
-    year: "25438",
-    month: "25438",
-  },
-  {
-    year: "25438",
-    month: "25438",
-  },
-  {
-    year: "25438",
-    month: "25438",
-  },
-  {
-    year: "25438",
-    month: "25438",
-  },
-]);
-
-const metricItemData = ref([
-  {
-    title: "累计",
-    value: 0,
+    value: 800,
+    label: "采购合同总金额",
     unit: "万元",
+    icon: icon2,
   },
   {
-    title: "环比增幅",
-    value: 0,
-    unit: "%",
-  },
-  {
-    title: "同比增长",
-    value: 0,
+    value: 100,
+    label: "销售合同总金额",
     unit: "万元",
+    icon: icon2,
   },
   {
-    title: "同比增幅",
-    value: 0,
-    unit: "%",
+    value: 80,
+    label: "合同总数",
+    unit: "份",
+    icon: icon2,
+  },
+  {
+    value: 60,
+    label: "已履行合同数",
+    unit: "份",
+    icon: icon2,
+  },
+  {
+    value: 20,
+    label: "未履行合同数",
+    unit: "份",
+    icon: icon2,
+  },
+  {
+    value: 2,
+    label: "风险违约合同数",
+    unit: "份",
+    icon: icon2,
   },
 ]);
 
@@ -422,7 +418,7 @@ const initChart1 = (type: string = "bar") => {
       {
         type: "pie",
         radius: ["10%", "60%"],
-        roseType: "radius",
+        // roseType: "radius",
         label: {
           show: true,
           formatter: "{b}\n{c}",
@@ -488,7 +484,7 @@ const initChart2 = () => {
       {
         type: "pie",
         radius: ["10%", "60%"],
-        roseType: "radius",
+        // roseType: "radius",
         label: {
           show: true,
           formatter: "{b}\n{c}",
@@ -542,7 +538,7 @@ const initChart3 = () => {
       {
         type: "pie",
         radius: ["10%", "60%"],
-        roseType: "radius",
+        // roseType: "radius",
         label: {
           show: true,
           formatter: "{b}\n{c}",
@@ -693,11 +689,19 @@ const initChart6 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
-        roseType: "radius",
+        radius: ["40%", "60%"],
+        // roseType: "radius",
+        label: {
+          show: true,
+          formatter: "{b}\n{c}",
+          color: "#fff",
+          fontSize: 15,
+        },
         data: [
-          { value: 533, name: "广投石化" },
-          { value: 335, name: "开燃公司" },
+          { value: 1048, name: "广投石化" },
+          { value: 735, name: "开燃公司" },
+          { value: 580, name: "桂盛桂轩" },
+          { value: 484, name: "恒润" },
         ],
       },
     ],
@@ -745,7 +749,7 @@ const initialize = async () => {
   initChart3();
   initChart4();
   initChart5();
-  // initChart6();
+  initChart6();
   // initLiquidFill();
 };
 
