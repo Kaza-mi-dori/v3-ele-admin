@@ -42,6 +42,7 @@
                     v-model="graphType"
                     size="small"
                     fill="darkBlue"
+                    @change="handleGraphTypeChange"
                   >
                     <el-radio-button label="柱状图" value="bar" />
                     <el-radio-button label="折线图" value="line" />
@@ -55,7 +56,7 @@
       <Model1 class="model1" title="营收构成分析">
         <div class="model-body">
           <div class="model-body__content">
-            <div class="flex gap-2">
+            <div class="flex gap-2 justify-center">
               <div
                 id="revenue-analysis-chart-3"
                 style="height: 250px; width: 100%"
@@ -313,7 +314,7 @@ const initLiquidFill = () => {
   liquidFill.value.setOption(option);
 };
 
-const initChart1 = () => {
+const initChart1 = (type: string = "bar") => {
   if (!chart1.value) {
     chart1.value = echarts.init(
       document.getElementById("revenue-analysis-chart-1")
@@ -422,7 +423,28 @@ const initChart1 = () => {
       },
     ],
   };
-  chart1.value.setOption(option);
+  // 折线图
+  const optionLine = {
+    ...option,
+    series: [
+      {
+        ...option.series[0],
+        type: "line",
+        markLine: {
+          lineStyle: {
+            type: "dashed",
+            color: sassvariables["bigscreen-primary-color-7"],
+          },
+        },
+      },
+      {
+        ...option.series[1],
+        type: "line",
+        data: [110, 220],
+      },
+    ],
+  };
+  chart1.value.setOption(type === "bar" ? option : optionLine);
 };
 const initChart2 = () => {
   if (!chart2.value) {
@@ -559,6 +581,10 @@ const initChart3 = () => {
     ],
   };
   chart3.value.setOption(option);
+};
+
+const handleGraphTypeChange = () => {
+  initChart1(graphType.value);
 };
 
 // 利润构成分析，饼图
@@ -707,7 +733,7 @@ onMounted(() => {
       chart1.value.resize();
       // chart2.value.resize();
       chart3.value.resize();
-      // chart4.value.resize();
+      chart4.value.resize();
       // chart5.value.resize();
       // chart6.value.resize();
       liquidFill.value.resize();
