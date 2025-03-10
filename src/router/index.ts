@@ -292,6 +292,14 @@ export const constantRoutes: RouteRecordRaw[] = [
           //       "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/profit.vue"
           //     ),
           // },
+          {
+            path: "contract",
+            name: "ContractAnalysis",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/contract.vue"
+              ),
+          },
         ],
       },
       {

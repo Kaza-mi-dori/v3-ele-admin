@@ -95,6 +95,7 @@ defineProps({
     }
     .model-body__content {
       @apply w-full h-full relative;
+      // @apply flex flex-col justify-center items-center;
     }
   }
   .model-footer {

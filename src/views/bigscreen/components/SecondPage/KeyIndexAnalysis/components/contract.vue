@@ -12,119 +12,55 @@
       <TextTab v-model="timeTabValue" style="transform: translateY(30%)" />
       <span class="text-date-desc">数据截止日期：{{ dataTimeText }}</span>
     </div>
-    <div class="bg-view-body pl-4 pr-4">
-      <Model1 class="model1 w-full" title="营收逐月分析">
-        <div class="model-body">
-          <div class="model-body__content">
-            <div class="flex items-center h-full w-full gap-2">
-              <div class="flex items-center justify-center w-1/3">
-                <div
-                  id="revenue-analysis-chart-liquid-fill"
-                  style="height: 250px; width: 60%"
-                />
-                <div class="flex flex-col items-center justify-center w-2/5">
-                  <MetricItem
-                    v-for="item in metricItemData"
-                    :key="item.title"
-                    :title="item.title"
-                    :value="item.value"
-                    :unit="item.unit"
-                    @click="handleMetricItemClick(item)"
-                  />
-                </div>
-              </div>
-              <div class="relative w-[calc(100%-33%)]">
-                <div
-                  id="revenue-analysis-chart-1"
-                  style="height: 250px; width: 100%"
-                />
-                <!-- 柱状图/折线图切换开关 -->
-                <div class="flex justify-end absolute top-2 right-12 w-full">
-                  <el-radio-group
-                    v-model="graphType"
-                    size="small"
-                    fill="darkBlue"
-                    @change="handleGraphTypeChange"
-                  >
-                    <el-radio-button label="柱状图" value="bar" />
-                    <el-radio-button label="折线图" value="line" />
-                  </el-radio-group>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Model1>
-      <Model1 class="model1" title="营收构成分析">
-        <div class="model-body">
-          <div class="model-body__content">
-            <div class="flex gap-2 justify-center">
-              <div
-                v-if="hasSubOrg"
-                id="revenue-analysis-chart-3"
-                style="height: 250px; width: 100%"
-              />
-              <div
-                v-if="hasProduct"
-                id="profit-analysis-chart-3"
-                style="height: 250px; width: 100%"
-              />
-            </div>
-          </div>
-        </div>
-      </Model1>
+    <div class="bg-view-body pl-4 pr-4 min-h-[100vh]">
+      <div class="grid grid-cols-3 gap-4 flex-1">
+        <Model1 class="model1" title="采购合同各企业占比">
+          <div
+            id="contract-analysis-chart-1"
+            style="height: 300px; width: 100%"
+          />
+        </Model1>
+        <Model1 class="model1" title="销售合同各企业占比">
+          <div
+            id="contract-analysis-chart-2"
+            style="height: 300px; width: 100%"
+          />
+        </Model1>
+        <Model1 class="model1" title="仓储合同各企业占比">
+          <div
+            id="contract-analysis-chart-3"
+            style="height: 300px; width: 100%"
+          />
+        </Model1>
+      </div>
       <!-- <div class="b-space" /> -->
-      <div class="flex gap-2">
-        <Model1 v-if="hasSubOrg" class="model1" title="下属企业营收分析">
+      <div class="grid grid-cols-3 gap-4 flex-1">
+        <!-- 占两列  minmax(0, 1fr)表示最小宽度为0，最大宽度为1fr，即占满剩余空间 -->
+        <Model1 class="model1 col-span-2" title="运输合同各企业占比">
           <div class="model-body">
-            <div class="model-body__content mx-4 my-2 flex gap-2">
-              <table class="sub-org-table m-auto">
-                <thead>
-                  <tr>
-                    <th>企业</th>
-                    <th>月实际（累计）</th>
-                    <th>同比</th>
-                    <th>环比</th>
-                    <th>完成率</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in data.table1.data" :key="item.name">
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.value[0] }}</td>
-                    <td>{{ item.value[1] }}</td>
-                    <td>{{ item.value[2] }}</td>
-                    <td>{{ item.value[3] }}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="model-body__content">
+              <div class="flex gap-2 justify-center">
+                <div
+                  id="contract-analysis-chart-4"
+                  style="height: 300px; width: 50%"
+                />
+                <div
+                  id="contract-analysis-chart-5"
+                  style="height: 300px; width: 50%"
+                />
+              </div>
             </div>
           </div>
         </Model1>
-        <!-- todo 按照是不是有数据来决定是否显示 -->
-        <Model1 v-if="hasProduct" class="model1" title="产品营收分析">
+        <Model1 class="model1" title="仓储合同各企业占比">
           <div class="model-body">
-            <div class="model-body__content mx-4 my-2 flex gap-2">
-              <table class="sub-org-table m-auto">
-                <thead>
-                  <tr>
-                    <th>企业</th>
-                    <th>月实际（累计）</th>
-                    <th>同比</th>
-                    <th>环比</th>
-                    <th>完成率</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in data.table2.data" :key="item.name">
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.value[0] }}</td>
-                    <td>{{ item.value[1] }}</td>
-                    <td>{{ item.value[2] }}</td>
-                    <td>{{ item.value[3] }}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="model-body__content">
+              <div class="flex gap-2 justify-center">
+                <div
+                  id="contract-analysis-chart-6"
+                  style="height: 300px; width: 100%"
+                />
+              </div>
             </div>
           </div>
         </Model1>
@@ -451,7 +387,7 @@ const initLiquidFill = () => {
 const initChart1 = (type: string = "bar") => {
   if (!chart1.value) {
     chart1.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-1")
+      document.getElementById("contract-analysis-chart-1")
     );
   }
   chart1.value.clear();
@@ -470,109 +406,35 @@ const initChart1 = (type: string = "bar") => {
   const option = {
     legend: {
       show: true,
-      // icon: "circle",
-      top: "3%",
-      data: ["计划经营收入", "实际经营收入"],
+      icon: "circle",
       textStyle: {
-        color: sassvariables["bigscreen-primary-color-7"],
-      },
-    },
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        type: "shadow",
+        color: "white",
       },
     },
     grid: {
       left: "3%",
       right: "4%",
-      top: "50px",
-      bottom: "10px",
+      top: "5%",
+      bottom: "3%",
       containLabel: true,
-    },
-    color: ["orange", "lightgreen"],
-    xAxis: {
-      type: "category",
-      data: [
-        "1月",
-        "2月",
-        "3月",
-        "4月",
-        "5月",
-        "6月",
-        "7月",
-        "8月",
-        "9月",
-        "10月",
-        "11月",
-        "12月",
-      ],
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: 'sassvariables["bigscreen-primary-color-7"]',
-        },
-      },
-      axisTick: {
-        show: false,
-      },
-    },
-    yAxis: {
-      type: "value",
-      name: "单位：万元",
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: sassvariables["bigscreen-primary-color-7"],
-        },
-      },
-      // 读取
-      nameTextStyle: {
-        color: sassvariables["bigscreen-primary-color-7"],
-        fontSize: 15,
-        padding: [0, 0, 0, 20],
-      },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          type: "dashed",
-          color: sassvariables["bigscreen-primary-color-7"],
-        },
-      },
     },
     series: [
       {
-        type: "bar",
-        name: "计划经营收入",
-        barWidth: "25%",
-        barGap: "35%",
-        markLine: {
-          lineStyle: {
-            type: "dashed",
-            color: sassvariables["bigscreen-primary-color-7"],
-          },
+        type: "pie",
+        radius: ["10%", "60%"],
+        roseType: "radius",
+        label: {
+          show: true,
+          formatter: "{b}\n{c}",
+          color: "#fff",
+          fontSize: 15,
         },
-        // 渐变绿色
-        color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [
-          { offset: 0, color: "#22FF22" },
-          { offset: 1, color: sassvariables["bigscreen-primary-color-7"] },
-        ]),
-        // data: [100, 200],
-        data: data.chart1.data,
-      },
-      {
-        type: "bar",
-        name: "实际经营收入",
-        barWidth: "25%",
-        barGap: "35%",
-        // data: [110, 220],
-        data: data.chart1.data,
-        markLine: {
-          lineStyle: {
-            type: "dashed",
-            color: sassvariables["bigscreen-primary-color-7"],
-          },
-        },
+        data: [
+          { value: 1048, name: "广投石化" },
+          { value: 735, name: "开燃公司" },
+          { value: 580, name: "桂盛桂轩" },
+          { value: 484, name: "恒润" },
+        ],
       },
     ],
   };
@@ -603,7 +465,7 @@ const initChart1 = (type: string = "bar") => {
 const initChart2 = () => {
   if (!chart2.value) {
     chart2.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-2")
+      document.getElementById("contract-analysis-chart-2")
     );
   }
   chart2.value.clear();
@@ -614,79 +476,31 @@ const initChart2 = () => {
       textStyle: {
         color: "white",
       },
-      data: ["同比", "环比"],
     },
-    xAxis: {
-      type: "category",
-      axisLabel: {
-        textStyle: {
-          color: sassvariables["bigscreen-primary-color-7"],
-        },
-      },
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: sassvariables["bigscreen-primary-color-7"],
-        },
-      },
-      axisTick: {
-        show: false,
-      },
-      data: [
-        "1月",
-        "2月",
-        "3月",
-        "4月",
-        "5月",
-        "6月",
-        "7月",
-        "8月",
-        "9月",
-        "10月",
-        "11月",
-        "12月",
-      ],
-    },
-    yAxis: {
-      type: "value",
-      name: "单位: %",
-      axisLine: {
-        show: false,
-        lineStyle: {
-          color: sassvariables["bigscreen-primary-color-7"],
-        },
-      },
-      nameTextStyle: {
-        color: sassvariables["bigscreen-primary-color-7"],
-        fontSize: 15,
-        padding: [0, 0, 0, 20],
-      },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          type: "dashed",
-          color: sassvariables["bigscreen-primary-color-7"],
-        },
-      },
+    grid: {
+      left: "3%",
+      right: "4%",
+      top: "5%",
+      bottom: "3%",
+      containLabel: true,
     },
     series: [
       {
-        type: "line",
-        data: getDateOfOneYearToNow().map((item) => {
-          return {
-            value: Math.random() * 10000,
-            name: item,
-          };
-        }),
-      },
-      {
-        type: "line",
-        data: getDateOfOneYearToNow().map((item) => {
-          return {
-            value: Math.random() * 10000,
-            name: item,
-          };
-        }),
+        type: "pie",
+        radius: ["10%", "60%"],
+        roseType: "radius",
+        label: {
+          show: true,
+          formatter: "{b}\n{c}",
+          color: "#fff",
+          fontSize: 15,
+        },
+        data: [
+          { value: 1048, name: "广投石化" },
+          { value: 735, name: "开燃公司" },
+          { value: 580, name: "桂盛桂轩" },
+          { value: 484, name: "恒润" },
+        ],
       },
     ],
   };
@@ -700,7 +514,7 @@ const initChart3 = () => {
   }
   if (!chart3.value) {
     chart3.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-3")
+      document.getElementById("contract-analysis-chart-3")
     );
   }
   // 绑定点击事件
@@ -759,7 +573,7 @@ const initChart4 = () => {
   }
   if (!chart4.value) {
     chart4.value = echarts.init(
-      document.getElementById("profit-analysis-chart-3")
+      document.getElementById("contract-analysis-chart-4")
     );
   }
   chart4.value.clear();
@@ -811,40 +625,42 @@ const initChart4 = () => {
 const initChart5 = () => {
   if (!chart5.value) {
     chart5.value = echarts.init(
-      document.getElementById("profit-analysis-chart-2")
+      document.getElementById("contract-analysis-chart-5")
     );
   }
   // 同比环比折线 1-12月
   const option = {
-    xAxis: {
-      type: "category",
-      // data: getDateOfOneYearToNow(),
-      data: [
-        "1月",
-        "2月",
-        "3月",
-        "4月",
-        "5月",
-        "6月",
-        "7月",
-        "8月",
-        "9月",
-        "10月",
-        "11月",
-        "12月",
-      ],
-    },
-    yAxis: {
-      type: "value",
-      name: "%",
-      nameTextStyle: {
+    legend: {
+      show: true,
+      icon: "circle",
+      textStyle: {
         color: "white",
       },
     },
+    grid: {
+      left: "3%",
+      right: "4%",
+      top: "5%",
+      bottom: "3%",
+      containLabel: true,
+    },
     series: [
       {
-        type: "line",
-        data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120],
+        type: "pie",
+        radius: ["10%", "60%"],
+        roseType: "radius",
+        label: {
+          show: true,
+          formatter: "{b}\n{c}",
+          color: "#fff",
+          fontSize: 15,
+        },
+        data: [
+          { value: 1048, name: "广投石化" },
+          { value: 735, name: "开燃公司" },
+          { value: 580, name: "桂盛桂轩" },
+          { value: 484, name: "恒润" },
+        ],
       },
     ],
   };
@@ -855,7 +671,7 @@ const initChart5 = () => {
 const initChart6 = () => {
   if (!chart6.value) {
     chart6.value = echarts.init(
-      document.getElementById("profit-analysis-chart-3")
+      document.getElementById("contract-analysis-chart-6")
     );
   }
   chart6.value.clear();
@@ -925,12 +741,12 @@ const initData = async () => {
 const initialize = async () => {
   await initData();
   initChart1();
-  // initChart2();
+  initChart2();
   initChart3();
   initChart4();
-  // initChart5();
+  initChart5();
   // initChart6();
-  initLiquidFill();
+  // initLiquidFill();
 };
 
 onMounted(async () => {
@@ -938,12 +754,12 @@ onMounted(async () => {
   window.addEventListener("resize", () => {
     try {
       chart1.value.resize();
-      // chart2.value.resize();
+      chart2.value.resize();
       chart3.value.resize();
       chart4.value.resize();
-      // chart5.value.resize();
-      // chart6.value.resize();
-      liquidFill.value.resize();
+      chart5.value.resize();
+      chart6.value.resize();
+      // liquidFill.value.resize();
     } catch (error) {
       console.log(error);
     }
@@ -1053,13 +869,16 @@ onMounted(async () => {
 //   @apply flex flex-1 flex-col h-full;
 // }
 
-.model1 {
-  .model-footer {
-    .model-footer__bg {
-      height: auto;
-    }
-  }
-}
+// :deep(.model1) {
+//   .model-body {
+//     @apply flex-1;
+//   }
+//   .model-footer {
+//     .model-footer__bg {
+//       height: auto;
+//     }
+//   }
+// }
 
 .sub-org-table {
   @apply w-full m-0 overflow-y-auto;

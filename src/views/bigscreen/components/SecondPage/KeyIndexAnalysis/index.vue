@@ -45,6 +45,9 @@ onMounted(() => {
     case "profit":
       title.value = `${companyName}利润`;
       break;
+    case "contract":
+      title.value = `${companyName}合同`;
+      break;
   }
 });
 </script>
