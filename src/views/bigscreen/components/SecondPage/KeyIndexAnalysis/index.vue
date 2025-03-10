@@ -85,7 +85,7 @@ onMounted(() => {
   // flex-grow: 1;
   // overflow-y: hidden;
   // margin: 20px 50px 50px 50px;
-  padding: 20px 0 20px 0;
+  padding: 10px 0 20px 0;
   // height: calc(100% - 66px);
   ::-webkit-scrollbar {
     @apply hidden;

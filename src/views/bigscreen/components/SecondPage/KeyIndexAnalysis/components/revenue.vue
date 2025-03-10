@@ -4,14 +4,15 @@
       <div class="flex gap-2">
         <el-date-picker
           v-model="datatime"
-          type="month"
+          :type="timeTabValue === 'year' ? 'year' : 'month'"
           placeholder="请选择月份"
         />
         <el-button type="primary" @click="handleSearch">搜索</el-button>
       </div>
-      <span class="text-white text-lg">数据截止日期：{{ dataTimeText }}</span>
+      <TextTab v-model="timeTabValue" />
+      <span class="text-date-desc">数据截止日期：{{ dataTimeText }}</span>
     </div>
-    <div class="bg-view-body">
+    <div class="bg-view-body pl-4 pr-4">
       <Model1 class="model1 w-full" title="营收逐月分析">
         <div class="model-body">
           <div class="model-body__content">
@@ -28,6 +29,7 @@
                     :title="item.title"
                     :value="item.value"
                     :unit="item.unit"
+                    @click="handleMetricItemClick(item)"
                   />
                 </div>
               </div>
@@ -172,6 +174,7 @@
 
 <script setup lang="ts">
 import Model1 from "../../Model1/index.vue";
+import TextTab from "@/views/bigscreen/components/SecondPage/Common/TextTab/index.vue";
 import DetailTable1 from "@/views/bigscreen/components/Common/Table/detailTable1.vue";
 import Left1 from "@/views/bigscreen/components/SecondPage/Left/left1.vue";
 import Left2 from "@/views/bigscreen/components/SecondPage/Left/left2.vue";
@@ -204,7 +207,7 @@ const totalData = ref([
 
 const metricItemData = ref([
   {
-    title: "1月",
+    title: "累计",
     value: 0,
     unit: "万元",
   },
@@ -237,6 +240,8 @@ const subOrgTableData = ref([
 ]);
 
 const chart1 = shallowRef();
+// 时间维度
+const timeTabValue = ref("year");
 const graphType = ref("bar"); // chart1的柱状图/折线图切换开关
 const chart2 = shallowRef();
 const chart3 = shallowRef();
@@ -245,17 +250,57 @@ const chart5 = shallowRef();
 const chart6 = shallowRef();
 const liquidFill = shallowRef();
 const fulfilledPercent = ref(20);
-const datatime = ref();
-const dataTimeText = computed(() => {
-  if (!datatime.value) {
-    return "";
-  }
-  return new Date(datatime.value).toLocaleDateString("zh-CN", {
+const datatime = ref(new Date());
+const dataTimeText = ref(
+  new Date(datatime.value).toLocaleDateString("zh-CN", {
     year: "numeric",
     month: "long",
-  });
+  })
+);
+// 以起止时间表示查询的数据
+const queryData = ref({
+  startDate: "",
+  endDate: "",
 });
 const loading = ref(false);
+
+// 如果timeTabValue为year，则显示年份，否则显示月份
+watch(timeTabValue, (newVal, oldVal) => {
+  console.log(newVal, oldVal);
+  if (newVal !== oldVal) {
+    // TODO 重新查询数据
+    // 如果是月→年，则提取年份并查询年份数据
+    try {
+      if (newVal === "year") {
+        // TODO 查询年份数据
+        const year = datatime.value.getFullYear();
+        queryData.value.startDate = `${year}-01-01`;
+        queryData.value.endDate = `${year}-12-31`;
+        // TODO 查询年份数据
+        handleSearch();
+      }
+      // 如果是年→月，则查询【当月】数据
+      if (newVal === "month") {
+        // TODO 查询月份数据
+        const year = datatime.value.getFullYear();
+        const month = datatime.value.getMonth() + 1;
+        queryData.value.startDate = `${year}-${month}-01`;
+        queryData.value.endDate = `${year}-${month}-31`;
+        handleSearch();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+});
+
+// 处理点击事件
+const handleMetricItemClick = (item: any) => {
+  // 如果item.title为1月【时间】，则显示1月数据
+  if (item.title === "1月") {
+    // TODO 显示1月数据
+  }
+};
 
 const initLiquidFill = () => {
   if (!liquidFill.value) {
@@ -321,6 +366,17 @@ const initChart1 = (type: string = "bar") => {
     );
   }
   chart1.value.clear();
+  // 绑定点击事件
+  chart1.value.on("click", "series.bar", (params: any) => {
+    // TODO 点击事件, 按照月份原地更新
+    // 获取当前月份
+    const month = params.name.split("月")[0];
+    // 更新月份
+    timeTabValue.value = "month";
+    // 更新月份
+    datatime.value = new Date(new Date().getFullYear(), month - 1, 1);
+    handleSearch();
+  });
   // 柱状图
   const option = {
     legend: {
@@ -330,6 +386,12 @@ const initChart1 = (type: string = "bar") => {
       data: ["计划经营收入", "实际经营收入"],
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
+      },
+    },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
       },
     },
     grid: {
@@ -544,6 +606,11 @@ const initChart3 = () => {
       document.getElementById("revenue-analysis-chart-3")
     );
   }
+  // 绑定点击事件
+  chart3.value.on("click", "series.pie", (params: any) => {
+    console.log(params);
+    // TODO 点击事件, 判断穿透到什么地方
+  });
   chart3.value.clear();
   const option = {
     legend: {
@@ -595,6 +662,11 @@ const initChart4 = () => {
     );
   }
   chart4.value.clear();
+  // 绑定点击事件
+  chart4.value.on("click", "series.pie", (params: any) => {
+    console.log(params);
+    // TODO 点击事件, 判断穿透到什么地方
+  });
   // 柱形图，利润逐月分析，两个柱子一个是计划值一个是完成值
   // x轴是月份，y轴是利润
   const option = {
@@ -608,14 +680,14 @@ const initChart4 = () => {
     grid: {
       left: "3%",
       right: "4%",
-      top: "8%",
+      top: "5%",
       bottom: "3%",
       containLabel: true,
     },
     series: [
       {
         type: "pie",
-        radius: ["10%", "70%"],
+        radius: ["10%", "60%"],
         roseType: "radius",
         label: {
           show: true,
@@ -718,9 +790,30 @@ const initChart6 = () => {
 
 const handleSearch = () => {
   // TODO 查询相关数据
+  const text = new Date(datatime.value).toLocaleDateString("zh-CN", {
+    year: "numeric",
+    month: "long",
+  });
+  const currentMonth = new Date().getMonth() + 1;
+  // 如果timeTabValue为year:
+  // 如果为当前年份，则显示当前年份，否则显示~年12月
+  // 如果timeTabValue为month:
+  // 显示该月份
+  dataTimeText.value =
+    timeTabValue.value === "year"
+      ? new Date().getFullYear() === Number(text.substring(0, 4))
+        ? text.substring(0, 4) + `年${currentMonth}月`
+        : text.substring(0, 4) + "年12月"
+      : text;
 };
 
-onMounted(() => {
+const initData = async () => {
+  // TODO 查询相关数据
+  // 根据路由参数、时间、时间类型，查询相关数据
+};
+
+const initialize = async () => {
+  await initData();
   initChart1();
   // initChart2();
   initChart3();
@@ -728,6 +821,10 @@ onMounted(() => {
   // initChart5();
   // initChart6();
   initLiquidFill();
+};
+
+onMounted(async () => {
+  await initialize();
   window.addEventListener("resize", () => {
     try {
       chart1.value.resize();
@@ -748,7 +845,8 @@ onMounted(() => {
 @use "@/styles/gmixin.scss" as gmixin;
 
 :deep(.search-bar) {
-  @apply flex items-center justify-between;
+  @apply flex items-center justify-between px-4;
+  padding-top: 0;
   background-color: transparent;
   border: none;
   .el-date-editor {
@@ -761,6 +859,13 @@ onMounted(() => {
         color: #fff;
       }
     }
+  }
+  .text-date-desc {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
