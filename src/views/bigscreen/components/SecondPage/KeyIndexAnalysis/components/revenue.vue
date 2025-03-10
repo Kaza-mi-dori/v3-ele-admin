@@ -69,66 +69,102 @@
         </div>
       </Model1>
       <!-- <div class="b-space" /> -->
-      <Model1 class="model1" title="下属企业当月营收">
-        <div class="model-body">
-          <div class="model-body__content mx-4 my-2 flex gap-2">
-            <table class="sub-org-table m-auto">
-              <thead>
-                <tr>
-                  <th>企业</th>
-                  <th>月实际（累计）</th>
-                  <th>同比</th>
-                  <th>环比</th>
-                  <th>完成率</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>广投石化</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                </tr>
-                <tr>
-                  <td>开燃公司</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                </tr>
-              </tbody>
-            </table>
-            <table class="sub-org-table m-auto">
-              <thead>
-                <tr>
-                  <th>企业</th>
-                  <th>月实际（累计）</th>
-                  <th>同比</th>
-                  <th>环比</th>
-                  <th>完成率</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>广投石化</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                </tr>
-                <tr>
-                  <td>开燃公司</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                  <td>1000</td>
-                </tr>
-              </tbody>
-            </table>
+      <div class="flex gap-2">
+        <Model1 class="model1" title="下属企业营收分析">
+          <div class="model-body">
+            <div class="model-body__content mx-4 my-2 flex gap-2">
+              <table class="sub-org-table m-auto">
+                <thead>
+                  <tr>
+                    <th>企业</th>
+                    <th>月实际（累计）</th>
+                    <th>同比</th>
+                    <th>环比</th>
+                    <th>完成率</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>广投石化</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                  </tr>
+                  <tr>
+                    <td>开燃公司</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                  </tr>
+                  <tr>
+                    <td>桂盛桂轩</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                  </tr>
+                  <tr>
+                    <td>恒润</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </Model1>
+        </Model1>
+        <Model1 class="model1" title="产品营收分析">
+          <div class="model-body">
+            <div class="model-body__content mx-4 my-2 flex gap-2">
+              <table class="sub-org-table m-auto">
+                <thead>
+                  <tr>
+                    <th>企业</th>
+                    <th>月实际（累计）</th>
+                    <th>同比</th>
+                    <th>环比</th>
+                    <th>完成率</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>广投石化</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                  </tr>
+                  <tr>
+                    <td>开燃公司</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                  </tr>
+                  <tr>
+                    <td>桂盛桂轩</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                  </tr>
+                  <tr>
+                    <td>恒润</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                    <td>1000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Model1>
+      </div>
     </div>
   </div>
 </template>
@@ -507,6 +543,12 @@ const initChart3 = () => {
         type: "pie",
         radius: ["10%", "60%"],
         roseType: "radius",
+        label: {
+          show: true,
+          formatter: "{b}\n{c}",
+          color: "#fff",
+          fontSize: 15,
+        },
         data: [
           { value: 1048, name: "原油" },
           { value: 735, name: "成品油" },
@@ -518,10 +560,12 @@ const initChart3 = () => {
   };
   chart3.value.setOption(option);
 };
+
+// 利润构成分析，饼图
 const initChart4 = () => {
   if (!chart4.value) {
     chart4.value = echarts.init(
-      document.getElementById("profit-analysis-chart-1")
+      document.getElementById("profit-analysis-chart-3")
     );
   }
   chart4.value.clear();
@@ -535,88 +579,30 @@ const initChart4 = () => {
         color: "white",
       },
     },
-    color: ["orange", "lightgreen"],
-    xAxis: {
-      type: "category",
-      data: [
-        "1月",
-        "2月",
-        "3月",
-        "4月",
-        "5月",
-        "6月",
-        "7月",
-        "8月",
-        "9月",
-        "10月",
-        "11月",
-        "12月",
-      ],
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: 'sassvariables["bigscreen-primary-color-7"]',
-        },
-      },
-      axisTick: {
-        show: false,
-      },
-    },
-    yAxis: {
-      type: "value",
-      name: "单位：万元",
-      axisLine: {
-        show: true,
-        lineStyle: {
-          color: sassvariables["bigscreen-primary-color-7"],
-        },
-      },
-      // 读取
-      nameTextStyle: {
-        color: sassvariables["bigscreen-primary-color-7"],
-        fontSize: 15,
-        padding: [0, 0, 0, 20],
-      },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          type: "dashed",
-          color: sassvariables["bigscreen-primary-color-7"],
-        },
-      },
+    grid: {
+      left: "3%",
+      right: "4%",
+      top: "8%",
+      bottom: "3%",
+      containLabel: true,
     },
     series: [
       {
-        type: "bar",
-        barWidth: "25%",
-        markLine: {
-          lineStyle: {
-            type: "dashed",
-            color: sassvariables["bigscreen-primary-color-7"],
-          },
+        type: "pie",
+        radius: ["10%", "70%"],
+        roseType: "radius",
+        label: {
+          show: true,
+          formatter: "{b}\n{c}",
+          color: "#fff",
+          fontSize: 15,
         },
         data: [
-          {
-            value: 100,
-            name: "完成率",
-          },
+          { value: 1048, name: "原油" },
+          { value: 735, name: "成品油" },
+          { value: 580, name: "化工产品" },
+          { value: 484, name: "其他" },
         ],
-      },
-      {
-        type: "bar",
-        barWidth: "25%",
-        data: [
-          {
-            value: 100,
-            name: "完成量",
-          },
-        ],
-        markLine: {
-          lineStyle: {
-            type: "dashed",
-            color: sassvariables["bigscreen-primary-color-7"],
-          },
-        },
       },
     ],
   };
@@ -712,7 +698,7 @@ onMounted(() => {
   initChart1();
   // initChart2();
   initChart3();
-  // initChart4();
+  initChart4();
   // initChart5();
   // initChart6();
   initLiquidFill();
@@ -835,10 +821,11 @@ onMounted(() => {
 }
 
 .sub-org-table {
-  @apply w-full m-0 overflow-y-auto border-separate;
+  @apply w-full m-0 overflow-y-auto;
   height: 190px;
   /* 使用 separate 以支持 border-spacing */
   border-spacing: 2px 1px; /* 设置单元格之间的外间距：左右px，上下1px */
+  border-collapse: collapse;
   background-color: #050b47;
   tbody {
     @apply w-full overflow-y-auto;
@@ -851,10 +838,16 @@ onMounted(() => {
   td {
     @apply text-center;
     font-size: 16px;
-    letter-spacing: 1px;
   }
   th {
-    @apply text-white;
+    @apply text-[#9CC9F0] bg-[#07488C] lh-loose;
+    letter-spacing: 1px;
+  }
+  td {
+    @apply lh-normal bg-transparent;
+  }
+  tr:nth-child(2n) {
+    @apply bg-[#05082B];
   }
 }
 </style>
