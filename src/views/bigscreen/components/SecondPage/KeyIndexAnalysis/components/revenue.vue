@@ -9,7 +9,7 @@
         />
         <el-button type="primary" @click="handleSearch">搜索</el-button>
       </div>
-      <TextTab v-model="timeTabValue" />
+      <TextTab v-model="timeTabValue" style="transform: translateY(30%)" />
       <span class="text-date-desc">数据截止日期：{{ dataTimeText }}</span>
     </div>
     <div class="bg-view-body pl-4 pr-4">
@@ -60,10 +60,12 @@
           <div class="model-body__content">
             <div class="flex gap-2 justify-center">
               <div
+                v-if="hasSubOrg"
                 id="revenue-analysis-chart-3"
                 style="height: 250px; width: 100%"
               />
               <div
+                v-if="hasProduct"
                 id="profit-analysis-chart-3"
                 style="height: 250px; width: 100%"
               />
@@ -73,7 +75,7 @@
       </Model1>
       <!-- <div class="b-space" /> -->
       <div class="flex gap-2">
-        <Model1 class="model1" title="下属企业营收分析">
+        <Model1 v-if="hasSubOrg" class="model1" title="下属企业营收分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -120,7 +122,8 @@
             </div>
           </div>
         </Model1>
-        <Model1 class="model1" title="产品营收分析">
+        <!-- todo 按照是不是有数据来决定是否显示 -->
+        <Model1 v-if="hasProduct" class="model1" title="产品营收分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -263,6 +266,10 @@ const queryData = ref({
   endDate: "",
 });
 const loading = ref(false);
+// 是否有下属企业
+const hasSubOrg = ref(false);
+// 是否有产品
+const hasProduct = ref(true);
 
 // 如果timeTabValue为year，则显示年份，否则显示月份
 watch(timeTabValue, (newVal, oldVal) => {
@@ -600,7 +607,12 @@ const initChart2 = () => {
   };
   chart2.value.setOption(option);
 };
+// 下属企业营收分析
 const initChart3 = () => {
+  // 如果hasSubOrg为false，则不初始化
+  if (!hasSubOrg.value) {
+    return;
+  }
   if (!chart3.value) {
     chart3.value = echarts.init(
       document.getElementById("revenue-analysis-chart-3")
@@ -654,8 +666,12 @@ const handleGraphTypeChange = () => {
   initChart1(graphType.value);
 };
 
-// 利润构成分析，饼图
+// 产品营收分析
 const initChart4 = () => {
+  // 如果hasProduct为false，则不初始化
+  if (!hasProduct.value) {
+    return;
+  }
   if (!chart4.value) {
     chart4.value = echarts.init(
       document.getElementById("profit-analysis-chart-3")
@@ -845,7 +861,7 @@ onMounted(async () => {
 @use "@/styles/gmixin.scss" as gmixin;
 
 :deep(.search-bar) {
-  @apply flex items-center justify-between px-4;
+  @apply flex items-end justify-between px-4;
   padding-top: 0;
   background-color: transparent;
   border: none;
@@ -862,7 +878,7 @@ onMounted(async () => {
   }
   .text-date-desc {
     font-size: 1rem;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.8);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
