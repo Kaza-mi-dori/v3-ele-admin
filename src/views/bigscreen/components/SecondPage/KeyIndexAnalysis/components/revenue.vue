@@ -65,8 +65,18 @@
                 style="height: 250px; width: 100%"
               />
               <div
+                v-if="hasSubOrg"
+                id="revenue-analysis-chart-31"
+                style="height: 250px; width: 100%"
+              />
+              <div
                 v-if="hasProduct"
                 id="profit-analysis-chart-3"
+                style="height: 250px; width: 100%"
+              />
+              <div
+                v-if="hasProduct"
+                id="profit-analysis-chart-41"
                 style="height: 250px; width: 100%"
               />
             </div>
@@ -141,12 +151,14 @@ import Left1 from "@/views/bigscreen/components/SecondPage/Left/left1.vue";
 import Left2 from "@/views/bigscreen/components/SecondPage/Left/left2.vue";
 import Right1 from "@/views/bigscreen/components/SecondPage/Right/right1.vue";
 import { ref, onMounted, shallowRef } from "vue";
+import { useRouter } from "vue-router";
 import * as echarts from "echarts";
 import "echarts-liquidfill";
 import MetricItem from "@/views/bigscreen/components/SecondPage/Common/MetricItem/index.vue";
 import sassvariables from "@/styles/variables.module.scss";
 import { getDateOfOneYear, getDateOfOneYearToNow } from "@/utils/time";
 
+const router = useRouter();
 const totalData = ref([
   {
     year: "25438",
@@ -206,7 +218,13 @@ const timeTabValue = ref("year");
 const graphType = ref("bar"); // chart1的柱状图/折线图切换开关
 const chart2 = shallowRef();
 const chart3 = shallowRef();
+const chart3Timer = ref<NodeJS.Timeout | null>(null);
+const chart3ActiveIndex = ref(0);
+const chart31 = shallowRef();
 const chart4 = shallowRef();
+const chart41 = shallowRef();
+const chart4Timer = ref<NodeJS.Timeout | null>(null);
+const chart4ActiveIndex = ref(0);
 const chart5 = shallowRef();
 const chart6 = shallowRef();
 const liquidFill = shallowRef();
@@ -705,7 +723,7 @@ const initChart3 = () => {
   }
   // 绑定点击事件
   chart3.value.on("click", "series.pie", (params: any) => {
-    console.log(params);
+    // console.log(params);
     // TODO 点击事件, 判断穿透到什么地方
   });
   chart3.value.clear();
@@ -747,6 +765,182 @@ const initChart3 = () => {
   chart3.value.setOption(option);
 };
 
+// 下属企业营收与计划营收对比
+const initChart31 = () => {
+  if (!chart31.value) {
+    chart31.value = echarts.init(
+      document.getElementById("revenue-analysis-chart-31")
+    );
+  }
+  chart31.value.clear();
+  const target = [
+    {
+      name: "广投石化",
+      value: 1048,
+    },
+    {
+      name: "开燃公司",
+      value: 735,
+    },
+    {
+      name: "桂盛桂轩",
+      value: 580,
+    },
+    {
+      name: "恒润",
+      value: 484,
+    },
+  ];
+  const actual = [
+    {
+      name: "广投石化",
+      value: 1050,
+      color: "#5470c6",
+    },
+    {
+      name: "开燃公司",
+      value: 515,
+      color: "#91cc75",
+    },
+    {
+      name: "桂盛桂轩",
+      value: 450,
+      color: "#fac858",
+    },
+    {
+      name: "恒润",
+      value: 484,
+      color: "#ee6666",
+    },
+  ];
+  // 实际渲染的y应该都是0~100%，但是tooltip显示的是实际值
+  // 所以需要先归一化，让整个y轴最大值为100%
+  const normalizedActual = actual.map((item, index) => ({
+    ...item,
+    value: (item.value / target[index].value) * 100,
+  }));
+  const option = {
+    legend: {
+      show: true,
+      textStyle: {
+        color: "white",
+      },
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      top: "50px",
+      bottom: "3%",
+      containLabel: true,
+    },
+    tooltip: {
+      show: true,
+      // formatter: "{b}: {c}%",
+      // 使用target和actual的值
+      // formatter: (params: any) => {
+      //   return `${params.name}<br />
+      //   计划值：${target[params.dataIndex].value}万元<br />
+      //   实际值：${actual[params.dataIndex].value}万元<br />
+      //   完成率：${normalizedActual[params.dataIndex].value.toFixed(2)}%`;
+      // },
+      trigger: "axis",
+      axisPointer: {
+        show: true,
+        type: "shadow",
+      },
+    },
+    xAxis: {
+      type: "category",
+      data: target.map((item) => item.name),
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: 'sassvariables["bigscreen-primary-color-7"]',
+        },
+      },
+      axisTick: {
+        show: false,
+      },
+    },
+    yAxis: {
+      type: "value",
+      name: "完成值（万元）",
+      // min: 0,
+      // max: 100,
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: sassvariables["bigscreen-primary-color-7"],
+        },
+      },
+      // 读取
+      nameTextStyle: {
+        color: sassvariables["bigscreen-primary-color-7"],
+        fontSize: 15,
+        padding: [0, 0, 0, 20],
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          type: "dashed",
+          color: sassvariables["bigscreen-primary-color-7"],
+        },
+      },
+    },
+    // 计划营收值永远是100%，实际营收值是归一化后的值
+    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    series: [
+      {
+        // type: "bar",
+        // stack: "a",
+        // z: 3,
+        type: "line",
+        name: "完成值",
+        data: actual,
+        // data: normalizedActual,
+        // itemStyle: {
+        //   color: (params: any) => {
+        //     return params.data.color;
+        //   },
+        // },
+        width: 2,
+        label: {
+          show: true,
+          formatter: ({ dataIndex }: any) => {
+            return actual[dataIndex].value;
+          },
+          fontSize: 14,
+          fontWeight: "bold",
+          color: "white",
+          position: "top",
+        },
+        itemStyle: {
+          // 深橙色
+          color: "#ff8c00",
+        },
+        barWidth: "45%",
+      },
+      {
+        //   type: "bar",
+        //   stack: "a",
+        //   silent: true,
+        //   z: 2,
+        type: "line",
+        name: "计划值",
+        lineStyle: {
+          type: "dashed",
+        },
+        data: target,
+        itemStyle: {
+          // color: "lightgray",
+          color: "#aa8c00cc",
+        },
+        barWidth: "45%",
+      },
+    ],
+  };
+  chart31.value.setOption(option);
+};
 const handleGraphTypeChange = () => {
   initChart1(graphType.value);
 };
@@ -765,7 +959,7 @@ const initChart4 = () => {
   chart4.value.clear();
   // 绑定点击事件
   chart4.value.on("click", "series.pie", (params: any) => {
-    console.log(params);
+    // console.log(params);
     // TODO 点击事件, 判断穿透到什么地方
   });
   // 柱形图，利润逐月分析，两个柱子一个是计划值一个是完成值
@@ -806,6 +1000,184 @@ const initChart4 = () => {
     ],
   };
   chart4.value.setOption(option);
+};
+
+// 产品营收与计划营收对比
+const initChart41 = () => {
+  if (!chart41.value) {
+    chart41.value = echarts.init(
+      document.getElementById("profit-analysis-chart-41")
+    );
+  }
+  chart41.value.clear();
+  const target = [
+    {
+      name: "原油",
+      value: 1048,
+    },
+    {
+      name: "成品油",
+      value: 735,
+    },
+    {
+      name: "化工产品",
+      value: 580,
+    },
+    {
+      name: "其他",
+      value: 484,
+    },
+  ];
+  const actual = [
+    {
+      name: "原油",
+      value: 1140,
+      color: "#5470c6",
+    },
+    {
+      name: "成品油",
+      value: 515,
+      color: "#91cc75",
+    },
+    {
+      name: "化工产品",
+      value: 450,
+      color: "#fac858",
+    },
+    {
+      name: "其他",
+      value: 484,
+      color: "#ee6666",
+    },
+  ];
+  const normalizedActual = actual.map((item, index) => ({
+    ...item,
+    value: (item.value / target[index].value) * 100,
+  }));
+  const option = {
+    legend: {
+      show: true,
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      top: "50px",
+      bottom: "3%",
+      containLabel: true,
+    },
+    tooltip: {
+      show: true,
+      // formatter: "{b}: {c}%",
+      // 使用target和actual的值
+      formatter: (params: any) => {
+        return `${params[0].name}<br />
+        计划值：${target[params[0].dataIndex].value}万元<br />
+        实际值：${actual[params[0].dataIndex].value}万元<br />
+        完成率：${normalizedActual[params[0].dataIndex].value.toFixed(2)}%`;
+      },
+      trigger: "axis",
+      axisPointer: {
+        show: true,
+        type: "shadow",
+      },
+    },
+    xAxis: {
+      type: "category",
+      data: target.map((item) => item.name),
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: 'sassvariables["bigscreen-primary-color-7"]',
+        },
+      },
+      axisTick: {
+        show: false,
+      },
+    },
+    yAxis: {
+      type: "value",
+      name: "计划完成率（%）",
+      min: 0,
+      interval: 25,
+      max: 150,
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: sassvariables["bigscreen-primary-color-7"],
+        },
+      },
+      // 读取
+      nameTextStyle: {
+        color: sassvariables["bigscreen-primary-color-7"],
+        fontSize: 15,
+        padding: [0, 0, 0, 20],
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          type: "dashed",
+          color: sassvariables["bigscreen-primary-color-7"],
+        },
+      },
+    },
+    // 计划营收值永远是100%，实际营收值是归一化后的值
+    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    series: [
+      {
+        type: "bar",
+        stack: "a",
+        z: 3,
+        data: normalizedActual,
+        itemStyle: {
+          color: (params: any) => {
+            return params.data.color;
+          },
+        },
+        label: {
+          show: true,
+          formatter: ({ dataIndex }: any) => {
+            return actual[dataIndex].value;
+          },
+          fontSize: 14,
+          fontWeight: "bold",
+          color: "white",
+          position: "top",
+        },
+        markLine: {
+          show: true,
+          symbol: "none",
+          data: [
+            {
+              name: "目标值",
+              yAxis: 100,
+            },
+          ],
+          lineStyle: {
+            // color: sassvariables["bigscreen-primary-color-7"],
+            type: "solid",
+            width: 2,
+            color: "orange",
+          },
+          label: {
+            show: false,
+          },
+        },
+        barWidth: "45%",
+      },
+      // {
+      //   type: "bar",
+      //   stack: "a",
+      //   silent: true,
+      //   z: 2,
+      //   data: target,
+      //   itemStyle: {
+      //     color: "lightgray",
+      //   },
+      //   barWidth: "45%",
+      // },
+    ],
+  };
+  chart41.value.setOption(option);
 };
 
 const initChart5 = () => {
@@ -889,6 +1261,136 @@ const initChart6 = () => {
   chart6.value.setOption(option);
 };
 
+// 初始化图3的轮播效果
+const initChart3Animation = () => {
+  // 先清除
+  chart3Timer.value && clearInterval(chart3Timer.value);
+  chart3Timer.value = setInterval(() => {
+    for (const i in chart3.value.getOption().series[0].data) {
+      chart3.value.dispatchAction({
+        type: "downplay",
+        seriesIndex: 0,
+        dataIndex: i,
+      });
+    }
+    chart3.value.dispatchAction({
+      type: "highlight",
+      seriesIndex: 0,
+      dataIndex: chart3ActiveIndex.value,
+    });
+    chart31.value.dispatchAction({
+      type: "showTip",
+      seriesIndex: 0,
+      dataIndex: chart3ActiveIndex.value,
+    });
+    chart3ActiveIndex.value++;
+    if (
+      chart3ActiveIndex.value >= chart3.value.getOption().series[0].data.length
+    ) {
+      chart3ActiveIndex.value = 0;
+    }
+  }, 3000);
+};
+
+// 初始化图4的轮播效果
+const initChart4Animation = () => {
+  // 先清除
+  chart4Timer.value && clearInterval(chart4Timer.value);
+  chart4Timer.value = setInterval(() => {
+    for (const i in chart4.value.getOption().series[0].data) {
+      chart4.value.dispatchAction({
+        type: "downplay",
+        seriesIndex: 0,
+        dataIndex: i,
+      });
+    }
+    chart4.value.dispatchAction({
+      type: "highlight",
+      seriesIndex: 0,
+      dataIndex: chart4ActiveIndex.value,
+    });
+    chart41.value.dispatchAction({
+      type: "showTip",
+      seriesIndex: 0,
+      dataIndex: chart4ActiveIndex.value,
+    });
+    chart4ActiveIndex.value++;
+    if (
+      chart4ActiveIndex.value >= chart4.value.getOption().series[0].data.length
+    ) {
+      chart4ActiveIndex.value = 0;
+    }
+  }, 3000);
+};
+
+// 统一初始化轮播效果
+const initAnimation = () => {
+  if (timeTabValue.value === "year") {
+    initChart3Animation();
+    initChart4Animation();
+  }
+};
+
+const initData = async () => {
+  // TODO 查询相关数据
+  // 根据路由参数、时间、时间类型，查询相关数据
+  // 如果路由参数有值，则查询相关数据
+  if (timeTabValue.value === "year") {
+    data = yearData;
+  } else {
+    data = monthData;
+  }
+};
+
+// 绑定各个图例的点击事件
+const initLegendClick = () => {
+  // 绑定图例的点击事件
+  chart3.value.on("mouseover", (params: any) => {
+    chart3Timer.value && clearInterval(chart3Timer.value);
+  });
+  chart3.value.on("mouseout", (params: any) => {
+    initChart3Animation();
+  });
+  chart3.value.on("click", "series.pie", (params: any) => {
+    const { name } = params;
+    if (name === "广投石化") {
+      router.push({
+        // path: "/bigscreen/secondPage/keyIndexAnalysis/revenue",
+        name: "Revenue",
+        query: {
+          name: "广投石化",
+        },
+      });
+    }
+  });
+  chart4.value.on("mouseover", (params: any) => {
+    chart4Timer.value && clearInterval(chart4Timer.value);
+  });
+  chart4.value.on("mouseout", (params: any) => {
+    initChart4Animation();
+  });
+  chart4.value.on("click", "series.pie", (params: any) => {
+    console.log(params);
+  });
+};
+
+const initialize = async () => {
+  await initData();
+  initChart1();
+  // initChart2();
+  initChart3();
+  initChart31();
+  initChart4();
+  initChart41();
+  // initChart5();
+  // initChart6();
+  initLiquidFill();
+  // 初始化轮播效果
+  initAnimation();
+  // 绑定各个图例的点击事件
+  initLegendClick();
+};
+
 const handleSearch = () => {
   // TODO 查询相关数据
   const text = new Date(datatime.value).toLocaleDateString("zh-CN", {
@@ -911,28 +1413,6 @@ const handleSearch = () => {
   initialize();
 };
 
-const initData = async () => {
-  // TODO 查询相关数据
-  // 根据路由参数、时间、时间类型，查询相关数据
-  // 如果路由参数有值，则查询相关数据
-  if (timeTabValue.value === "year") {
-    data = yearData;
-  } else {
-    data = monthData;
-  }
-};
-
-const initialize = async () => {
-  await initData();
-  initChart1();
-  // initChart2();
-  initChart3();
-  initChart4();
-  // initChart5();
-  // initChart6();
-  initLiquidFill();
-};
-
 onMounted(async () => {
   await initialize();
   window.addEventListener("resize", () => {
@@ -940,7 +1420,9 @@ onMounted(async () => {
       chart1.value.resize();
       // chart2.value.resize();
       chart3.value.resize();
+      chart31.value.resize();
       chart4.value.resize();
+      chart41.value.resize();
       // chart5.value.resize();
       // chart6.value.resize();
       liquidFill.value.resize();
@@ -948,6 +1430,11 @@ onMounted(async () => {
       console.log(error);
     }
   });
+});
+
+onBeforeUnmount(() => {
+  chart3Timer.value && clearInterval(chart3Timer.value);
+  chart4Timer.value && clearInterval(chart4Timer.value);
 });
 </script>
 
