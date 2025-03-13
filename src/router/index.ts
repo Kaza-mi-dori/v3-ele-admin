@@ -284,14 +284,30 @@ export const constantRoutes: RouteRecordRaw[] = [
                 "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/revenue.vue"
               ),
           },
-          // {
-          //   path: "profit",
-          //   name: "Profit",
-          //   component: () =>
-          //     import(
-          //       "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/profit.vue"
-          //     ),
-          // },
+          {
+            path: "profit",
+            name: "Profit",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/profit.vue"
+              ),
+          },
+          {
+            path: "purchase",
+            name: "Purchase",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/purchase.vue"
+              ),
+          },
+          {
+            path: "sell",
+            name: "Sell",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/sell.vue"
+              ),
+          },
           {
             path: "contract",
             name: "ContractAnalysis",

@@ -301,7 +301,7 @@ const initChartMiddle4 = () => {
         // interval: 0,
         formatter: (value: string) => {
           const dates = value.split("-");
-          return `${dates[0]}月${dates[1]}日`;
+          return `${parseInt(dates[0])}月`;
         },
         customValues: [
           "01-01",

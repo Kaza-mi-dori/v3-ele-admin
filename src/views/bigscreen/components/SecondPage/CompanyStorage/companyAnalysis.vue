@@ -46,6 +46,10 @@ import Model1 from "@/views/bigscreen/components/SecondPage/Model1/index.vue";
 import icon2 from "@/views/bigscreen/img/product_icon2.png";
 import sassvariables from "@/styles/variables.module.scss";
 import * as echarts from "echarts";
+import { useRouter, useRoute } from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
 
 const company = ref("");
 const companyList = ref([
@@ -145,6 +149,19 @@ const initAllGraph = () => {
   initGraph2();
   initGraph3();
   initGraph4();
+  // 绑定点击事件，跳转油库页面
+  companyGraph1.value?.on("click", "series.pie", (params: any) => {
+    // console.log(params);
+    router.push({
+      name: "SingleStorage",
+      query: {
+        storageName: params.name,
+      },
+    });
+  });
+  companyGraph3.value?.on("click", "series.pie", (params: any) => {
+    console.log(params);
+  });
 };
 
 const initGraph1 = () => {
@@ -207,6 +224,7 @@ const initGraph1 = () => {
       // position: "inside",
       edgeDistance: 20,
       lineHeight: 20,
+      color: "#fff",
       textStyle: {
         color: "#fff",
         fontSize: "1rem",
@@ -262,6 +280,7 @@ const initGraph2 = () => {
       left: "3%",
       containLabel: true,
     },
+
     xAxis: {
       type: "category",
       boundaryGap: true,
@@ -402,6 +421,7 @@ const initGraph3 = () => {
       // position: "inside",
       edgeDistance: 20,
       lineHeight: 20,
+      color: "#fff",
       textStyle: {
         color: "#fff",
         fontSize: "1rem",

@@ -124,6 +124,7 @@ defineProps({
   align-items: center;
   justify-content: center;
   border-radius: 0 0 5px 5px;
+  animation: bar-animation 1.5s ease-in-out;
   @keyframes bar-animation {
     0% {
       height: 0;
@@ -132,7 +133,6 @@ defineProps({
       height: 100%;
     }
   }
-  animation: bar-animation 1.5s ease-in-out;
 }
 
 .remaining {

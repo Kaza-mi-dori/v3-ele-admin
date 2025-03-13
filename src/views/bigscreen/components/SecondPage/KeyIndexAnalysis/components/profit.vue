@@ -13,13 +13,13 @@
       <span class="text-date-desc">数据截止日期：{{ dataTimeText }}</span>
     </div>
     <div class="bg-view-body pl-4 pr-4">
-      <Model1 class="model1 w-full" title="营收逐月分析">
+      <Model1 class="model1 w-full" title="利润逐月分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex items-center h-full w-full gap-2">
               <div class="flex items-center justify-center w-1/3">
                 <div
-                  id="revenue-analysis-chart-liquid-fill"
+                  id="profit-analysis-chart-liquid-fill"
                   style="height: 250px; width: 60%"
                 />
                 <div class="flex flex-col items-center justify-center w-2/5">
@@ -35,7 +35,7 @@
               </div>
               <div class="relative w-[calc(100%-33%)]">
                 <div
-                  id="revenue-analysis-chart-1"
+                  id="profit-analysis-chart-1"
                   style="height: 250px; width: 100%"
                 />
                 <!-- 柱状图/折线图切换开关 -->
@@ -55,23 +55,23 @@
           </div>
         </div>
       </Model1>
-      <Model1 class="model1" title="营收构成分析">
+      <Model1 class="model1" title="利润构成分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex gap-2 justify-center">
               <div
                 v-if="hasSubOrg"
-                id="revenue-analysis-chart-3"
+                id="profit-analysis-chart-3"
                 style="height: 250px; width: 100%"
               />
               <div
                 v-if="hasSubOrg"
-                id="revenue-analysis-chart-31"
+                id="profit-analysis-chart-31"
                 style="height: 250px; width: 100%"
               />
               <div
                 v-if="hasProduct"
-                id="profit-analysis-chart-3"
+                id="profit-analysis-chart-4"
                 style="height: 250px; width: 100%"
               />
               <div
@@ -85,7 +85,7 @@
       </Model1>
       <!-- <div class="b-space" /> -->
       <div class="flex gap-2">
-        <Model1 v-if="hasSubOrg" class="model1" title="下属企业营收分析">
+        <Model1 v-if="hasSubOrg" class="model1" title="下属企业利润分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -112,7 +112,7 @@
           </div>
         </Model1>
         <!-- todo 按照是不是有数据来决定是否显示 -->
-        <Model1 v-if="hasProduct" class="model1" title="产品营收分析">
+        <Model1 v-if="hasProduct" class="model1" title="产品利润分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -410,7 +410,7 @@ const handleMetricItemClick = (item: any) => {
 const initLiquidFill = () => {
   if (!liquidFill.value) {
     liquidFill.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-liquid-fill")
+      document.getElementById("profit-analysis-chart-liquid-fill")
     );
   }
   liquidFill.value.clear();
@@ -470,7 +470,7 @@ const initLiquidFill = () => {
 const initChart1 = (type: string = "bar") => {
   if (!chart1.value) {
     chart1.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-1")
+      document.getElementById("profit-analysis-chart-1")
     );
   }
   chart1.value.clear();
@@ -491,7 +491,7 @@ const initChart1 = (type: string = "bar") => {
       show: true,
       // icon: "circle",
       top: "3%",
-      data: ["计划经营收入", "实际经营收入"],
+      data: ["计划经利润入", "实际经利润入"],
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
       },
@@ -562,7 +562,7 @@ const initChart1 = (type: string = "bar") => {
     series: [
       {
         type: "bar",
-        name: "计划经营收入",
+        name: "计划经利润入",
         barWidth: "25%",
         barGap: "35%",
         markLine: {
@@ -581,7 +581,7 @@ const initChart1 = (type: string = "bar") => {
       },
       {
         type: "bar",
-        name: "实际经营收入",
+        name: "实际经利润入",
         barWidth: "25%",
         barGap: "35%",
         // data: [110, 220],
@@ -622,7 +622,7 @@ const initChart1 = (type: string = "bar") => {
 const initChart2 = () => {
   if (!chart2.value) {
     chart2.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-2")
+      document.getElementById("profit-analysis-chart-2")
     );
   }
   chart2.value.clear();
@@ -711,7 +711,7 @@ const initChart2 = () => {
   };
   chart2.value.setOption(option);
 };
-// 下属企业营收分析
+// 下属企业利润分析
 const initChart3 = () => {
   // 如果hasSubOrg为false，则不初始化
   if (!hasSubOrg.value) {
@@ -719,7 +719,7 @@ const initChart3 = () => {
   }
   if (!chart3.value) {
     chart3.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-3")
+      document.getElementById("profit-analysis-chart-3")
     );
   }
   // 绑定点击事件
@@ -766,11 +766,11 @@ const initChart3 = () => {
   chart3.value.setOption(option);
 };
 
-// 下属企业营收与计划营收对比
+// 下属企业利润与计划利润对比
 const initChart31 = () => {
   if (!chart31.value) {
     chart31.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-31")
+      document.getElementById("profit-analysis-chart-31")
     );
   }
   chart31.value.clear();
@@ -888,8 +888,8 @@ const initChart31 = () => {
         },
       },
     },
-    // 计划营收值永远是100%，实际营收值是归一化后的值
-    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    // 计划利润值永远是100%，实际利润值是归一化后的值
+    // 计划利润值在最底层，颜色较淡，实际利润值在上面，颜色较深
     series: [
       {
         // type: "bar",
@@ -946,7 +946,7 @@ const handleGraphTypeChange = () => {
   initChart1(graphType.value);
 };
 
-// 产品营收分析
+// 产品利润分析
 const initChart4 = () => {
   // 如果hasProduct为false，则不初始化
   if (!hasProduct.value) {
@@ -954,7 +954,7 @@ const initChart4 = () => {
   }
   if (!chart4.value) {
     chart4.value = echarts.init(
-      document.getElementById("profit-analysis-chart-3")
+      document.getElementById("profit-analysis-chart-4")
     );
   }
   chart4.value.clear();
@@ -1003,7 +1003,7 @@ const initChart4 = () => {
   chart4.value.setOption(option);
 };
 
-// 产品营收与计划营收对比
+// 产品利润与计划利润对比
 const initChart41 = () => {
   if (!chart41.value) {
     chart41.value = echarts.init(
@@ -1121,8 +1121,8 @@ const initChart41 = () => {
         },
       },
     },
-    // 计划营收值永远是100%，实际营收值是归一化后的值
-    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    // 计划利润值永远是100%，实际利润值是归一化后的值
+    // 计划利润值在最底层，颜色较淡，实际利润值在上面，颜色较深
     series: [
       {
         type: "bar",
@@ -1345,7 +1345,7 @@ const initData = async () => {
 
 // 绑定各个图例的点击事件
 const initLegendClick = () => {
-  // 绑定逐月营收的点击事件
+  // 绑定逐月利润的点击事件
   chart1.value.on("click", "series.bar", (params: any) => {
     const { name } = params;
     const month = name.split("月")[0];
@@ -1364,7 +1364,7 @@ const initLegendClick = () => {
     const { name } = params;
     if (name === "广投石化") {
       const nextRoute = router.resolve({
-        name: "Revenue",
+        name: "profit",
         query: {
           companyName: "广投石化",
         },
@@ -1381,7 +1381,7 @@ const initLegendClick = () => {
   chart4.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
     const nextRoute = router.resolve({
-      name: "Revenue",
+      name: "profit",
       query: {
         companyName: route.query.companyName,
         productName: name,
