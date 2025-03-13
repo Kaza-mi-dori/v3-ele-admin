@@ -11,8 +11,8 @@ export const DynamicFormInstanceAPI = {
   getDynamicFormInstanceList(params: any) {
     return request2({
       url: `${DYNAMIC_FORM_INSTANCE_BASE_URL}/Query`,
-      method: "get",
-      params,
+      method: "post",
+      data: params,
     });
   },
 
@@ -97,8 +97,8 @@ export const DynamicFormInstanceAPI = {
   getDynamicFormInstancePage(params: any) {
     return request2({
       url: `/Api/Business/FormOperation/Query`,
-      method: "get",
-      params,
+      method: "post",
+      data: params,
     });
   },
 

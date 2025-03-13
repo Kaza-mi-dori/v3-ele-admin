@@ -30,6 +30,8 @@
       :value="100"
       :name="'原油'"
       :unit="'吨'"
+      class="cursor-pointer"
+      @click="handleClickContainer"
     />
     <OilContainer1
       :isShowTitle="true"
@@ -37,6 +39,8 @@
       :value="142"
       :name="'燃料油'"
       :unit="'吨'"
+      class="cursor-pointer"
+      @click="handleClickContainer"
     />
     <OilContainer1
       :isShowTitle="true"
@@ -44,6 +48,8 @@
       :value="100"
       :name="'#0柴油'"
       :unit="'吨'"
+      class="cursor-pointer"
+      @click="handleClickContainer"
     />
     <OilContainer1
       :isShowTitle="true"
@@ -51,6 +57,8 @@
       :value="1410"
       :name="'#92汽油'"
       :unit="'吨'"
+      class="cursor-pointer"
+      @click="handleClickContainer"
     />
     <OilContainer1
       :isShowTitle="true"
@@ -58,6 +66,8 @@
       :value="1050"
       :name="'#95汽油'"
       :unit="'吨'"
+      class="cursor-pointer"
+      @click="handleClickContainer"
     />
   </div>
 </template>
@@ -71,6 +81,9 @@ import { ref } from "vue";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { startOfYear, endOfYear } from "@/utils/time"; // 导入工具类
 import { useDataIndex } from "@/hooks/useDataIndex";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -161,6 +174,15 @@ const initData = async () => {
       keywordMap["成品油交易量"]
     ][0].时间?.substring(5, 10);
   }
+};
+
+const handleClickContainer = () => {
+  // console.log(name);
+  // TODO 细化逻辑
+  const nextRoute = router.resolve({
+    name: "BlockStorage",
+  });
+  window.open(nextRoute.href, "_blank");
 };
 
 onMounted(() => {

@@ -3,13 +3,13 @@
     <!-- 标题 -->
     <!-- 统计数据区 -->
     <div class="title-block">
-      <div class="__title">表单定义</div>
+      <div class="__title">表单字段定义</div>
       <div class="__stat">
         <span class="__item">当前共定义了</span>
         <span class="__item">
           <span>
             <span class="text-red-5 mr-2">{{ pagination.total || 0 }}</span>
-            <span>个表单</span>
+            <span>个字段</span>
           </span>
         </span>
       </div>
@@ -55,6 +55,7 @@
       border
       class="w-full"
       :data="tableData"
+      row-key="id"
       element-loading-text="拼命加载中"
       :header-cell-style="{
         'background-color': sassvariables['custom-table-header-background'],
@@ -67,10 +68,39 @@
           <el-checkbox v-model="scope.row.checked" />
         </template>
       </el-table-column>
-      <!-- 编号 -->
-      <el-table-column prop="编号" label="编号" align="center">
+      <!-- 关联表单 -->
+      <el-table-column
+        prop="表单定义编号"
+        label="所属表单"
+        align="center"
+        width="150"
+        sortable
+      >
         <template v-slot="scope">
-          <span>{{ scope.row.编号 || "-" }}</span>
+          <span>{{ scope.row.表单定义编号 }}</span>
+        </template>
+      </el-table-column>
+      <!-- 编号 -->
+      <el-table-column
+        prop="编号"
+        label="编号"
+        align="center"
+        width="150"
+        sortable
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.编号 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="类型"
+        label="字段类型"
+        align="center"
+        width="150"
+        sortable
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.类型 }}</span>
         </template>
       </el-table-column>
       <!-- 名称 -->
@@ -87,71 +117,26 @@
           </el-link>
         </template>
       </el-table-column>
-      <!-- 类型 -->
-      <el-table-column
-        prop="类型"
-        label="类型"
-        align="center"
-        width="150"
-        sortable
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.类型 }}</span>
-        </template>
-      </el-table-column>
-      <!-- 表名 -->
-      <el-table-column
-        prop="表名"
-        label="表名"
-        width="150"
-        align="center"
-        sortable
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.表名 || "-" }}</span>
-        </template>
-      </el-table-column>
       <!-- 描述 -->
-      <el-table-column
-        prop="描述"
-        label="描述"
-        width="150"
-        align="center"
-        sortable
-      >
+      <el-table-column prop="描述" label="描述" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.描述 || "-" }}</span>
         </template>
       </el-table-column>
-      <!-- 数据时间类型 -->
-      <el-table-column
-        prop="数据时间类型"
-        label="数据时间类型"
-        align="center"
-        width="150"
-        sortable
-      >
+      <!-- 时间精度 -->
+      <el-table-column prop="时间精度" label="时间精度" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.数据时间类型 || "-" }}</span>
+          <span>{{ scope.row.时间精度 || "-" }}</span>
         </template>
       </el-table-column>
-      <!-- 启用行级权限 -->
-      <el-table-column
-        prop="开启行级权限"
-        label="开启行级权限"
-        align="center"
-        width="150"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.开启行级权限 || "-" }}</span>
-        </template>
-      </el-table-column>
-      <!-- 操作 -->
       <el-table-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
           <div class="w-full flex justify-evenly">
             <el-button type="text" @click="handleViewDetail(scope.row)">
               详情
+            </el-button>
+            <el-button type="text" @click="handleUpdateDetail(scope.row)">
+              编辑
             </el-button>
             <el-link type="danger" @click="handleDeleteRecord(scope.row)">
               删除
@@ -249,12 +234,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { DynamicFormAPI } from "@/api/dynamicForm";
+import { ref, onMounted } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
+import { DynamicFormFieldAPI } from "@/api/dynamicForm/definition";
 
 const pagination = ref({
   currentPage: 1,
@@ -265,15 +247,7 @@ const pagination = ref({
 
 const tableData = ref([]);
 const loading = ref(false);
-const itemForm = ref({
-  type: "",
-  name: "",
-  name2: "",
-  name3: "",
-  unit: "",
-  status: "",
-  order: "",
-});
+const itemForm = ref({});
 const itemFormRef = ref();
 const dialogVisible = ref(false);
 const submitItemLoading = ref(false);
@@ -284,7 +258,12 @@ const filterItemList = ref([
     label: "类别",
     prop: "type",
     type: "select",
-    options: [],
+    options: [
+      {
+        label: "其他数据",
+        value: "其他数据",
+      },
+    ],
   },
 ]);
 
@@ -301,19 +280,7 @@ const handleAddRecord = () => {
 };
 
 const handleViewDetail = (row: any) => {
-  // itemForm.value = row;
-  // dialogVisible.value = true;
-  router.push({
-    name: "DynamicFormDefinitionDetail",
-    query: {
-      id: row.id,
-    },
-  });
-};
-
-const handleEditRecord = (row: any) => {
-  // console.log(row);
-  dialogVisible.value = true;
+  console.log(row);
 };
 
 const handleUpdateDetail = (row: any) => {
@@ -337,10 +304,12 @@ const handleExportExcel = () => {
 };
 
 onMounted(() => {
-  DynamicFormAPI.getDynamicFormDefinitionList({
-    页码: pagination.value.currentPage,
+  // console.log("mounted");
+  DynamicFormFieldAPI.getDynamicFormFieldList({
+    页面: pagination.value.currentPage,
     页容量: pagination.value.pageSize,
   }).then((res: any) => {
+    // console.log(res);
     tableData.value = res["当前记录"] || [];
     pagination.value.total = res["记录总数"] || 0;
   });

@@ -709,6 +709,29 @@ export const constantRoutes: RouteRecordRaw[] = [
           icon: "el-icon-coin",
         },
       },
+      // 动态表单定义详情
+      {
+        path: "dynamicFormDefinitionDetail",
+        name: "DynamicFormDefinitionDetail",
+        component: () =>
+          import("@/views/otherConfig/dynamicForm/definitionDetail.vue"),
+        meta: {
+          title: "动态表单定义详情",
+          icon: "el-icon-coin",
+          hidden: true,
+        },
+      },
+      // 动态表单字段定义管理
+      {
+        path: "dynamicFormFieldDefinitionMng",
+        name: "DynamicFormFieldDefinitionMng",
+        component: () =>
+          import("@/views/otherConfig/dynamicForm/fieldDefinitionMng.vue"),
+        meta: {
+          title: "动态表单字段定义管理",
+          icon: "el-icon-coin",
+        },
+      },
       {
         path: "mapElementMng",
         name: "MapElementMng",

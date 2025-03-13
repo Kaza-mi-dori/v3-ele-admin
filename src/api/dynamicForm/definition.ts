@@ -1,4 +1,4 @@
-import request2 from "@/utils/request";
+import request2 from "@/utils/request2";
 
 const DYNAMIC_FORM_BASE_URL = "/Api/Business/FormDefinition";
 
@@ -13,10 +13,10 @@ export const DynamicFormAPI = {
     });
   },
   getDynamicFormDefinitionList(params: any) {
-    return request2({
+    return request2<any>({
       url: `${DYNAMIC_FORM_BASE_URL}/Query`,
-      method: "get",
-      params,
+      method: "post",
+      data: params,
     });
   },
   addDynamicFormDefinition(data: any) {
@@ -73,8 +73,8 @@ export const DynamicFormFieldAPI = {
   getDynamicFormFieldList(params: any) {
     return request2({
       url: `${DYNAMIC_FORM_FIELD_BASE_URL}/Query`,
-      method: "get",
-      params,
+      method: "post",
+      data: params,
     });
   },
 
