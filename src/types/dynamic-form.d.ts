@@ -4,16 +4,16 @@ type IFormTypeEnum = "融合表" | "普通表";
 interface IFormDefinitionDTO {
   编号: string;
   名称: string;
-  描述: string;
+  描述?: string;
   类型: IFormTypeEnum;
-  数据源id: number;
-  表名: string;
-  数据时间类型: string;
-  数据时间显示名称: string;
-  数据时间显示顺序: number;
-  开启行级权限: boolean;
-  创建人可见性: boolean;
-  用户组可见性: string;
+  数据源id?: number;
+  表名?: string;
+  数据时间类型?: string;
+  数据时间显示名称?: string;
+  数据时间显示顺序?: number;
+  开启行级权限?: boolean;
+  创建人可见性?: boolean;
+  用户组可见性?: string;
 }
 
 type IFormFieldTypeEnum =
@@ -51,7 +51,7 @@ type IFormFieldDefinitionForm = IFormFieldDefinitionDTO & {
 // 表单定义Form，在表单定义的基础上，添加了表单定义的id以及可能的表单定义项
 type IFormDefinitionForm = IFormDefinitionDTO & {
   id: string | number;
-  fieldDefinitionList?: IFormFieldDefinitionForm[];
+  字段列表?: IFormFieldDefinitionForm[];
 };
 
 // 表单实例

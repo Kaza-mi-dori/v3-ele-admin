@@ -48,7 +48,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="表名" prop="表名">
+              <el-form-item label="数据表名" prop="表名">
                 <el-input v-model="form.表名" />
               </el-form-item>
             </el-col>
@@ -59,14 +59,14 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="时间精度" prop="时间精度">
-                <el-input v-model="form.时间精度" />
+                <el-input v-model="form.时间精度" type="number" :min="0" />
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
       </div>
     </div>
-    <div class="info-card-level1">
+    <div v-if="form.id !== -1" class="info-card-level1">
       <div class="__title">
         <span>包含字段</span>
       </div>
@@ -133,14 +133,14 @@ const formRef = ref();
 
 const fieldDefinitionFormRef = ref<InstanceType<typeof FieldDefinitionForm>>();
 
-const form = ref({
-  编号: "",
-  名称: "",
-  类型: "",
-  表名: "",
-  描述: "",
-  时间精度: "",
-  顺序: "",
+const form = ref<IFormDefinitionForm>({
+  id: -1,
+  编号: undefined,
+  名称: undefined,
+  类型: "融合表",
+  表名: undefined,
+  描述: undefined,
+  // 数据源id: 0,
   字段列表: [],
 });
 
@@ -171,17 +171,7 @@ const fieldDefinitionForm = ref<IFormFieldDefinitionForm>({
   时间精度: undefined,
 });
 
-const fieldTableData = ref([
-  {
-    id: "1",
-    编号: "1",
-    名称: "名称",
-    类型: "类型",
-    描述: "描述",
-    时间精度: "时间精度",
-    顺序: "顺序",
-  },
-]);
+const fieldTableData = ref([]);
 
 const rules = ref({
   编号: [{ required: true, message: "请输入编号" }],
@@ -214,10 +204,16 @@ const onSubmit = async () => {
     await formRef.value?.validate();
     editing.value = false;
     formLoading.value = true;
-    await DynamicFormAPI.editDynamicFormDefinition({
+    const remoteApi =
+      form.value.id === -1
+        ? DynamicFormAPI.addDynamicFormDefinition
+        : DynamicFormAPI.editDynamicFormDefinition;
+    const res: any = await remoteApi({
       ...form.value,
     });
     ElMessage.success("保存成功");
+    // 如果新增，则跳转至列表页
+    initData(res.id);
   } catch (error) {
     ElMessage.error("保存失败");
     console.error(error);
@@ -254,13 +250,15 @@ const onEdit = () => {
 };
 
 onMounted(() => {
-  initData();
+  if (route.query.id) {
+    initData(route.query.id as string);
+  } else {
+    editing.value = true;
+  }
 });
 
-const initDefinitionInfo = async () => {
-  const res: any = await DynamicFormAPI.getDynamicFormDefinition(
-    route.query.id as string
-  );
+const initDefinitionInfo = async (id: string) => {
+  const res: any = await DynamicFormAPI.getDynamicFormDefinition(id);
   // form.value = res.data;
   form.value = res;
 };
@@ -275,9 +273,9 @@ const initFieldTableData = async () => {
   }
 };
 
-const initData = async () => {
+const initData = async (id: string) => {
   try {
-    await initDefinitionInfo();
+    await initDefinitionInfo(id);
     await initFieldTableData();
   } catch (error) {
     console.error(error);

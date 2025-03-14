@@ -129,7 +129,7 @@
           <span>{{ scope.row.时间精度 || "-" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150" fixed="right">
+      <!-- <el-table-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
           <div class="w-full flex justify-evenly">
             <el-button type="text" @click="handleViewDetail(scope.row)">
@@ -143,7 +143,7 @@
             </el-link>
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <!-- 分页 -->
     <el-pagination
@@ -159,64 +159,7 @@
     />
     <!-- 底部操作区 -->
     <!-- 新增弹窗 -->
-    <el-dialog v-model="dialogVisible" title="新增数据定义" width="30%" center>
-      <el-form
-        ref="itemFormRef"
-        :model="itemForm"
-        :rules="rules"
-        label-position="left"
-        label-width="120px"
-      >
-        <el-form-item label="类别" prop="type">
-          <el-select v-model="itemForm.type" disabled placeholder="请选择">
-            <el-option label="其他数据" value="其他数据" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="名称" prop="name">
-          <el-input
-            v-model="itemForm.name"
-            placeholder="请输入数据大类名称(例如：市场日数据)"
-          />
-        </el-form-item>
-        <el-form-item label="数据细分名称1" prop="name2">
-          <el-input
-            v-model="itemForm.name2"
-            placeholder="请输入数据细分名称(例如: 原油价格)"
-          />
-        </el-form-item>
-        <el-form-item label="数据细分名称2" prop="name3">
-          <el-input
-            v-model="itemForm.name3"
-            placeholder="请输入数据细分名称(例如: 中海油报价)"
-          />
-        </el-form-item>
-        <el-form-item label="单位" prop="unit">
-          <el-input
-            v-model="itemForm.unit"
-            placeholder="请输入单位，如：元/吨"
-          />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="itemForm.status" placeholder="请选择">
-            <el-option label="正常" value="正常" />
-            <el-option label="停用" value="停用" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="显示顺序" prop="order">
-          <el-input
-            v-model="itemForm.order"
-            type="number"
-            placeholder="请输入显示顺序"
-          />
-        </el-form-item>
-        <el-form-item label="描述" prop="description">
-          <el-input
-            v-model="itemForm.description"
-            type="textarea"
-            placeholder="请输入描述"
-          />
-        </el-form-item>
-      </el-form>
+    <el-dialog v-model="dialogVisible" title="新增字段定义" width="30%" center>
       <template v-slot:footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -236,6 +179,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
+import { handleDeleteRow } from "@/hooks/useTableOp";
 import { DynamicFormFieldAPI } from "@/api/dynamicForm/definition";
 
 const pagination = ref({
@@ -276,7 +220,8 @@ const handleResetFilter = () => {
 };
 
 const handleAddRecord = () => {
-  console.log("add");
+  // TODO: 弹出弹窗
+  dialogVisible.value = true;
 };
 
 const handleViewDetail = (row: any) => {
@@ -288,7 +233,9 @@ const handleUpdateDetail = (row: any) => {
 };
 
 const handleDeleteRecord = (row: any) => {
-  console.log(row);
+  handleDeleteRow(row, DynamicFormFieldAPI.deleteDynamicFormField, () => {
+    initTableData();
+  });
 };
 
 const handleCurrentChange = (currentPage: number) => {
@@ -303,16 +250,21 @@ const handleExportExcel = () => {
   console.log("export");
 };
 
-onMounted(() => {
-  // console.log("mounted");
-  DynamicFormFieldAPI.getDynamicFormFieldList({
-    页面: pagination.value.currentPage,
-    页容量: pagination.value.pageSize,
-  }).then((res: any) => {
-    // console.log(res);
-    tableData.value = res["当前记录"] || [];
-    pagination.value.total = res["记录总数"] || 0;
+const initTableData = async () => {
+  const res: any = await DynamicFormFieldAPI.getDynamicFormFieldList({
+    page: pagination.value.currentPage,
+    pageSize: pagination.value.pageSize,
   });
+  tableData.value = res["当前记录"] || [];
+  pagination.value.total = res["记录总数"] || 0;
+};
+
+const onSubmitItemForm = async () => {
+  console.log(itemForm.value);
+};
+
+onMounted(() => {
+  initTableData();
 });
 </script>
 
