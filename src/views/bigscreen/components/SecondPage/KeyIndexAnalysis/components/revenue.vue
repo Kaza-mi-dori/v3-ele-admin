@@ -158,6 +158,265 @@ import MetricItem from "@/views/bigscreen/components/SecondPage/Common/MetricIte
 import sassvariables from "@/styles/variables.module.scss";
 import { getDateOfOneYear, getDateOfOneYearToNow } from "@/utils/time";
 
+// 数据结果
+interface TimeSpanDataResult {
+  // 时间维度
+  timeSpan: any;
+  // 时间
+  dataTime: string;
+  // 指标
+  keyIndexType: string;
+  // 组织名
+  org: string;
+  // 产品类型
+  productType?: string;
+  // 产品细项
+  product?: string;
+  // 当期计划值 当期实际值 累计值 环比 同比增长 同比增幅
+  plan: number;
+  real: number;
+  accumulated: number;
+  pOverPRate: number;
+  pOverPValue: number;
+  pToPRate: number;
+  pToPValue: number;
+  // 下属企业数据；产品数据；下属时间段数据
+  subOrg?: TimeSpanDataResult[];
+  subProduct?: TimeSpanDataResult[]; // 对企业是产品类型，对产品是分项产品
+  subData?: TimeSpanDataResult[];
+}
+
+// 查询参数
+interface TimeSpanDataQuery {
+  keyIndexType: string;
+  timeSpan: "year" | "month" | "season" | "day";
+  dataTime: string;
+  org: string;
+  productType?: string; // 方便中间件组织用
+  product?: string;
+  // 是否包含下属企业信息
+  withSubOrgResult?: boolean;
+  // 是否包含产品信息
+  withProductResult?: boolean;
+  // 下属时间段数据维度
+  subDataTimeSpan?: "year" | "month" | "season" | "day";
+}
+
+// 示例
+// 查询2024年石化板块营收数据，包含下属企业信息和产品信息
+const exampleQuery: TimeSpanDataQuery = {
+  keyIndexType: "revenue",
+  timeSpan: "year",
+  dataTime: "2024-01-01",
+  org: "石化板块",
+  withSubOrgResult: true,
+  withProductResult: true,
+};
+
+// 示例返回
+const exampleResult: TimeSpanDataResult = {
+  timeSpan: "year",
+  dataTime: "2024-01-01",
+  org: "石化板块",
+  keyIndexType: "revenue",
+  plan: 1000000,
+  real: 1000000,
+  accumulated: 1000000,
+  pOverPRate: 100,
+  pOverPValue: 1000000,
+  pToPRate: 100,
+  pToPValue: 1000000,
+  subOrg: [
+    {
+      timeSpan: "month",
+      dataTime: "2024-01-01",
+      keyIndexType: "revenue",
+      org: "广投石化",
+      plan: 1000000,
+      real: 1000000,
+      accumulated: 1000000,
+      pOverPRate: 100,
+      pOverPValue: 1000000,
+      pToPRate: 100,
+      pToPValue: 1000000,
+      subOrg: [],
+      subProduct: [],
+      subData: [],
+    },
+  ],
+  subProduct: [
+    {
+      timeSpan: "month",
+      dataTime: "2024-01-01",
+      keyIndexType: "revenue",
+      org: "石化板块",
+      productType: "原油",
+      product: "原油1",
+      plan: 1000000,
+      real: 1000000,
+      accumulated: 1000000,
+      pOverPRate: 100,
+      pOverPValue: 1000000,
+      pToPRate: 100,
+      pToPValue: 1000000,
+      subOrg: [],
+      subProduct: [],
+      subData: [],
+    },
+  ],
+};
+
+const exampleJson = {
+  营收: {
+    "2025-01": {
+      石化板块: {
+        "#92汽油": {
+          当期计划值: 105,
+          当期实际值: 112,
+          累计值: 112,
+          环比: 15.0,
+          同比增长: 18.0,
+          同比增幅: "18.0%",
+        },
+        "#95汽油": {
+          当期计划值: 85,
+          当期实际值: 92,
+          累计值: 92,
+          环比: 12.0,
+          同比增长: 16.0,
+          同比增幅: "16.0%",
+        },
+        "#98汽油": {
+          当期计划值: 45,
+          当期实际值: 50,
+          累计值: 50,
+          环比: 20.0,
+          同比增长: 25.0,
+          同比增幅: "25.0%",
+        },
+        "#0柴油": {
+          当期计划值: 120,
+          当期实际值: 128,
+          累计值: 128,
+          环比: 10.0,
+          同比增长: 14.0,
+          同比增幅: "14.0%",
+        },
+        原油: {
+          当期计划值: 500,
+          当期实际值: 530,
+          累计值: 530,
+          环比: 8.0,
+          同比增长: 12.0,
+          同比增幅: "12.0%",
+        },
+      },
+      广投石化: {
+        "#92汽油": {
+          当期计划值: 58,
+          当期实际值: 62,
+          累计值: 62,
+          环比: 12.0,
+          同比增长: 14.0,
+          同比增幅: "14.0%",
+        },
+        "#0柴油": {
+          当期计划值: 75,
+          当期实际值: 80,
+          累计值: 80,
+          环比: 10.0,
+          同比增长: 15.0,
+          同比增幅: "15.0%",
+        },
+      },
+    },
+    "2025-02": {
+      石化板块: {
+        "#92汽油": {
+          当期计划值: 110,
+          当期实际值: 118,
+          累计值: 230,
+          环比: 5.3,
+          同比增长: 16.0,
+          同比增幅: "16.0%",
+        },
+        "#95汽油": {
+          当期计划值: 90,
+          当期实际值: 96,
+          累计值: 188,
+          环比: 4.3,
+          同比增长: 14.0,
+          同比增幅: "14.0%",
+        },
+      },
+    },
+  },
+  利润: {
+    "2025-01": {
+      石化板块: {
+        "#92汽油": {
+          当期计划值: 18,
+          当期实际值: 20,
+          累计值: 20,
+          环比: 20.0,
+          同比增长: 25.0,
+          同比增幅: "25.0%",
+        },
+        "#98汽油": {
+          当期计划值: 12,
+          当期实际值: 14,
+          累计值: 14,
+          环比: 16.7,
+          同比增长: 33.3,
+          同比增幅: "33.3%",
+        },
+      },
+    },
+  },
+  采购量: {
+    "2025-01": {
+      石化板块: {
+        原油: {
+          当期计划值: 480,
+          当期实际值: 500,
+          累计值: 500,
+          环比: 5.0,
+          同比增长: 8.0,
+          同比增幅: "8.0%",
+        },
+      },
+    },
+  },
+  销售量: {
+    "2025-01": {
+      广投石化: {
+        "#0柴油": {
+          当期计划值: 4500,
+          当期实际值: 4800,
+          累计值: 4800,
+          环比: 10.0,
+          同比增长: 12.0,
+          同比增幅: "12.0%",
+        },
+      },
+    },
+  },
+  毛利率: {
+    "2025-01": {
+      石化板块: {
+        "#92汽油": {
+          当期计划值: 18.5,
+          当期实际值: 19.2,
+          累计值: 19.2,
+          环比: 3.8,
+          同比增长: 4.5,
+          同比增幅: "4.5%",
+        },
+      },
+    },
+  },
+};
+
 const router = useRouter();
 const route = useRoute();
 const totalData = ref([
