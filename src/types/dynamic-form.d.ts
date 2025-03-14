@@ -2,8 +2,8 @@ type IFormTypeEnum = "融合表" | "普通表";
 
 // 表单定义
 interface IFormDefinitionDTO {
-  编号: string;
-  名称: string;
+  编号?: string;
+  名称?: string;
   描述?: string;
   类型: IFormTypeEnum;
   数据源id?: number;

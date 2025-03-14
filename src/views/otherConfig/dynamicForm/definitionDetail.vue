@@ -75,9 +75,28 @@
           <el-table-column prop="编号" label="编号" align="center" />
           <el-table-column prop="名称" label="名称" align="center" />
           <el-table-column prop="类型" label="类型" align="center" />
-          <el-table-column prop="表名" label="表名" align="center" />
           <el-table-column prop="描述" label="描述" align="center" />
+          <el-table-column prop="顺序" label="顺序" align="center" />
           <el-table-column prop="时间精度" label="时间精度" align="center" />
+          <!-- 操作 -->
+          <el-table-column label="操作" align="center" width="200">
+            <template #default="scope">
+              <el-button
+                type="primary"
+                :disabled="!editing"
+                @click="handleEditField(scope.row)"
+              >
+                编辑
+              </el-button>
+              <el-button
+                type="danger"
+                :disabled="!editing"
+                @click="handleDeleteField(scope.row)"
+              >
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <div v-if="editing" class="w-full">
           <el-button
@@ -122,7 +141,7 @@ import { DynamicFormAPI, DynamicFormFieldAPI } from "@/api/dynamicForm";
 import { useRoute, useRouter } from "vue-router";
 import FieldDefinitionForm from "./components/FieldDefinitionForm.vue";
 import OpBar from "@/components/CustomComponent/OpBar/index.vue";
-
+import { handleDeleteRow } from "@/hooks/useTableOp";
 const route = useRoute();
 
 const router = useRouter();
@@ -162,7 +181,7 @@ const fieldDefinitionForm = ref<IFormFieldDefinitionForm>({
   类型: "未定义",
   描述: undefined,
   索引名: undefined,
-  索引唯一: false,
+  索引唯一: undefined,
   顺序: undefined,
   索引顺序: undefined,
   字符串最大长度: undefined,
@@ -198,6 +217,18 @@ const handleAddRecord = () => {
   fieldDefinitionDialogVisible.value = true;
 };
 
+const handleEditField = (row: any) => {
+  fieldDefinitionForm.value = row;
+  fieldDefinitionForm.value.索引唯一 = undefined;
+  fieldDefinitionDialogVisible.value = true;
+};
+
+const handleDeleteField = (row: any) => {
+  handleDeleteRow(row, DynamicFormFieldAPI.deleteDynamicFormField, () => {
+    initFieldTableData();
+  });
+};
+
 const onSubmit = async () => {
   // console.log("onSubmit");
   try {
@@ -228,7 +259,11 @@ const submitFieldDefinition = async () => {
   if (valid) {
     fieldDefinitionFormLoading.value = true;
     try {
-      await DynamicFormFieldAPI.addDynamicFormField({
+      const remoteApi =
+        fieldDefinitionForm.value.id === -1
+          ? DynamicFormFieldAPI.addDynamicFormField
+          : DynamicFormFieldAPI.editDynamicFormField;
+      await remoteApi({
         ...fieldDefinitionForm.value,
         表单定义编号: form.value.编号,
       });
