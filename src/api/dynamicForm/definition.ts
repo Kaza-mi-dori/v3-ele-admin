@@ -29,7 +29,7 @@ export const DynamicFormAPI = {
   editDynamicFormDefinition(data: any) {
     return request2({
       url: `${DYNAMIC_FORM_BASE_URL}`,
-      method: "put",
+      method: "patch",
       data,
     });
   },
