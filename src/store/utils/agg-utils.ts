@@ -12,7 +12,11 @@ interface ProductData {
   数据类型: string;
   当期计划值: number;
   当期实际值: number;
-  累计值: number;
+  年累计值: number;
+  年累计值环比: number;
+  年累计值环比增幅: number;
+  年累计值同比: number;
+  年累计值同比增幅: number;
   环比: number;
   同比增长: number;
   同比增幅: number | string;
@@ -27,7 +31,11 @@ interface AggregatedData {
   数据时间: string; // 具体时间 2025-01、2025等
   计划值: number;
   实际值: number;
-  累计值: number;
+  年累计值: number;
+  年累计值环比: number;
+  年累计值环比增幅: number;
+  年累计值同比: number;
+  年累计值同比增幅: number;
   环比率: number;
   环比值: number;
   同比率: number;
@@ -44,7 +52,7 @@ interface AggData {
   数据时间: string;
   计划值: number;
   实际值: number;
-  累计值: number;
+  年累计值: number;
   环比率: number;
   环比值: number;
   同比率: number;
@@ -230,7 +238,11 @@ function flattenData(rawData: any): Array<ProductData> {
             产品类型: 产品数据.产品类型,
             当期计划值: 产品数据.当期计划值,
             当期实际值: 产品数据.当期实际值,
-            累计值: 产品数据.累计值,
+            年累计值: 产品数据.年累计值,
+            年累计值环比: 产品数据.年累计值环比,
+            年累计值环比增幅: 产品数据.年累计值环比增幅,
+            年累计值同比: 产品数据.年累计值同比,
+            年累计值同比增幅: 产品数据.年累计值同比增幅,
             环比: 产品数据.环比,
             同比增长: 产品数据.同比增长,
             同比增幅: 产品数据.同比增幅,
@@ -390,7 +402,11 @@ function buildYearOrgCache(keyIndexType: string, year: string, data: any[]) {
       数据时间: year,
       计划值: 0,
       实际值: 0,
-      累计值: 0,
+      年累计值: 0,
+      年累计值环比: 0,
+      年累计值环比增幅: 0,
+      年累计值同比: 0,
+      年累计值同比增幅: 0,
       环比率: 0,
       环比值: 0,
       同比率: 0,
@@ -405,7 +421,7 @@ function buildYearOrgCache(keyIndexType: string, year: string, data: any[]) {
         const monthData = monthDatas[month];
         orgAggData.计划值 += monthData.计划值;
         orgAggData.实际值 += monthData.实际值;
-        orgAggData.累计值 += monthData.累计值;
+        orgAggData.年累计值 += monthData.年累计值;
       });
 
     yearCache.byOrg[keyIndexType][org][year] = orgAggData;
@@ -452,7 +468,7 @@ function buildMonthOrgCache(keyIndexType: string, month: string, data: any[]) {
           数据时间: month,
           计划值: 0,
           实际值: 0,
-          累计值: 0,
+          年累计值: 0,
           环比率: 0,
           环比值: 0,
           同比率: 0,
@@ -462,7 +478,7 @@ function buildMonthOrgCache(keyIndexType: string, month: string, data: any[]) {
 
       // 累加数值
       companyDataMap[company].实际值 += item.当期实际值;
-      companyDataMap[company].累计值 += item.累计值;
+      companyDataMap[company].年累计值 += item.年累计值;
       companyDataMap[company].计划值 += item.当期计划值;
     });
 
@@ -475,7 +491,7 @@ function buildMonthOrgCache(keyIndexType: string, month: string, data: any[]) {
       数据时间: month,
       计划值: 0,
       实际值: 0,
-      累计值: 0,
+      年累计值: 0,
       环比率: 0,
       环比值: 0,
       同比率: 0,
@@ -486,7 +502,7 @@ function buildMonthOrgCache(keyIndexType: string, month: string, data: any[]) {
     Object.values(companyDataMap).forEach((companyData) => {
       orgAggData.计划值 += companyData.计划值;
       orgAggData.实际值 += companyData.实际值;
-      orgAggData.累计值 += companyData.累计值;
+      orgAggData.年累计值 += companyData.年累计值;
       orgAggData.环比率 += companyData.环比率;
       orgAggData.环比值 += companyData.环比值;
       orgAggData.同比率 += companyData.同比率;
@@ -535,11 +551,15 @@ function buildYearProductTypeCache(
       数据时间: year,
       计划值: 0,
       实际值: 0,
-      累计值: 0,
+      年累计值: 0,
       环比率: 0,
       环比值: 0,
       同比率: 0,
       同比值: 0,
+      年累计值环比: 0,
+      年累计值环比增幅: 0,
+      年累计值同比: 0,
+      年累计值同比增幅: 0,
     };
 
     // 从相应的月度数据中获取产品类型级数据
@@ -551,7 +571,7 @@ function buildYearProductTypeCache(
         const monthData = monthDatas[month];
         productTypeAggData.计划值 += monthData.计划值;
         productTypeAggData.实际值 += monthData.实际值;
-        productTypeAggData.累计值 += monthData.累计值;
+        productTypeAggData.年累计值 += monthData.年累计值;
       });
 
     yearCache.byProductType[keyIndexType][productType][year] =
@@ -605,7 +625,7 @@ function buildMonthProductTypeCache(
           数据时间: month,
           计划值: 0,
           实际值: 0,
-          累计值: 0,
+          年累计值: 0,
           环比率: 0,
           环比值: 0,
           同比率: 0,
@@ -615,7 +635,7 @@ function buildMonthProductTypeCache(
 
       // 累加数值
       productDataMap[product].实际值 += item.当期实际值;
-      productDataMap[product].累计值 += item.累计值;
+      productDataMap[product].年累计值 += item.年累计值;
       productDataMap[product].计划值 += item.当期计划值;
     });
 
@@ -628,7 +648,7 @@ function buildMonthProductTypeCache(
       数据时间: month,
       计划值: 0,
       实际值: 0,
-      累计值: 0,
+      年累计值: 0,
       环比率: 0,
       环比值: 0,
       同比率: 0,
@@ -639,7 +659,7 @@ function buildMonthProductTypeCache(
     Object.values(productDataMap).forEach((productData) => {
       productTypeAggData.计划值 += productData.计划值;
       productTypeAggData.实际值 += productData.实际值;
-      productTypeAggData.累计值 += productData.累计值;
+      productTypeAggData.年累计值 += productData.年累计值;
     });
 
     monthCache.byProductType[keyIndexType][productType][month] =
@@ -679,11 +699,15 @@ function buildYearCompanyCache(
       数据时间: year,
       计划值: 0,
       实际值: 0,
-      累计值: 0,
+      年累计值: 0,
       环比率: 0,
       环比值: 0,
       同比率: 0,
       同比值: 0,
+      年累计值环比: 0,
+      年累计值环比增幅: 0,
+      年累计值同比: 0,
+      年累计值同比增幅: 0,
     };
 
     // 从相应的月度数据中获取公司级数据
@@ -695,7 +719,7 @@ function buildYearCompanyCache(
         const monthData = monthDatas[month];
         companyAggData.计划值 += monthData.计划值;
         companyAggData.实际值 += monthData.实际值;
-        companyAggData.累计值 += monthData.累计值;
+        companyAggData.年累计值 += monthData.年累计值;
       });
 
     yearCache.byCompany[keyIndexType][company][year] = companyAggData;
@@ -734,17 +758,21 @@ function buildMonthCompanyCache(
       数据时间: month,
       计划值: 0,
       实际值: 0,
-      累计值: 0,
+      年累计值: 0,
       环比率: 0,
       环比值: 0,
       同比率: 0,
       同比值: 0,
+      年累计值环比: 0,
+      年累计值环比增幅: 0,
+      年累计值同比: 0,
+      年累计值同比增幅: 0,
     };
 
     // 累加数值
     companyDataRows.forEach((item) => {
       companyAggData.实际值 += item.当期实际值;
-      companyAggData.累计值 += item.累计值;
+      companyAggData.年累计值 += item.年累计值;
       companyAggData.计划值 += item.当期计划值;
     });
 
@@ -785,17 +813,21 @@ function buildMonthProductCache(
       数据时间: month,
       计划值: 0,
       实际值: 0,
-      累计值: 0,
+      年累计值: 0,
       环比率: 0,
       环比值: 0,
       同比率: 0,
       同比值: 0,
+      年累计值环比: 0,
+      年累计值环比增幅: 0,
+      年累计值同比: 0,
+      年累计值同比增幅: 0,
     };
 
     // 累加数值
     productDataRows.forEach((item) => {
       productAggData.实际值 += item.当期实际值;
-      productAggData.累计值 += item.累计值;
+      productAggData.年累计值 += item.年累计值;
       productAggData.计划值 += item.当期计划值;
     });
 
@@ -836,11 +868,15 @@ function buildYearProductCache(
       数据时间: year,
       计划值: 0,
       实际值: 0,
-      累计值: 0,
+      年累计值: 0,
       环比率: 0,
       环比值: 0,
       同比率: 0,
       同比值: 0,
+      年累计值环比: 0,
+      年累计值环比增幅: 0,
+      年累计值同比: 0,
+      年累计值同比增幅: 0,
     };
 
     // 从相应的月度数据中获取产品级数据
@@ -852,7 +888,7 @@ function buildYearProductCache(
         const monthData = monthDatas[month];
         productAggData.计划值 += monthData.计划值;
         productAggData.实际值 += monthData.实际值;
-        productAggData.累计值 += monthData.累计值;
+        productAggData.年累计值 += monthData.年累计值;
       });
 
     yearCache.byProduct[keyIndexType][product][year] = productAggData;
@@ -907,17 +943,21 @@ function buildMonthOrgAndProductTypeCache(
         数据时间: month,
         计划值: 0,
         实际值: 0,
-        累计值: 0,
+        年累计值: 0,
         环比率: 0,
         环比值: 0,
         同比率: 0,
         同比值: 0,
+        年累计值环比: 0,
+        年累计值环比增幅: 0,
+        年累计值同比: 0,
+        年累计值同比增幅: 0,
       };
 
       // 累加数值
       productTypeDataRows.forEach((item) => {
         aggData.实际值 += item.当期实际值;
-        aggData.累计值 += item.累计值;
+        aggData.年累计值 += item.年累计值;
         aggData.计划值 += item.当期计划值;
       });
 
@@ -927,41 +967,52 @@ function buildMonthOrgAndProductTypeCache(
   });
 }
 
-// 计算指定维度的环比
+/**
+ * 计算指定维度的环比
+ * @param cache 缓存数据 直接取相应月份的缓存数据
+ * @param currentMonth 当前月份
+ * @param lastMonth 上一月份
+ */
 function calculateDimensionMToM(
-  cache: Record<string, Record<string, AggregatedData>>,
+  cache: Record<string, AggregatedData>,
   currentMonth: string,
   lastMonth: string
 ) {
-  Object.keys(cache).forEach((keyIndexType) => {
-    const currentMonthData = cache[keyIndexType][currentMonth];
-    const lastMonthData = cache[keyIndexType][lastMonth];
-    if (currentMonthData && lastMonthData) {
-      currentMonthData.环比率 = currentMonthData.实际值 / lastMonthData.实际值;
-      currentMonthData.环比值 =
-        lastMonthData.实际值 > 0
-          ? currentMonthData.实际值 - lastMonthData.实际值
-          : 0;
-    }
-  });
+  const currentMonthData = cache[currentMonth];
+  const lastMonthData = cache[lastMonth];
+  if (currentMonthData && lastMonthData) {
+    currentMonthData.环比率 =
+      lastMonthData.实际值 === 0
+        ? 0
+        : (currentMonthData.实际值 - lastMonthData.实际值) /
+          lastMonthData.实际值;
+    currentMonthData.环比值 = currentMonthData.实际值 - lastMonthData.实际值;
+  }
 }
 
 // 计算指定维度的同比
 function calculateDimensionYToY(
-  cache: Record<string, Record<string, AggregatedData>>,
+  cache: Record<string, AggregatedData>,
   current: string,
   last: string
 ) {
-  Object.keys(cache).forEach((keyIndexType) => {
-    const currentYearData = cache[keyIndexType][current];
-    const lastYearData = cache[keyIndexType][last];
-    if (currentYearData && lastYearData) {
-      currentYearData.同比率 = currentYearData.实际值 / lastYearData.实际值;
-      currentYearData.同比值 = lastYearData.实际值
-        ? currentYearData.实际值 - lastYearData.实际值
-        : 0;
-    }
-  });
+  const currentYearData = cache[current];
+  const lastYearData = cache[last];
+  if (currentYearData && lastYearData) {
+    currentYearData.同比率 =
+      lastYearData.实际值 === 0
+        ? 0
+        : (currentYearData.实际值 - lastYearData.实际值) / lastYearData.实际值;
+    currentYearData.同比值 = currentYearData.实际值 - lastYearData.实际值;
+
+    currentYearData.年累计值同比增幅 =
+      currentYearData.年累计值 - lastYearData.年累计值;
+    currentYearData.年累计值同比 =
+      lastYearData.年累计值 === 0
+        ? 0
+        : (currentYearData.年累计值 - lastYearData.年累计值) /
+          lastYearData.年累计值;
+  }
 }
 
 // 计算所有缓存数据的同比环比
@@ -970,8 +1021,8 @@ function calculateMonthCache() {
   calculateMonthMToM();
   // 计算月度同比
   calculateMonthYToY();
-  // 计算年度同比
-  calculateYearYToY();
+  // // 计算年度同比
+  // calculateYearYToY();
 }
 
 // 计算月度环比
@@ -995,52 +1046,122 @@ function calculateMonthMToM() {
         (currentYear === lastYear + 1 && currentMonth === 1 && lastMonth === 12)
       ) {
         // 处理组织维度
-        calculateDimensionMToM(
-          monthCache.byOrg[keyIndexType],
-          currentItem,
-          lastItem
-        );
+        Object.keys(monthCache.byOrg[keyIndexType]).forEach((org) => {
+          calculateDimensionMToM(
+            monthCache.byOrg[keyIndexType][org],
+            currentItem,
+            lastItem
+          );
+        });
         // 处理产品类型维度
-        calculateDimensionMToM(
-          monthCache.byProductType[keyIndexType],
-          currentItem,
-          lastItem
+        Object.keys(monthCache.byProductType[keyIndexType]).forEach(
+          (productType) => {
+            calculateDimensionMToM(
+              monthCache.byProductType[keyIndexType][productType],
+              currentItem,
+              lastItem
+            );
+          }
         );
         // 处理公司维度
-        calculateDimensionMToM(
-          monthCache.byProduct[keyIndexType],
-          currentItem,
-          lastItem
-        );
+        Object.keys(monthCache.byCompany[keyIndexType]).forEach((company) => {
+          calculateDimensionMToM(
+            monthCache.byCompany[keyIndexType][company],
+            currentItem,
+            lastItem
+          );
+        });
         // 处理产品维度
-        calculateDimensionMToM(
-          monthCache.byProduct[keyIndexType],
-          currentItem,
-          lastItem
-        );
+        Object.keys(monthCache.byProduct[keyIndexType]).forEach((product) => {
+          calculateDimensionMToM(
+            monthCache.byProduct[keyIndexType][product],
+            currentItem,
+            lastItem
+          );
+        });
         // 处理组织和产品类型联合维度
-        // Object.keys(monthCache.byOrgAndProductType[keyIndexType]).forEach(
-        //   (org) => {
-        //     Object.keys(
-        //       monthCache.byOrgAndProductType[keyIndexType][org]
-        //     ).forEach((productType) => {
-        //       calculateDimensionMToM(
-        //         monthCache.byOrgAndProductType[keyIndexType][org][productType],
-        //         currentItem,
-        //         lastItem
-        //       );
-        //     });
-        //   }
-        // );
+        Object.keys(monthCache.byOrgAndProductType[keyIndexType]).forEach(
+          (org) => {
+            Object.keys(
+              monthCache.byOrgAndProductType[keyIndexType][org]
+            ).forEach((productType) => {
+              calculateDimensionMToM(
+                monthCache.byOrgAndProductType[keyIndexType][org][productType],
+                currentItem,
+                lastItem
+              );
+            });
+          }
+        );
       }
-
-      // 计算环比
     }
   });
 }
 // 计算月度同比
 function calculateMonthYToY() {
   // 对每个指标类型处理
+  Object.keys(monthCache.byOrg).forEach((keyIndexType) => {
+    const monthList = getMonthList();
+
+    monthList.forEach((currentMonth) => {
+      // 计算去年同期月份
+      const [year, month] = currentMonth.split("-");
+      const lastYearMonth = `${parseInt(year) - 1}-${month}`;
+
+      // 1. 处理组织维度
+      Object.keys(monthCache.byOrg[keyIndexType]).forEach((org) => {
+        calculateDimensionYToY(
+          monthCache.byOrg[keyIndexType][org],
+          currentMonth,
+          lastYearMonth
+        );
+      });
+
+      // 2. 处理产品类型维度
+      Object.keys(monthCache.byProductType[keyIndexType]).forEach(
+        (productType) => {
+          calculateDimensionYToY(
+            monthCache.byProductType[keyIndexType][productType],
+            currentMonth,
+            lastYearMonth
+          );
+        }
+      );
+
+      // 3. 处理公司维度
+      Object.keys(monthCache.byCompany[keyIndexType]).forEach((company) => {
+        calculateDimensionYToY(
+          monthCache.byCompany[keyIndexType][company],
+          currentMonth,
+          lastYearMonth
+        );
+      });
+
+      // 4. 处理产品维度
+      Object.keys(monthCache.byProduct[keyIndexType]).forEach((product) => {
+        calculateDimensionYToY(
+          monthCache.byProduct[keyIndexType][product],
+          currentMonth,
+          lastYearMonth
+        );
+      });
+
+      // 5. 处理组织和产品类型联合维度
+      Object.keys(monthCache.byOrgAndProductType[keyIndexType]).forEach(
+        (org) => {
+          Object.keys(
+            monthCache.byOrgAndProductType[keyIndexType][org]
+          ).forEach((productType) => {
+            calculateDimensionYToY(
+              monthCache.byOrgAndProductType[keyIndexType][org][productType],
+              currentMonth,
+              lastYearMonth
+            );
+          });
+        }
+      );
+    });
+  });
 }
 
 // 计算年度同比
@@ -1086,10 +1207,21 @@ function initCache(rawData: any) {
   // console.log(monthData);
   // 构建月度缓存
   initMonthCache(monthData);
-  console.log(monthCache);
   // 构建年份缓存
   initYearCache(yearData, flattenedData);
-  console.log(yearCache);
+
+  // 计算同比环比
+  calculateMonthCache();
+
+  // 测试查询
+  const result = queryAggData({
+    keyIndexType: "营收",
+    timeDimension: "month",
+    org: "石化板块",
+    startDate: "2025-01",
+    endDate: "2025-12",
+  });
+  console.log(result);
 }
 
 /**
@@ -1301,6 +1433,72 @@ function clearCache() {
   monthCache.byOrgAndProductType = {};
 }
 
+/**
+ * 统一查询接口
+ * @param 查询参数 查询参数对象
+ */
+function queryAggData(queryParam: {
+  keyIndexType: string;
+  timeDimension: "year" | "month";
+  startDate: string;
+  endDate: string;
+  org?: string;
+  productType?: string;
+  company?: string;
+  product?: string;
+}): AggregatedData[] {
+  const {
+    keyIndexType,
+    timeDimension,
+    startDate,
+    endDate,
+    org,
+    productType,
+    company,
+    product,
+  } = queryParam;
+
+  // 根据提供的参数决定使用哪个查询函数
+  if (org && productType) {
+    return queryOrgAndProductTypeData(
+      keyIndexType,
+      org,
+      productType,
+      timeDimension,
+      startDate,
+      endDate
+    );
+  } else if (org) {
+    return queryOrgData(keyIndexType, org, timeDimension, startDate, endDate);
+  } else if (productType) {
+    return queryProductTypeData(
+      keyIndexType,
+      productType,
+      timeDimension,
+      startDate,
+      endDate
+    );
+  } else if (company) {
+    return queryCompanyData(
+      keyIndexType,
+      company,
+      timeDimension,
+      startDate,
+      endDate
+    );
+  } else if (product) {
+    return queryProductData(
+      keyIndexType,
+      product,
+      timeDimension,
+      startDate,
+      endDate
+    );
+  } else {
+    throw new Error("查询参数不足，至少需要提供组织、产品类型、公司或产品之一");
+  }
+}
+
 // TODO 增删查改
 
 export {
@@ -1311,4 +1509,5 @@ export {
   queryCompanyData,
   queryProductData,
   queryOrgAndProductTypeData,
+  queryAggData,
 };

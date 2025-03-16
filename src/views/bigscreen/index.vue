@@ -127,7 +127,8 @@ const performanceMonitor = new PerformanceMonitor((info) => {
   if (info.longFrames > 5) {
     console.warn("卡顿帧数过多:", info.longFrames);
   }
-  if (info.memoryUsage && info.memoryUsage.usedJSHeapSize > 100 * 1024 * 1024) {
+  // 内存占用过高，开发环境下300M，生产环境下100M
+  if (info.memoryUsage && info.memoryUsage.usedJSHeapSize > 300 * 1024 * 1024) {
     console.warn("内存占用过高");
   }
 });
