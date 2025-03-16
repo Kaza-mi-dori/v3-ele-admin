@@ -146,18 +146,32 @@
 <script setup lang="ts">
 import Model1 from "../../Model1/index.vue";
 import TextTab from "@/views/bigscreen/components/SecondPage/Common/TextTab/index.vue";
-import DetailTable1 from "@/views/bigscreen/components/Common/Table/detailTable1.vue";
-import Left1 from "@/views/bigscreen/components/SecondPage/Left/left1.vue";
-import Left2 from "@/views/bigscreen/components/SecondPage/Left/left2.vue";
-import Right1 from "@/views/bigscreen/components/SecondPage/Right/right1.vue";
-import { ref, onMounted, shallowRef } from "vue";
-import { useRouter } from "vue-router";
 import * as echarts from "echarts";
 import "echarts-liquidfill";
 import MetricItem from "@/views/bigscreen/components/SecondPage/Common/MetricItem/index.vue";
 import sassvariables from "@/styles/variables.module.scss";
+import { ref, onMounted, shallowRef } from "vue";
+import { useRouter } from "vue-router";
 import { getDateOfOneYear, getDateOfOneYearToNow } from "@/utils/time";
+import { revenueData, businessStoreHook } from "@/store/modules/business";
+import {
+  initCache,
+  clearCache,
+  queryOrgData,
+  queryProductTypeData,
+  queryCompanyData,
+  queryOrgAndProductTypeData,
+  queryProductData,
+} from "@/store/utils/agg-utils";
 
+const testFunc = () => {
+  initCache(revenueData);
+  // console.log(
+  //   queryOrgData("revenue", "石化板块", "month", "2024-01-01", "2024-12-31")
+  // );
+};
+
+const businessStore = businessStoreHook();
 // 数据结果
 interface TimeSpanDataResult {
   // 时间维度
@@ -172,7 +186,7 @@ interface TimeSpanDataResult {
   productType?: string;
   // 产品细项
   product?: string;
-  // 当期计划值 当期实际值 累计值 环比 同比增长 同比增幅
+  // 当期计划值 当期实际值 累计值 环比 环比增长 同比增长 同比增幅
   plan: number;
   real: number;
   accumulated: number;
@@ -264,157 +278,6 @@ const exampleResult: TimeSpanDataResult = {
       subData: [],
     },
   ],
-};
-
-const exampleJson = {
-  营收: {
-    "2025-01": {
-      石化板块: {
-        "#92汽油": {
-          当期计划值: 105,
-          当期实际值: 112,
-          累计值: 112,
-          环比: 15.0,
-          同比增长: 18.0,
-          同比增幅: "18.0%",
-        },
-        "#95汽油": {
-          当期计划值: 85,
-          当期实际值: 92,
-          累计值: 92,
-          环比: 12.0,
-          同比增长: 16.0,
-          同比增幅: "16.0%",
-        },
-        "#98汽油": {
-          当期计划值: 45,
-          当期实际值: 50,
-          累计值: 50,
-          环比: 20.0,
-          同比增长: 25.0,
-          同比增幅: "25.0%",
-        },
-        "#0柴油": {
-          当期计划值: 120,
-          当期实际值: 128,
-          累计值: 128,
-          环比: 10.0,
-          同比增长: 14.0,
-          同比增幅: "14.0%",
-        },
-        原油: {
-          当期计划值: 500,
-          当期实际值: 530,
-          累计值: 530,
-          环比: 8.0,
-          同比增长: 12.0,
-          同比增幅: "12.0%",
-        },
-      },
-      广投石化: {
-        "#92汽油": {
-          当期计划值: 58,
-          当期实际值: 62,
-          累计值: 62,
-          环比: 12.0,
-          同比增长: 14.0,
-          同比增幅: "14.0%",
-        },
-        "#0柴油": {
-          当期计划值: 75,
-          当期实际值: 80,
-          累计值: 80,
-          环比: 10.0,
-          同比增长: 15.0,
-          同比增幅: "15.0%",
-        },
-      },
-    },
-    "2025-02": {
-      石化板块: {
-        "#92汽油": {
-          当期计划值: 110,
-          当期实际值: 118,
-          累计值: 230,
-          环比: 5.3,
-          同比增长: 16.0,
-          同比增幅: "16.0%",
-        },
-        "#95汽油": {
-          当期计划值: 90,
-          当期实际值: 96,
-          累计值: 188,
-          环比: 4.3,
-          同比增长: 14.0,
-          同比增幅: "14.0%",
-        },
-      },
-    },
-  },
-  利润: {
-    "2025-01": {
-      石化板块: {
-        "#92汽油": {
-          当期计划值: 18,
-          当期实际值: 20,
-          累计值: 20,
-          环比: 20.0,
-          同比增长: 25.0,
-          同比增幅: "25.0%",
-        },
-        "#98汽油": {
-          当期计划值: 12,
-          当期实际值: 14,
-          累计值: 14,
-          环比: 16.7,
-          同比增长: 33.3,
-          同比增幅: "33.3%",
-        },
-      },
-    },
-  },
-  采购量: {
-    "2025-01": {
-      石化板块: {
-        原油: {
-          当期计划值: 480,
-          当期实际值: 500,
-          累计值: 500,
-          环比: 5.0,
-          同比增长: 8.0,
-          同比增幅: "8.0%",
-        },
-      },
-    },
-  },
-  销售量: {
-    "2025-01": {
-      广投石化: {
-        "#0柴油": {
-          当期计划值: 4500,
-          当期实际值: 4800,
-          累计值: 4800,
-          环比: 10.0,
-          同比增长: 12.0,
-          同比增幅: "12.0%",
-        },
-      },
-    },
-  },
-  毛利率: {
-    "2025-01": {
-      石化板块: {
-        "#92汽油": {
-          当期计划值: 18.5,
-          当期实际值: 19.2,
-          累计值: 19.2,
-          环比: 3.8,
-          同比增长: 4.5,
-          同比增幅: "4.5%",
-        },
-      },
-    },
-  },
 };
 
 const router = useRouter();
@@ -630,7 +493,7 @@ let data = reactive(yearData);
 
 // 如果timeTabValue为year，则显示年份，否则显示月份
 watch(timeTabValue, (newVal, oldVal) => {
-  console.log(newVal, oldVal);
+  // console.log(newVal, oldVal);
   if (newVal !== oldVal) {
     // TODO 重新查询数据
     // 如果是月→年，则提取年份并查询年份数据
@@ -1592,9 +1455,19 @@ const initAnimation = () => {
 };
 
 const initData = async () => {
-  // TODO 查询相关数据
-  // 根据路由参数、时间、时间类型，查询相关数据
-  // 如果路由参数有值，则查询相关数据
+  // TODO 校验查询参数合法性
+  // const testData = await businessStore.queryKeyIndexData(
+  //   "营收",
+  //   "年",
+  //   "广投石化",
+  //   undefined,
+  //   undefined,
+  //   undefined,
+  //   undefined,
+  //   undefined,
+  //   undefined
+  // );
+  // console.log(testData);
   if (timeTabValue.value === "year") {
     data = yearData;
   } else {
@@ -1690,6 +1563,7 @@ const handleSearch = () => {
 };
 
 onMounted(async () => {
+  testFunc();
   await initialize();
   window.addEventListener("resize", () => {
     try {

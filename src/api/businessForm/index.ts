@@ -680,6 +680,28 @@ const BusinessFormAPI = {
       data,
     });
   },
+
+  /**
+   * 获取产品类型包含关系
+   *
+   */
+  getProductRelation() {
+    return request2<any, any>({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductRelation`,
+      method: "get",
+    });
+  },
+
+  /**
+   * 获取企业关系
+   *
+   */
+  getEnterpriseRelation() {
+    return request2<any, any>({
+      url: `${BUSINESS_FORM_BASE_URL}/EnterpriseRelation`,
+      method: "get",
+    });
+  },
 };
 
 export interface CompanyOverviewForm {
