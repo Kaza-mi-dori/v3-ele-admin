@@ -164,14 +164,8 @@ import {
   queryProductData,
 } from "@/store/utils/agg-utils";
 
-const testFunc = () => {
-  initCache(revenueData);
-  // console.log(
-  //   queryOrgData("revenue", "石化板块", "month", "2024-01-01", "2024-12-31")
-  // );
-};
-
 const businessStore = businessStoreHook();
+
 // 数据结果
 interface TimeSpanDataResult {
   // 时间维度
@@ -1454,20 +1448,61 @@ const initAnimation = () => {
   }
 };
 
+// 根据路由参数、时间、时间类型，构建查询参数
+const buildQueryParams = () => {
+  const queryParams = {
+    keyIndexType: "营收",
+    timeDimension: timeTabValue.value === "year" ? "年" : "月",
+    companyName: route.query.companyName || "石化板块",
+    fromYear: 2025,
+    toYear: 2025,
+    fromMonth: 1,
+    toMonth: 12,
+    category: undefined,
+    product: undefined,
+    withSubOrgData: true,
+    withSubProductData: false,
+    withSubProductTypeData: false,
+  };
+
+  // 如果有时间
+  if (datatime.value) {
+    if (timeTabValue.value === "year") {
+      queryParams.fromYear = new Date(datatime.value).getFullYear();
+      queryParams.toYear = new Date(datatime.value).getFullYear();
+    } else {
+      queryParams.fromMonth = new Date(datatime.value).getMonth() + 1;
+      queryParams.toMonth = new Date(datatime.value).getMonth() + 1;
+    }
+  }
+
+  // if (route.query.category) {
+  //   queryParams.category = route.query.category;
+  // }
+  // if (route.query.product) {
+  //   queryParams.product = route.query.product;
+  // }
+  return queryParams;
+};
+
 const initData = async () => {
   // TODO 校验查询参数合法性
-  // const testData = await businessStore.queryKeyIndexData(
-  //   "营收",
-  //   "年",
-  //   "广投石化",
-  //   undefined,
-  //   undefined,
-  //   undefined,
-  //   undefined,
-  //   undefined,
-  //   undefined
-  // );
-  // console.log(testData);
+  const queryParams = buildQueryParams();
+  const testData = await businessStore.queryKeyIndexData(
+    queryParams.keyIndexType as "营收" | "利润",
+    queryParams.timeDimension as "年" | "月",
+    queryParams.companyName as string,
+    queryParams.fromYear as number,
+    queryParams.toYear as number,
+    queryParams.fromMonth as number,
+    queryParams.toMonth as number,
+    queryParams.category as string | undefined,
+    queryParams.product as string | undefined,
+    queryParams.withSubOrgData as boolean,
+    queryParams.withSubProductData as boolean,
+    queryParams.withSubProductTypeData as boolean
+  );
+  console.log(testData);
   if (timeTabValue.value === "year") {
     data = yearData;
   } else {
@@ -1563,7 +1598,7 @@ const handleSearch = () => {
 };
 
 onMounted(async () => {
-  testFunc();
+  // testFunc();
   await initialize();
   window.addEventListener("resize", () => {
     try {

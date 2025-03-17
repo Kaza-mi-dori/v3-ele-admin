@@ -1,6 +1,18 @@
 import { store } from "@/store";
 import BusinessFormAPI, { type BusinessReportQuery } from "@/api/businessForm";
 import { ref, computed } from "vue";
+import {
+  type MonthCache,
+  type YearCache,
+  initCache,
+  clearCache,
+  queryOrgData,
+  queryProductTypeData,
+  queryCompanyData,
+  queryOrgAndProductTypeData,
+  queryProductData,
+  queryAggData,
+} from "@/store/utils/agg-utils";
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -375,109 +387,6 @@ export const revenueData = {
   },
 };
 
-// 产品报表
-const productReport = {
-  年: {
-    "2025": {
-      "#92汽油": {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-      "#98汽油": {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-      "#0柴油": {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-      原油产品: {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-    },
-  },
-  月: {
-    "2025-01": {
-      "#92汽油": {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-      "#98汽油": {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-      "#0柴油": {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-      原油产品: {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-    },
-  },
-};
-
-// 组织报表
-const enterpriseReport = {
-  年: {
-    "2025": {
-      广投石化: {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-    },
-  },
-  月: {
-    "2025-01": {
-      石化板块: {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-      广投石化: {
-        营收: {},
-        利润: {},
-        采购量: {},
-        销售量: {},
-        库存量: {},
-      },
-    },
-  },
-};
-
-// 组织-产品类型报表
-
 // 层数较浅直接用json模拟树结构
 // 较深则转用节点树 + k-v 表
 const enterpriseRelationData = {
@@ -509,12 +418,6 @@ const productRelationData = {
     原油产品: undefined,
   },
 };
-
-// 0315 两种解决方案
-// 1. 另起数据库服务，原原本本做出定期聚合计算、缓存、查询逻辑
-// 2. 直接根据可能的查询结果(4种指标 * 4个组织 * 4个产品类型)，先维护64(年) + 128(月) = 192个返回结果，然后根据返回结果进行查询
-// 3. 依次补充getSubOrgData/getSubProductData/getSubData，简化可能情况(当年或者当月，同环比最多只需要前一年或者前一个月的数据，但是需要缓存 )
-
 /**
  * 针对json模拟树结构进行深度优先搜索
  * @param data 数据
@@ -568,6 +471,20 @@ export const businessStore = defineStore("business", () => {
   const businessInfo = ref([]);
   const businessInfoValue = computed(() => businessInfo.value);
   const businessReportMap = ref<Record<string, any>>({});
+  const yearCache = ref<YearCache>();
+  const monthCache = ref<MonthCache>();
+
+  function initLocalBusinessDatabase() {
+    if (yearCache.value && monthCache.value) {
+      // return;
+      clearCache();
+    }
+    const cache = initCache(revenueData);
+    yearCache.value = cache.yearCache;
+    monthCache.value = cache.monthCache;
+    // console.log(yearCache.value, monthCache.value);
+  }
+
   /**
    * 获取业态报表列表
    *
@@ -913,7 +830,7 @@ export const businessStore = defineStore("business", () => {
   }
 
   /**
-   * 根据时间维度、企业、业态、产品拼装数据至TimeSpanDataResult
+   * 查询关键指标数据并根据企业关系进行拼装
    * @param keyIndex 关键指标
    * @param timeScale 时间维度
    * @param company 企业
@@ -921,80 +838,12 @@ export const businessStore = defineStore("business", () => {
    * @param toYear 结束年份
    * @param fromMonth 开始月份
    * @param toMonth 结束月份
-   */
-  function getTimeSpanDataResult(
-    keyIndex: "营收" | "利润",
-    timeScale: "年" | "月",
-    fromYear?: number,
-    toYear?: number,
-    fromMonth?: number,
-    toMonth?: number,
-    company?: string,
-    category?: string,
-    product?: string
-  ) {
-    const rows = getKeyIndexData(
-      keyIndex,
-      timeScale,
-      fromYear!,
-      toYear!,
-      fromMonth!,
-      toMonth!,
-      company,
-      category,
-      product
-    );
-    let result: TimeSpanDataResult = {
-      timeSpan: timeScale,
-      dataTime: `${toYear}-${toMonth}`,
-      keyIndexType: keyIndex,
-      org: company || "石化板块",
-      productType: category,
-      product: product,
-      plan: 0,
-      real: 0,
-      accumulated: 0,
-      pOverPRate: 0,
-      pOverPValue: 0,
-      pToPRate: 0,
-      pToPValue: 0,
-    };
-    // 按照月份分组数据
-    const monthResult: Record<string, any> = {};
-    const months: string[] = Array.from(
-      new Set(rows.map((row) => row.数据时间.split("-")))
-    );
-    // 根据月份分组数据
-    for (const month of months) {
-      monthResult[month] = {
-        plan: 0,
-        real: 0,
-        accumulated: 0,
-        pOverPRate: 0,
-        pOverPValue: 0,
-        pToPRate: 0,
-        pToPValue: 0,
-      };
-      for (const row of rows) {
-        if (row.数据时间.split("-")[1] === month) {
-          monthResult[month].plan += row.当期计划值;
-          monthResult[month].real += row.当期实际值;
-          monthResult[month].accumulated += row.累计值;
-        }
-      }
-    }
-    return result;
-  }
-
-  /**
-   * 查询关键指标数据并根据企业关系进行拼装
-   * @param keyIndex 关键指标
-   * @param timeScale 时间维度
-   * @param company 企业
-   * @param from 开始时间
-   * @param to 结束时间
    * @param category 业态, 和company至少一个
    * @param product 产品, 和company至少一个
+   * @param withSubTimeData 是否查询子时段数据
+   * @param withSubOrgData 是否查询下属企业数据
+   * @param withSubProductData 是否查询下属产品数据
+   * @param withSubProductTypeData 是否查询下属业态数据
    */
   function queryKeyIndexData(
     keyIndex: "营收" | "利润",
@@ -1005,9 +854,18 @@ export const businessStore = defineStore("business", () => {
     fromMonth?: number,
     toMonth?: number,
     category?: string,
-    product?: string
+    product?: string,
+    withSubTimeData?: boolean,
+    withSubOrgData?: boolean,
+    withSubProductData?: boolean,
+    withSubProductTypeData?: boolean
   ) {
     return new Promise<any>((resolve, reject) => {
+      // 如果缓存为空，则初始化缓存
+      if (!yearCache.value || !monthCache.value) {
+        initLocalBusinessDatabase();
+      }
+
       // 如果不满足参数条件则返回空
       if (!company && !category && !product) {
         reject("请至少选择一个企业或业态或产品来查询");
@@ -1028,54 +886,36 @@ export const businessStore = defineStore("business", () => {
         fromMonth = fromMonth || new Date().getMonth() + 1;
         toMonth = toMonth || new Date().getMonth() + 1;
       }
-      // let result: TimeSpanDataResult[] = [];
-      // if (timeScale === "年") {
-      //   const result: TimeSpanDataResult = {
-      //     timeSpan: "年",
-      //     dataTime: `${toYear}-${toMonth}`,
-      //     keyIndexType: keyIndex,
-      //     org: company || "石化板块",
-      //     productType: category,
-      //     product: product,
-      //     // TODO 改为从年报表中获取
-      //     plan: rows.reduce((acc, row) => acc + row.当期计划值, 0),
-      //     real: rows.reduce((acc, row) => acc + row.当期实际值, 0),
-      //     accumulated: rows.reduce((acc, row) => acc + row.累计值, 0),
-      //     pOverPRate: 0,
-      //     pOverPValue: 0,
-      //     pToPRate: 0,
-      //     pToPValue: 0,
-      //     subData: rows.map((row) => {
-      //       return {
-      //         ...row,
-      //         dataTime: `${row.数据时间}`,
-      //         org: row.组织名,
-      //         productType: row.产品类型,
-      //         product: row.产品,
-      //         plan: row.当期计划值,
-      //         real: row.当期实际值,
-      //         accumulated: row.累计值,
-      //         pOverPRate: row.环比,
-      //         pOverPValue: row.环比增幅,
-      //         pToPRate: row.同比,
-      //         pToPValue: row.同比增幅,
-      //       };
-      //     }),
-      //   };
-      // } else {
-      //   result = rows;
-      // }
-      const result = getKeyIndexData(
-        keyIndex,
-        timeScale,
-        fromYear!,
-        toYear!,
-        fromMonth!,
-        toMonth!,
-        company,
-        category,
-        product
-      );
+      // const result = getKeyIndexData(
+      //   keyIndex,
+      //   timeScale,
+      //   fromYear!,
+      //   toYear!,
+      //   fromMonth!,
+      //   toMonth!,
+      //   company,
+      //   category,
+      //   product
+      // );
+      const result = queryAggData({
+        keyIndexType: keyIndex,
+        timeDimension: timeScale === "年" ? "year" : "month",
+        org: company,
+        productType: category,
+        product: product,
+        startDate:
+          timeScale === "年"
+            ? `${fromYear}`
+            : `${fromYear}-${fromMonth!.toString().padStart(2, "0")}`,
+        endDate:
+          timeScale === "年"
+            ? `${toYear}`
+            : `${toYear}-${toMonth!.toString().padStart(2, "0")}`,
+        withSubTimeData,
+        withSubOrgData,
+        withSubProductData,
+        withSubProductTypeData,
+      });
       resolve(result);
     });
   }
