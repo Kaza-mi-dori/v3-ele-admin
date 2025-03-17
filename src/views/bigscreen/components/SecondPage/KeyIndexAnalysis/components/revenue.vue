@@ -1450,18 +1450,37 @@ const initAnimation = () => {
 
 // 根据路由参数、时间、时间类型，构建查询参数
 const buildQueryParams = () => {
+  // 测试数据：组织
+  // const queryParams = {
+  //   keyIndexType: "营收",
+  //   timeDimension: timeTabValue.value === "year" ? "年" : "月",
+  //   companyName: route.query.companyName || "石化板块",
+  //   fromYear: 2025,
+  //   toYear: 2025,
+  //   fromMonth: 1,
+  //   toMonth: 12,
+  //   category: "成品油",
+  //   product: undefined,
+  //   withSubTimeData: true,
+  //   withSubOrgData: true,
+  //   withSubProductData: true,
+  //   withSubProductTypeData: false,
+  // };
+
+  // 测试数据：产品类型
   const queryParams = {
     keyIndexType: "营收",
     timeDimension: timeTabValue.value === "year" ? "年" : "月",
-    companyName: route.query.companyName || "石化板块",
+    companyName: undefined,
     fromYear: 2025,
     toYear: 2025,
     fromMonth: 1,
     toMonth: 12,
-    category: undefined,
+    category: "原油类",
     product: undefined,
+    withSubTimeData: true,
     withSubOrgData: true,
-    withSubProductData: false,
+    withSubProductData: true,
     withSubProductTypeData: false,
   };
 
@@ -1491,13 +1510,14 @@ const initData = async () => {
   const testData = await businessStore.queryKeyIndexData(
     queryParams.keyIndexType as "营收" | "利润",
     queryParams.timeDimension as "年" | "月",
-    queryParams.companyName as string,
+    queryParams.companyName as string | undefined,
     queryParams.fromYear as number,
     queryParams.toYear as number,
     queryParams.fromMonth as number,
     queryParams.toMonth as number,
     queryParams.category as string | undefined,
     queryParams.product as string | undefined,
+    queryParams.withSubTimeData as boolean,
     queryParams.withSubOrgData as boolean,
     queryParams.withSubProductData as boolean,
     queryParams.withSubProductTypeData as boolean

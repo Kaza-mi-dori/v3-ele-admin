@@ -76,6 +76,11 @@ interface AggData {
   subProductTypeData?: AggData[]; // 嵌套子项数据
 }
 
+// 组织的包含关系
+const orgToOrgMap: Record<string, string[]> = {
+  石化板块: ["广投石化", "桂盛桂轩", "开燃公司", "恒润公司"],
+};
+
 // 组织到企业的映射
 const orgToEnterpriseMap: Record<string, string[]> = {
   石化板块: [
@@ -99,9 +104,19 @@ const productTypeToProductMap: Record<string, string[]> = {
   原油类: ["原油产品"],
   化工类: ["化工产品"],
   天然气类: ["天然气产品"],
+  煤炭类: ["煤炭"],
   其他类: ["其他产品"],
   汽油: ["#92汽油", "#95汽油", "#98汽油"],
   柴油: ["#0柴油"],
+};
+
+// 组织到产品类型的映射
+const orgToProductTypeMap: Record<string, string[]> = {
+  石化板块: ["成品油", "原油类", "化工类", "天然气类", "煤炭类", "其他类"],
+  广投石化: ["成品油", "原油类", "化工类", "天然气类", "煤炭类", "其他类"],
+  桂盛桂轩: ["成品油", "原油类", "化工类", "天然气类", "煤炭类", "其他类"],
+  开燃公司: ["成品油", "原油类", "化工类", "天然气类", "煤炭类", "其他类"],
+  恒润公司: ["成品油", "原油类", "化工类", "天然气类", "煤炭类", "其他类"],
 };
 
 // 反向映射：公司到组织的映射
@@ -109,6 +124,9 @@ const enterpriseToOrgMap: Record<string, string[]> = {};
 
 // 反向映射：产品到产品类型的映射
 const productToProductTypeMap: Record<string, string[]> = {};
+
+// 反向映射：产品类型到组织的映射
+const productTypeToOrgMap: Record<string, string[]> = {};
 
 const productRelationData = {
   成品油: {
@@ -155,6 +173,17 @@ function initReverseMap() {
       productToProductTypeMap[product].push(productType);
     }
   }
+
+  // 反向映射：产品类型到组织的映射
+  for (const [org, productTypes] of Object.entries(orgToProductTypeMap)) {
+    for (const productType of productTypes) {
+      if (!productTypeToOrgMap[productType]) {
+        productTypeToOrgMap[productType] = [];
+      }
+      productTypeToOrgMap[productType].push(org);
+    }
+  }
+  // console.log(productTypeToOrgMap);
 }
 
 // 缓存结构
@@ -1612,6 +1641,23 @@ function queryAggData(queryParam: {
         // TODO 查询下属日数据
       }
     }
+    if (withSubProductData) {
+      // 查询货品类型数据
+      const products = productTypeToProductMap[productType];
+      result.forEach((item) => {
+        item.subProductData = products
+          .map((product) => {
+            return queryProductData(
+              keyIndexType,
+              product,
+              timeDimension,
+              startDate,
+              endDate
+            );
+          })
+          .flat();
+      });
+    }
     return result;
   } else if (org) {
     const result = queryOrgData(
@@ -1641,13 +1687,37 @@ function queryAggData(queryParam: {
     if (withSubOrgData) {
       // 查询下属企业数据
       result.forEach((item) => {
-        const subCompanies = orgToEnterpriseMap[item.维度值];
-        if (subCompanies) {
-          item.subOrgData = subCompanies
-            .map((subCompany) => {
-              return queryCompanyData(
+        // 如果在包含关系中，则查询下属组织
+        const hasSubOrg = !!orgToOrgMap[item.维度值];
+        const subItems = hasSubOrg
+          ? orgToOrgMap[item.维度值]
+          : orgToEnterpriseMap[item.维度值];
+        const queryOp = hasSubOrg ? queryOrgData : queryCompanyData;
+        if (subItems) {
+          item.subOrgData = subItems
+            .map((subItem) => {
+              return queryOp(
                 keyIndexType,
-                subCompany,
+                subItem,
+                timeDimension,
+                startDate,
+                endDate
+              );
+            })
+            .flat();
+        }
+      });
+    }
+    if (withSubProductTypeData) {
+      // 需要将所有产品类型都查出来
+      result.forEach((item) => {
+        const productTypes = orgToProductTypeMap[item.维度值];
+        if (productTypes) {
+          item.subProductTypeData = productTypes
+            .map((productType) => {
+              return queryProductTypeData(
+                keyIndexType,
+                productType,
                 timeDimension,
                 startDate,
                 endDate
@@ -1659,13 +1729,69 @@ function queryAggData(queryParam: {
     }
     return result;
   } else if (productType) {
-    return queryProductTypeData(
+    const result = queryProductTypeData(
       keyIndexType,
       productType,
       timeDimension,
       startDate,
       endDate
     );
+    if (withSubTimeData) {
+      // 查询子时段数据
+      if (timeDimension === "year") {
+        // 查询月份数据
+        result.forEach((item) => {
+          item.subTimeData = queryProductTypeData(
+            keyIndexType,
+            productType,
+            "month",
+            `${item.数据时间}-01`,
+            `${item.数据时间}-12`
+          );
+        });
+      } else if (timeDimension === "month") {
+        // TODO 查询下属日数据
+      }
+    }
+    if (withSubProductData) {
+      // 查询货品类型数据
+      const products = productTypeToProductMap[productType];
+      result.forEach((item) => {
+        item.subProductData = products
+          .map((product) => {
+            return queryProductData(
+              keyIndexType,
+              product,
+              timeDimension,
+              startDate,
+              endDate
+            );
+          })
+          .flat();
+      });
+    }
+
+    if (withSubOrgData) {
+      // 查询下属组织数据
+      result.forEach((item) => {
+        const orgs = productTypeToOrgMap[item.维度值];
+        if (orgs) {
+          item.subOrgData = orgs
+            .map((org) => {
+              return queryOrgData(
+                keyIndexType,
+                org,
+                timeDimension,
+                startDate,
+                endDate
+              );
+            })
+            .flat();
+        }
+      });
+    }
+
+    return result;
   } else if (company) {
     const result = queryCompanyData(
       keyIndexType,
@@ -1689,6 +1815,39 @@ function queryAggData(queryParam: {
         });
       } else if (timeDimension === "month") {
         // TODO 查询下属日数据
+      }
+
+      // 查询货品类型数据
+      if (withSubProductTypeData) {
+        result.forEach((item) => {
+          const productTypes = orgToProductTypeMap[item.维度值];
+          if (productTypes) {
+            item.subProductTypeData = productTypes
+              .map((productType) => {
+                return queryProductTypeData(
+                  keyIndexType,
+                  productType,
+                  timeDimension,
+                  startDate,
+                  endDate
+                );
+              })
+              .flat();
+          }
+        });
+      }
+
+      // 查询货品数据
+      if (withSubProductData) {
+        result.forEach((item) => {
+          item.subProductData = queryProductData(
+            keyIndexType,
+            item.维度值,
+            timeDimension,
+            startDate,
+            endDate
+          );
+        });
       }
     }
     return result;
