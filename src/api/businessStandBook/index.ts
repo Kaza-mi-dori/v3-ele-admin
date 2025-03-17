@@ -73,7 +73,7 @@ units.forEach((unit) => {
   });
 });
 
-console.log("生成kari", kari);
+// console.log("生成kari", kari);
 
 const BusinessStandbookAPI = {
   ...kari,

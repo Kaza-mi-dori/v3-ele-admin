@@ -162,7 +162,9 @@ import {
   queryCompanyData,
   queryOrgAndProductTypeData,
   queryProductData,
+  type AggregatedData,
 } from "@/store/utils/agg-utils";
+import { dateTableEmits } from "element-plus/es/components/calendar/src/date-table";
 
 const businessStore = businessStoreHook();
 
@@ -276,24 +278,6 @@ const exampleResult: TimeSpanDataResult = {
 
 const router = useRouter();
 const route = useRoute();
-const totalData = ref([
-  {
-    year: "25438",
-    month: "25438",
-  },
-  {
-    year: "25438",
-    month: "25438",
-  },
-  {
-    year: "25438",
-    month: "25438",
-  },
-  {
-    year: "25438",
-    month: "25438",
-  },
-]);
 
 const metricItemData = ref([
   {
@@ -315,17 +299,6 @@ const metricItemData = ref([
     title: "同比增幅",
     value: 0,
     unit: "%",
-  },
-]);
-
-const subOrgTableData = ref([
-  {
-    name: "广投石化",
-    value: "1000",
-  },
-  {
-    name: "开燃公司",
-    value: "1000",
   },
 ]);
 
@@ -372,14 +345,41 @@ const yearData = {
   liquidFill: {
     fulfilledPercent: 20,
   },
+  metricItem: [
+    {
+      title: "累计",
+      value: 0,
+      unit: "万元",
+    },
+    {
+      title: "环比增幅",
+      value: 0,
+      unit: "%",
+    },
+    {
+      title: "同比增长",
+      value: 0,
+      unit: "万元",
+    },
+    {
+      title: "同比增幅",
+      value: 0,
+      unit: "%",
+    },
+  ],
   chart1: {
-    data: [100, 200],
+    dataPlan: [100, 200],
+    dataReal: [100, 200],
   },
   chart2: {
     data: [100, 200],
   },
   chart3: {
     data: [100, 200],
+  },
+  chart31: {
+    dataTarget: [100, 200],
+    dataActual: [100, 200],
   },
   chart4: {
     data: [100, 200],
@@ -426,64 +426,9 @@ const yearData = {
   },
 };
 
-const monthData = {
-  liquidFill: {
-    fulfilledPercent: 50,
-  },
-  chart1: {
-    data: [30, 20],
-  },
-  chart2: {
-    data: [30, 20],
-  },
-  chart3: {
-    data: [30, 20],
-  },
-  chart4: {
-    data: [30, 20],
-  },
-  table1: {
-    data: [
-      {
-        name: "广投石化",
-        value: [20, 30, 20, 10],
-      },
-      {
-        name: "开燃公司",
-        value: [100, 30, 20, 60],
-      },
-      {
-        name: "桂盛桂轩",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "恒润",
-        value: [200, 300, 200, 100],
-      },
-    ],
-  },
-  table2: {
-    data: [
-      {
-        name: "原油",
-        value: [20, 30, 20, 10],
-      },
-      {
-        name: "成品油",
-        value: [20, 30, 20, 10],
-      },
-      {
-        name: "化工产品",
-        value: [20, 30, 20, 10],
-      },
-      {
-        name: "其他",
-        value: [20, 30, 20, 10],
-      },
-    ],
-  },
-};
 let data = reactive(yearData);
+const table1Data = toRef(data, "table1");
+const table2Data = toRef(data, "table2");
 
 // 如果timeTabValue为year，则显示年份，否则显示月份
 watch(timeTabValue, (newVal, oldVal) => {
@@ -693,7 +638,7 @@ const initChart1 = (type: string = "bar") => {
           { offset: 1, color: sassvariables["bigscreen-primary-color-7"] },
         ]),
         // data: [100, 200],
-        data: data.chart1.data,
+        data: data.chart1.dataPlan,
       },
       {
         type: "bar",
@@ -701,7 +646,7 @@ const initChart1 = (type: string = "bar") => {
         barWidth: "25%",
         barGap: "35%",
         // data: [110, 220],
-        data: data.chart1.data,
+        data: data.chart1.dataReal,
         markLine: {
           lineStyle: {
             type: "dashed",
@@ -870,12 +815,7 @@ const initChart3 = () => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "广投石化" },
-          { value: 735, name: "开燃公司" },
-          { value: 580, name: "桂盛桂轩" },
-          { value: 484, name: "恒润" },
-        ],
+        data: data.chart3.data,
       },
     ],
   };
@@ -890,46 +830,8 @@ const initChart31 = () => {
     );
   }
   chart31.value.clear();
-  const target = [
-    {
-      name: "广投石化",
-      value: 1048,
-    },
-    {
-      name: "开燃公司",
-      value: 735,
-    },
-    {
-      name: "桂盛桂轩",
-      value: 580,
-    },
-    {
-      name: "恒润",
-      value: 484,
-    },
-  ];
-  const actual = [
-    {
-      name: "广投石化",
-      value: 1050,
-      color: "#5470c6",
-    },
-    {
-      name: "开燃公司",
-      value: 515,
-      color: "#91cc75",
-    },
-    {
-      name: "桂盛桂轩",
-      value: 450,
-      color: "#fac858",
-    },
-    {
-      name: "恒润",
-      value: 484,
-      color: "#ee6666",
-    },
-  ];
+  const target = data.chart31.dataTarget;
+  const actual = data.chart31.dataActual;
   // 实际渲染的y应该都是0~100%，但是tooltip显示的是实际值
   // 所以需要先归一化，让整个y轴最大值为100%
   const normalizedActual = actual.map((item, index) => ({
@@ -1107,12 +1009,7 @@ const initChart4 = () => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "原油" },
-          { value: 735, name: "成品油" },
-          { value: 580, name: "化工产品" },
-          { value: 484, name: "其他" },
-        ],
+        data: data.chart4.data,
       },
     ],
   };
@@ -1127,46 +1024,8 @@ const initChart41 = () => {
     );
   }
   chart41.value.clear();
-  const target = [
-    {
-      name: "原油",
-      value: 1048,
-    },
-    {
-      name: "成品油",
-      value: 735,
-    },
-    {
-      name: "化工产品",
-      value: 580,
-    },
-    {
-      name: "其他",
-      value: 484,
-    },
-  ];
-  const actual = [
-    {
-      name: "原油",
-      value: 1140,
-      color: "#5470c6",
-    },
-    {
-      name: "成品油",
-      value: 515,
-      color: "#91cc75",
-    },
-    {
-      name: "化工产品",
-      value: 450,
-      color: "#fac858",
-    },
-    {
-      name: "其他",
-      value: 484,
-      color: "#ee6666",
-    },
-  ];
+  const target = data.chart41.dataTarget;
+  const actual = data.chart41.dataActual;
   const normalizedActual = actual.map((item, index) => ({
     ...item,
     value: (item.value / target[index].value) * 100,
@@ -1451,38 +1310,38 @@ const initAnimation = () => {
 // 根据路由参数、时间、时间类型，构建查询参数
 const buildQueryParams = () => {
   // 测试数据：组织
+  const queryParams = {
+    keyIndexType: "营收",
+    timeDimension: timeTabValue.value === "year" ? "年" : "月",
+    companyName: route.query.companyName || "石化板块",
+    fromYear: 2025,
+    toYear: 2025,
+    fromMonth: 1,
+    toMonth: 12,
+    category: undefined,
+    product: undefined,
+    withSubTimeData: true,
+    withSubOrgData: true,
+    withSubProductData: false,
+    withSubProductTypeData: true,
+  };
+
+  // // 测试数据：产品类型
   // const queryParams = {
   //   keyIndexType: "营收",
   //   timeDimension: timeTabValue.value === "year" ? "年" : "月",
-  //   companyName: route.query.companyName || "石化板块",
+  //   companyName: undefined,
   //   fromYear: 2025,
   //   toYear: 2025,
   //   fromMonth: 1,
   //   toMonth: 12,
-  //   category: "成品油",
+  //   category: "原油类",
   //   product: undefined,
   //   withSubTimeData: true,
   //   withSubOrgData: true,
   //   withSubProductData: true,
   //   withSubProductTypeData: false,
   // };
-
-  // 测试数据：产品类型
-  const queryParams = {
-    keyIndexType: "营收",
-    timeDimension: timeTabValue.value === "year" ? "年" : "月",
-    companyName: undefined,
-    fromYear: 2025,
-    toYear: 2025,
-    fromMonth: 1,
-    toMonth: 12,
-    category: "原油类",
-    product: undefined,
-    withSubTimeData: true,
-    withSubOrgData: true,
-    withSubProductData: true,
-    withSubProductTypeData: false,
-  };
 
   // 如果有时间
   if (datatime.value) {
@@ -1507,7 +1366,7 @@ const buildQueryParams = () => {
 const initData = async () => {
   // TODO 校验查询参数合法性
   const queryParams = buildQueryParams();
-  const testData = await businessStore.queryKeyIndexData(
+  const testData: AggregatedData[] = await businessStore.queryKeyIndexData(
     queryParams.keyIndexType as "营收" | "利润",
     queryParams.timeDimension as "年" | "月",
     queryParams.companyName as string | undefined,
@@ -1522,12 +1381,130 @@ const initData = async () => {
     queryParams.withSubProductData as boolean,
     queryParams.withSubProductTypeData as boolean
   );
-  console.log(testData);
-  if (timeTabValue.value === "year") {
-    data = yearData;
-  } else {
-    data = monthData;
+  // console.log(testData);
+  // TODO 将数据放入组件
+  if (testData?.[0]) {
+    data = {
+      liquidFill: {
+        fulfilledPercent: Number(
+          ((testData[0].实际值 / testData[0].计划值) * 100).toFixed(2)
+        ),
+      },
+      metricItem: [
+        {
+          title: "累计",
+          value: testData[0].年累计值,
+          unit: "万元",
+        },
+        {
+          title: "环比增幅",
+          value: testData[0].年累计值环比增幅,
+          unit: "%",
+        },
+        {
+          title: "同比增长",
+          value: testData[0].年累计值同比,
+          unit: "万元",
+        },
+        {
+          title: "同比增幅",
+          value: testData[0].年累计值同比增幅,
+          unit: "%",
+        },
+      ],
+      chart1: {
+        dataReal: testData[0].subTimeData?.map((item: any) => item.实际值),
+        dataPlan: testData[0].subTimeData?.map((item: any) => item.计划值),
+      },
+      chart2: {
+        data: [100, 200],
+      },
+      chart3: {
+        data: testData[0].subOrgData?.map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.实际值,
+          };
+        }),
+      },
+      chart31: {
+        dataTarget: testData[0].subOrgData?.map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.计划值,
+          };
+        }),
+        dataActual: testData[0].subOrgData?.map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.实际值,
+          };
+        }),
+      },
+      chart4: {
+        data: testData[0].subProductTypeData?.map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.实际值,
+          };
+        }),
+      },
+      chart41: {
+        dataTarget: testData[0].subProductTypeData?.map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.计划值,
+          };
+        }),
+        dataActual: testData[0].subProductTypeData?.map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.实际值,
+          };
+        }),
+      },
+      table1:
+        testData[0].subOrgData ||
+        [].map((item: any) => {
+          return {
+            name: item.维度值,
+            value: [
+              item.实际值,
+              item.同比增幅,
+              item.环比值,
+              (item.实际值 / item.计划值) * 100 + "%",
+            ],
+          };
+        }),
+      table2: {
+        data: [
+          {
+            name: "原油",
+            value: [200, 300, 200, 100],
+          },
+          {
+            name: "成品油",
+            value: [200, 300, 200, 100],
+          },
+          {
+            name: "化工产品",
+            value: [200, 300, 200, 100],
+          },
+          {
+            name: "其他",
+            value: [200, 300, 200, 100],
+          },
+        ],
+      },
+    };
+    metricItemData.value = data.metricItem;
   }
+
+  // if (timeTabValue.value === "year") {
+  //   data = yearData;
+  // } else {
+  //   data = monthData;
+  // }
 };
 
 // 绑定各个图例的点击事件

@@ -33,7 +33,7 @@ interface ProductData {
 }
 
 // 聚合后的数据结构
-interface AggregatedData {
+export interface AggregatedData {
   指标类型: string; // 营收、利润等
   维度类型: string; // 组织、产品类型、公司、产品
   维度值: string; // 具体的组织名、产品类型名等

@@ -12,6 +12,7 @@ import {
   queryOrgAndProductTypeData,
   queryProductData,
   queryAggData,
+  type AggregatedData,
 } from "@/store/utils/agg-utils";
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
@@ -859,7 +860,7 @@ export const businessStore = defineStore("business", () => {
     withSubOrgData?: boolean,
     withSubProductData?: boolean,
     withSubProductTypeData?: boolean
-  ) {
+  ): AggregatedData[] {
     return new Promise<any>((resolve, reject) => {
       // 如果缓存为空，则初始化缓存
       if (!yearCache.value || !monthCache.value) {
