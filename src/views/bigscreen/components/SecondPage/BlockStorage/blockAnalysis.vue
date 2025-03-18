@@ -57,9 +57,12 @@ import icon2 from "@/views/bigscreen/img/product_icon2.png";
 import sassvariables from "@/styles/variables.module.scss";
 import * as echarts from "echarts";
 import { useRouter, useRoute } from "vue-router";
+import { businessStoreHook } from "@/store/modules/business";
 
 const router = useRouter();
 const route = useRoute();
+
+const businessStore = businessStoreHook();
 
 const company = ref("");
 const companyList = ref([
@@ -68,6 +71,24 @@ const companyList = ref([
     label: "企业1",
   },
 ]);
+
+// 页面所需要的数据
+interface StorageReport {
+  // 组织当日数据(年累计)
+  storageNumber: number;
+  totalStorageRevenue: number;
+  totalStorageProfit: number;
+  // 累计出库
+  totalOutStorageVolume: number;
+  // 累计入库
+  totalInStorageVolume: number;
+  // 库存量
+  totalStorageVolume: number;
+  // 分产品数据
+  subProductDatas?: StorageReport[];
+  // 分组织数据
+  subCompanyDatas?: StorageReport[];
+}
 
 const companyGraph1 = shallowRef<echarts.ECharts>();
 const companyGraph2 = shallowRef<echarts.ECharts>();
@@ -118,6 +139,8 @@ interface StorageData {
 const companyData = ref<CompanyData[]>([]);
 
 const storageData = ref<StorageData[]>([]);
+
+const pageData = ref<StorageReport>();
 
 const stats = ref([
   {
@@ -677,7 +700,51 @@ const initGraph6 = () => {
   });
 };
 
+const testQuery = (cache: any) => {
+  // console.log(cache);
+  // 根据组织名、年份获取年出库
+  // 优化点1： 自由选择子数据维度
+  // 优化点2： 自由选择产品
+  const yearCache = cache.yearCache;
+  const year = 2025;
+  const orgName = "广投石化";
+  const yearData = yearCache.byStorageName[orgName][year];
+  console.log(yearData);
+  // 根据产品名获取年出库
+  const productName = "#0柴油";
+  const yearPData = yearCache.byProduct[productName][year];
+  console.log(yearPData);
+  // 根据组织名、年份、产品名获取年入库
+  console.log(yearCache.byProductAndStorageName[productName][year][orgName]);
+};
+
+/**
+ * 查询库存仓储数据统一接口
+ * 时间维度：年/月/日
+ * 组织维度：组织名
+ * 产品维度：产品名
+ * 包含子产品维度
+ * 包含子事件维度
+ * @param cache
+ * @param timeDimension
+ * @param orgName
+ * @param productName
+ * @param subProductName
+ * @param subEventName
+ */
+function queryStorageAggData(
+  cache: any,
+  timeDimension: string,
+  orgName: string,
+  productName: string,
+  subProductName: string,
+  subEventName: string
+) {}
+
 onMounted(() => {
+  const cache = businessStore.getLocalStorageDatabase();
+  testQuery(cache);
+  // initStorageData();
   initAllGraph();
   window.addEventListener("resize", () => {
     companyGraph1.value?.resize();

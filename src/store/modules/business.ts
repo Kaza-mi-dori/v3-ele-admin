@@ -14,6 +14,13 @@ import {
   queryAggData,
   type AggregatedData,
 } from "@/store/utils/agg-utils";
+import {
+  storageData,
+  type StorageMonthCache,
+  type StorageYearCache,
+  clearStorageCache,
+  initStorageCache,
+} from "@/store/utils/storage-agg-utils";
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -472,8 +479,13 @@ export const businessStore = defineStore("business", () => {
   const businessInfo = ref([]);
   const businessInfoValue = computed(() => businessInfo.value);
   const businessReportMap = ref<Record<string, any>>({});
+
+  // 模拟数据库
   const yearCache = ref<YearCache>();
   const monthCache = ref<MonthCache>();
+  // 模拟库存数据表
+  const storageYearCache = ref<StorageYearCache>();
+  const storageMonthCache = ref<StorageMonthCache>();
 
   function initLocalBusinessDatabase() {
     if (yearCache.value && monthCache.value) {
@@ -484,6 +496,27 @@ export const businessStore = defineStore("business", () => {
     yearCache.value = cache.yearCache;
     monthCache.value = cache.monthCache;
     // console.log(yearCache.value, monthCache.value);
+  }
+
+  function initLocalStorageDatabase() {
+    if (storageYearCache.value && storageMonthCache.value) {
+      // return;
+      clearStorageCache();
+    }
+    const cache = initStorageCache();
+    storageYearCache.value = cache.yearCache;
+    storageMonthCache.value = cache.monthCache;
+    // console.log(storageYearCache.value, storageMonthCache.value);
+  }
+
+  function getLocalStorageDatabase() {
+    if (!storageYearCache.value || !storageMonthCache.value) {
+      initLocalStorageDatabase();
+    }
+    return {
+      yearCache: storageYearCache.value,
+      monthCache: storageMonthCache.value,
+    };
   }
 
   /**
@@ -566,268 +599,6 @@ export const businessStore = defineStore("business", () => {
       });
       resolve(result);
     });
-  }
-
-  /**
-   * 根据参数获取数据
-   * 1. 根据关系找出要聚合的数据行
-   * 2. 对每个聚合维度（company、category、product）进行聚合获得月报
-   * 3. 根据每个聚合维度的月报和上一期的年报得这一期的年报
-   * @param keyIndex 关键指标
-   * @param timeScale 时间维度
-   * @param company 企业
-   * @param fromYear 开始年份
-   * @param toYear 结束年份
-   * @param fromMonth 开始月份
-   * @param toMonth 结束月份
-   * @param category 业态, 和company至少一个
-   * @param product 产品, 和company至少一个
-   */
-  function getKeyIndexData(
-    keyIndex: "营收" | "利润",
-    timeScale: "年" | "月",
-    fromYear: number,
-    toYear: number,
-    fromMonth: number,
-    toMonth: number,
-    company?: string,
-    category?: string,
-    product?: string
-  ) {
-    const dataBase = revenueData;
-    const table = dataBase[keyIndex];
-    /**
-     * 在同一时间维度下，根据当前驾驶舱规划页面有几种聚合查询可能
-     * 1. company + category 需要根据enterpriseRelationData先获取所有的后代企业(非叶子节点)或者自己，然后根据productRelationData获取所有后代产品(非叶子节点)或者自己，然后根据table进行聚合
-     * 2. company + product 需要根据enterpriseRelationData先获取所有的后代企业(非叶子节点)或者自己，然后找到相应的产品，然后根据table进行聚合
-     * 3. company 需要根据enterpriseRelationData先获取所有的后代企业(非叶子节点)或者自己，然后根据table获取相应时间维度数据进行聚合
-     * 4. category 需要根据productRelationData获取所有后代产品(非叶子节点)或者自己，然后根据table获取相应时间维度数据进行聚合
-     **/
-    let rows: any[] = [];
-    let result: TimeSpanDataResult = {
-      timeSpan: timeScale,
-      dataTime: `${toYear}-${toMonth}`,
-      keyIndexType: keyIndex,
-      org: company || "石化板块",
-      productType: category,
-      product: product,
-      plan: 0,
-      real: 0,
-      accumulated: 0,
-      pOverPRate: 0,
-      pOverPValue: 0,
-      pToPRate: 0,
-      pToPValue: 0,
-    };
-    const companyCode = 0x00000001;
-    const categoryCode = 0x00000010;
-    const productCode = 0x00000100;
-    const companyAndCategoryCode = companyCode | categoryCode;
-    const companyAndProductCode = companyCode | productCode;
-    const categoryAndProductCode = categoryCode | productCode;
-    const companyAndCategoryAndProductCode =
-      companyAndCategoryCode | productCode;
-    const queryCode = company
-      ? category
-        ? product
-          ? companyAndCategoryAndProductCode
-          : companyAndCategoryCode
-        : product
-          ? companyAndProductCode
-          : companyCode
-      : category
-        ? product
-          ? categoryAndProductCode
-          : categoryCode
-        : productCode;
-    // 如果包含了company，则获取所有后代企业(非叶子节点)或者自己
-    if (queryCode & companyCode) {
-      // 获取所有后代企业(非叶子节点)或者自己
-      const children = dfsSearch(enterpriseRelationData, company!, (data) => {
-        return getLeafNodes(data);
-      });
-      // 用fromYear toYear fromMonth toMonth 构造区间内每个月份
-      const months = [];
-      // 如果fromYear和toYear相同，则只取fromMonth到toMonth
-      if (fromYear === toYear) {
-        for (let month = fromMonth; month <= toMonth; month++) {
-          months.push(`${fromYear}-${month.toString().padStart(2, "0")}`);
-        }
-      } else {
-        // 如果fromYear和toYear不同，则取fromMonth到12月，然后取中间年份的1月到12月，然后取toYear的1月到toMonth
-        for (let month = fromMonth; month <= 12; month++) {
-          months.push(`${fromYear}-${month.toString().padStart(2, "0")}`);
-        }
-        for (let year = fromYear + 1; year < toYear; year++) {
-          for (let month = 1; month <= 12; month++) {
-            months.push(`${year}-${month.toString().padStart(2, "0")}`);
-          }
-        }
-        for (let month = 1; month <= toMonth; month++) {
-          months.push(`${toYear}-${month.toString().padStart(2, "0")}`);
-        }
-      }
-      // 根据[keyIndex][month][company]构造rows
-      for (const month of months) {
-        for (const child of children) {
-          if (table[month] && table[month][child]) {
-            // TODO 此时索引到的是一个对象，需要根据productRelationData获取所有后代产品(非叶子节点)或者自己，然后根据table进行聚合
-            // const productChildren = dfsSearch(productRelationData, child, (data) => {
-            //   return getLeafNodes(data);
-            // });
-            // 直接将所有所有包含的key加入rows
-            for (const product of Object.keys(table[month][child])) {
-              rows.push({
-                ...table[month][child][product],
-                产品: product,
-              });
-            }
-          }
-        }
-      }
-      if ((queryCode & companyAndCategoryCode) === companyAndCategoryCode) {
-        const productChildren = dfsSearch(
-          productRelationData,
-          category!,
-          (data) => {
-            return getLeafNodes(data);
-          }
-        );
-        // 过滤掉rows中productChildren中不包含的key
-        rows = rows.filter((item) => {
-          return productChildren.includes(item.产品);
-        });
-      }
-      // 先构造以月份为key的monthResult
-      const monthResult: Record<string, TimeSpanDataResult> = {};
-      for (const row of rows) {
-        if (!monthResult[row.数据时间]) {
-          monthResult[row.数据时间] = {
-            timeSpan: "月",
-            dataTime: row.数据时间,
-            keyIndexType: keyIndex,
-            org: row.组织名,
-            productType: row.产品类型,
-            product: row.产品,
-            plan: 0,
-            real: 0,
-            accumulated: 0,
-            pOverPRate: 0,
-            pOverPValue: 0,
-            pToPRate: 0,
-            pToPValue: 0,
-            subData: [],
-          };
-        }
-        monthResult[row.数据时间].subData!.push({
-          dataTime: row.数据时间,
-          org: row.组织名,
-          productType: row.产品类型,
-          product: row.产品,
-          plan: row.当期计划值,
-          real: row.当期实际值,
-          accumulated: row.累计值,
-          pOverPRate: row.环比,
-          pOverPValue: row.环比增幅,
-          pToPRate: row.同比,
-          pToPValue: row.同比增幅,
-        } as TimeSpanDataResult);
-      }
-      // 聚合monthResult计算得到几个聚合值
-      for (const month of Object.keys(monthResult)) {
-        const monthData = monthResult[month];
-        result.plan += monthData.subData!.reduce(
-          (acc: number, row: any) => acc + row.plan,
-          0
-        );
-        result.real += monthData.subData!.reduce(
-          (acc: number, row: any) => acc + row.real,
-          0
-        );
-        result.accumulated += monthData.subData!.reduce(
-          (acc: number, row: any) => acc + row.accumulated,
-          0
-        );
-      }
-      // TODO 根据上一期计算同比增幅
-
-      const monthResultValues = Object.values(monthResult).sort((a, b) => {
-        return new Date(a.dataTime) > new Date(b.dataTime) ? 1 : -1;
-      });
-      // 计算环比增幅与比例（减去上个月 、除以上个月）
-      for (let i = 0; i < monthResultValues.length; i++) {
-        const current = monthResultValues[i];
-        const previous = monthResultValues[i - 1];
-        if (previous) {
-          current.pOverPRate = (current.real - previous.real) / previous.real;
-          current.pOverPValue = current.real - previous.real;
-        }
-      }
-      // 如果timeScale为年，则将monthResultValues中的数据聚合到result中
-      if (timeScale === "年") {
-        result.subData = [];
-        for (const month of monthResultValues) {
-          result.plan += month.plan;
-          result.real += month.real;
-          result.accumulated += month.accumulated;
-          result.subData.push(month);
-        }
-      } else {
-        result = monthResultValues[monthResultValues.length - 1];
-      }
-    } else if ((queryCode & productCode) === productCode) {
-      // 先根据productRelationData获取所有后代产品(非叶子节点)或者自己
-      const productChildren = dfsSearch(
-        productRelationData,
-        product!,
-        (data) => {
-          return getLeafNodes(data);
-        }
-      );
-      // 根据fromYear toYear fromMonth toMonth 构造区间内每个月份
-      const months = [];
-      // 如果fromYear和toYear相同，则只取fromMonth到toMonth
-      // 如果fromYear和toYear相同，则只取fromMonth到toMonth
-      if (fromYear === toYear) {
-        for (let month = fromMonth; month <= toMonth; month++) {
-          months.push(`${fromYear}-${month.toString().padStart(2, "0")}`);
-        }
-      } else {
-        // 如果fromYear和toYear不同，则取fromMonth到12月，然后取中间年份的1月到12月，然后取toYear的1月到toMonth
-        for (let month = fromMonth; month <= 12; month++) {
-          months.push(`${fromYear}-${month.toString().padStart(2, "0")}`);
-        }
-        for (let year = fromYear + 1; year < toYear; year++) {
-          for (let month = 1; month <= 12; month++) {
-            months.push(`${year}-${month.toString().padStart(2, "0")}`);
-          }
-        }
-        for (let month = 1; month <= toMonth; month++) {
-          months.push(`${toYear}-${month.toString().padStart(2, "0")}`);
-        }
-      }
-      // 根据[keyIndex][month][company]构造rows, 将所有company的productChildren的key加入rows
-      // 并筛选出rows中productChildren中包含的key
-      for (const month of months) {
-        for (const company of Object.keys(table[month])) {
-          // 直接筛选出productChildren中包含的key
-          const productToAdd = Object.keys(table[month][company]).filter(
-            (product) => {
-              return productChildren.includes(product);
-            }
-          );
-          rows.push(
-            ...productToAdd.map((product) => {
-              return {
-                ...table[month][company][product],
-                产品: product,
-              };
-            })
-          );
-        }
-      }
-    }
-    return result;
   }
 
   /**
@@ -921,6 +692,20 @@ export const businessStore = defineStore("business", () => {
     });
   }
 
+  function queryStorageData(
+    timeScale: "年" | "月",
+    company?: string,
+    product?: string,
+    productType?: string
+  ) {
+    if (!storageYearCache.value || !storageMonthCache.value) {
+      initLocalStorageDatabase();
+    }
+    return new Promise<any>((resolve, reject) => {
+      resolve(storageMonthCache.value);
+    });
+  }
+
   return {
     queryForm,
     businessInfo,
@@ -933,6 +718,8 @@ export const businessStore = defineStore("business", () => {
     getEnterpriseRelation,
     getSubordinateEnterprise,
     queryKeyIndexData,
+    queryStorageData,
+    getLocalStorageDatabase,
   };
 });
 
