@@ -99,7 +99,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in data.table1.data" :key="item.name">
+                  <tr v-for="item in table1Data" :key="item.name">
                     <td>{{ item.name }}</td>
                     <td>{{ item.value[0] }}</td>
                     <td>{{ item.value[1] }}</td>
@@ -126,7 +126,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in data.table2.data" :key="item.name">
+                  <tr v-for="item in table2Data" :key="item.name">
                     <td>{{ item.name }}</td>
                     <td>{{ item.value[0] }}</td>
                     <td>{{ item.value[1] }}</td>
@@ -384,46 +384,42 @@ const yearData = {
   chart4: {
     data: [100, 200],
   },
-  table1: {
-    data: [
-      {
-        name: "广投石化",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "开燃公司",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "桂盛桂轩",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "恒润",
-        value: [200, 300, 200, 100],
-      },
-    ],
-  },
-  table2: {
-    data: [
-      {
-        name: "原油",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "成品油",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "化工产品",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "其他",
-        value: [200, 300, 200, 100],
-      },
-    ],
-  },
+  table1: [
+    {
+      name: "广投石化",
+      value: [200, 300, 200, 100],
+    },
+    {
+      name: "开燃公司",
+      value: [200, 300, 200, 100],
+    },
+    {
+      name: "桂盛桂轩",
+      value: [200, 300, 200, 100],
+    },
+    {
+      name: "恒润",
+      value: [200, 300, 200, 100],
+    },
+  ],
+  table2: [
+    {
+      name: "原油",
+      value: [200, 300, 200, 100],
+    },
+    {
+      name: "成品油",
+      value: [200, 300, 200, 100],
+    },
+    {
+      name: "化工产品",
+      value: [200, 300, 200, 100],
+    },
+    {
+      name: "其他",
+      value: [200, 300, 200, 100],
+    },
+  ],
 };
 
 let data = reactive(yearData);
@@ -1023,12 +1019,14 @@ const initChart41 = () => {
       document.getElementById("profit-analysis-chart-41")
     );
   }
+  const colors = ["#ff8c00", "#aa8c00cc"];
   chart41.value.clear();
   const target = data.chart41.dataTarget;
   const actual = data.chart41.dataActual;
   const normalizedActual = actual.map((item, index) => ({
     ...item,
     value: (item.value / target[index].value) * 100,
+    color: colors[index],
   }));
   const option = {
     legend: {
@@ -1463,40 +1461,31 @@ const initData = async () => {
           };
         }),
       },
-      table1:
-        testData[0].subOrgData ||
-        [].map((item: any) => {
-          return {
-            name: item.维度值,
-            value: [
-              item.实际值,
-              item.同比增幅,
-              item.环比值,
-              (item.实际值 / item.计划值) * 100 + "%",
-            ],
-          };
-        }),
-      table2: {
-        data: [
-          {
-            name: "原油",
-            value: [200, 300, 200, 100],
-          },
-          {
-            name: "成品油",
-            value: [200, 300, 200, 100],
-          },
-          {
-            name: "化工产品",
-            value: [200, 300, 200, 100],
-          },
-          {
-            name: "其他",
-            value: [200, 300, 200, 100],
-          },
-        ],
-      },
+      table1: (testData[0].subOrgData || []).map((item: any) => {
+        return {
+          name: item.维度值,
+          value: [
+            item.实际值,
+            item.同比增幅,
+            item.环比值,
+            (item.实际值 / item.计划值) * 100 + "%",
+          ],
+        };
+      }),
+      table2: (testData[0].subProductTypeData || []).map((item: any) => {
+        return {
+          name: item.维度值,
+          value: [
+            item.实际值,
+            item.同比增幅,
+            item.环比值,
+            (item.实际值 / item.计划值) * 100 + "%",
+          ],
+        };
+      }),
     };
+    table1Data.value = data.table1;
+    table2Data.value = data.table2;
     metricItemData.value = data.metricItem;
   }
 
