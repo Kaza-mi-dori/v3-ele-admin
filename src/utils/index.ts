@@ -83,3 +83,19 @@ export function stringToArray(str?: string | string[], separator = ",") {
   if (Array.isArray(str)) return str;
   return str.split(separator);
 }
+
+/**
+ * 补全数组
+ */
+export function fulfillArray(
+  arr: any[] | undefined,
+  model?: any,
+  minLength?: number
+) {
+  if (!arr) return [];
+  if (!minLength || arr.length >= minLength || !model) return arr;
+  const fillContent = Array(minLength - arr.length).fill(
+    Object.assign({}, model || {})
+  );
+  return arr.concat(fillContent);
+}

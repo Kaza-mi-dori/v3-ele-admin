@@ -1641,11 +1641,11 @@ function queryAggData(queryParam: {
         // TODO 查询下属日数据
       }
     }
-    if (withSubProductData) {
-      // 查询货品类型数据
+    if (withSubProductTypeData) {
+      // 查询货品类型数据 考虑统一性 装进productTypeData
       const products = productTypeToProductMap[productType];
       result.forEach((item) => {
-        item.subProductData = products
+        item.subProductTypeData = products
           .map((product) => {
             return queryProductData(
               keyIndexType,
@@ -1656,6 +1656,35 @@ function queryAggData(queryParam: {
             );
           })
           .flat();
+      });
+    }
+    // 查询下属组织数据的时候也要带上产品类型数据
+    if (withSubOrgData) {
+      // 查询下属企业数据
+      result.forEach((item) => {
+        // 如果在包含关系中，则查询下属组织
+        const orgName = item.维度值.split("-")[0];
+        const hasSubOrg = !!orgToOrgMap[orgName];
+        const subItems = hasSubOrg
+          ? orgToOrgMap[orgName]
+          : orgToEnterpriseMap[orgName];
+        const queryOp = hasSubOrg
+          ? queryOrgAndProductTypeData
+          : queryOrgAndProductTypeData;
+        if (subItems) {
+          item.subOrgData = subItems
+            .map((subItem) => {
+              return queryOp(
+                keyIndexType,
+                subItem,
+                productType,
+                timeDimension,
+                startDate,
+                endDate
+              );
+            })
+            .flat();
+        }
       });
     }
     return result;
@@ -1753,13 +1782,13 @@ function queryAggData(queryParam: {
         // TODO 查询下属日数据
       }
     }
-    if (withSubProductData) {
+    if (withSubProductTypeData) {
       // 查询货品类型数据
       const products = productTypeToProductMap[productType];
       result.forEach((item) => {
-        item.subProductData = products
+        item.subProductTypeData = products
           .map((product) => {
-            return queryProductData(
+            return queryProductTypeData(
               keyIndexType,
               product,
               timeDimension,
@@ -1770,7 +1799,6 @@ function queryAggData(queryParam: {
           .flat();
       });
     }
-
     if (withSubOrgData) {
       // 查询下属组织数据
       result.forEach((item) => {

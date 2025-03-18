@@ -35,18 +35,30 @@ const getCompanyName = (name: string) => {
   return companyNameEnum || "";
 };
 
+const getProductTypeName = (name: string) => {
+  const productType = route.query.productType || "";
+  return productType;
+};
+
 onMounted(() => {
   const name = route.fullPath.split("/").pop()?.split("?")[0];
   const companyName = getCompanyName(name!);
+  const productType = getProductTypeName(name!);
   switch (name) {
     case "revenue":
-      title.value = `${companyName}营收`;
+      title.value = `${companyName}${productType ? `${productType}` : ""}营收`;
       break;
     case "profit":
-      title.value = `${companyName}利润`;
+      title.value = `${companyName}${productType ? `${productType}` : ""}利润`;
+      break;
+    case "purchase":
+      title.value = `${companyName}${productType ? `${productType}` : ""}采购`;
+      break;
+    case "sale":
+      title.value = `${companyName}${productType ? `${productType}` : ""}销售`;
       break;
     case "contract":
-      title.value = `${companyName}合同`;
+      title.value = `${companyName}${productType ? `${productType}` : ""}合同`;
       break;
   }
 });
