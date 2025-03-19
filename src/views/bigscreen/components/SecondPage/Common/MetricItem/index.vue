@@ -35,7 +35,7 @@ const valueStyle = computed(() => {
 
 <style lang="scss" scoped>
 $title-color: #fff;
-$value-color: #2660b8;
+$value-color: #4d8be7;
 
 .metric-item {
   width: 100%;

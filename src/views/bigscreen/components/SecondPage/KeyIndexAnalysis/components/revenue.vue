@@ -17,11 +17,13 @@
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex items-center h-full w-full gap-2">
-              <div class="flex items-center justify-center w-1/3">
-                <div
+              <div class="flex items-center justify-around w-1/3">
+                <!-- <div
                   id="revenue-analysis-chart-liquid-fill"
                   style="height: 250px; width: 60%"
-                />
+                /> -->
+                <!-- 换成ProcessRing -->
+                <ProcessRing :value="liquidFillFulfilledPercent" unit="%" />
                 <div
                   class="flex flex-col items-center justify-center w-2/5 gap-3"
                 >
@@ -152,6 +154,7 @@ import TextTab from "@/views/bigscreen/components/SecondPage/Common/TextTab/inde
 import * as echarts from "echarts";
 import "echarts-liquidfill";
 import MetricItem from "@/views/bigscreen/components/SecondPage/Common/MetricItem/index.vue";
+import ProcessRing from "@/views/bigscreen/components/SecondPage/Common/ProcessRing/index.vue";
 import sassvariables from "@/styles/variables.module.scss";
 import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
@@ -400,6 +403,7 @@ const yearData = {
 let data = reactive(yearData);
 const table1Data = toRef(data, "table1");
 const table2Data = toRef(data, "table2");
+const liquidFillFulfilledPercent = toRef(data.liquidFill, "fulfilledPercent");
 
 // 如果timeTabValue为year，则显示年份，否则显示月份
 watch(timeTabValue, (newVal, oldVal) => {
@@ -1478,11 +1482,13 @@ const initData = async () => {
     table1Data.value = data.table1;
     table2Data.value = data.table2;
     metricItemData.value = data.metricItem;
+    liquidFillFulfilledPercent.value = data.liquidFill.fulfilledPercent;
   } else {
     data = yearData;
     table1Data.value = [];
     table2Data.value = [];
     metricItemData.value = yearData.metricItem;
+    liquidFillFulfilledPercent.value = 0;
   }
 
   // if (timeTabValue.value === "year") {
@@ -1550,7 +1556,7 @@ const initialize = async () => {
   initChart41();
   // initChart5();
   // initChart6();
-  initLiquidFill();
+  // initLiquidFill();
   // 初始化轮播效果
   initAnimation();
   // 绑定各个图例的点击事件
@@ -1592,7 +1598,7 @@ onMounted(async () => {
       chart41.value.resize();
       // chart5.value.resize();
       // chart6.value.resize();
-      liquidFill.value.resize();
+      // liquidFill.value.resize();
     } catch (error) {
       console.log(error);
     }
