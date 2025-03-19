@@ -16,6 +16,33 @@
         />
         <span class="__unit">{{ props.unit }}</span>
       </div>
+      <div class="box__amount">
+        <span class="__desc">计划量</span>
+        <el-statistic
+          class="animated-amount"
+          :precision="2"
+          :value="animatedTarget"
+        />
+        <span class="__unit">{{ props.unit }}</span>
+      </div>
+      <div class="box__amount">
+        <span class="__desc">完成率</span>
+        <el-statistic
+          class="animated-amount"
+          :precision="2"
+          :value="animatedFinished"
+        />
+        <span class="__unit">%</span>
+        <!-- 换成进度条 -->
+        <!-- <el-progress
+          style="width: calc(100% - 3em)"
+          :text-inside="true"
+          :stroke-width="16"
+          color="#0054BD"
+          text-color="#fff"
+          :percentage="animatedFinished"
+        /> -->
+      </div>
     </div>
   </div>
 </template>
@@ -31,6 +58,7 @@ const props = withDefaults(
   defineProps<{
     title?: string;
     amount?: string;
+    planAmount?: string;
     iconUrl?: string;
     amountColor?: string;
     titleColor?: string;
@@ -44,6 +72,7 @@ const props = withDefaults(
     titleColor: "white",
     title: "标题",
     amount: "0",
+    planAmount: "10",
     iconWidth: 50,
     iconHeight: 50,
     height: 100,
@@ -52,7 +81,15 @@ const props = withDefaults(
 );
 
 const source = ref(0);
+const target = ref(0);
+const finished = ref(0);
 const animatedAmount = useTransition(source, {
+  duration: 1500,
+});
+const animatedTarget = useTransition(target, {
+  duration: 1500,
+});
+const animatedFinished = useTransition(finished, {
   duration: 1500,
 });
 
@@ -85,6 +122,12 @@ watch(
     // 确保转换后的值不会是 NaN
     if (isNaN(source.value)) {
       source.value = 0;
+    }
+    if (props.planAmount) {
+      target.value = +parseFloat(props.planAmount).toFixed(2);
+      if (target.value) {
+        finished.value = +((source.value / target.value) * 100).toFixed(2);
+      }
     }
   },
   {
