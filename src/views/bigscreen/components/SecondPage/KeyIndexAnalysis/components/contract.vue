@@ -81,43 +81,53 @@ import "echarts-liquidfill";
 import MetricItem from "@/views/bigscreen/components/SecondPage/Common/MetricItem/index.vue";
 import sassvariables from "@/styles/variables.module.scss";
 import { getDateOfOneYear, getDateOfOneYearToNow } from "@/utils/time";
+import purchasAmountIcon from "@/views/bigscreen/img/contract_icon1.png";
+import sellAmountIcon from "@/views/bigscreen/img/contract_icon2.png";
+import totalCountIcon from "@/views/bigscreen/img/contract_icon3.png";
+import fulfilledCountIcon from "@/views/bigscreen/img/contract_icon4.png";
+import fulfillingCountIcon from "@/views/bigscreen/img/contract_icon5.png";
+import riskCountIcon from "@/views/bigscreen/img/contract_icon6.png";
+import { OurCompanyEnumMap } from "@/enums/BusinessEnum";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const stats = ref([
   {
     value: 800,
     label: "采购合同总金额",
     unit: "万元",
-    icon: icon2,
+    icon: purchasAmountIcon,
   },
   {
     value: 100,
     label: "销售合同总金额",
     unit: "万元",
-    icon: icon2,
+    icon: sellAmountIcon,
   },
   {
     value: 80,
     label: "合同总数",
     unit: "份",
-    icon: icon2,
+    icon: totalCountIcon,
   },
   {
     value: 60,
-    label: "已履行合同数",
+    label: "已完成合同数",
     unit: "份",
-    icon: icon2,
+    icon: fulfilledCountIcon,
   },
   {
     value: 20,
     label: "未履行合同数",
     unit: "份",
-    icon: icon2,
+    icon: fulfillingCountIcon,
   },
   {
     value: 2,
     label: "风险违约合同数",
     unit: "份",
-    icon: icon2,
+    icon: riskCountIcon,
   },
 ]);
 
@@ -166,61 +176,34 @@ const productName = ref("");
 const subOrgName = ref("");
 
 const yearData = {
-  liquidFill: {
-    fulfilledPercent: 20,
-  },
-  chart1: {
-    data: [100, 200],
-  },
-  chart2: {
-    data: [100, 200],
-  },
-  chart3: {
-    data: [100, 200],
-  },
-  chart4: {
-    data: [100, 200],
-  },
-  table1: {
-    data: [
-      {
-        name: "广投石化",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "开燃公司",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "桂盛桂轩",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "恒润",
-        value: [200, 300, 200, 100],
-      },
-    ],
-  },
-  table2: {
-    data: [
-      {
-        name: "原油",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "成品油",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "化工产品",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "其他",
-        value: [200, 300, 200, 100],
-      },
-    ],
-  },
+  purchaseContractDetail: [
+    { name: "广投石化", value: 1000 },
+    { name: "开燃公司", value: 200 },
+    { name: "桂盛桂轩", value: 300 },
+    { name: "恒润", value: 400 },
+  ],
+  saleContractDetail: [
+    { name: "广投石化", value: 830 },
+    { name: "开燃公司", value: 100 },
+    { name: "桂盛桂轩", value: 400 },
+    { name: "恒润", value: 444 },
+  ],
+  transportContractDetail: [
+    { name: "广投石化", value: 412 },
+    { name: "开燃公司", value: 300 },
+    { name: "桂盛桂轩", value: 110 },
+    { name: "恒润", value: 90 },
+  ],
+  storageContractDetail: [
+    { name: "广投石化", value: 120 },
+    { name: "开燃公司", value: 1000 },
+    { name: "桂盛桂轩", value: 1000 },
+    { name: "恒润", value: 1000 },
+  ],
+  riskContractDetail: [
+    { name: "广投石化", value: 40 },
+    { name: "开燃公司", value: 10 },
+  ],
 };
 
 const monthData = {
@@ -312,74 +295,6 @@ watch(timeTabValue, (newVal, oldVal) => {
   }
 });
 
-// 处理点击事件
-const handleMetricItemClick = (item: any) => {
-  // 如果item.title为1月【时间】，则显示1月数据
-  if (item.title === "1月") {
-    // TODO 显示1月数据
-  }
-};
-
-const initLiquidFill = () => {
-  if (!liquidFill.value) {
-    liquidFill.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-liquid-fill")
-    );
-  }
-  liquidFill.value.clear();
-  const option = {
-    series: [
-      {
-        type: "liquidFill",
-        name: "完成率",
-        data: [
-          {
-            // value: fulfilledPercent.value / 100,
-            value: data.liquidFill.fulfilledPercent / 100,
-            direction: "left",
-            itemStyle: {
-              color: "#6C683E",
-            },
-          },
-          // fulfilledPercent.value / 100,
-          data.liquidFill.fulfilledPercent / 100,
-        ],
-        radius: "90%",
-        outline: {
-          show: false,
-        },
-        backgroundStyle: {
-          color: "transparent",
-          borderColor: "#156ACF",
-          borderWidth: 1,
-          shadowColor: "rgba(0, 0, 0, 0.4)",
-          shadowBlur: 20,
-        },
-        color: [
-          new echarts.graphic.LinearGradient(0, 0, 1, 1, [
-            { offset: 0, color: "#EB8A00" },
-            { offset: 0.8, color: "#D65305" },
-          ]),
-        ],
-        label: {
-          position: ["50%", "50%"],
-          formatter: function () {
-            // return `${fulfilledPercent.value}%`;
-            return `${data.liquidFill.fulfilledPercent}%`;
-          },
-          fontSize: 20,
-          color: sassvariables["bigscreen-primary-color-1"],
-        },
-        waveAnimation: fulfilledPercent.value > 0, // 只有在完成率大于0时启用水波动画
-        animationEasingUpdate: "cubicOut", // 波动动画的缓动效果
-        amplitude: fulfilledPercent.value > 0 ? 10 : 0, // 增加波动幅度，让水波效果更明显
-        phase: fulfilledPercent.value > 0 ? 1 : 0, // 设置波浪初始偏移，实现水波从左向右滚动的效果
-      },
-    ],
-  };
-  liquidFill.value.setOption(option);
-};
-
 const initChart1 = (type: string = "bar") => {
   if (!chart1.value) {
     chart1.value = echarts.init(
@@ -387,17 +302,6 @@ const initChart1 = (type: string = "bar") => {
     );
   }
   chart1.value.clear();
-  // 绑定点击事件
-  chart1.value.on("click", "series.bar", (params: any) => {
-    // TODO 点击事件, 按照月份原地更新
-    // 获取当前月份
-    const month = params.name.split("月")[0];
-    // 更新月份
-    timeTabValue.value = "month";
-    // 更新月份
-    datatime.value = new Date(new Date().getFullYear(), month - 1, 1);
-    handleSearch();
-  });
   // 柱状图
   const option = {
     legend: {
@@ -425,38 +329,12 @@ const initChart1 = (type: string = "bar") => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "广投石化" },
-          { value: 735, name: "开燃公司" },
-          { value: 580, name: "桂盛桂轩" },
-          { value: 484, name: "恒润" },
-        ],
+        data: data.purchaseContractDetail,
       },
     ],
   };
   // 折线图
-  const optionLine = {
-    ...option,
-    series: [
-      {
-        ...option.series[0],
-        type: "line",
-        markLine: {
-          lineStyle: {
-            type: "dashed",
-            color: sassvariables["bigscreen-primary-color-7"],
-          },
-        },
-      },
-      {
-        ...option.series[1],
-        type: "line",
-        // data: [110, 220],
-        data: data.chart1.data,
-      },
-    ],
-  };
-  chart1.value.setOption(type === "bar" ? option : optionLine);
+  chart1.value.setOption(option);
 };
 const initChart2 = () => {
   if (!chart2.value) {
@@ -491,12 +369,7 @@ const initChart2 = () => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "广投石化" },
-          { value: 735, name: "开燃公司" },
-          { value: 580, name: "桂盛桂轩" },
-          { value: 484, name: "恒润" },
-        ],
+        data: data.saleContractDetail,
       },
     ],
   };
@@ -513,11 +386,6 @@ const initChart3 = () => {
       document.getElementById("contract-analysis-chart-3")
     );
   }
-  // 绑定点击事件
-  chart3.value.on("click", "series.pie", (params: any) => {
-    console.log(params);
-    // TODO 点击事件, 判断穿透到什么地方
-  });
   chart3.value.clear();
   const option = {
     legend: {
@@ -545,12 +413,7 @@ const initChart3 = () => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "广投石化" },
-          { value: 735, name: "开燃公司" },
-          { value: 580, name: "桂盛桂轩" },
-          { value: 484, name: "恒润" },
-        ],
+        data: data.transportContractDetail,
       },
     ],
   };
@@ -573,11 +436,7 @@ const initChart4 = () => {
     );
   }
   chart4.value.clear();
-  // 绑定点击事件
-  chart4.value.on("click", "series.pie", (params: any) => {
-    console.log(params);
-    // TODO 点击事件, 判断穿透到什么地方
-  });
+  // 柱形图，利润逐月分析，两个柱子一个是计划值一个是完成值
   // 柱形图，利润逐月分析，两个柱子一个是计划值一个是完成值
   // x轴是月份，y轴是利润
   const option = {
@@ -606,12 +465,7 @@ const initChart4 = () => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "原油" },
-          { value: 735, name: "成品油" },
-          { value: 580, name: "化工产品" },
-          { value: 484, name: "其他" },
-        ],
+        data: data.transportContractDetail,
       },
     ],
   };
@@ -651,12 +505,7 @@ const initChart5 = () => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "广投石化" },
-          { value: 735, name: "开燃公司" },
-          { value: 580, name: "桂盛桂轩" },
-          { value: 484, name: "恒润" },
-        ],
+        data: data.transportContractDetail,
       },
     ],
   };
@@ -697,12 +546,7 @@ const initChart6 = () => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "广投石化" },
-          { value: 735, name: "开燃公司" },
-          { value: 580, name: "桂盛桂轩" },
-          { value: 484, name: "恒润" },
-        ],
+        data: data.riskContractDetail,
       },
     ],
   };
@@ -731,15 +575,40 @@ const handleSearch = () => {
   initialize();
 };
 
+const initLegendClick = () => {
+  // 绑定点击事件
+  chart1.value.on("click", "series.pie", (params: any) => {
+    // TODO 点击事件, 判断是否为合法可穿透组织名
+    // 如果是则穿透到下一级合同分析页
+    const { name } = params;
+    if (Object.values(OurCompanyEnumMap).includes(name)) {
+      router.push({
+        name: "ContractList",
+        query: { companyName: name },
+      });
+    }
+  });
+  chart2.value.on("click", "series.pie", (params: any) => {
+    console.log(params);
+  });
+  chart3.value.on("click", "series.pie", (params: any) => {
+    console.log(params);
+  });
+  chart4.value.on("click", "series.pie", (params: any) => {
+    console.log(params);
+  });
+  chart5.value.on("click", "series.pie", (params: any) => {
+    console.log(params);
+  });
+  chart6.value.on("click", "series.pie", (params: any) => {
+    console.log(params);
+  });
+};
+
 const initData = async () => {
   // TODO 查询相关数据
-  // 根据路由参数、时间、时间类型，查询相关数据
+  // 根据组织名、时间(年份或月份)、时间类型(年或月)，查询相关数据
   // 如果路由参数有值，则查询相关数据
-  if (timeTabValue.value === "year") {
-    data = yearData;
-  } else {
-    data = monthData;
-  }
 };
 
 const initialize = async () => {
@@ -755,6 +624,7 @@ const initialize = async () => {
 
 onMounted(async () => {
   await initialize();
+  initLegendClick();
   window.addEventListener("resize", () => {
     try {
       chart1.value.resize();

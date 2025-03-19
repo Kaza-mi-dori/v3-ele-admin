@@ -47,18 +47,33 @@ import icon2 from "@/views/bigscreen/img/product_icon2.png";
 import sassvariables from "@/styles/variables.module.scss";
 import * as echarts from "echarts";
 import { useRouter, useRoute } from "vue-router";
+import amountIcon from "@/views/bigscreen/img/inventory_icon1.png";
+import volumeIcon from "@/views/bigscreen/img/inventory_icon2.png";
+import storageIcon from "@/views/bigscreen/img/inventory_icon3.png";
+import outIcon from "@/views/bigscreen/img/inventory_icon4.png";
+import inIcon from "@/views/bigscreen/img/inventory_icon5.png";
+import revenueIcon from "@/views/bigscreen/img/inventory_icon7.png";
+import profitIcon from "@/views/bigscreen/img/inventory_icon8.png";
 
 const router = useRouter();
 const route = useRoute();
+const emit = defineEmits(["companyChange"]);
 
 const company = ref("");
 const companyList = ref([
   {
-    value: "1",
-    label: "企业1",
+    value: "广投石化",
+    label: "广投石化",
+  },
+  {
+    value: "开燃公司",
+    label: "开燃公司",
+  },
+  {
+    value: "恒润公司",
+    label: "恒润公司",
   },
 ]);
-
 const companyGraph1 = shallowRef<echarts.ECharts>();
 const companyGraph2 = shallowRef<echarts.ECharts>();
 const companyGraph3 = shallowRef<echarts.ECharts>();
@@ -107,48 +122,171 @@ const companyData = ref<CompanyData[]>([]);
 
 const storageData = ref<StorageData[]>([]);
 
+const exampleRemoteData = reactive<any>({});
+const pageData = reactive<any>(exampleRemoteData);
+const graphData = reactive<any>({
+  yearOutStorage: [
+    {
+      name: "油库A",
+      value: 55,
+    },
+    {
+      name: "油库B",
+      value: 77,
+    },
+    {
+      name: "油库C",
+      value: 88,
+    },
+    {
+      name: "油库D",
+      value: 88,
+    },
+  ],
+  yearInStorage: [
+    {
+      name: "油库A",
+      value: 25,
+    },
+    {
+      name: "油库B",
+      value: 35,
+    },
+    {
+      name: "油库C",
+      value: 45,
+    },
+    {
+      name: "油库D",
+      value: 55,
+    },
+  ],
+  yearStorage: [
+    {
+      name: "油库A",
+      value: 550,
+    },
+    {
+      name: "油库B",
+      value: 660,
+    },
+    {
+      name: "油库C",
+      value: 770,
+    },
+    {
+      name: "油库D",
+      value: 880,
+    },
+  ],
+  detailOutStorage: {
+    油库A: [
+      {
+        name: "2025-01",
+        value: 50,
+      },
+      {
+        name: "2025-02",
+        value: 60,
+      },
+      {
+        name: "2025-03",
+        value: 70,
+      },
+      {
+        name: "2025-04",
+        value: 110,
+      },
+    ],
+    油库B: [
+      {
+        name: "2025-01",
+        value: 140,
+      },
+      {
+        name: "2025-02",
+        value: 122,
+      },
+      {
+        name: "2025-03",
+        value: 130,
+      },
+    ],
+  },
+  detailInStorage: {
+    油库A: [
+      {
+        name: "2025-01",
+        value: 140,
+      },
+      {
+        name: "2025-02",
+        value: 122,
+      },
+      {
+        name: "2025-03",
+        value: 130,
+      },
+      {
+        name: "2025-04",
+        value: 110,
+      },
+    ],
+    油库B: [
+      {
+        name: "2025-01",
+        value: 20,
+      },
+      {
+        name: "2025-02",
+        value: 52,
+      },
+      {
+        name: "2025-03",
+        value: 10,
+      },
+    ],
+  },
+});
+
 const stats = ref([
   {
     value: 6,
     label: "油库数量",
-    icon: icon2,
+    icon: amountIcon,
   },
   {
     value: 100,
     label: "总库存(吨)",
-    icon: icon2,
+    icon: storageIcon,
   },
   {
     value: 100,
     label: "年累计出库量(万吨)",
-    icon: icon2,
+    icon: outIcon,
   },
   {
     value: 100,
     label: "年累计入库量(万吨)",
-    icon: icon2,
+    icon: inIcon,
   },
   {
     value: 100,
     label: "年累计营收(万元)",
-    icon: icon2,
+    icon: revenueIcon,
   },
   {
     value: 100,
     label: "年累计利润(万元)",
-    icon: icon2,
+    icon: profitIcon,
   },
 ]);
 
-const handleCompanyChange = () => {
-  console.log(company.value);
+const handleCompanyChange = (companyName: string) => {
+  emit("companyChange", companyName);
 };
 
-const initAllGraph = () => {
-  initGraph1();
-  initGraph2();
-  initGraph3();
-  initGraph4();
+const initLegendClick = () => {
   // 绑定点击事件，跳转油库页面
   companyGraph1.value?.on("click", "series.pie", (params: any) => {
     // console.log(params);
@@ -164,6 +302,13 @@ const initAllGraph = () => {
   });
 };
 
+const initAllGraph = () => {
+  initGraph1();
+  initGraph2();
+  initGraph3();
+  initGraph4();
+};
+
 const initGraph1 = () => {
   if (!companyGraph1.value) {
     companyGraph1.value = echarts.init(
@@ -173,20 +318,7 @@ const initGraph1 = () => {
   companyGraph1.value.clear();
   // 饼图，显示各油库的出库量的比
   // TODO 从companyData中提取
-  const data = [
-    {
-      name: "油库A",
-      value: 55,
-    },
-    {
-      name: "油库B",
-      value: 77,
-    },
-    {
-      name: "油库C",
-      value: 88,
-    },
-  ];
+  const data = graphData.yearOutStorage;
   companyGraph1.value.setOption({
     legend: {
       show: true,
@@ -252,6 +384,17 @@ const initGraph2 = () => {
       document.getElementById("company-graph-2")
     );
   }
+  const data = Object.keys(graphData.detailOutStorage).map((key) => {
+    return {
+      storageName: key,
+      monthData: graphData.detailOutStorage[key].map((data: any) => {
+        return {
+          name: `${Number(data.name.split("-")[1])}月`,
+          value: data.value,
+        };
+      }),
+    };
+  });
   const colors = [
     "#f87171ee",
     "#fbbf24ee",
@@ -312,8 +455,6 @@ const initGraph2 = () => {
     yAxis: {
       type: "value",
       name: "单位：万吨",
-      min: 0,
-      max: 10,
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
@@ -337,29 +478,40 @@ const initGraph2 = () => {
         color: sassvariables["bigscreen-primary-color-7"],
       },
     },
-    series: [
-      {
-        name: "油库A",
+    // series: [
+    //   {
+    //     name: "油库A",
+    //     type: "line",
+    //     symbol: "none", // 不显示折线点的点号
+    //     data: data,
+    //     lineStyle: {
+    //       //
+    //       width: 2,
+    //     },
+    //   },
+    //   // 油库B
+    //   {
+    //     name: "油库B",
+    //     type: "line",
+    //     symbol: "none", // 不显示折线点的点号
+    //     data: [3, 2, 1, 7, 5, 6, 7, 2, 3, 4, 5, 6],
+    //     lineStyle: {
+    //       //
+    //       width: 2,
+    //     },
+    //   },
+    // ],
+    series: data.map((item) => {
+      return {
+        name: item.storageName,
         type: "line",
         symbol: "none", // 不显示折线点的点号
-        data: [1, 2, 3, 4, 5, 6, 7, 3, 4, 5, 6, 7],
+        data: item.monthData.map((data: any) => data.value),
         lineStyle: {
-          //
           width: 2,
         },
-      },
-      // 油库B
-      {
-        name: "油库B",
-        type: "line",
-        symbol: "none", // 不显示折线点的点号
-        data: [3, 2, 1, 7, 5, 6, 7, 2, 3, 4, 5, 6],
-        lineStyle: {
-          //
-          width: 2,
-        },
-      },
-    ],
+      };
+    }),
   });
 };
 
@@ -449,6 +601,17 @@ const initGraph4 = () => {
     );
   }
   companyGraph4.value.clear();
+  const data = Object.keys(graphData.detailInStorage).map((key) => {
+    return {
+      storageName: key,
+      monthData: graphData.detailInStorage[key].map((data: any) => {
+        return {
+          name: `${Number(data.name.split("-")[1])}月`,
+          value: data.value,
+        };
+      }),
+    };
+  });
   companyGraph4.value.setOption({
     tooltip: {
       trigger: "axis",
@@ -501,8 +664,6 @@ const initGraph4 = () => {
         fontSize: 15,
       },
       nameGap: 20,
-      min: 0,
-      max: 10,
       axisLine: {
         show: true, // 显示坐标轴线
         lineStyle: {
@@ -521,33 +682,54 @@ const initGraph4 = () => {
         color: sassvariables["bigscreen-primary-color-7"],
       },
     },
-    series: [
-      {
-        name: "油库A",
+    // series: [
+    //   {
+    //     name: "油库A",
+    //     type: "line",
+    //     smooth: true, // 设置线条为圆滑
+    //     symbol: "none", // 不显示折线点的点号
+    //     data: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200],
+    //     lineStyle: {
+    //       color: sassvariables["bigscreen-primary-color-8"],
+    //     },
+    //   },
+    //   // 油库B
+    //   {
+    //     name: "油库B",
+    //     type: "line",
+    //     smooth: true, // 设置线条为圆滑
+    //     symbol: "none", // 不显示折线点的点号
+    //     data: [300, 200, 100, 700, 500, 600, 700, 800, 900, 1000, 1100, 1200],
+    //     lineStyle: {
+    //       color: sassvariables["bigscreen-primary-color-7"],
+    //     },
+    //   },
+    // ],
+    series: data.map((item) => {
+      return {
+        name: item.storageName,
         type: "line",
-        smooth: true, // 设置线条为圆滑
         symbol: "none", // 不显示折线点的点号
-        data: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200],
+        data: item.monthData.map((data: any) => data.value),
         lineStyle: {
-          color: sassvariables["bigscreen-primary-color-8"],
+          width: 2,
         },
-      },
-      // 油库B
-      {
-        name: "油库B",
-        type: "line",
-        smooth: true, // 设置线条为圆滑
-        symbol: "none", // 不显示折线点的点号
-        data: [300, 200, 100, 700, 500, 600, 700, 800, 900, 1000, 1100, 1200],
-        lineStyle: {
-          color: sassvariables["bigscreen-primary-color-7"],
-        },
-      },
-    ],
+      };
+    }),
   });
 };
-onMounted(() => {
+
+const initData = async () => {
+  if (route.query.company) {
+    company.value = route.query.company as string;
+  }
+  // TODO 根据companyName获取公司数据
+};
+
+onMounted(async () => {
+  await initData();
   initAllGraph();
+  initLegendClick();
   window.addEventListener("resize", () => {
     companyGraph1.value?.resize();
     companyGraph2.value?.resize();

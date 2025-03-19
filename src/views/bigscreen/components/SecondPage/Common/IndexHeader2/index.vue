@@ -30,12 +30,15 @@ defineProps({
 
 <style scoped lang="scss">
 .dashboard-header {
-  @apply flex justify-evenly items-center text-white;
+  @apply flex justify-evenly items-center text-white mb-4;
 }
 
 .stats-container {
   margin: 0 auto;
   display: flex;
+  // justify-content: space-around;
+  justify-content: center;
+  width: 100%;
   gap: 20px;
 }
 

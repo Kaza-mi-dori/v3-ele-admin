@@ -1,6 +1,6 @@
 <template>
   <div class="company-analysis">
-    <el-select
+    <!-- <el-select
       v-model="company"
       style="margin-left: 20px; width: 200px"
       placeholder="请选择企业"
@@ -12,7 +12,7 @@
         :label="item.label"
         :value="item.value"
       />
-    </el-select>
+    </el-select> -->
     <DashboardHeader :stats="stats" />
     <div class="grid-container">
       <div class="grid-item w-full h-40vh">
@@ -32,17 +32,47 @@
       </div>
       <div class="grid-item w-full h-40vh">
         <Model1 title="各油品出库分析">
-          <div id="company-graph-4" style="width: 100%; height: 100%" />
+          <Tab
+            v-model="activeOutStorageProductName"
+            @tab-click="handleOutStorageProductNameChange"
+          >
+            <el-tab-pane label="原油" name="原油" />
+            <el-tab-pane label="汽柴油" name="汽柴油" />
+          </Tab>
+          <div
+            id="company-graph-4"
+            style="width: 100%; height: calc(100% - 40px)"
+          />
         </Model1>
       </div>
       <div class="grid-item w-full h-40vh">
         <Model1 title="各油品入库分析">
-          <div id="company-graph-5" style="width: 100%; height: 100%" />
+          <Tab
+            v-model="activeInStorageProductName"
+            @tab-click="handleInStorageProductNameChange"
+          >
+            <el-tab-pane label="原油" name="原油" />
+            <el-tab-pane label="汽柴油" name="汽柴油" />
+          </Tab>
+          <div
+            id="company-graph-5"
+            style="width: 100%; height: calc(100% - 40px)"
+          />
         </Model1>
       </div>
       <div class="grid-item w-full h-40vh">
         <Model1 title="各油品库存分析">
-          <div id="company-graph-6" style="width: 100%; height: 100%" />
+          <Tab
+            v-model="activeStorageProductName"
+            @tab-click="handleStorageProductNameChange"
+          >
+            <el-tab-pane label="原油" name="原油" />
+            <el-tab-pane label="汽柴油" name="汽柴油" />
+          </Tab>
+          <div
+            id="company-graph-6"
+            style="width: 100%; height: calc(100% - 40px)"
+          />
         </Model1>
       </div>
     </div>
@@ -58,7 +88,13 @@ import sassvariables from "@/styles/variables.module.scss";
 import * as echarts from "echarts";
 import { useRouter, useRoute } from "vue-router";
 import { businessStoreHook } from "@/store/modules/business";
-
+import Tab from "@/views/bigscreen/components/FirstPage/Tab/index.vue";
+import amountIcon from "@/views/bigscreen/img/inventory_icon1.png";
+import volumeIcon from "@/views/bigscreen/img/inventory_icon2.png";
+import storageIcon from "@/views/bigscreen/img/inventory_icon3.png";
+import outIcon from "@/views/bigscreen/img/inventory_icon4.png";
+import inIcon from "@/views/bigscreen/img/inventory_icon5.png";
+import { TabsPaneContext } from "element-plus";
 const router = useRouter();
 const route = useRoute();
 
@@ -71,6 +107,10 @@ const companyList = ref([
     label: "企业1",
   },
 ]);
+
+const activeOutStorageProductName = ref<string>("原油");
+const activeInStorageProductName = ref<string>("原油");
+const activeStorageProductName = ref<string>("原油");
 
 // 页面所需要的数据
 interface StorageReport {
@@ -96,6 +136,205 @@ const companyGraph3 = shallowRef<echarts.ECharts>();
 const companyGraph4 = shallowRef<echarts.ECharts>();
 const companyGraph5 = shallowRef<echarts.ECharts>();
 const companyGraph6 = shallowRef<echarts.ECharts>();
+
+// 数据库中应该有tagType tagName subDataId
+// 页面中数据应要求放在json的key中直接标明
+// 应该有一张子数据表，存储某张统计报表使用了哪些子数据
+// 同时要有一张配置表存储某个类型的报表的聚合规则
+// 方案1 聚合只发生在同一张数据表，id不需要区分不同表，服务也只需要写一张表
+// 方案2 聚合发生在不同数据表，id需要区分不同表，服务需要写多张表
+// Aggregation_Category 提示常用的交集、并集、差集聚合规则
+// relation_type	枚举	"single", "intersection", "union"（表示是否是单一分类，或是交集/并集）
+// related_categories	JSON	记录参与计算的分类 ID
+
+const exampleRemoteData = {
+  // 日报数据→月报数据→年报数据
+  storageNumber: 100,
+  totalStorageRevenue: 100,
+  totalStorageProfit: 100,
+  totalOutStorageVolume: 100,
+  totalInStorageVolume: 100,
+  totalStorageVolume: 100,
+  subProductDatas: {
+    原油: [
+      {
+        id: 1, // 产品年报ID
+        orgName: "石化板块",
+        // ruleId: 1, // 聚合规则ID
+        // relation_type: "single", // 聚合规则类型
+        // related_categories: [1, 2], // 参与计算的分类ID
+        // tagType: "productType",
+        // tagName: "原油", // 统计口径，应该是tag
+        productName: "原油产品A",
+        totalOutStorageVolume: 100,
+        totalInStorageVolume: 100,
+        totalStorageVolume: 100,
+        storageNumber: 100,
+        totalStorageRevenue: 100,
+        totalStorageProfit: 100,
+      },
+      {
+        id: 2, // 产品年报ID
+        orgName: "石化板块",
+        // tagType: "productType",
+        // tagName: "原油", // 统计口径，应该是tag
+        productName: "原油产品B",
+        totalOutStorageVolume: 80,
+        totalInStorageVolume: 80,
+        totalStorageVolume: 80,
+        storageNumber: 80,
+        totalStorageRevenue: 80,
+        totalStorageProfit: 80,
+      },
+    ],
+    汽柴油: [
+      {
+        id: 1, // 产品年报ID
+        orgName: "石化板块",
+        // tagType: "productType",
+        // tagName: "汽柴油", // 统计口径，应该是tag
+        productName: "#92汽油",
+        totalOutStorageVolume: 100,
+        totalInStorageVolume: 100,
+        totalStorageVolume: 100,
+        storageNumber: 100,
+        totalStorageRevenue: 100,
+        totalStorageProfit: 100,
+      },
+      {
+        id: 2, // 产品年报ID
+        orgName: "石化板块",
+        // tagType: "productType",
+        // tagName: "汽柴油", // 统计口径，应该是tag
+        productName: "#0柴油",
+        totalOutStorageVolume: 80,
+        totalInStorageVolume: 80,
+        totalStorageVolume: 80,
+        storageNumber: 80,
+        totalStorageRevenue: 80,
+        totalStorageProfit: 80,
+      },
+    ],
+  },
+  subCompanyDatas: [
+    {
+      id: 5,
+      orgName: "广投石化",
+      totalOutStorageVolume: 80,
+      totalInStorageVolume: 80,
+      totalStorageVolume: 80,
+      storageNumber: 80,
+      totalStorageRevenue: 80,
+      totalStorageProfit: 80,
+      subProductDatas: {
+        原油: [
+          {
+            id: 1,
+            orgName: "广投石化",
+            // tagType: "productType",
+            // tagName: "原油", // 统计口径，应该是tag
+            prodcutName: "原油产品A",
+            totalOutStorageVolume: 80,
+            totalInStorageVolume: 80,
+            totalStorageVolume: 80,
+            storageNumber: 80,
+            totalStorageRevenue: 80,
+            totalStorageProfit: 80,
+          },
+        ],
+        汽柴油: [
+          {
+            id: 1,
+            orgName: "广投石化",
+            productName: "#92汽油",
+            totalOutStorageVolume: 80,
+            totalInStorageVolume: 80,
+            totalStorageVolume: 80,
+            storageNumber: 80,
+            totalStorageRevenue: 80,
+            totalStorageProfit: 80,
+          },
+        ],
+      },
+    },
+    {
+      id: 6,
+      orgName: "开燃公司",
+      totalOutStorageVolume: 80,
+      totalInStorageVolume: 80,
+      totalStorageVolume: 80,
+      storageNumber: 80,
+      totalStorageRevenue: 80,
+      totalStorageProfit: 80,
+      subProductDatas: {
+        原油: [
+          {
+            id: 1,
+            orgName: "开燃公司",
+            productName: "原油产品A",
+            totalOutStorageVolume: 80,
+            totalInStorageVolume: 80,
+            totalStorageVolume: 80,
+            storageNumber: 80,
+            totalStorageRevenue: 80,
+            totalStorageProfit: 80,
+          },
+        ],
+        汽柴油: [
+          {
+            id: 1,
+            orgName: "开燃公司",
+            productName: "#92汽油",
+            totalOutStorageVolume: 80,
+            totalInStorageVolume: 80,
+            totalStorageVolume: 80,
+            storageNumber: 80,
+            totalStorageRevenue: 80,
+            totalStorageProfit: 80,
+          },
+        ],
+      },
+    },
+    {
+      id: 7,
+      orgName: "桂盛桂轩",
+      totalOutStorageVolume: 80,
+      totalInStorageVolume: 80,
+      totalStorageVolume: 80,
+      storageNumber: 80,
+      totalStorageRevenue: 80,
+      totalStorageProfit: 80,
+      subProductDatas: {
+        原油: [
+          {
+            id: 1,
+            orgName: "桂盛桂轩",
+            productName: "原油产品A",
+            totalOutStorageVolume: 80,
+            totalInStorageVolume: 80,
+            totalStorageVolume: 80,
+            storageNumber: 80,
+            totalStorageRevenue: 80,
+            totalStorageProfit: 80,
+          },
+        ],
+        汽柴油: [
+          {
+            id: 1,
+            orgName: "桂盛桂轩",
+            productName: "#92汽油",
+            totalOutStorageVolume: 80,
+            totalInStorageVolume: 80,
+            totalStorageVolume: 80,
+            storageNumber: 80,
+            totalStorageRevenue: 80,
+            totalStorageProfit: 80,
+          },
+        ],
+      },
+    },
+  ],
+};
 
 // TODO 根据企业获取库存仓储数据
 
@@ -140,91 +379,9 @@ const companyData = ref<CompanyData[]>([]);
 
 const storageData = ref<StorageData[]>([]);
 
-const pageData = ref<StorageReport>();
-
-const stats = ref([
-  {
-    value: 6,
-    label: "油库数量",
-    icon: icon2,
-  },
-  {
-    value: 100,
-    label: "总库存(吨)",
-    icon: icon2,
-  },
-  {
-    value: 100,
-    label: "年累计出库量(万吨)",
-    icon: icon2,
-  },
-  {
-    value: 100,
-    label: "年累计入库量(万吨)",
-    icon: icon2,
-  },
-  {
-    value: 100,
-    label: "年累计营收(万元)",
-    icon: icon2,
-  },
-  {
-    value: 100,
-    label: "年累计利润(万元)",
-    icon: icon2,
-  },
-]);
-
-const handleCompanyChange = () => {
-  // console.log(company.value);
-  // TODO 根据企业获取库存仓储数据
-  // initAllGraph();
-};
-
-const initAllGraph = () => {
-  initGraph1();
-  initGraph2();
-  initGraph3();
-  initGraph4();
-  initGraph5();
-  initGraph6();
-  // 绑定点击事件
-  companyGraph1.value?.on("click", "series.pie", (params: any) => {
-    // console.log(params);
-    router.push({
-      name: "CompanyStorage",
-      query: {
-        company: params.name,
-      },
-    });
-  });
-  companyGraph2.value?.on("click", "series.pie", (params: any) => {
-    console.log(params);
-  });
-  companyGraph3.value?.on("click", "series.pie", (params: any) => {
-    console.log(params);
-  });
-  companyGraph4.value?.on("click", "series.bar", (params: any) => {
-    console.log(params);
-  });
-  companyGraph5.value?.on("click", "series.bar", (params: any) => {
-    console.log(params);
-  });
-  companyGraph6.value?.on("click", "series.bar", (params: any) => {
-    console.log(params);
-  });
-};
-
-const initGraph1 = () => {
-  if (!companyGraph1.value) {
-    companyGraph1.value = echarts.init(
-      document.getElementById("company-graph-1")
-    );
-  }
-  companyGraph1.value.clear();
-  // 饼图，显示各油库的出库量的比
-  // TODO 从companyData中提取
-  const data = [
+const pageData = reactive<any>(exampleRemoteData);
+const graphData = reactive<any>({
+  yearOutStorage: [
     {
       name: "广投石化",
       value: 55,
@@ -241,7 +398,283 @@ const initGraph1 = () => {
       name: "恒润",
       value: 88,
     },
-  ];
+  ],
+  yearInStorage: [
+    {
+      name: "广投石化",
+      value: 25,
+    },
+    {
+      name: "开燃公司",
+      value: 35,
+    },
+    {
+      name: "桂盛桂轩",
+      value: 45,
+    },
+    {
+      name: "恒润",
+      value: 55,
+    },
+  ],
+  yearStorage: [
+    {
+      name: "广投石化",
+      value: 550,
+    },
+    {
+      name: "开燃公司",
+      value: 660,
+    },
+    {
+      name: "桂盛桂轩",
+      value: 770,
+    },
+    {
+      name: "恒润",
+      value: 880,
+    },
+  ],
+  detailOutStorage: {
+    原油: [
+      {
+        name: "广投石化",
+        value: 15,
+      },
+      {
+        name: "开燃公司",
+        value: 14,
+      },
+      {
+        name: "桂盛桂轩",
+        value: 20,
+      },
+      {
+        name: "恒润",
+        value: 25,
+      },
+    ],
+    汽柴油: [
+      {
+        name: "广投石化",
+        value: 15,
+      },
+      {
+        name: "开燃公司",
+        value: 14,
+      },
+      {
+        name: "桂盛桂轩",
+        value: 20,
+      },
+      {
+        name: "恒润",
+        value: 25,
+      },
+    ],
+  },
+  detailInStorage: {
+    原油: [
+      {
+        name: "广投石化",
+        value: 240,
+      },
+      {
+        name: "开燃公司",
+        value: 230,
+      },
+      {
+        name: "桂盛桂轩",
+        value: 220,
+      },
+      {
+        name: "恒润",
+        value: 210,
+      },
+    ],
+    汽柴油: [
+      {
+        name: "广投石化",
+        value: 140,
+      },
+      {
+        name: "开燃公司",
+        value: 122,
+      },
+      {
+        name: "桂盛桂轩",
+        value: 130,
+      },
+      {
+        name: "恒润",
+        value: 110,
+      },
+    ],
+  },
+  detailStorage: {
+    原油: [
+      {
+        name: "广投石化",
+        value: 550,
+      },
+      {
+        name: "开燃公司",
+        value: 660,
+      },
+      {
+        name: "桂盛桂轩",
+        value: 770,
+      },
+      {
+        name: "恒润",
+        value: 880,
+      },
+    ],
+    汽柴油: [
+      {
+        name: "广投石化",
+        value: 150,
+      },
+      {
+        name: "开燃公司",
+        value: 140,
+      },
+      {
+        name: "桂盛桂轩",
+        value: 130,
+      },
+      {
+        name: "恒润",
+        value: 110,
+      },
+    ],
+  },
+});
+
+const stats = ref([
+  {
+    value: 6,
+    label: "油库数量",
+    icon: amountIcon,
+  },
+  {
+    value: 100,
+    label: "总库容(吨)",
+    icon: volumeIcon,
+  },
+  {
+    value: 100,
+    label: "总库存(吨)",
+    icon: storageIcon,
+  },
+  {
+    value: 100,
+    label: "年累计出库量(万吨)",
+    icon: outIcon,
+  },
+  {
+    value: 100,
+    label: "年累计入库量(万吨)",
+    icon: inIcon,
+  },
+]);
+
+const handleCompanyChange = () => {
+  // console.log(company.value);
+  // TODO 根据企业获取库存仓储数据
+  // initAllGraph();
+};
+
+// 出库产品名称切换
+const handleOutStorageProductNameChange = (tab: TabsPaneContext) => {
+  activeOutStorageProductName.value = tab.paneName as string;
+  initGraph4();
+};
+
+// 入库产品名称切换
+const handleInStorageProductNameChange = (tab: TabsPaneContext) => {
+  activeInStorageProductName.value = tab.paneName as string;
+  initGraph5();
+};
+
+// 库存产品名称切换
+const handleStorageProductNameChange = (tab: TabsPaneContext) => {
+  activeStorageProductName.value = tab.paneName as string;
+  initGraph6();
+};
+
+const initLegendClick = () => {
+  // 绑定点击事件
+  companyGraph1.value?.on("click", "series.pie", (params: any) => {
+    // console.log(params);
+    router.push({
+      name: "CompanyStorage",
+      query: {
+        company: params.name,
+      },
+    });
+  });
+  companyGraph2.value?.on("click", "series.pie", (params: any) => {
+    router.push({
+      name: "CompanyStorage",
+      query: {
+        company: params.name,
+      },
+    });
+  });
+  companyGraph3.value?.on("click", "series.pie", (params: any) => {
+    router.push({
+      name: "CompanyStorage",
+      query: {
+        company: params.name,
+      },
+    });
+  });
+  companyGraph4.value?.on("click", "series.bar", (params: any) => {
+    router.push({
+      name: "CompanyStorage",
+      query: {
+        company: params.name,
+      },
+    });
+  });
+  companyGraph5.value?.on("click", "series.bar", (params: any) => {
+    router.push({
+      name: "CompanyStorage",
+      query: {
+        company: params.name,
+      },
+    });
+  });
+  companyGraph6.value?.on("click", "series.bar", (params: any) => {
+    router.push({
+      name: "CompanyStorage",
+      query: {
+        company: params.name,
+      },
+    });
+  });
+};
+
+const initAllGraph = () => {
+  initGraph1();
+  initGraph2();
+  initGraph3();
+  initGraph4();
+  initGraph5();
+  initGraph6();
+};
+
+const initGraph1 = () => {
+  if (!companyGraph1.value) {
+    companyGraph1.value = echarts.init(
+      document.getElementById("company-graph-1")
+    );
+  }
+  companyGraph1.value.clear();
+  // 饼图，显示各油库的出库量的比
+  // TODO 从companyData中提取
+  const data = graphData.yearOutStorage;
   companyGraph1.value.setOption({
     legend: {
       show: true,
@@ -307,24 +740,7 @@ const initGraph2 = () => {
       document.getElementById("company-graph-2")
     );
   }
-  const data = [
-    {
-      name: "广投石化",
-      value: 55,
-    },
-    {
-      name: "开燃公司",
-      value: 77,
-    },
-    {
-      name: "桂盛桂轩",
-      value: 88,
-    },
-    {
-      name: "恒润",
-      value: 88,
-    },
-  ];
+  const data = graphData.yearInStorage;
   companyGraph2.value.setOption({
     legend: {
       show: true,
@@ -390,24 +806,7 @@ const initGraph3 = () => {
     );
   }
   companyGraph3.value.clear();
-  const data = [
-    {
-      name: "广投石化",
-      value: 55,
-    },
-    {
-      name: "开燃公司",
-      value: 77,
-    },
-    {
-      name: "桂盛桂轩",
-      value: 88,
-    },
-    {
-      name: "恒润",
-      value: 88,
-    },
-  ];
+  const data = graphData.yearStorage;
   companyGraph3.value.setOption({
     legend: {
       show: true,
@@ -537,7 +936,7 @@ const initGraph4 = () => {
       {
         type: "bar",
         barWidth: "50%",
-        data: [100, 200, 300, 400],
+        data: graphData.detailOutStorage[activeOutStorageProductName.value],
         itemStyle: {
           color: (params: { dataIndex: number }) => {
             return color[params.dataIndex];
@@ -613,7 +1012,7 @@ const initGraph5 = () => {
       {
         type: "bar",
         barWidth: "50%",
-        data: [100, 200, 300, 400],
+        data: graphData.detailInStorage[activeInStorageProductName.value],
         itemStyle: {
           color: (params: { dataIndex: number }) => {
             return color[params.dataIndex];
@@ -689,7 +1088,7 @@ const initGraph6 = () => {
       {
         type: "bar",
         barWidth: "50%",
-        data: [100, 200, 300, 400],
+        data: graphData.detailStorage[activeStorageProductName.value],
         itemStyle: {
           color: (params: { dataIndex: number }) => {
             return color[params.dataIndex];
@@ -741,11 +1140,15 @@ function queryStorageAggData(
   subEventName: string
 ) {}
 
-onMounted(() => {
-  const cache = businessStore.getLocalStorageDatabase();
-  testQuery(cache);
+const initData = async () => {};
+
+onMounted(async () => {
+  // const cache = businessStore.getLocalStorageDatabase();
+  // testQuery(cache);
   // initStorageData();
+  await initData();
   initAllGraph();
+  initLegendClick();
   window.addEventListener("resize", () => {
     companyGraph1.value?.resize();
     companyGraph2.value?.resize();

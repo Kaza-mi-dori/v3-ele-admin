@@ -3,11 +3,11 @@
     <img style="position: absolute; top: 0" height="100vh" />
     <div class="bg-view1__header">
       <div class="title">
-        <div class="__title--text">企业仓储分析</div>
+        <div class="__title--text">{{ company }}仓储分析</div>
       </div>
     </div>
     <div class="bg-view1__body">
-      <CompanyAnalysis />
+      <CompanyAnalysis @companyChange="handleCompanyChange" />
     </div>
   </div>
 </template>
@@ -18,11 +18,19 @@ import { useRoute } from "vue-router";
 import CompanyAnalysis from "./companyAnalysis.vue";
 
 const route = useRoute();
-const title = ref("");
+const company = ref("");
 
 onMounted(() => {
-  const paramName = route.params.typeName;
+  if (route.query.company) {
+    company.value = route.query.company as string;
+  }
 });
+
+const handleCompanyChange = (companyName: string) => {
+  if (companyName) {
+    company.value = companyName;
+  }
+};
 </script>
 
 <style lang="scss" scoped>

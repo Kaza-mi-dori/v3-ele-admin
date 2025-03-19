@@ -1494,6 +1494,7 @@ const initLegendClick = () => {
     // 触发切换日期 + 重新搜索数据
     datatime.value = new Date(new Date().getFullYear(), month - 1, 1);
     // handleSearch();
+    timeTabValue.value = "month";
   });
   // 绑定图例的点击事件
   chart3.value.on("mouseover", (params: any) => {
