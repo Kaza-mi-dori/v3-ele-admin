@@ -87,17 +87,17 @@
       </el-table-column>
       <el-table-column prop="no" label="订单编号" align="center" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.no }}</span>
+          <span>{{ scope.row["订单编号"] }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="订单类别" width="150" sortable>
+      <el-table-column prop="type" label="订单类型" width="150" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.category }}</span>
+          <span>{{ scope.row["内容"]?.["订单类型"] || "" }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" width="150" sortable>
         <template v-slot="scope">
-          <span>{{ scope.row.status }}</span>
+          <span>{{ scope.row["状态"] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right">
@@ -155,7 +155,7 @@ const exampleData: Ref<IExampleData[]> = ref([
     name: "订单1",
     from: "供应商1",
     no: "123456",
-    category: "订单类别1",
+    category: "订单类型1",
     type: "采购",
     status: "已下单",
     audited: true,
@@ -170,7 +170,7 @@ const exampleData: Ref<IExampleData[]> = ref([
     from: "供应商2",
     no: "654321",
     type: "销售",
-    category: "订单类别2",
+    category: "订单类型2",
     status: "已结单2",
     audited: false,
     dataFrom: "数据来源2",
@@ -244,7 +244,7 @@ const handleConfirmFilter = (filter: any) => {
     日期晚于: date[1],
   };
   if (type && type !== "全部") {
-    queryParams.value.订单类别 = type;
+    queryParams.value.订单类型 = type;
   }
   if (status && status !== "全部") {
     queryParams.value.状态集合 = [status];

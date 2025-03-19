@@ -584,10 +584,19 @@ const convertToBackendData = (type: string | null, data: any) => {
       };
       return result;
     case "orderDetail":
-      return {
-        ...data,
-        // 转换数据
+      //TODO 对齐前后端其他字段
+      result["日期"] = data["日期"];
+      result["状态"] = data["状态"];
+      result["订单编号"] = data["订单编号"];
+      result["合同编号"] = data["合同编号"];
+      result["备注"] = data["备注"];
+      result["内容"] = {
+        货品信息: data["货品"],
+        订单数量: data["数量"],
+        订单金额: data["金额"],
+        订单类型: data["订单类型"],
       };
+      return result;
     case "settlementDetail":
       result["日期"] = data.date;
       result["结算编号"] = data.number;
@@ -843,6 +852,31 @@ const submitForm = async () => {
       break;
     case "orderDetail":
       // BusinessFormAPI.saveOrderDetail(submitData);
+      const opOrderDetail = route.query.id
+        ? BusinessStandbookAPI.editOrderLedgerRecord
+        : BusinessStandbookAPI.addOrderLedgerRecord;
+      opOrderDetail(realDataToSubmit)
+        .then(() => {
+          isEditing.value = false;
+          if (!route.query.id) {
+            // 跳转到列表页
+            ElMessage.success("提交成功, 正在跳转到列表页");
+            setTimeout(() => {
+              router.push({
+                name: "OrderLedgerMng",
+              });
+            }, 500);
+          } else {
+            ElMessage.success("提交成功");
+          }
+        })
+        .catch((err) => {
+          isEditing.value = false;
+          ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
+        });
       break;
     case "settlementDetail":
       // BusinessFormAPI.saveSettlementDetail(submitData);

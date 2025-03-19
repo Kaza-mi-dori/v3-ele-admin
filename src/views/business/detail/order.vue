@@ -46,9 +46,42 @@
                 </span>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="订单编号" prop="订单编号">
+                <el-input
+                  v-if="editing"
+                  v-model="orderDetailForm.订单编号"
+                  placeholder="请输入订单编号"
+                />
+                <span v-else>{{ orderDetailForm.订单编号 }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同编号" prop="合同编号">
+                <el-autocomplete
+                  v-if="editing"
+                  v-model="orderDetailForm.合同编号"
+                  :fetch-suggestions="debounceContractSearchAsync as any"
+                  placeholder="请输入合同编号"
+                  value-key="label"
+                  @select="handleSelectContract"
+                />
+                <span v-else>{{ orderDetailForm.合同编号 }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="货品" prop="货品">
+                <el-input
+                  v-if="editing"
+                  v-model="orderDetailForm.货品"
+                  placeholder="请输入货品"
+                />
+                <span v-else>{{ orderDetailForm.货品 }}</span>
+              </el-form-item>
+            </el-col>
             <!-- 数量 -->
             <el-col :span="8">
-              <el-form-item label="货单数量" prop="数量">
+              <el-form-item label="订单数量" prop="数量">
                 <el-input
                   v-if="editing"
                   v-model="orderDetailForm.数量"
@@ -59,7 +92,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="货单金额" prop="金额">
+              <el-form-item label="订单金额" prop="金额">
                 <el-input
                   v-if="editing"
                   v-model="orderDetailForm.金额"
@@ -87,16 +120,13 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="合同编号" prop="合同编号">
-                <el-autocomplete
+              <el-form-item label="订单类型" prop="订单类型">
+                <el-input
                   v-if="editing"
-                  v-model="orderDetailForm.合同编号"
-                  :fetch-suggestions="debounceContractSearchAsync as any"
-                  placeholder="请输入合同编号"
-                  value-key="label"
-                  @select="handleSelectContract"
+                  v-model="orderDetailForm.订单类型"
+                  placeholder="请输入订单类型"
                 />
-                <span v-else>{{ orderDetailForm.合同编号 }}</span>
+                <span v-else>{{ orderDetailForm.订单类型 }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -107,16 +137,6 @@
                   placeholder="请输入合作方"
                 />
                 <span v-else>{{ orderDetailForm.合作方 }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="货品" prop="货品">
-                <el-input
-                  v-if="editing"
-                  v-model="orderDetailForm.货品"
-                  placeholder="请输入货品"
-                />
-                <span v-else>{{ orderDetailForm.货品 }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -193,7 +213,7 @@ const { id, editing } = toRefs(props);
 const formRef = ref<Nullable<FormInstance>>(null);
 
 /**
- * 货单详情表单
+ * 订单详情表单
  * 包括:
  * 编号、类型、日期、金额、状态、附件、合同编号、备注、主体、客商、货品、数量、单价
  */
@@ -202,23 +222,28 @@ const orderDetailForm = ref({
   金额: undefined,
   状态: undefined,
   附件: [],
+  订单编号: undefined,
   合同编号: undefined,
   备注: undefined,
   合作方: undefined,
   货品: undefined,
   数量: undefined,
   单价: undefined,
+  订单类型: undefined,
 });
 
+// TODO 与后端保持一致
 const rules: Ref<GenericRecord> = ref({
   日期: [{ required: true, message: "请选择日期", trigger: "blur" }],
   金额: [{ required: true, message: "请输入金额", trigger: "blur" }],
   状态: [{ required: true, message: "请输入状态", trigger: "blur" }],
+  订单编号: [{ required: true, message: "请输入订单编号", trigger: "blur" }],
   合同编号: [{ required: true, message: "请输入合同编号", trigger: "blur" }],
   合作方: [{ required: true, message: "请输入合作方", trigger: "blur" }],
   货品: [{ required: true, message: "请输入货品", trigger: "blur" }],
   数量: [{ required: true, message: "请输入数量", trigger: "blur" }],
   单价: [{ required: true, message: "请输入单价", trigger: "blur" }],
+  订单类型: [{ required: true, message: "请输入订单类型", trigger: "blur" }],
 });
 
 const allSelected = ref(false);
@@ -250,9 +275,18 @@ const converter = (value: any) => {
 };
 
 function contractSearchAsync(query: string, callback: (data: any) => void) {
-  BusinessStandbookAPI.getContractLedgerRecordList({
-    编号: query,
-  })
+  // 构造请求参数
+  const requestParams: any = {
+    页码: 1,
+    页容量: 10000,
+  };
+
+  // TODO 是否增加模糊搜索？
+  // 如果 query 有值，则添加合同编号集合参数
+  if (query) {
+    requestParams.合同编号集合 = [query];
+  }
+  BusinessStandbookAPI.getContractLedgerRecordList(requestParams)
     .then((res: any) => {
       // 将res.当前记录.合同编号转化为value
       const data = res.当前记录?.map((item: any) => {
@@ -328,12 +362,14 @@ const generateRandomData = () => {
     金额: "1000",
     状态: "有效",
     附件: [],
+    订单编号: "订单编号",
     合同编号: "合同编号",
     备注: "备注",
     合作方: "合作方",
     货品: "货品",
     数量: "数量",
     单价: "单价",
+    订单类型: "订单类型",
   };
 };
 
