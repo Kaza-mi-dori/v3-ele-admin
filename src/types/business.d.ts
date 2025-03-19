@@ -28,7 +28,7 @@ namespace business {
     id: string;
     no: string;
     date: string;
-    category: string; // 订单类别
+    category: string; // 订单类型
     amount: number;
     status: string; // 订单本身的状态，非数据审核状态
     goods: Partial<IGoods>[];
