@@ -22,13 +22,16 @@
                   id="profit-analysis-chart-liquid-fill"
                   style="height: 250px; width: 60%"
                 />
-                <div class="flex flex-col items-center justify-center w-2/5">
+                <div
+                  class="flex flex-col items-center justify-center w-2/5 gap-3"
+                >
                   <MetricItem
                     v-for="item in metricItemData"
                     :key="item.title"
                     :title="item.title"
                     :value="item.value"
                     :unit="item.unit"
+                    arrowLine
                     @click="handleMetricItemClick(item)"
                   />
                 </div>
