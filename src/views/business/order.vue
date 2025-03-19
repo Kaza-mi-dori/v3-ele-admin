@@ -103,12 +103,15 @@
       <el-table-column label="操作" width="150" fixed="right">
         <template v-slot="scope">
           <div class="w-full flex justify-evenly">
-            <el-button type="text" @click="handleViewDetail(scope.row)">
+            <el-button
+              type="text"
+              @click="handleClickRecord(scope.row, router)"
+            >
               详情
             </el-button>
             <el-button type="text">编辑</el-button>
           </div>
-        </template>
+        </template> 
       </el-table-column>
     </el-table>
     <!-- 分页 -->
@@ -191,7 +194,13 @@ const handleCurrentChange = (currentPage: number) => {
   initTableData();
 };
 const handleViewDetail = (row: IExampleData) => {
-  console.log(row);
+  router.push({
+    name: "ReportForm",
+    query: {
+      type: "orderDetail",
+      id: row.id,
+    },
+  });
 };
 const handleAddRecord = () => {
   router.push({

@@ -341,6 +341,15 @@ const converToFrontendFormData = (type: string | null, data: any) => {
     case "orderDetail":
       return {
         // 转换数据
+        日期: data["日期"],
+        状态: data["状态"],
+        订单编号: data["订单编号"],
+        合同编号: data["合同编号"],
+        备注: data["备注"],
+        货品: data["内容"]?.["货品信息"],
+        数量: data["内容"]?.["订单数量"],
+        金额: data["内容"]?.["订单金额"],
+        订单类型: data["内容"]?.["订单类型"],
       };
     case "settlementDetail":
       return {
@@ -1101,6 +1110,21 @@ const initForm = () => {
       }
       break;
     case orderDetailForm:
+      if (route.query.id) {
+        BusinessStandbookAPI.getOrderLedgerRecord(
+          route.query.id as string
+        ).then((data) => {
+          if (formRef.value) {
+            const form = formRef.value as any;
+            form.setFormValue(
+              converToFrontendFormData(
+                route.query.type as Nullable<string>,
+                data
+              )
+            );
+          }
+        });
+      }
       break;
     case settlementDetailForm:
       if (route.query.id) {
