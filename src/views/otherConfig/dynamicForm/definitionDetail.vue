@@ -275,6 +275,8 @@ const submitFieldDefinition = async () => {
       console.error(error);
     } finally {
       fieldDefinitionDialogVisible.value = false;
+      fieldDefinitionFormLoading.value = false;
+      fieldDefinitionForm.value.id = -1;
     }
   }
 };

@@ -27,12 +27,12 @@
       </div>
       <div class="box__amount">
         <span class="__desc">完成率</span>
-        <el-statistic
+        <!-- <el-statistic
           class="animated-amount"
           :precision="2"
           :value="animatedFinished"
         />
-        <span class="__unit">%</span>
+        <span class="__unit">%</span> -->
         <!-- 换成进度条 -->
         <!-- <el-progress
           style="width: calc(100% - 3em)"
@@ -42,6 +42,23 @@
           text-color="#fff"
           :percentage="animatedFinished"
         /> -->
+        <div
+          class="__bar-container"
+          :style="{
+            width: `calc(100% - 3em)`,
+            backgroundColor: '#c1c1c1',
+          }"
+        >
+          <div
+            class="__bar"
+            :style="{
+              width: `calc(${Math.min(animatedFinished, 100)}%)`,
+              backgroundColor: '#0180EB',
+            }"
+          >
+            <span class="__text">{{ animatedFinished }}%</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -84,13 +101,13 @@ const source = ref(0);
 const target = ref(0);
 const finished = ref(0);
 const animatedAmount = useTransition(source, {
-  duration: 1500,
+  duration: 1000,
 });
 const animatedTarget = useTransition(target, {
-  duration: 1500,
+  duration: 1000,
 });
 const animatedFinished = useTransition(finished, {
-  duration: 1500,
+  duration: 1000,
 });
 
 function handleClick() {
@@ -126,7 +143,9 @@ watch(
     if (props.planAmount) {
       target.value = +parseFloat(props.planAmount).toFixed(2);
       if (target.value) {
-        finished.value = +((source.value / target.value) * 100).toFixed(2);
+        finished.value = Number(
+          ((source.value / target.value) * 100).toFixed(2)
+        );
       }
     }
   },
@@ -169,7 +188,7 @@ $number-color: #2abfff;
     }
     .box__amount {
       @apply flex;
-      align-items: baseline;
+      align-items: center;
       font-size: 1.2rem;
       color: $number-color;
       .__desc {
@@ -191,5 +210,20 @@ $number-color: #2abfff;
 
 ::v-deep(.el-statistic__content) {
   all: unset;
+}
+
+.__bar-container {
+  @apply h-3.5 mb-3px ml-3px relative;
+  // border-radius: 5px;
+  .__bar {
+    @apply h-full;
+    // border-radius: 5px;
+  }
+  .__text {
+    @apply text-sm text-center max-w-[5em] text-ellipsis overflow-hidden whitespace-nowrap text-white absolute left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%];
+    &:first-child {
+      @apply font-bold;
+    }
+  }
 }
 </style>
