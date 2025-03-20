@@ -13,29 +13,34 @@
       <span class="text-date-desc">数据截止日期：{{ dataTimeText }}</span>
     </div>
     <div class="bg-view-body pl-4 pr-4">
-      <Model1 class="model1 w-full" title="营收逐月分析">
+      <Model1 class="model1 w-full" title="销售逐月分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex items-center h-full w-full gap-2">
-              <div class="flex items-center justify-center w-1/3">
-                <div
-                  id="revenue-analysis-chart-liquid-fill"
+              <div class="flex items-center justify-around w-1/3">
+                <!-- <div
+                  id="sell-analysis-chart-liquid-fill"
                   style="height: 250px; width: 60%"
-                />
-                <div class="flex flex-col items-center justify-center w-2/5">
+                /> -->
+                <!-- 换成ProcessRing -->
+                <ProcessRing :value="liquidFillFulfilledPercent" unit="%" />
+                <div
+                  class="flex flex-col items-center justify-center w-2/5 gap-3"
+                >
                   <MetricItem
                     v-for="item in metricItemData"
                     :key="item.title"
                     :title="item.title"
                     :value="item.value"
                     :unit="item.unit"
+                    arrowLine
                     @click="handleMetricItemClick(item)"
                   />
                 </div>
               </div>
               <div class="relative w-[calc(100%-33%)]">
                 <div
-                  id="revenue-analysis-chart-1"
+                  id="sell-analysis-chart-1"
                   style="height: 250px; width: 100%"
                 />
                 <!-- 柱状图/折线图切换开关 -->
@@ -55,18 +60,18 @@
           </div>
         </div>
       </Model1>
-      <Model1 class="model1" title="营收构成分析">
+      <Model1 class="model1" title="销售构成分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex gap-2 justify-center">
               <div
                 v-if="hasSubOrg"
-                id="revenue-analysis-chart-3"
+                id="sell-analysis-chart-3"
                 style="height: 250px; width: 100%"
               />
               <div
                 v-if="hasSubOrg"
-                id="revenue-analysis-chart-31"
+                id="sell-analysis-chart-31"
                 style="height: 250px; width: 100%"
               />
               <div
@@ -85,7 +90,7 @@
       </Model1>
       <!-- <div class="b-space" /> -->
       <div class="flex gap-2">
-        <Model1 v-if="hasSubOrg" class="model1" title="下属企业营收分析">
+        <Model1 v-if="hasSubOrg" class="model1" title="下属企业销售分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -99,7 +104,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in data.table1.data" :key="item.name">
+                  <tr v-for="item in table1Data" :key="item.name">
                     <td>{{ item.name }}</td>
                     <td>{{ item.value[0] }}</td>
                     <td>{{ item.value[1] }}</td>
@@ -112,7 +117,7 @@
           </div>
         </Model1>
         <!-- todo 按照是不是有数据来决定是否显示 -->
-        <Model1 v-if="hasProduct" class="model1" title="产品营收分析">
+        <Model1 v-if="hasProduct" class="model1" title="产品销售分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -126,7 +131,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in data.table2.data" :key="item.name">
+                  <tr v-for="item in table2Data" :key="item.name">
                     <td>{{ item.name }}</td>
                     <td>{{ item.value[0] }}</td>
                     <td>{{ item.value[1] }}</td>
@@ -146,38 +151,141 @@
 <script setup lang="ts">
 import Model1 from "../../Model1/index.vue";
 import TextTab from "@/views/bigscreen/components/SecondPage/Common/TextTab/index.vue";
-import DetailTable1 from "@/views/bigscreen/components/Common/Table/detailTable1.vue";
-import Left1 from "@/views/bigscreen/components/SecondPage/Left/left1.vue";
-import Left2 from "@/views/bigscreen/components/SecondPage/Left/left2.vue";
-import Right1 from "@/views/bigscreen/components/SecondPage/Right/right1.vue";
-import { ref, onMounted, shallowRef } from "vue";
-import { useRouter } from "vue-router";
 import * as echarts from "echarts";
 import "echarts-liquidfill";
 import MetricItem from "@/views/bigscreen/components/SecondPage/Common/MetricItem/index.vue";
+import ProcessRing from "@/views/bigscreen/components/SecondPage/Common/ProcessRing/index.vue";
 import sassvariables from "@/styles/variables.module.scss";
+import { ref, onMounted, shallowRef } from "vue";
+import { useRouter } from "vue-router";
 import { getDateOfOneYear, getDateOfOneYearToNow } from "@/utils/time";
+import { sellData, businessStoreHook } from "@/store/modules/business";
+import {
+  initCache,
+  clearCache,
+  queryOrgData,
+  queryProductTypeData,
+  queryCompanyData,
+  queryOrgAndProductTypeData,
+  queryProductData,
+  type AggregatedData,
+} from "@/store/utils/agg-utils";
+import { OurCompanyEnumMap } from "@/enums/BusinessEnum";
+import { fulfillArray } from "@/utils";
+import { dateTableEmits } from "element-plus/es/components/calendar/src/date-table";
+
+const businessStore = businessStoreHook();
+
+// 数据结果
+interface TimeSpanDataResult {
+  // 时间维度
+  timeSpan: any;
+  // 时间
+  dataTime: string;
+  // 指标
+  keyIndexType: string;
+  // 组织名
+  org: string;
+  // 产品类型
+  productType?: string;
+  // 产品细项
+  product?: string;
+  // 当期计划值 当期实际值 累计值 环比 环比增长 同比增长 同比增幅
+  plan: number;
+  real: number;
+  accumulated: number;
+  pOverPRate: number;
+  pOverPValue: number;
+  pToPRate: number;
+  pToPValue: number;
+  // 下属企业数据；产品数据；下属时间段数据
+  subOrg?: TimeSpanDataResult[];
+  subProduct?: TimeSpanDataResult[]; // 对企业是产品类型，对产品是分项产品
+  subData?: TimeSpanDataResult[];
+}
+
+// 查询参数
+interface TimeSpanDataQuery {
+  keyIndexType: string;
+  timeSpan: "year" | "month" | "season" | "day";
+  dataTime: string;
+  org: string;
+  productType?: string; // 方便中间件组织用
+  product?: string;
+  // 是否包含下属企业信息
+  withSubOrgResult?: boolean;
+  // 是否包含产品信息
+  withProductResult?: boolean;
+  // 下属时间段数据维度
+  subDataTimeSpan?: "year" | "month" | "season" | "day";
+}
+
+// 示例
+// 查询2024年石化板块销售数据，包含下属企业信息和产品信息
+const exampleQuery: TimeSpanDataQuery = {
+  keyIndexType: "sell",
+  timeSpan: "year",
+  dataTime: "2024-01-01",
+  org: "石化板块",
+  withSubOrgResult: true,
+  withProductResult: true,
+};
+
+// 示例返回
+const exampleResult: TimeSpanDataResult = {
+  timeSpan: "year",
+  dataTime: "2024-01-01",
+  org: "石化板块",
+  keyIndexType: "sell",
+  plan: 1000000,
+  real: 1000000,
+  accumulated: 1000000,
+  pOverPRate: 100,
+  pOverPValue: 1000000,
+  pToPRate: 100,
+  pToPValue: 1000000,
+  subOrg: [
+    {
+      timeSpan: "month",
+      dataTime: "2024-01-01",
+      keyIndexType: "sell",
+      org: "广投石化",
+      plan: 1000000,
+      real: 1000000,
+      accumulated: 1000000,
+      pOverPRate: 100,
+      pOverPValue: 1000000,
+      pToPRate: 100,
+      pToPValue: 1000000,
+      subOrg: [],
+      subProduct: [],
+      subData: [],
+    },
+  ],
+  subProduct: [
+    {
+      timeSpan: "month",
+      dataTime: "2024-01-01",
+      keyIndexType: "sell",
+      org: "石化板块",
+      productType: "原油",
+      product: "原油1",
+      plan: 1000000,
+      real: 1000000,
+      accumulated: 1000000,
+      pOverPRate: 100,
+      pOverPValue: 1000000,
+      pToPRate: 100,
+      pToPValue: 1000000,
+      subOrg: [],
+      subProduct: [],
+      subData: [],
+    },
+  ],
+};
 
 const router = useRouter();
 const route = useRoute();
-const totalData = ref([
-  {
-    year: "25438",
-    month: "25438",
-  },
-  {
-    year: "25438",
-    month: "25438",
-  },
-  {
-    year: "25438",
-    month: "25438",
-  },
-  {
-    year: "25438",
-    month: "25438",
-  },
-]);
 
 const metricItemData = ref([
   {
@@ -199,17 +307,6 @@ const metricItemData = ref([
     title: "同比增幅",
     value: 0,
     unit: "%",
-  },
-]);
-
-const subOrgTableData = ref([
-  {
-    name: "广投石化",
-    value: "1000",
-  },
-  {
-    name: "开燃公司",
-    value: "1000",
   },
 ]);
 
@@ -254,124 +351,63 @@ const subOrgName = ref("");
 
 const yearData = {
   liquidFill: {
-    fulfilledPercent: 20,
+    fulfilledPercent: 0,
   },
+  metricItem: [
+    {
+      title: "累计",
+      value: 0,
+      unit: "万元",
+    },
+    {
+      title: "环比增幅",
+      value: 0,
+      unit: "%",
+    },
+    {
+      title: "同比增长",
+      value: 0,
+      unit: "万元",
+    },
+    {
+      title: "同比增幅",
+      value: 0,
+      unit: "%",
+    },
+  ],
   chart1: {
-    data: [100, 200],
+    dataPlan: [0, 0],
+    dataReal: [0, 0],
   },
   chart2: {
-    data: [100, 200],
+    data: [0, 0],
   },
   chart3: {
-    data: [100, 200],
+    data: [],
+  },
+  chart31: {
+    dataTarget: [],
+    dataActual: [],
   },
   chart4: {
-    data: [100, 200],
+    data: [],
   },
-  table1: {
-    data: [
-      {
-        name: "广投石化",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "开燃公司",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "桂盛桂轩",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "恒润",
-        value: [200, 300, 200, 100],
-      },
-    ],
+  chart41: {
+    dataTarget: [0, 0],
+    dataActual: [0, 0],
   },
-  table2: {
-    data: [
-      {
-        name: "原油",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "成品油",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "化工产品",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "其他",
-        value: [200, 300, 200, 100],
-      },
-    ],
-  },
+  table1: [],
+  table2: [],
 };
 
-const monthData = {
-  liquidFill: {
-    fulfilledPercent: 50,
-  },
-  chart1: {
-    data: [30, 20],
-  },
-  chart2: {
-    data: [30, 20],
-  },
-  chart3: {
-    data: [30, 20],
-  },
-  chart4: {
-    data: [30, 20],
-  },
-  table1: {
-    data: [
-      {
-        name: "广投石化",
-        value: [20, 30, 20, 10],
-      },
-      {
-        name: "开燃公司",
-        value: [100, 30, 20, 60],
-      },
-      {
-        name: "桂盛桂轩",
-        value: [200, 300, 200, 100],
-      },
-      {
-        name: "恒润",
-        value: [200, 300, 200, 100],
-      },
-    ],
-  },
-  table2: {
-    data: [
-      {
-        name: "原油",
-        value: [20, 30, 20, 10],
-      },
-      {
-        name: "成品油",
-        value: [20, 30, 20, 10],
-      },
-      {
-        name: "化工产品",
-        value: [20, 30, 20, 10],
-      },
-      {
-        name: "其他",
-        value: [20, 30, 20, 10],
-      },
-    ],
-  },
-};
 let data = reactive(yearData);
+const table1Data = toRef(data, "table1");
+const table2Data = toRef(data, "table2");
+const liquidFillFulfilledPercent = toRef(data.liquidFill, "fulfilledPercent");
 
 // 如果timeTabValue为year，则显示年份，否则显示月份
 watch(timeTabValue, (newVal, oldVal) => {
-  console.log(newVal, oldVal);
+  // console.log(newVal, oldVal);
   if (newVal !== oldVal) {
     // TODO 重新查询数据
     // 如果是月→年，则提取年份并查询年份数据
@@ -410,7 +446,7 @@ const handleMetricItemClick = (item: any) => {
 const initLiquidFill = () => {
   if (!liquidFill.value) {
     liquidFill.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-liquid-fill")
+      document.getElementById("sell-analysis-chart-liquid-fill")
     );
   }
   liquidFill.value.clear();
@@ -470,28 +506,41 @@ const initLiquidFill = () => {
 const initChart1 = (type: string = "bar") => {
   if (!chart1.value) {
     chart1.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-1")
+      document.getElementById("sell-analysis-chart-1")
     );
   }
   chart1.value.clear();
-  // 绑定点击事件
-  chart1.value.on("click", "series.bar", (params: any) => {
-    // TODO 点击事件, 按照月份原地更新
-    // 获取当前月份
-    const month = params.name.split("月")[0];
-    // 更新月份
-    timeTabValue.value = "month";
-    // 更新月份
-    datatime.value = new Date(new Date().getFullYear(), month - 1, 1);
-    handleSearch();
-  });
+  // 根据timeTabValue的值，更新chart1的x轴
+  let monthData = [];
+  if (timeTabValue.value === "year") {
+    monthData = [
+      "1月",
+      "2月",
+      "3月",
+      "4月",
+      "5月",
+      "6月",
+      "7月",
+      "8月",
+      "9月",
+      "10月",
+      "11月",
+      "12月",
+    ];
+  } else {
+    // 只显示当前月份
+    const currentYear = datatime.value.getFullYear();
+    const currentMonth = datatime.value.getMonth() + 1;
+    monthData = [`${currentYear}-${currentMonth.toString().padStart(2, "0")}`];
+  }
+
   // 柱状图
   const option = {
     legend: {
       show: true,
       // icon: "circle",
       top: "3%",
-      data: ["计划经营收入", "实际经营收入"],
+      data: ["计划经销售入", "实际经销售入"],
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
       },
@@ -512,20 +561,7 @@ const initChart1 = (type: string = "bar") => {
     color: ["orange", "lightgreen"],
     xAxis: {
       type: "category",
-      data: [
-        "1月",
-        "2月",
-        "3月",
-        "4月",
-        "5月",
-        "6月",
-        "7月",
-        "8月",
-        "9月",
-        "10月",
-        "11月",
-        "12月",
-      ],
+      data: monthData,
       axisLine: {
         show: true,
         lineStyle: {
@@ -562,8 +598,9 @@ const initChart1 = (type: string = "bar") => {
     series: [
       {
         type: "bar",
-        name: "计划经营收入",
-        barWidth: "25%",
+        name: "计划经销售入",
+        // barWidth: "25%",
+        barWidth: 30,
         barGap: "35%",
         markLine: {
           lineStyle: {
@@ -577,15 +614,16 @@ const initChart1 = (type: string = "bar") => {
           { offset: 1, color: sassvariables["bigscreen-primary-color-7"] },
         ]),
         // data: [100, 200],
-        data: data.chart1.data,
+        data: data.chart1.dataPlan,
       },
       {
         type: "bar",
-        name: "实际经营收入",
-        barWidth: "25%",
+        name: "实际经销售入",
+        // barWidth: "25%",
+        barWidth: 30,
         barGap: "35%",
         // data: [110, 220],
-        data: data.chart1.data,
+        data: data.chart1.dataReal,
         markLine: {
           lineStyle: {
             type: "dashed",
@@ -622,7 +660,7 @@ const initChart1 = (type: string = "bar") => {
 const initChart2 = () => {
   if (!chart2.value) {
     chart2.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-2")
+      document.getElementById("sell-analysis-chart-2")
     );
   }
   chart2.value.clear();
@@ -711,7 +749,7 @@ const initChart2 = () => {
   };
   chart2.value.setOption(option);
 };
-// 下属企业营收分析
+// 下属企业销售分析
 const initChart3 = () => {
   // 如果hasSubOrg为false，则不初始化
   if (!hasSubOrg.value) {
@@ -719,14 +757,9 @@ const initChart3 = () => {
   }
   if (!chart3.value) {
     chart3.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-3")
+      document.getElementById("sell-analysis-chart-3")
     );
   }
-  // 绑定点击事件
-  chart3.value.on("click", "series.pie", (params: any) => {
-    // console.log(params);
-    // TODO 点击事件, 判断穿透到什么地方
-  });
   chart3.value.clear();
   const option = {
     legend: {
@@ -754,66 +787,23 @@ const initChart3 = () => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "广投石化" },
-          { value: 735, name: "开燃公司" },
-          { value: 580, name: "桂盛桂轩" },
-          { value: 484, name: "恒润" },
-        ],
+        data: data.chart3.data,
       },
     ],
   };
   chart3.value.setOption(option);
 };
 
-// 下属企业营收与计划营收对比
+// 下属企业销售与计划销售对比
 const initChart31 = () => {
   if (!chart31.value) {
     chart31.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-31")
+      document.getElementById("sell-analysis-chart-31")
     );
   }
   chart31.value.clear();
-  const target = [
-    {
-      name: "广投石化",
-      value: 1048,
-    },
-    {
-      name: "开燃公司",
-      value: 735,
-    },
-    {
-      name: "桂盛桂轩",
-      value: 580,
-    },
-    {
-      name: "恒润",
-      value: 484,
-    },
-  ];
-  const actual = [
-    {
-      name: "广投石化",
-      value: 1050,
-      color: "#5470c6",
-    },
-    {
-      name: "开燃公司",
-      value: 515,
-      color: "#91cc75",
-    },
-    {
-      name: "桂盛桂轩",
-      value: 450,
-      color: "#fac858",
-    },
-    {
-      name: "恒润",
-      value: 484,
-      color: "#ee6666",
-    },
-  ];
+  const target = data.chart31.dataTarget;
+  const actual = data.chart31.dataActual;
   // 实际渲染的y应该都是0~100%，但是tooltip显示的是实际值
   // 所以需要先归一化，让整个y轴最大值为100%
   const normalizedActual = actual.map((item, index) => ({
@@ -888,8 +878,8 @@ const initChart31 = () => {
         },
       },
     },
-    // 计划营收值永远是100%，实际营收值是归一化后的值
-    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    // 计划销售值永远是100%，实际销售值是归一化后的值
+    // 计划销售值在最底层，颜色较淡，实际销售值在上面，颜色较深
     series: [
       {
         // type: "bar",
@@ -946,7 +936,7 @@ const handleGraphTypeChange = () => {
   initChart1(graphType.value);
 };
 
-// 产品营收分析
+// 产品销售分析
 const initChart4 = () => {
   // 如果hasProduct为false，则不初始化
   if (!hasProduct.value) {
@@ -958,11 +948,6 @@ const initChart4 = () => {
     );
   }
   chart4.value.clear();
-  // 绑定点击事件
-  chart4.value.on("click", "series.pie", (params: any) => {
-    // console.log(params);
-    // TODO 点击事件, 判断穿透到什么地方
-  });
   // 柱形图，利润逐月分析，两个柱子一个是计划值一个是完成值
   // x轴是月份，y轴是利润
   const option = {
@@ -991,69 +976,28 @@ const initChart4 = () => {
           color: "#fff",
           fontSize: 15,
         },
-        data: [
-          { value: 1048, name: "原油" },
-          { value: 735, name: "成品油" },
-          { value: 580, name: "化工产品" },
-          { value: 484, name: "其他" },
-        ],
+        data: data.chart4.data,
       },
     ],
   };
   chart4.value.setOption(option);
 };
 
-// 产品营收与计划营收对比
+// 产品销售与计划销售对比
 const initChart41 = () => {
   if (!chart41.value) {
     chart41.value = echarts.init(
       document.getElementById("profit-analysis-chart-41")
     );
   }
+  const colors = ["#ff8c00", "#aa8c00cc"];
   chart41.value.clear();
-  const target = [
-    {
-      name: "原油",
-      value: 1048,
-    },
-    {
-      name: "成品油",
-      value: 735,
-    },
-    {
-      name: "化工产品",
-      value: 580,
-    },
-    {
-      name: "其他",
-      value: 484,
-    },
-  ];
-  const actual = [
-    {
-      name: "原油",
-      value: 1140,
-      color: "#5470c6",
-    },
-    {
-      name: "成品油",
-      value: 515,
-      color: "#91cc75",
-    },
-    {
-      name: "化工产品",
-      value: 450,
-      color: "#fac858",
-    },
-    {
-      name: "其他",
-      value: 484,
-      color: "#ee6666",
-    },
-  ];
+  const target = data.chart41.dataTarget;
+  const actual = data.chart41.dataActual;
   const normalizedActual = actual.map((item, index) => ({
     ...item,
     value: (item.value / target[index].value) * 100,
+    color: colors[index],
   }));
   const option = {
     legend: {
@@ -1121,8 +1065,8 @@ const initChart41 = () => {
         },
       },
     },
-    // 计划营收值永远是100%，实际营收值是归一化后的值
-    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    // 计划销售值永远是100%，实际销售值是归一化后的值
+    // 计划销售值在最底层，颜色较淡，实际销售值在上面，颜色较深
     series: [
       {
         type: "bar",
@@ -1286,6 +1230,7 @@ const initChart3Animation = () => {
     });
     chart3ActiveIndex.value++;
     if (
+      chart3.value.getOption().series?.[0]?.data &&
       chart3ActiveIndex.value >= chart3.value.getOption().series[0].data.length
     ) {
       chart3ActiveIndex.value = 0;
@@ -1317,6 +1262,7 @@ const initChart4Animation = () => {
     });
     chart4ActiveIndex.value++;
     if (
+      chart4.value.getOption().series?.[0]?.data &&
       chart4ActiveIndex.value >= chart4.value.getOption().series[0].data.length
     ) {
       chart4ActiveIndex.value = 0;
@@ -1332,26 +1278,236 @@ const initAnimation = () => {
   }
 };
 
-const initData = async () => {
-  // TODO 查询相关数据
-  // 根据路由参数、时间、时间类型，查询相关数据
-  // 如果路由参数有值，则查询相关数据
-  if (timeTabValue.value === "year") {
-    data = yearData;
-  } else {
-    data = monthData;
+// 根据路由参数、时间、时间类型，构建查询参数
+const buildQueryParams = () => {
+  // 测试数据：组织
+  const queryParams = {
+    keyIndexType: "销售",
+    timeDimension: timeTabValue.value === "year" ? "年" : "月",
+    companyName: route.query.companyName || "石化板块",
+    fromYear: 2025,
+    toYear: 2025,
+    fromMonth: 1,
+    toMonth: 12,
+    category: route.query.productType || undefined,
+    product: undefined,
+    withSubTimeData: true,
+    withSubOrgData: true,
+    withSubProductData: false,
+    withSubProductTypeData: true,
+  };
+
+  // // 测试数据：产品类型
+  // const queryParams = {
+  //   keyIndexType: "销售",
+  //   timeDimension: timeTabValue.value === "year" ? "年" : "月",
+  //   companyName: undefined,
+  //   fromYear: 2025,
+  //   toYear: 2025,
+  //   fromMonth: 1,
+  //   toMonth: 12,
+  //   category: "原油类",
+  //   product: undefined,
+  //   withSubTimeData: true,
+  //   withSubOrgData: true,
+  //   withSubProductData: true,
+  //   withSubProductTypeData: false,
+  // };
+
+  // 如果有时间
+  if (datatime.value) {
+    if (timeTabValue.value === "year") {
+      queryParams.fromYear = new Date(datatime.value).getFullYear();
+      queryParams.toYear = new Date(datatime.value).getFullYear();
+    } else {
+      queryParams.fromMonth = new Date(datatime.value).getMonth() + 1;
+      queryParams.toMonth = new Date(datatime.value).getMonth() + 1;
+    }
   }
+
+  // if (route.query.category) {
+  //   queryParams.category = route.query.category;
+  // }
+  // if (route.query.product) {
+  //   queryParams.product = route.query.product;
+  // }
+  return queryParams;
+};
+
+const initData = async () => {
+  // TODO 校验查询参数合法性
+  const queryParams = buildQueryParams();
+  const testData: AggregatedData[] = await businessStore.queryKeyIndexData(
+    queryParams.keyIndexType as "销售" | "利润",
+    queryParams.timeDimension as "年" | "月",
+    queryParams.companyName as string | undefined,
+    queryParams.fromYear as number,
+    queryParams.toYear as number,
+    queryParams.fromMonth as number,
+    queryParams.toMonth as number,
+    queryParams.category as string | undefined,
+    queryParams.product as string | undefined,
+    queryParams.withSubTimeData as boolean,
+    queryParams.withSubOrgData as boolean,
+    queryParams.withSubProductData as boolean,
+    queryParams.withSubProductTypeData as boolean
+  );
+  console.log(testData);
+  // TODO 将数据放入组件
+  if (testData?.[0]) {
+    data = {
+      liquidFill: {
+        fulfilledPercent: Number(
+          ((testData[0].实际值 / testData[0].计划值) * 100).toFixed(2)
+        ),
+      },
+      metricItem: [
+        {
+          title: "累计",
+          value: Number(testData[0].年累计值.toFixed(2)),
+          unit: "万元",
+        },
+        {
+          title: "环比增幅",
+          value: Number((testData[0].年累计值环比增幅 || 0).toFixed(2)),
+          unit: "%",
+        },
+        {
+          title: "同比增长",
+          value: Number((testData[0].年累计值同比 || 0).toFixed(2)),
+          unit: "万元",
+        },
+        {
+          title: "同比增幅",
+          value: Number((testData[0].年累计值同比增幅 || 0).toFixed(2)),
+          unit: "%",
+        },
+      ],
+      chart1: {
+        // TODO 通用化
+        dataReal:
+          timeTabValue.value === "year"
+            ? testData[0].subTimeData?.map((item: any) => item.实际值)
+            : [testData[0].实际值],
+        dataPlan:
+          timeTabValue.value === "year"
+            ? testData[0].subTimeData?.map((item: any) => item.计划值)
+            : [testData[0].计划值],
+      },
+      chart2: {
+        data: [100, 200],
+      },
+      chart3: {
+        data: testData[0].subOrgData?.map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.实际值,
+          };
+        }),
+      },
+      chart31: {
+        dataTarget: fulfillArray(testData[0].subOrgData).map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.计划值,
+          };
+        }),
+        dataActual: fulfillArray(testData[0].subOrgData).map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.实际值,
+          };
+        }),
+      },
+      chart4: {
+        data: fulfillArray(testData[0].subProductTypeData).map((item: any) => {
+          return {
+            name: item.维度值,
+            value: item.实际值,
+          };
+        }),
+      },
+      chart41: {
+        dataTarget: fulfillArray(testData[0].subProductTypeData).map(
+          (item: any) => {
+            return {
+              name: item.维度值,
+              value: item.计划值,
+            };
+          }
+        ),
+        dataActual: fulfillArray(testData[0].subProductTypeData).map(
+          (item: any) => {
+            return {
+              name: item.维度值,
+              value: item.实际值,
+            };
+          }
+        ),
+      },
+      table1: fulfillArray(testData[0].subOrgData).map((item: any) => {
+        return {
+          name: item.维度值,
+          value: [
+            item.实际值,
+            item.同比增幅,
+            item.环比值,
+            item.计划值
+              ? ((item.实际值 / item.计划值) * 100).toFixed(2) + "%"
+              : "",
+          ],
+        };
+      }),
+      table2: fulfillArray(
+        testData[0].subProductTypeData,
+        {
+          name: "维度值",
+          value: [0, 0, 0, 0],
+        },
+        4
+      ).map((item: any) => {
+        return {
+          name: item.维度值,
+          value: [
+            item.实际值,
+            item.同比增幅,
+            item.环比值,
+            item.计划值
+              ? ((item.实际值 / item.计划值) * 100).toFixed(2) + "%"
+              : "",
+          ],
+        };
+      }),
+    };
+    table1Data.value = data.table1;
+    table2Data.value = data.table2;
+    metricItemData.value = data.metricItem;
+    liquidFillFulfilledPercent.value = data.liquidFill.fulfilledPercent;
+  } else {
+    data = yearData;
+    table1Data.value = [];
+    table2Data.value = [];
+    metricItemData.value = yearData.metricItem;
+    liquidFillFulfilledPercent.value = 0;
+  }
+
+  // if (timeTabValue.value === "year") {
+  //   data = yearData;
+  // } else {
+  //   data = monthData;
+  // }
 };
 
 // 绑定各个图例的点击事件
 const initLegendClick = () => {
-  // 绑定逐月营收的点击事件
+  // 绑定逐月销售的点击事件
   chart1.value.on("click", "series.bar", (params: any) => {
     const { name } = params;
     const month = name.split("月")[0];
     // 触发切换日期 + 重新搜索数据
     datatime.value = new Date(new Date().getFullYear(), month - 1, 1);
-    handleSearch();
+    // handleSearch();
+    timeTabValue.value = "month";
   });
   // 绑定图例的点击事件
   chart3.value.on("mouseover", (params: any) => {
@@ -1362,15 +1518,14 @@ const initLegendClick = () => {
   });
   chart3.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
-    if (name === "广投石化") {
-      const nextRoute = router.resolve({
-        name: "Revenue",
-        query: {
-          companyName: "广投石化",
-        },
-      });
-      window.open(nextRoute.href, "_blank");
-    }
+    if (!Object.values(OurCompanyEnumMap).includes(name)) return;
+    const nextRoute = router.resolve({
+      name: "Sell",
+      query: {
+        companyName: name,
+      },
+    });
+    window.open(nextRoute.href, "_blank");
   });
   chart4.value.on("mouseover", (params: any) => {
     chart4Timer.value && clearInterval(chart4Timer.value);
@@ -1381,10 +1536,10 @@ const initLegendClick = () => {
   chart4.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
     const nextRoute = router.resolve({
-      name: "Revenue",
+      name: "Sell",
       query: {
         companyName: route.query.companyName,
-        productName: name,
+        productType: name,
       },
     });
     window.open(nextRoute.href, "_blank");
@@ -1401,7 +1556,7 @@ const initialize = async () => {
   initChart41();
   // initChart5();
   // initChart6();
-  initLiquidFill();
+  // initLiquidFill();
   // 初始化轮播效果
   initAnimation();
   // 绑定各个图例的点击事件
@@ -1431,6 +1586,7 @@ const handleSearch = () => {
 };
 
 onMounted(async () => {
+  // testFunc();
   await initialize();
   window.addEventListener("resize", () => {
     try {
@@ -1442,7 +1598,7 @@ onMounted(async () => {
       chart41.value.resize();
       // chart5.value.resize();
       // chart6.value.resize();
-      liquidFill.value.resize();
+      // liquidFill.value.resize();
     } catch (error) {
       console.log(error);
     }

@@ -65,13 +65,14 @@ defineProps({
     .model-title__text {
       font-size: 1.3rem;
       color: #fff;
-      // 勾边
+      // // 勾边
       // text-shadow: 0 0 5px #000;
       // 边缘阴影
-      -webkit-text-stroke: 1px #e1e1e1;
+      -webkit-text-stroke: 1px #d1d1d1;
       z-index: 1; /* 确保文字在背景图片上方 */
       font-family: 黑体;
       letter-spacing: 0.5px;
+      filter: brightness(1.1);
     }
   }
   .title__bg2 {

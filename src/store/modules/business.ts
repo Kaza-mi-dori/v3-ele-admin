@@ -21,6 +21,14 @@ import {
   clearStorageCache,
   initStorageCache,
 } from "@/store/utils/storage-agg-utils";
+import {
+  initCache as initContractCache,
+  clearContractYearCache,
+  clearContractMonthCache,
+  type ContractMonthCache,
+  type ContractYearCache,
+  queryAggregateContractData,
+} from "@/store/utils/contract-utils";
 
 const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   业务维度: undefined,
@@ -486,7 +494,11 @@ export const businessStore = defineStore("business", () => {
   // 模拟库存数据表
   const storageYearCache = ref<StorageYearCache>();
   const storageMonthCache = ref<StorageMonthCache>();
+  // 模拟合同数据表
+  const contractYearCache = ref<ContractYearCache>();
+  const contractMonthCache = ref<ContractMonthCache>();
 
+  // 初始化业务数据库
   function initLocalBusinessDatabase() {
     if (yearCache.value && monthCache.value) {
       // return;
@@ -498,6 +510,7 @@ export const businessStore = defineStore("business", () => {
     // console.log(yearCache.value, monthCache.value);
   }
 
+  // 初始化库存数据库
   function initLocalStorageDatabase() {
     if (storageYearCache.value && storageMonthCache.value) {
       // return;
@@ -507,6 +520,19 @@ export const businessStore = defineStore("business", () => {
     storageYearCache.value = cache.yearCache;
     storageMonthCache.value = cache.monthCache;
     // console.log(storageYearCache.value, storageMonthCache.value);
+  }
+
+  // 初始化合同数据库
+  function initLocalContractDatabase() {
+    if (contractYearCache.value && contractMonthCache.value) {
+      // return;
+      clearContractYearCache();
+      clearContractMonthCache();
+    }
+    const cache = initContractCache();
+    contractYearCache.value = cache.yearCache;
+    contractMonthCache.value = cache.monthCache;
+    // console.log(contractYearCache.value, contractMonthCache.value);
   }
 
   function getLocalStorageDatabase() {
@@ -706,6 +732,32 @@ export const businessStore = defineStore("business", () => {
     });
   }
 
+  // service + controller
+  /**
+   * 查询合同数据
+   * @param timeScale
+   * @param company
+   * @param product
+   * @param productType
+   * @returns
+   */
+  function queryContractData(
+    timeScale: "年" | "月",
+    dataTime: string,
+    company?: string,
+    contractType?: string
+  ) {
+    if (!contractYearCache.value || !contractMonthCache.value) {
+      initLocalContractDatabase();
+    }
+    // console.log(contractYearCache.value, contractMonthCache.value);
+    return new Promise<any>((resolve, reject) => {
+      resolve(
+        queryAggregateContractData(timeScale, dataTime, company, contractType)
+      );
+    });
+  }
+
   return {
     queryForm,
     businessInfo,
@@ -719,6 +771,7 @@ export const businessStore = defineStore("business", () => {
     getSubordinateEnterprise,
     queryKeyIndexData,
     queryStorageData,
+    queryContractData,
     getLocalStorageDatabase,
   };
 });

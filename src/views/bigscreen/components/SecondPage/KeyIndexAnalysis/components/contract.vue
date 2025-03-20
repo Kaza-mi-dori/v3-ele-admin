@@ -41,14 +41,20 @@
           <div class="model-body">
             <div class="model-body__content">
               <div class="flex gap-2 justify-center">
-                <div
-                  id="contract-analysis-chart-4"
-                  style="height: 400px; width: 50%"
-                />
-                <div
-                  id="contract-analysis-chart-5"
-                  style="height: 400px; width: 50%"
-                />
+                <div style="width: 50%">
+                  <div class="sub-title">国际海运</div>
+                  <div
+                    id="contract-analysis-chart-4"
+                    style="height: 400px; width: 100%"
+                  />
+                </div>
+                <div style="width: 50%">
+                  <div class="sub-title">内陆船运</div>
+                  <div
+                    id="contract-analysis-chart-5"
+                    style="height: 400px; width: 100%"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -88,9 +94,13 @@ import fulfilledCountIcon from "@/views/bigscreen/img/contract_icon4.png";
 import fulfillingCountIcon from "@/views/bigscreen/img/contract_icon5.png";
 import riskCountIcon from "@/views/bigscreen/img/contract_icon6.png";
 import { OurCompanyEnumMap } from "@/enums/BusinessEnum";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { initCache } from "@/store/utils/contract-utils";
+import { businessStoreHook } from "@/store/modules/business";
 
+const businessStore = businessStoreHook();
 const router = useRouter();
+const route = useRoute();
 
 const stats = ref([
   {
@@ -177,34 +187,45 @@ const subOrgName = ref("");
 
 const yearData = {
   purchaseContractDetail: [
-    { name: "广投石化", value: 1000 },
-    { name: "开燃公司", value: 200 },
-    { name: "桂盛桂轩", value: 300 },
-    { name: "恒润", value: 400 },
+    { name: "广投石化", value: 1000, count: 100 },
+    { name: "开燃公司", value: 200, count: 20 },
+    { name: "桂盛桂轩", value: 300, count: 30 },
+    { name: "恒润", value: 400, count: 40 },
   ],
   saleContractDetail: [
-    { name: "广投石化", value: 830 },
-    { name: "开燃公司", value: 100 },
-    { name: "桂盛桂轩", value: 400 },
-    { name: "恒润", value: 444 },
+    { name: "广投石化", value: 830, count: 83 },
+    { name: "开燃公司", value: 100, count: 10 },
+    { name: "桂盛桂轩", value: 400, count: 40 },
+    { name: "恒润", value: 444, count: 44 },
   ],
   transportContractDetail: [
-    { name: "广投石化", value: 412 },
-    { name: "开燃公司", value: 300 },
-    { name: "桂盛桂轩", value: 110 },
-    { name: "恒润", value: 90 },
+    { name: "广投石化", value: 412, count: 41 },
+    { name: "开燃公司", value: 300, count: 30 },
+    { name: "桂盛桂轩", value: 110, count: 11 },
+    { name: "恒润", value: 90, count: 9 },
   ],
   storageContractDetail: [
-    { name: "广投石化", value: 120 },
-    { name: "开燃公司", value: 1000 },
-    { name: "桂盛桂轩", value: 1000 },
-    { name: "恒润", value: 1000 },
+    { name: "广投石化", value: 120, count: 12 },
+    { name: "开燃公司", value: 1000, count: 100 },
+    { name: "桂盛桂轩", value: 1000, count: 100 },
+    { name: "恒润", value: 1000, count: 100 },
   ],
   riskContractDetail: [
-    { name: "广投石化", value: 40 },
-    { name: "开燃公司", value: 10 },
+    { name: "广投石化", value: 40, count: 4 },
+    { name: "开燃公司", value: 10, count: 1 },
   ],
 };
+
+// 颜色
+const colors = [
+  "#4BB5F1", // 蓝色
+  "#05F0A3", // 蓝色
+  "#FFA628", // 蓝色
+  "#EDED00", // 蓝色
+  // "#48ECF5", // 蓝色
+
+  "#FC6723",
+];
 
 const monthData = {
   liquidFill: {
@@ -311,6 +332,7 @@ const initChart1 = (type: string = "bar") => {
         color: "white",
       },
     },
+    color: colors,
     grid: {
       left: "3%",
       right: "4%",
@@ -321,11 +343,15 @@ const initChart1 = (type: string = "bar") => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
+        radius: ["0%", "60%"],
         // roseType: "radius",
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          formatter: (params: any) => {
+            // console.log(params);
+            const { name, value, dataIndex, percent } = params;
+            return `${name}  ${data.purchaseContractDetail[dataIndex].count}份\n合同金额 ${value.toFixed(2)}万元\n占比 ${percent}%`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -351,6 +377,7 @@ const initChart2 = () => {
         color: "white",
       },
     },
+    color: colors,
     grid: {
       left: "3%",
       right: "4%",
@@ -361,11 +388,14 @@ const initChart2 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
+        radius: ["0%", "60%"],
         // roseType: "radius",
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          formatter: (params: any) => {
+            const { name, value, dataIndex, percent } = params;
+            return `${name}  ${data.saleContractDetail[dataIndex].count}份\n合同金额 ${value.toFixed(2)}万元\n占比 ${percent}%`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -395,6 +425,7 @@ const initChart3 = () => {
         color: "white",
       },
     },
+    color: colors,
     grid: {
       left: "3%",
       right: "4%",
@@ -405,11 +436,14 @@ const initChart3 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
+        radius: ["0%", "60%"],
         // roseType: "radius",
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          formatter: (params: any) => {
+            const { name, value, dataIndex, percent } = params;
+            return `${name}  ${data.transportContractDetail[dataIndex].count}份\n合同金额 ${value.toFixed(2)}万元\n占比 ${percent}%`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -454,6 +488,7 @@ const initChart4 = () => {
       bottom: "3%",
       containLabel: true,
     },
+    color: colors,
     series: [
       {
         type: "pie",
@@ -461,7 +496,10 @@ const initChart4 = () => {
         roseType: "radius",
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          formatter: (params: any) => {
+            const { name, value, dataIndex, percent } = params;
+            return `${name}  ${data.transportContractDetail[dataIndex].count}份\n合同金额 ${value.toFixed(2)}万元\n占比 ${percent}%`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -494,6 +532,7 @@ const initChart5 = () => {
       bottom: "3%",
       containLabel: true,
     },
+    color: colors,
     series: [
       {
         type: "pie",
@@ -501,7 +540,10 @@ const initChart5 = () => {
         roseType: "radius",
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          formatter: (params: any) => {
+            const { name, value, dataIndex, percent } = params;
+            return `${name}  ${data.transportContractDetail[dataIndex].count}份\n合同金额 ${value.toFixed(2)}万元\n占比 ${percent}%`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -535,6 +577,7 @@ const initChart6 = () => {
       bottom: "3%",
       containLabel: true,
     },
+    color: colors,
     series: [
       {
         type: "pie",
@@ -542,7 +585,10 @@ const initChart6 = () => {
         // roseType: "radius",
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          formatter: (params: any) => {
+            const { name, value, dataIndex, percent } = params;
+            return `${name}  ${data.riskContractDetail[dataIndex].count}份\n合同金额 ${value.toFixed(2)}万元\n占比 ${percent}%`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -609,6 +655,78 @@ const initData = async () => {
   // TODO 查询相关数据
   // 根据组织名、时间(年份或月份)、时间类型(年或月)，查询相关数据
   // 如果路由参数有值，则查询相关数据
+  const { year, month, companyName, contractType } = route.query;
+  if (companyName) {
+    // 查询相关数据
+    const purchaseData = await businessStore.queryContractData(
+      "年",
+      "2025",
+      "石化板块",
+      "采购合同"
+    );
+    const saleData = await businessStore.queryContractData(
+      "年",
+      "2025",
+      "石化板块",
+      "销售合同"
+    );
+    const storageData = await businessStore.queryContractData(
+      "年",
+      "2025",
+      "石化板块",
+      "仓储合同"
+    );
+    const transportData = await businessStore.queryContractData(
+      "年",
+      "2025",
+      "石化板块",
+      "国际海运"
+    );
+    const riskData = await businessStore.queryContractData(
+      "年",
+      "2025",
+      "石化板块",
+      "内陆船运"
+    );
+    data.purchaseContractDetail = purchaseData.subData.map((item: any) => {
+      return {
+        name: item.name,
+        value: item.value,
+        count: item.count,
+      };
+    });
+    data.saleContractDetail = saleData.subData.map((item: any) => {
+      return {
+        name: item.name,
+        value: item.value,
+        count: item.count,
+      };
+    });
+    data.storageContractDetail = storageData.subData.map((item: any) => {
+      return {
+        name: item.name,
+        value: item.value,
+        count: item.count,
+      };
+    });
+    data.transportContractDetail = transportData.subData.map((item: any) => {
+      return {
+        name: item.name,
+        value: item.value,
+        count: item.count,
+      };
+    });
+    // 更新总指标
+    stats.value[0].value = purchaseData.value.toFixed(0);
+    stats.value[1].value = saleData.value.toFixed(0);
+    // stats.value[2].value = storageData.value.toFixed(2);
+    // stats.value[3].value = transportData.value.toFixed(2);
+    // stats.value[4].value = riskData.value.toFixed(2);
+    // const hengrunData
+  }
+  if (contractType) {
+    // 查询相关数据
+  }
 };
 
 const initialize = async () => {
@@ -753,6 +871,23 @@ onMounted(async () => {
 //     }
 //   }
 // }
+.sub-title {
+  @apply text-white  color-[#86D2F6] w-[8em] ml-8 mt-4;
+  font-size: 1.2rem;
+  font-weight: 600;
+  // 水平渐变
+  background: linear-gradient(to right, #195da6, #0333554d);
+  line-height: 2;
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 1em;
+    border-radius: 2px;
+    transform: translate(-0.2em, 0.2em);
+    background-color: #86d2f6;
+  }
+}
 
 .sub-org-table {
   @apply w-full m-0 overflow-y-auto;

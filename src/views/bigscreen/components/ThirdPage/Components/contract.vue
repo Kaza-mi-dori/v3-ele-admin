@@ -10,9 +10,20 @@
             size="large"
             style="width: 250px"
             class="input-field"
-            placeholder="请输入"
+            placeholder="输入名称搜索"
             clearable
           />
+          <el-select
+            v-model="status"
+            size="large"
+            style="width: 250px"
+            class="input-field"
+            placeholder="请选择合同状态"
+            clearable
+          >
+            <el-option label="已完成" value="completed" />
+            <el-option label="履行中" value="ongoing" />
+          </el-select>
           <el-button type="primary" size="large" class="search-button">
             搜索
           </el-button>
@@ -78,6 +89,7 @@ const filters: Ref<any> = ref({
 });
 
 const inputValue = ref("");
+const status = ref();
 
 const tableData: Ref<[]> = ref([]);
 const tableDataDisplay = computed(() => {
@@ -388,6 +400,9 @@ onMounted(async () => {
       ...filters.value,
       ...params,
     };
+    if (params.status) {
+      status.value = params.status;
+    }
   }
   await initTableData();
   // setTimeout(() => {
@@ -511,8 +526,8 @@ const handleClickRow = (row: any) => {
   left: 3%;
 }
 .header-right {
-  @apply absolute z-1;
-  top: -10px;
+  @apply absolute z-1 flex flex-gap-2;
+  top: -15px;
   right: 5px;
 }
 :deep(.input-field) {
@@ -525,6 +540,23 @@ const handleClickRow = (row: any) => {
     background-color: #1c1e57 !important;
   }
   .el-input__inner {
+    background-color: #1c1e57 !important;
+    color: #fefefe !important;
+    .el-input__inner::placeholder {
+      color: #7b9de0 !important;
+    }
+  }
+}
+:deep(.el-select) {
+  .el-select__wrapper {
+    background-color: #1c1e57 !important;
+    color: #7b9de0 !important;
+    font-size: 16px;
+    .el-select__placeholder {
+      color: #fefefe !important;
+    }
+  }
+  .el-select__input-wrapper {
     background-color: #1c1e57 !important;
     color: #7b9de0 !important;
   }

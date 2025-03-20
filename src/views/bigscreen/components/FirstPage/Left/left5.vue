@@ -38,6 +38,9 @@
           <Left54 style="flex: 1" :year="year" />
         </div>
       </template>
+      <template v-else-if="selectedItem === '合同情况'">
+        <Left55 style="flex: 1" :year="year" />
+      </template>
     </div>
     <div class="footer" />
   </div>
@@ -52,8 +55,8 @@ import Left51 from "./Components/left51.vue";
 import Left52 from "./Components/left52.vue";
 import Left53 from "./Components/left53.vue";
 import Left54 from "./Components/left54.vue";
-
-const items = ref(["经营主体", "主营产品", "业态类型"]);
+import Left55 from "./Components/left55.vue";
+const items = ref(["经营主体", "主营产品", "业态类型", "合同情况"]);
 const selectedItem = ref("经营主体");
 
 // const props = defineProps<{

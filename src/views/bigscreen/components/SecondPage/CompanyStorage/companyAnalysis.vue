@@ -54,6 +54,9 @@ import outIcon from "@/views/bigscreen/img/inventory_icon4.png";
 import inIcon from "@/views/bigscreen/img/inventory_icon5.png";
 import revenueIcon from "@/views/bigscreen/img/inventory_icon7.png";
 import profitIcon from "@/views/bigscreen/img/inventory_icon8.png";
+import { businessStoreHook } from "@/store/modules/business";
+
+const businessStore = businessStoreHook();
 
 const router = useRouter();
 const route = useRoute();
@@ -509,6 +512,10 @@ const initGraph2 = () => {
         data: item.monthData.map((data: any) => data.value),
         lineStyle: {
           width: 2,
+          shadowBlur: 8,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          shadowColor: "rgba(145, 132, 132, 1)",
         },
       };
     }),
