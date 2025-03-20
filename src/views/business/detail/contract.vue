@@ -54,7 +54,7 @@
         </el-form>
       </div>
     </div>
-    <div v-if="ordersTableData.length > 0" class="info-card-level1">
+    <div class="info-card-level1">
       <div class="__title">
         <span>报表信息</span>
       </div>
@@ -242,7 +242,7 @@
       </div>
     </div>
     <!-- 关联结算 -->
-    <div v-if="!editing" class="info-card-level1">
+    <!-- <div v-if="!editing" class="info-card-level1">
       <div class="__title">
         <span>关联结算</span>
       </div>
@@ -266,7 +266,7 @@
           <el-table-column label="结算数量" prop="结算数量" />
         </el-table>
       </div>
-    </div>
+    </div> -->
     <div class="info-card-level1">
       <div class="__title">
         <span>附件信息</span>
@@ -350,6 +350,7 @@ import {
   OurCompanyFullNameMap,
   ContractTypeEnumMap,
 } from "@/enums/BusinessEnum";
+import BusinessStandbookAPI from "@/api/businessStandBook";
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
 import { FormInstance } from "element-plus";
@@ -368,36 +369,38 @@ const props = defineProps({
 const { id, editing } = toRefs(props);
 const formRef = ref<Nullable<FormInstance>>(null);
 
-const ordersTableData = ref([
-  {
-    id: 1,
-    类型: "货转单",
-    编号: "HT2022001",
-    日期: "2022-01-01",
-    金额: "1000000",
-    状态: "未完成",
-    百分比: "10%",
-    关联款项: [
-      {
-        类型: "回款",
-        日期: "2024-11-01",
-        金额: "20000",
-        状态: "已付款",
-        款项说明: "第一笔回款",
-        百分比: "20%",
-      },
-    ],
-  },
-  {
-    id: 2,
-    类型: "货转单",
-    编号: "HT2022002",
-    日期: "2022-01-02",
-    金额: "2000000",
-    状态: "已完成",
-    百分比: "20%",
-  },
-]);
+// const ordersTableData = ref([
+//   {
+//     id: 1,
+//     类型: "货转单",
+//     编号: "HT2022001",
+//     日期: "2022-01-01",
+//     金额: "1000000",
+//     状态: "未完成",
+//     百分比: "10%",
+//     // 关联款项: [
+//     //   {
+//     //     类型: "回款",
+//     //     日期: "2024-11-01",
+//     //     金额: "20000",
+//     //     状态: "已付款",
+//     //     款项说明: "第一笔回款",
+//     //     百分比: "20%",
+//     //   },
+//     // ],
+//   },
+//   {
+//     id: 2,
+//     类型: "货转单",
+//     编号: "HT2022002",
+//     日期: "2022-01-02",
+//     金额: "2000000",
+//     状态: "已完成",
+//     百分比: "20%",
+//   },
+// ]);
+
+const ordersTableData = ref([]);
 
 const settlementTableData = ref([
   {
@@ -627,6 +630,56 @@ const generateRandomData = () => {
       },
     ],
   };
+};
+
+// 合同编号
+const contractNumber = computed(() => firmReportDetailForm.value.number);
+
+watch(
+  contractNumber,
+  async (newContractNumber) => {
+    // 如果合同编号存在，则获取关联的订单
+    if (newContractNumber) {
+      const orders = await fetchOrderLedgerRecords(newContractNumber);
+      ordersTableData.value = orders;
+    } else {
+      ordersTableData.value = [];
+      console.error("合同编号不存在，无法获取订单数据");
+    }
+  },
+  { immediate: true }
+);
+
+/**
+ * 获取关联的订单，并构造 ordersTableData 所需格式
+ * @param contractNumber 合同编号
+ * @returns 构造后的 ordersTableData 数据
+ */
+const fetchOrderLedgerRecords = async (contractNumber: string) => {
+  try {
+    // 调用接口获取数据
+    const response = await BusinessStandbookAPI.getOrderLedgerRecordList({
+      页码: 1,
+      页容量: 1000,
+      合同编号集合: [contractNumber], // 将单个合同编号放入数据中
+    });
+
+    const records = response?.["当前记录"] || [];
+
+    // 构造 ordersTableData 所需格式
+    return records.map((record: any) => ({
+      id: record.id,
+      类型: record["内容"]?.["订单类型"],
+      编号: record["订单编号"],
+      日期: record["日期"],
+      金额: record["内容"]?.["订单金额"],
+      状态: record["状态"],
+      百分比: "",
+    }));
+  } catch (err) {
+    ElMessage.error("获取数据失败");
+    return []; // 返回空数组，避免页面渲染出错
+  }
 };
 
 defineExpose({
