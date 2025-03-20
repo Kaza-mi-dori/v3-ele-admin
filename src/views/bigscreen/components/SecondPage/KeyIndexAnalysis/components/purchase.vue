@@ -71,12 +71,12 @@
               />
               <div
                 v-if="hasProduct"
-                id="profit-analysis-chart-3"
+                id="purchase-analysis-chart-3"
                 style="height: 250px; width: 100%"
               />
               <div
                 v-if="hasProduct"
-                id="profit-analysis-chart-41"
+                id="purchase-analysis-chart-41"
                 style="height: 250px; width: 100%"
               />
             </div>
@@ -954,7 +954,7 @@ const initChart4 = () => {
   }
   if (!chart4.value) {
     chart4.value = echarts.init(
-      document.getElementById("profit-analysis-chart-3")
+      document.getElementById("purchase-analysis-chart-3")
     );
   }
   chart4.value.clear();
@@ -1007,7 +1007,7 @@ const initChart4 = () => {
 const initChart41 = () => {
   if (!chart41.value) {
     chart41.value = echarts.init(
-      document.getElementById("profit-analysis-chart-41")
+      document.getElementById("purchase-analysis-chart-41")
     );
   }
   chart41.value.clear();
@@ -1184,7 +1184,7 @@ const initChart41 = () => {
 const initChart5 = () => {
   if (!chart5.value) {
     chart5.value = echarts.init(
-      document.getElementById("profit-analysis-chart-2")
+      document.getElementById("purchase-analysis-chart-2")
     );
   }
   // 同比环比折线 1-12月
@@ -1228,7 +1228,7 @@ const initChart5 = () => {
 const initChart6 = () => {
   if (!chart6.value) {
     chart6.value = echarts.init(
-      document.getElementById("profit-analysis-chart-3")
+      document.getElementById("purchase-analysis-chart-3")
     );
   }
   chart6.value.clear();
@@ -1348,6 +1348,7 @@ const initLegendClick = () => {
   // 绑定逐月营收的点击事件
   chart1.value.on("click", "series.bar", (params: any) => {
     const { name } = params;
+    if (timeTabValue.value === "month") return;
     const month = name.split("月")[0];
     // 触发切换日期 + 重新搜索数据
     datatime.value = new Date(new Date().getFullYear(), month - 1, 1);

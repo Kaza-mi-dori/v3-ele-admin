@@ -1498,6 +1498,7 @@ const initLegendClick = () => {
   // 绑定逐月利润的点击事件
   chart1.value.on("click", "series.bar", (params: any) => {
     const { name } = params;
+    if (timeTabValue.value === "month") return;
     const month = name.split("月")[0];
     // 触发切换日期 + 重新搜索数据
     datatime.value = new Date(new Date().getFullYear(), month - 1, 1);

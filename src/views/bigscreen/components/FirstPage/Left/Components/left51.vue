@@ -128,7 +128,11 @@ function onClickBar(params: any) {
     // console.log(subject);
     const route = router.resolve({
       // 第一个字母大写
-      name: subject.name.charAt(0).toUpperCase() + subject.name.slice(1),
+      // name: subject.name.charAt(0).toUpperCase() + subject.name.slice(1),
+      name: "Revenue",
+      query: {
+        companyName: name,
+      },
     });
     if (!route) return;
     window.open(route.href, "_blank");
@@ -485,6 +489,17 @@ function initChart() {
     chartRef2.value = echarts.init(left511Ref.value as HTMLDivElement);
   }
   chartRef2.value.clear();
+  chartRef2.value.on("click", "series.pie", (params) => {
+    // console.log(params);
+    const route = router.resolve({
+      name: "Profit",
+      query: {
+        companyName: params.name,
+      },
+    });
+    if (!route) return;
+    window.open(route.href, "_blank");
+  });
   const option2 = {
     tooltip: {
       trigger: "axis",
