@@ -593,18 +593,21 @@ function getOrdersSummary(param: any) {
       sums[index] = "";
       return;
     }
+    // TODO 处理sum最后是NaN的情况
     if (column.property === "金额") {
       sums[index] = data.reduce((sum: number, row: any) => {
-        return sum + Number(row.金额);
+        return sum + (isNaN(Number(row.金额)) ? 0 : Number(row.金额));
       }, 0);
     } else if (column.property === "百分比") {
       sums[index] = data.reduce((sum: number, row: any) => {
-        return sum + parseFloat(row.百分比);
+        return (
+          sum + (isNaN(parseFloat(row.百分比)) ? 0 : parseFloat(row.百分比))
+        );
       }, 0);
     } else {
       sums[index] = "-";
       return;
-    }
+    } 
   });
   return sums;
 }
