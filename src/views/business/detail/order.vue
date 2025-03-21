@@ -48,10 +48,13 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="订单编号" prop="订单编号">
-                <el-input
+                <el-autocomplete
                   v-if="editing"
                   v-model="orderDetailForm.订单编号"
                   placeholder="请输入订单编号"
+                  :fetch-suggestions="queryOrderAsync"
+                  :trigger-on-focus="false"
+                  :debounce="500"
                 />
                 <span v-else>{{ orderDetailForm.订单编号 }}</span>
               </el-form-item>
@@ -406,6 +409,25 @@ const generateRandomData = () => {
     订单类型: "订单类型",
   };
 };
+
+function queryOrderAsync(query: string, callback: (data: any) => void) {
+  BusinessStandbookAPI.getOrderLedgerRecordList({
+    编号: query,
+  })
+    .then((data: any) => {
+      const list = data?.["当前记录"] || [];
+      callback(
+        list.map((item: any) => ({
+          value: item.订单编号,
+          label: item.订单编号,
+        }))
+      );
+    })
+    .catch((error: any) => {
+      console.error(error);
+      callback([]);
+    });
+}
 
 // 订单编号
 const orderNumber = computed(() => orderDetailForm.value["订单编号"]);
