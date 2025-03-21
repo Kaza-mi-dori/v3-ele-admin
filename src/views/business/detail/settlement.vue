@@ -55,6 +55,16 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
+              <el-form-item label="款项编号" prop="number">
+                <el-input
+                  v-if="editing"
+                  v-model="firmReportDetailForm.paymentNum"
+                  placeholder="请输入款项编号"
+                />
+                <span v-else>{{ firmReportDetailForm.paymentNum }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="结算合同" prop="contractNum">
                 <!-- <el-select
                   v-if="editing"
@@ -318,6 +328,8 @@ const firmReportDetailForm = ref({
   date: undefined,
   /** 结算单号 */
   number: undefined,
+  /** 款项编号 */
+  paymentNum: undefined,
   /** 合同编号 */
   contractNum: undefined,
   /** 结算描述 */
