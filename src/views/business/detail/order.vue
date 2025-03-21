@@ -154,6 +154,38 @@
         </el-form>
       </div>
     </div>
+    <!-- 关联信息 -->
+    <div v-if="!editing" class="info-card-level1">
+      <div class="__title">
+        <span>结算追踪</span>
+      </div>
+      <div class="__content">
+        <div class="flex mb-4 items-center">
+          <!-- 表格，显示关联的款项 -->
+          <el-table
+            :data="paymentTableData"
+            row-key="id"
+            style="width: 100%"
+            :tree-props="{ children: '关联款项' }"
+            show-summary
+            :summary-method="getpaymentsSummary"
+          >
+            <el-table-column label="类型" prop="类型" />
+            <el-table-column label="编号">
+              <template v-slot="scope">
+                <el-link type="primary" @click="handleExpand(scope.row)">
+                  {{ scope.row.编号 }}
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column prop="日期" label="日期" />
+            <el-table-column prop="金额" label="金额" />
+            <el-table-column prop="状态" label="状态" />
+            <el-table-column prop="百分比" label="合同占比" />
+          </el-table>
+        </div>
+      </div>
+    </div>
     <div class="info-card-level1">
       <div class="__title">
         <span>附件信息</span>
@@ -245,6 +277,8 @@ const rules: Ref<GenericRecord> = ref({
   单价: [{ required: true, message: "请输入单价", trigger: "blur" }],
   订单类型: [{ required: true, message: "请输入订单类型", trigger: "blur" }],
 });
+
+const paymentTableData = ref([]);
 
 const allSelected = ref(false);
 
@@ -371,6 +405,92 @@ const generateRandomData = () => {
     单价: "单价",
     订单类型: "订单类型",
   };
+};
+
+// 订单编号
+const orderNumber = computed(() => orderDetailForm.value["订单编号"]);
+
+watch(
+  orderNumber,
+  async (newOrderNumber) => {
+    // 如果订单编号存在，则获取关联的款项
+    if (newOrderNumber) {
+      const payments = await fetchPaymentLedgerRecords(newOrderNumber);
+      paymentTableData.value = payments;
+    } else {
+      paymentTableData.value = [];
+      console.error("订单编号不存在，无法获取款项数据");
+    }
+  },
+  { immediate: true }
+);
+
+const handleExpand = (row: any) => {
+  console.log("handleExpand", row);
+};
+
+/**
+ * 获取关联款项的汇总
+ * @param param
+ * @returns
+ */
+function getpaymentsSummary(param: any) {
+  const { columns, data } = param;
+  const sums: any[] = [];
+  // 根据列名，计算汇总金额与百分比
+  columns.forEach((column: any, index: number) => {
+    if (index === 0) {
+      sums[index] = "";
+      return;
+    }
+    // TODO 处理sum最后是NaN的情况
+    if (column.property === "金额") {
+      sums[index] = data.reduce((sum: number, row: any) => {
+        return sum + (isNaN(Number(row.金额)) ? 0 : Number(row.金额));
+      }, 0);
+    } else if (column.property === "百分比") {
+      sums[index] = data.reduce((sum: number, row: any) => {
+        return (
+          sum + (isNaN(parseFloat(row.百分比)) ? 0 : parseFloat(row.百分比))
+        );
+      }, 0);
+    } else {
+      sums[index] = "-";
+      return;
+    }
+  });
+  return sums;
+}
+
+/**
+ * 获取关联的款项，并构造 paymentTableData 所需格式
+ * @param orderNumber 订单编号
+ * @returns 构造后的 paymentTableData 数据
+ */
+const fetchPaymentLedgerRecords = async (orderNumber: string) => {
+  try {
+    // 调用接口获取数据
+    const response = await BusinessStandbookAPI.getPaymentLedgerRecordList({
+      页码: 1,
+      页容量: 1000,
+      订单编号集合: [orderNumber], // 将单个订单编号放入数据中
+    });
+    const records = response?.["当前记录"] || [];
+
+    // 构造 paymentTableData 所需格式
+    return records.map((record: any) => ({
+      id: record.id,
+      类型: record["内容"]?.["款项类型"],
+      编号: record["款项编号"],
+      日期: record["日期"],
+      金额: record["内容"]?.["款项金额"],
+      状态: record["状态"],
+      百分比: "",
+    }));
+  } catch (err) {
+    ElMessage.error("获取数据失败");
+    return []; // 返回空数组，避免页面渲染出错
+  }
 };
 
 defineExpose({
