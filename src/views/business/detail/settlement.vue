@@ -56,10 +56,13 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="款项编号" prop="number">
-                <el-input
+                <el-autocomplete
                   v-if="editing"
                   v-model="firmReportDetailForm.paymentNum"
+                  :fetch-suggestions="debouncePaymentSearchAsync as any"
                   placeholder="请输入款项编号"
+                  value-key="label"
+                  @select="handleSelectPayment"
                 />
                 <span v-else>{{ firmReportDetailForm.paymentNum }}</span>
               </el-form-item>
@@ -302,7 +305,7 @@ import ZipSVG from "@/assets/icons/zip.svg";
 import BusinessStandbookAPI from "@/api/businessStandBook";
 import { toThousands } from "@/utils";
 import { ref, onMounted } from "vue";
-import { useManualRefHistory } from "@vueuse/core";
+import { useManualRefHistory, useDebounceFn } from "@vueuse/core";
 import { FormInstance } from "element-plus";
 import type {
   AutocompleteFetchSuggestions,
@@ -520,6 +523,41 @@ const setFormValue = (value: any) => {
 const validateForm = () => {
   return formRef.value?.validate();
 };
+
+const debouncePaymentSearchAsync = useDebounceFn(paymentSearchAsync, 500);
+
+function paymentSearchAsync(query: string, callback: (data: any) => void) {
+  // 构造请求参数
+  const requestParams: any = {
+    页码: 1,
+    页容量: 10000,
+  };
+
+  // TODO 是否增加模糊搜索？
+  // 如果 query 有值，则添加款项编号集合参数
+  if (query) {
+    requestParams.款项编号集合 = [query];
+  }
+  BusinessStandbookAPI.getPaymentLedgerRecordList(requestParams)
+    .then((res: any) => {
+      // 将res.当前记录.款项编号转化为value
+      const data = res.当前记录?.map((item: any) => {
+        return {
+          value: item.款项编号,
+          label: item.款项编号,
+        };
+      });
+      callback(data);
+    })
+    .catch((err: any) => {
+      console.log(err);
+      callback([]);
+    });
+}
+
+function handleSelectPayment(item: any) {
+  firmReportDetailForm.value.paymentNum = item.value;
+}
 
 const generateRandomData = () => {
   /** 随机生成数据 */
