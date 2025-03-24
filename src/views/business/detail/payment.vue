@@ -96,10 +96,10 @@
                 <el-autocomplete
                   v-if="editing"
                   v-model="paymentDetailForm.订单编号"
+                  :fetch-suggestions="debounceOrderSearchAsync as any"
                   placeholder="请输入订单编号"
-                  :fetch-suggestions="queryOrderAsync"
-                  :trigger-on-focus="false"
-                  :debounce="500"
+                  value-key="label"
+                  @select="handleSelectOrder"
                 />
                 <span v-else>{{ paymentDetailForm.订单编号 }}</span>
               </el-form-item>
@@ -223,7 +223,7 @@ import ZipSVG from "@/assets/icons/zip.svg";
 import { DatasourceEnumMap } from "@/enums/DatasourceEnum";
 import BusinessStandbookAPI from "@/api/businessStandBook";
 import { ref, onMounted } from "vue";
-import { useManualRefHistory } from "@vueuse/core";
+import { useManualRefHistory, useDebounceFn } from "@vueuse/core";
 import { FormInstance } from "element-plus";
 
 const props = defineProps({
@@ -295,23 +295,39 @@ const converter = (value: any) => {
   return obj;
 };
 
-function queryOrderAsync(query: string, callback: (data: any) => void) {
-  BusinessStandbookAPI.getOrderLedgerRecordList({
-    编号: query,
-  })
-    .then((data: any) => {
-      const list = data?.["当前记录"] || [];
-      callback(
-        list.map((item: any) => ({
+const debounceOrderSearchAsync = useDebounceFn(orderSearchAsync, 500);
+
+function orderSearchAsync(query: string, callback: (data: any) => void) {
+  // 构造请求参数
+  const requestParams: any = {
+    页码: 1,
+    页容量: 10000,
+  };
+
+  // TODO 是否增加模糊搜索？
+  // 如果 query 有值，则添加订单编号集合参数
+  if (query) {
+    requestParams.订单编号集合 = [query];
+  }
+  BusinessStandbookAPI.getOrderLedgerRecordList(requestParams)
+    .then((res: any) => {
+      // 将res.当前记录.订单编号转化为value
+      const data = res.当前记录?.map((item: any) => {
+        return {
           value: item.订单编号,
           label: item.订单编号,
-        }))
-      );
+        };
+      });
+      callback(data);
     })
-    .catch((error: any) => {
-      console.error(error);
+    .catch((err) => {
+      console.log(err);
       callback([]);
     });
+}
+
+function handleSelectOrder(item: any) {
+  paymentDetailForm.value.订单编号 = item.value;
 }
 
 const submitForm = () => {
