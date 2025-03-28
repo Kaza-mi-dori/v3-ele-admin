@@ -511,6 +511,41 @@ export const constantRoutes: RouteRecordRaw[] = [
           icon: "el-icon-coin",
         },
       },
+      {
+        path: "monthlyProductReportMng",
+        name: "MonthlyProductReportMng",
+        component: () =>
+          import("@/views/datareport/monthlyProductReport/index.vue"),
+        meta: {
+          title: "经营报表管理",
+        },
+      },
+      {
+        path: "companyBusinessReportMng",
+        name: "CompanyBusinessReportMng",
+        component: () =>
+          import("@/views/datareport/companyBusinessReport/index.vue"),
+        meta: {
+          title: "企业贸易报表管理",
+        },
+      },
+      {
+        path: "productTypeReportMng",
+        name: "ProductTypeReportMng",
+        component: () =>
+          import("@/views/datareport/ProductTypeReport/index.vue"),
+        meta: {
+          title: "主营产品经营报表管理",
+        },
+      },
+      {
+        path: "dailyStorageReportMng",
+        name: "DailyStorageReportMng",
+        component: () => import("@/views/datareport/storageReport/index.vue"),
+        meta: {
+          title: "每日库存报表管理",
+        },
+      },
     ],
   },
   // 台账类
@@ -842,6 +877,15 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/components/CustomComponent/index.vue"),
         meta: {
           title: "自定义组件预览",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "listTemplate",
+        name: "ListTemplate",
+        component: () => import("@/components/FormCRUDTemplate/ListPage.vue"),
+        meta: {
+          title: "列表页模板",
           icon: "el-icon-coin",
         },
       },

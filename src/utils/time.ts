@@ -1,3 +1,19 @@
+/**
+ * 根据Date对象返回YYYY-MM-DD格式的时间(数据库时间格式)
+ * @param date 日期对象
+ * @param delimiter 分隔符(默认"-")
+ * @returns
+ */
+export const getDateString = (date: Date, delimiter: string = "-") => {
+  return date
+    .toLocaleDateString("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    .replace(/\//g, delimiter);
+};
+
 // 返回当年日期
 export const getDateOfOneYear = (givenYear?: string) => {
   let year = givenYear;

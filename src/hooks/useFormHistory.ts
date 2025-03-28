@@ -12,6 +12,9 @@ export function useFormHistory(initialValue: any) {
   const restoreForm = () => {
     undo();
   };
+  const clearHistory = () => {
+    history.value = [];
+  };
 
   return {
     history,
@@ -22,5 +25,6 @@ export function useFormHistory(initialValue: any) {
     canRedo,
     saveForm,
     restoreForm,
+    clearHistory,
   };
 }

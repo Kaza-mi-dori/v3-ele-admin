@@ -85,6 +85,8 @@ import purchaseDetailReportDetailForm from "@/views/datareport/purchaseDetailRep
 import sellDetailReportDetailForm from "@/views/datareport/sellDetailReport/detail.vue";
 import purchaseRecordDetailForm from "@/views/business/detail/purchaseRecord.vue";
 import sellRecordDetailForm from "@/views/business/detail/sellRecord.vue";
+import productBusinessReportDetailForm from "@/views/datareport/monthlyProductReport/detail.vue";
+import storageReportDetailForm from "@/views/datareport/storageReport/detail.vue";
 import BusinessFormAPI from "@/api/businessForm";
 import BusinessStandbookAPI from "@/api/businessStandBook";
 import { BusinessDetailAPI } from "@/api/datasource/businessDetail";
@@ -131,6 +133,8 @@ const reportTypes = [
   { value: "sellDetailReport", label: "销售明细报表" },
   { value: "purchaseRecordDetail", label: "采购台账记录" },
   { value: "sellRecordDetail", label: "销售台账记录" },
+  { value: "productBusinessReport", label: "贸易经营报表" },
+  { value: "storageReportDetailForm", label: "库存报表" },
 ];
 
 const handleEdit = () => {
@@ -417,6 +421,44 @@ const converToFrontendFormData = (type: string | null, data: any) => {
       return {
         year: data["日期"],
         content: data["内容"]?.["数据列表"] || [],
+      };
+    case "productBusinessReport":
+      return {
+        companyName: data["企业名称"],
+        dataTime: data["数据日期"],
+        aggTag: data["聚合标签"],
+        productTypeName: data["产品类型"],
+        productName: data["产品名称"],
+        subData: data["聚合子数据ids"] || [],
+        businessData: {
+          "成本金额(元)": data["经营数据"]["成本金额"],
+          "利润金额(元)": data["经营数据"]["利润金额"],
+          "营收金额(元)": data["经营数据"]["营收金额"],
+          "采购金额(元)": data["经营数据"]["采购金额"],
+          "销售金额(元)": data["经营数据"]["销售金额"],
+          "库存量(吨)": data["经营数据"]["库存数量"],
+          "入库量(吨)": data["经营数据"]["入库数量"],
+          "出库量(吨)": data["经营数据"]["出库数量"],
+          "平均采购价(元/吨)": data["经营数据"]["平均采购价"],
+          "平均销售价(元/吨)": data["经营数据"]["平均售价"],
+          "平均成本(元/吨)": data["经营数据"]["平均成本"],
+          平均毛利率: data["经营数据"]["平均毛利率"],
+          毛利率: data["经营数据"]["毛利率"],
+        },
+      };
+    case "storageReportDetailForm":
+      return {
+        companyName: data["企业名称"],
+        dataTime: data["数据日期"],
+        aggTag: data["聚合模式"] || "产品库存日报",
+        timeDimension: data["时间维度"],
+        productTypeName: data["产品类型"] || "-",
+        productName: data["产品名称"] || "-",
+        businessData: {
+          "入库数量(吨)": data["入库数量"],
+          "出库数量(吨)": data["出库数量"],
+          "库存数量(吨)": data["库存数量"],
+        },
       };
     default:
       return data;
@@ -907,7 +949,7 @@ const submitForm = async () => {
             ElMessage.success("提交成功");
           }
         })
-        .catch((err) => {
+        .catch((err: any) => {
           isEditing.value = false;
           ElMessage.error("提交失败，" + err);
         })
@@ -1201,6 +1243,40 @@ const initForm = () => {
       break;
     case fixedCostReportDetailForm:
       break;
+    case productBusinessReportDetailForm:
+      if (route.query.id) {
+        BusinessFormAPI.getMonthlyProductReportForm(
+          Number(route.query.id)
+        ).then((data) => {
+          if (formRef.value) {
+            const form = formRef.value as any;
+            form.setFormValue(
+              converToFrontendFormData(
+                route.query.type as Nullable<string>,
+                data
+              )
+            );
+          }
+        });
+      }
+      break;
+    case storageReportDetailForm:
+      if (route.query.id) {
+        BusinessFormAPI.getDailyStorageReportForm(Number(route.query.id)).then(
+          (data) => {
+            if (formRef.value) {
+              const form = formRef.value as any;
+              form.setFormValue(
+                converToFrontendFormData(
+                  route.query.type as Nullable<string>,
+                  data
+                )
+              );
+            }
+          }
+        );
+      }
+      break;
     default:
       break;
   }
@@ -1253,6 +1329,10 @@ watch(
       currentComponent.value = purchaseRecordDetailForm;
     } else if (value === "sellDetail") {
       currentComponent.value = sellRecordDetailForm;
+    } else if (value === "productBusinessReport") {
+      currentComponent.value = productBusinessReportDetailForm;
+    } else if (value === "storageReportDetailForm") {
+      currentComponent.value = storageReportDetailForm;
     }
   },
   { immediate: true }

@@ -1,5 +1,6 @@
 import request2 from "@/utils/request2";
 import request from "@/utils/request";
+import add from "@/views/demo/curd/config/add";
 
 const BUSINESS_FORM_BASE_URL = "/Api/Business";
 
@@ -700,6 +701,237 @@ const BusinessFormAPI = {
     return request2<any, any>({
       url: `${BUSINESS_FORM_BASE_URL}/EnterpriseRelation`,
       method: "get",
+    });
+  },
+
+  /**
+   * 产品经营报表新增
+   * @param data 产品经营报表
+   * @returns
+   */
+  addMonthlyProductReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductMonthReport`,
+      method: "post",
+      data: data,
+    });
+  },
+
+  /**
+   * 产品经营报表修改
+   * @param data 产品经营报表
+   * @returns
+   */
+  editMonthlyProductReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductMonthReport`,
+      method: "patch",
+      data: data,
+    });
+  },
+
+  /**
+   * 产品经营报表详情
+   * @param companyId 企业ID
+   * @returns 产品经营报表详情
+   */
+  getMonthlyProductReportForm(id: number | string) {
+    return request2<any, any>({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductMonthReport`,
+      method: "get",
+      params: {
+        id: id,
+      },
+    });
+  },
+
+  /**
+   * 产品经营报表删除
+   * @param id 产品经营报表ID
+   * @returns
+   */
+  deleteMonthlyProductReportFormByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductMonthReport/DeleteBatch`,
+      method: "delete",
+      data: ids,
+    });
+  },
+
+  /**
+   * 产品经营报表列表
+   * @param data 查询条件
+   * @returns 产品经营报表列表
+   */
+  getMonthlyProductReportFormList(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductMonthReport/Query`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 产品经营报表导出
+   * @param data 查询条件
+   * @returns 产品经营报表列表
+   */
+  exportMonthlyProductReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductMonthReport/Export/exportExcel`,
+      method: "post",
+      data,
+      responseType: "blob",
+    });
+  },
+
+  /**
+   * 获取产品经营报表导入模板
+   * @returns 产品经营报表导入模板
+   */
+  getMonthlyProductReportImportTemplate() {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductMonthReport/GetExcelTemplate`,
+      method: "get",
+      responseType: "blob",
+    });
+  },
+
+  /**
+   * 批量新增修改产品经营报表
+   * @param data 产品经营报表
+   * @returns
+   */
+  addOrUpdateMonthlyProductReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/ProductMonthReport/AddOrChangeBatch`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**DailyStorageReport
+   * 库存报表查询
+   */
+  getCorporateStorageReportList(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateStorageReport/Query`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 新增库存报表
+   * @param data
+   * @returns
+   */
+  addDailyStorageReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateStorageReport`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 修改库存报表
+   * @param data
+   * @returns
+   */
+  editDailyStorageReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/`,
+      method: "patch",
+      data,
+    });
+  },
+  /**
+   * 库存报表详情
+   * @param id 库存报表ID
+   */
+  getDailyStorageReportForm(id: number | string) {
+    return request2<any, any>({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateStorageReport`,
+      method: "get",
+      params: {
+        id,
+      },
+    });
+  },
+
+  /**
+   * 删除库存报表
+   * @param id 库存报表ID
+   */
+  deleteDailyStorageReportForm(id: number | string) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateStorageReport`,
+      method: "delete",
+      params: {
+        id,
+      },
+    });
+  },
+
+  /**
+   * 批量删除库存报表
+   * @param ids 库存报表ID字符串，多个以英文逗号(,)分割
+   */
+  deleteDailyStorageReportFormByIds(ids: any[]) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateStorageReport/DeleteBatch`,
+      method: "delete",
+      data: ids,
+    });
+  },
+
+  /**
+   * 库存报表导出
+   * @param data 查询条件
+   */
+  exportDailyStorageReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateStorageReport/Export/exportExcel`,
+      method: "post",
+      data,
+      responseType: "blob",
+    });
+  },
+
+  /**
+   * 库存报表excel解析
+   * @param data 查询条件
+   */
+  importDailyStorageReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateStorageReport/Import/importExcel`,
+      method: "post",
+      data,
+    });
+  },
+
+  /**
+   * 获取库存报表导入模板
+   */
+  getDailyStorageReportImportTemplate() {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateStorageReport/GetExcelTemplate`,
+      method: "get",
+      responseType: "blob",
+    });
+  },
+
+  /**
+   * 批量新增修改库存报表
+   * @param data 库存报表
+   * @returns
+   */
+  addOrUpdateDailyStorageReportForm(data: any) {
+    return request2({
+      url: `${BUSINESS_FORM_BASE_URL}/CorporateStorageReport/AddOrChangeBatch`,
+      method: "post",
+      data,
     });
   },
 };
