@@ -19,120 +19,125 @@
           </tr>
         </template>
       </thead>
-      <tr class="__header __row">
-        <!-- 表头显示 -->
-        <!-- 如果传入了行定义，则渲染多一个th叫项目且colspan根据最长的行来定 -->
-        <th v-if="props.inputItemDefsByRow" :colspan="longestRow.names.length">
-          项目
-        </th>
-        <!-- 然后根据列定义渲染, 宽度为该name的长度 + 10px -->
-        <th
-          v-for="col in props.colsDef"
-          :key="col.name"
-          :colspan="1"
-          :style="{
-            padding: '0 20px',
-          }"
-        >
-          <div :style="{ width: col.name.length * 15 + 30 + 'px' }">
-            {{ col.name }}
-          </div>
-          <!-- 如果是不可编辑则多显示一个锁icon -->
-          <el-popover
-            v-if="!col.editable"
-            placement="top"
-            width="200"
-            trigger="hover"
+      <tbody>
+        <tr class="__header __row">
+          <!-- 表头显示 -->
+          <!-- 如果传入了行定义，则渲染多一个th叫项目且colspan根据最长的行来定 -->
+          <th
+            v-if="props.inputItemDefsByRow"
+            :colspan="longestRow.names.length"
           >
-            <div style="text-align: center">该列不可编辑</div>
-            <template v-slot:reference>
-              <el-icon>
-                <Lock />
-              </el-icon>
-            </template>
-          </el-popover>
-        </th>
-      </tr>
-      <tr v-for="item in tableData" :key="item.name" class="__row">
-        <!-- 先按需要渲染行头 -->
-        <template v-if="props.inputItemDefsByRow">
-          <!-- 如果不是index === 0则只渲染最后一个名字 -->
-          <td
-            v-for="(name, index) in item.names.slice(
-              item.isFirstChild ? 0 : item.names.length - 1,
-              item.names.length
-            )"
-            :key="name"
-            :class="{
-              'sticky-cell':
-                index === (item.isFirstChild ? item.names.length - 1 : 0),
+            项目
+          </th>
+          <!-- 然后根据列定义渲染, 宽度为该name的长度 + 10px -->
+          <th
+            v-for="col in props.colsDef"
+            :key="col.name"
+            :colspan="1"
+            :style="{
+              padding: '0 20px',
             }"
-            :rowspan="
-              item.isFirstChild ? (index === 0 ? item.childrenCount : 1) : 1
-            "
-            :colspan="
-              index === item.names.length - 1
-                ? longestRow.names.length - index
-                : 1
-            "
           >
-            <div>{{ name }}</div>
-          </td>
-        </template>
-        <td
-          v-for="col in props.colsDef"
-          :key="col.prop"
-          :colspan="1"
-          :rowspan="1"
-        >
-          <template v-if="col.editable && editing">
-            <el-input
-              v-if="col.inputType === 'input'"
-              v-model="item[col.prop]"
-              :type="col.isNumber ? 'number' : ''"
-            />
-            <el-select
-              v-else-if="col.inputType === 'select'"
-              v-model="item[col.prop]"
-              :multiple="col.selectType === 'multiple'"
-              :placeholder="'请选择' + col.name"
+            <div :style="{ width: col.name.length * 15 + 30 + 'px' }">
+              {{ col.name }}
+            </div>
+            <!-- 如果是不可编辑则多显示一个锁icon -->
+            <el-popover
+              v-if="!col.editable"
+              placement="top"
+              width="200"
+              trigger="hover"
             >
-              <el-option
-                v-for="option in col.options"
-                :key="option"
-                :label="option"
-                :value="option"
+              <div style="text-align: center">该列不可编辑</div>
+              <template v-slot:reference>
+                <el-icon>
+                  <Lock />
+                </el-icon>
+              </template>
+            </el-popover>
+          </th>
+        </tr>
+        <tr v-for="item in tableData" :key="item.name" class="__row">
+          <!-- 先按需要渲染行头 -->
+          <template v-if="props.inputItemDefsByRow">
+            <!-- 如果不是index === 0则只渲染最后一个名字 -->
+            <td
+              v-for="(name, index) in item.names.slice(
+                item.isFirstChild ? 0 : item.names.length - 1,
+                item.names.length
+              )"
+              :key="name"
+              :class="{
+                'sticky-cell':
+                  index === (item.isFirstChild ? item.names.length - 1 : 0),
+              }"
+              :rowspan="
+                item.isFirstChild ? (index === 0 ? item.childrenCount : 1) : 1
+              "
+              :colspan="
+                index === item.names.length - 1
+                  ? longestRow.names.length - index
+                  : 1
+              "
+            >
+              <div>{{ name }}</div>
+            </td>
+          </template>
+          <td
+            v-for="col in props.colsDef"
+            :key="col.prop"
+            :colspan="1"
+            :rowspan="1"
+          >
+            <template v-if="col.editable && editing">
+              <el-input
+                v-if="col.inputType === 'input'"
+                v-model="item[col.prop]"
+                :type="col.isNumber ? 'number' : ''"
               />
-            </el-select>
-            <el-input
-              v-else
-              v-model="item[col.prop]"
-              :type="col.isNumber ? 'number' : ''"
-            />
-          </template>
-          <template v-else>
-            <div>{{ item[col.prop] }}</div>
-          </template>
-        </td>
-      </tr>
-      <!-- 汇总行，定义一样，每一个单元格都由上面所有数据汇总而来 -->
-      <tr v-if="props.needSummary" class="__row">
-        <td
-          v-if="props.inputItemDefsByRow"
-          :colspan="longestRow.names.length"
-          class="sticky-cell"
-        >
-          汇总
-        </td>
-        <td
-          v-for="col in props.colsDef"
-          :key="col.prop"
-          :colspan="1"
-          :rowspan="1"
-        >
-          {{ summaryRow[col.prop] }}
-        </td>
-      </tr>
+              <el-select
+                v-else-if="col.inputType === 'select'"
+                v-model="item[col.prop]"
+                :multiple="col.selectType === 'multiple'"
+                :placeholder="'请选择' + col.name"
+              >
+                <el-option
+                  v-for="option in col.options"
+                  :key="option"
+                  :label="option"
+                  :value="option"
+                />
+              </el-select>
+              <el-input
+                v-else
+                v-model="item[col.prop]"
+                :type="col.isNumber ? 'number' : ''"
+              />
+            </template>
+            <template v-else>
+              <div>{{ item[col.prop] }}</div>
+            </template>
+          </td>
+        </tr>
+        <!-- 汇总行，定义一样，每一个单元格都由上面所有数据汇总而来 -->
+        <tr v-if="props.needSummary" class="__row">
+          <td
+            v-if="props.inputItemDefsByRow"
+            :colspan="longestRow.names.length"
+            class="sticky-cell"
+          >
+            汇总
+          </td>
+          <td
+            v-for="col in props.colsDef"
+            :key="col.prop"
+            :colspan="1"
+            :rowspan="1"
+          >
+            {{ summaryRow[col.prop] }}
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>

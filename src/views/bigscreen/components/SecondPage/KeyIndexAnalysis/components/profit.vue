@@ -1451,7 +1451,9 @@ const initData = async () => {
             item.实际值,
             item.同比增幅,
             item.环比值,
-            item.计划值 ? (item.实际值 / item.计划值) * 100 + "%" : "",
+            item.计划值
+              ? ((item.实际值 / item.计划值) * 100).toFixed(2) + "%"
+              : "",
           ],
         };
       }),
@@ -1469,7 +1471,9 @@ const initData = async () => {
             item.实际值,
             item.同比增幅,
             item.环比值,
-            item.计划值 ? (item.实际值 / item.计划值) * 100 + "%" : "",
+            item.计划值
+              ? ((item.实际值 / item.计划值) * 100).toFixed(2) + "%"
+              : "",
           ],
         };
       }),
