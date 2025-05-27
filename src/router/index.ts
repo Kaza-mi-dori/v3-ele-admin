@@ -648,6 +648,16 @@ export const constantRoutes: RouteRecordRaw[] = [
           icon: "el-icon-coin",
         },
       },
+      {
+        path: "cargoSheetList",
+        name: "CargoSheetList",
+        component: () =>
+          import("@/views/datareport/dingding/cargoSheetList.vue"),
+        meta: {
+          title: "钉钉合同台账",
+          icon: "el-icon-coin",
+        },
+      },
     ],
   },
   // 数据源管理

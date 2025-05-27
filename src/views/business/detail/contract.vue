@@ -57,6 +57,13 @@
     <div class="info-card-level1">
       <div class="__title">
         <span>报表信息</span>
+        <el-button
+          class="g-button-1 ml-4"
+          type="primary"
+          @click="handleExtract"
+        >
+          提取信息
+        </el-button>
       </div>
       <div class="__content">
         <el-form
@@ -354,6 +361,7 @@ import BusinessStandbookAPI from "@/api/businessStandBook";
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
 import { FormInstance } from "element-plus";
+import { extractInfoFromContractRecord } from "@/utils/textExtract";
 
 const props = defineProps({
   id: {
@@ -369,36 +377,13 @@ const props = defineProps({
 const { id, editing } = toRefs(props);
 const formRef = ref<Nullable<FormInstance>>(null);
 
-// const ordersTableData = ref([
-//   {
-//     id: 1,
-//     类型: "货转单",
-//     编号: "HT2022001",
-//     日期: "2022-01-01",
-//     金额: "1000000",
-//     状态: "未完成",
-//     百分比: "10%",
-//     // 关联款项: [
-//     //   {
-//     //     类型: "回款",
-//     //     日期: "2024-11-01",
-//     //     金额: "20000",
-//     //     状态: "已付款",
-//     //     款项说明: "第一笔回款",
-//     //     百分比: "20%",
-//     //   },
-//     // ],
-//   },
-//   {
-//     id: 2,
-//     类型: "货转单",
-//     编号: "HT2022002",
-//     日期: "2022-01-02",
-//     金额: "2000000",
-//     状态: "已完成",
-//     百分比: "20%",
-//   },
-// ]);
+const handleExtract = () => {
+  console.log("handleExtract", firmReportDetailForm.value.description);
+  const info = extractInfoFromContractRecord(
+    firmReportDetailForm.value.description
+  );
+  console.log("info", info);
+};
 
 const ordersTableData = ref([]);
 
@@ -607,7 +592,7 @@ function getOrdersSummary(param: any) {
     } else {
       sums[index] = "-";
       return;
-    } 
+    }
   });
   return sums;
 }
