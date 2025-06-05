@@ -9,7 +9,8 @@ export type StorageName =
 // 当前此模块模拟数据为【组织】的【分油品】日报
 
 // 组织列表
-const orgList = ["广投石化", "开燃公司", "桂盛桂轩", "恒润公司"];
+// const orgList = ["广投石化", "开燃公司", "桂盛桂轩", "恒润公司"];
+const orgList = ["广投石化", "桂盛桂轩", "恒润公司"];
 
 // 产品列表
 const products = ["#92汽油", "#95汽油", "#98汽油", "#0柴油", "原油"];
@@ -52,7 +53,7 @@ export interface StorageMonthCache {
 export const storageMonthCache: StorageMonthCache = {
   byStorageName: {
     广投石化: {},
-    开燃公司: {},
+    // 开燃公司: {},
     桂盛桂轩: {},
     恒润公司: {},
   },
@@ -82,7 +83,7 @@ export interface StorageYearCache {
 export const storageYearCache: StorageYearCache = {
   byStorageName: {
     广投石化: {},
-    开燃公司: {},
+    // 开燃公司: {},
     桂盛桂轩: {},
     恒润公司: {},
   },

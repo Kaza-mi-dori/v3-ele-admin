@@ -18,6 +18,7 @@
       :title="item.title"
       :amount="item.value + ''"
       :unit="item.unit"
+      :planAmount="item.planAmount"
       :iconUrl="item.iconUrl"
     />
   </div>
@@ -63,6 +64,7 @@ const data = ref<any[]>([
     unit: "万吨",
     keyword: keywordMap["成品油贸易累计合同数量"],
     iconUrl: icon1,
+    planAmount: 150,
   },
   {
     title: "化工产品",
@@ -77,6 +79,7 @@ const data = ref<any[]>([
     unit: "万吨",
     keyword: keywordMap["原油贸易累计合同数量"],
     iconUrl: icon3,
+    planAmount: 680,
   },
   { title: "LNG", value: 50, unit: "万吨", iconUrl: icon4 },
   {
@@ -92,6 +95,7 @@ const data = ref<any[]>([
     keyword: keywordMap["燃料油贸易累计合同数量"],
     unit: "万吨",
     iconUrl: icon6,
+    planAmount: 80,
   },
 ]);
 

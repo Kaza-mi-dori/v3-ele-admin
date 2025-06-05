@@ -146,10 +146,10 @@ const subOrgTableData = ref([
     name: "广投石化",
     value: "1000",
   },
-  {
-    name: "开燃公司",
-    value: "1000",
-  },
+  // {
+  //   name: "开燃公司",
+  //   value: "1000",
+  // },
 ]);
 
 const chart1 = shallowRef();
@@ -188,31 +188,31 @@ const subOrgName = ref("");
 const yearData = {
   purchaseContractDetail: [
     { name: "广投石化", value: 1000, count: 100 },
-    { name: "开燃公司", value: 200, count: 20 },
+    // { name: "开燃公司", value: 200, count: 20 },
     { name: "桂盛桂轩", value: 300, count: 30 },
     { name: "恒润", value: 400, count: 40 },
   ],
   saleContractDetail: [
     { name: "广投石化", value: 830, count: 83 },
-    { name: "开燃公司", value: 100, count: 10 },
+    // { name: "开燃公司", value: 100, count: 10 },
     { name: "桂盛桂轩", value: 400, count: 40 },
     { name: "恒润", value: 444, count: 44 },
   ],
   transportContractDetail: [
     { name: "广投石化", value: 412, count: 41 },
-    { name: "开燃公司", value: 300, count: 30 },
+    // { name: "开燃公司", value: 300, count: 30 },
     { name: "桂盛桂轩", value: 110, count: 11 },
     { name: "恒润", value: 90, count: 9 },
   ],
   storageContractDetail: [
     { name: "广投石化", value: 120, count: 12 },
-    { name: "开燃公司", value: 1000, count: 100 },
+    // { name: "开燃公司", value: 1000, count: 100 },
     { name: "桂盛桂轩", value: 1000, count: 100 },
     { name: "恒润", value: 1000, count: 100 },
   ],
   riskContractDetail: [
     { name: "广投石化", value: 40, count: 4 },
-    { name: "开燃公司", value: 10, count: 1 },
+    // { name: "开燃公司", value: 10, count: 1 },
   ],
 };
 
@@ -249,10 +249,10 @@ const monthData = {
         name: "广投石化",
         value: [20, 30, 20, 10],
       },
-      {
-        name: "开燃公司",
-        value: [100, 30, 20, 60],
-      },
+      // {
+      //   name: "开燃公司",
+      //   value: [100, 30, 20, 60],
+      // },
       {
         name: "桂盛桂轩",
         value: [200, 300, 200, 100],

@@ -135,12 +135,6 @@
       <el-table-column label="操作" fixed="right" width="200">
         <template v-slot="scope">
           <div class="flex w-full justify-evenly">
-            <!-- <el-link type="primary" @click="handleViewDetail(scope.row)">
-              详情
-            </el-link>
-            <el-link type="primary" @click="handleViewDetail(scope.row)">
-              编辑
-            </el-link> -->
             <el-link
               v-if="scope.row['状态'] !== '有效'"
               type="primary"
@@ -148,7 +142,41 @@
             >
               审核
             </el-link>
-            <el-link
+            <el-dropdown>
+              <span class="el-dropdown-link">
+                更多
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item>
+                    <el-link
+                      type="primary"
+                      @click="handleCopyRecord(scope.row)"
+                    >
+                      复制新建
+                    </el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-link
+                      :disabled="scope.row['状态'] !== '有效'"
+                      type="primary"
+                      @click="handleResetAudit(scope.row)"
+                    >
+                      设为无效
+                    </el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-link type="danger" @click="handleDelete(scope.row)">
+                      删除
+                    </el-link>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <!-- <el-link
               v-if="scope.row['状态'] === '有效'"
               type="primary"
               @click="handleResetAudit(scope.row)"
@@ -157,7 +185,7 @@
             </el-link>
             <el-link type="danger" @click="handleDelete(scope.row)">
               删除
-            </el-link>
+            </el-link> -->
           </div>
         </template>
       </el-table-column>
@@ -367,6 +395,25 @@ const handleResetAudit = (row: any) => {
     "无效",
     initTableData
   );
+};
+
+const handleCopyRecord = async (row: any) => {
+  // 获取详情
+  loading.value = true;
+  const res = await BusinessFormAPI.getCompanyReportForm(row.id);
+  // 去掉id后复制新建
+  const { id, 状态, 日期, ...rest } = res;
+  const newRecord: any = await BusinessFormAPI.addCompanyReportForm(rest);
+  ElMessage.success("复制新建成功");
+  loading.value = false;
+  initTableData();
+  // router.push({
+  //   name: "ReportForm",
+  //   query: {
+  //     type: "firmMngReport",
+  //     id: newRecord.id,
+  //   },
+  // });
 };
 
 const handleSelectionChange = (selection: any) => {

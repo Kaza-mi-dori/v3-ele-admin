@@ -157,3 +157,16 @@ export const handleBatchAuditRows = (
       ElMessage.info("已取消审核");
     });
 };
+
+// /**
+//  * 复制新建
+//  */
+// export const useCopyRecord = (row: any, router: Router) => {
+//   const route = router.resolve({
+//     name: "ReportForm",
+//     query: {
+//       type: "orderDetail",
+//       id: row.id,
+//     },
+//   });
+// };

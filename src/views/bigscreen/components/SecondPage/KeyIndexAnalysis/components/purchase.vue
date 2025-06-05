@@ -207,10 +207,10 @@ const subOrgTableData = ref([
     name: "广投石化",
     value: "1000",
   },
-  {
-    name: "开燃公司",
-    value: "1000",
-  },
+  // {
+  //   name: "开燃公司",
+  //   value: "1000",
+  // },
 ]);
 
 const chart1 = shallowRef();
@@ -274,10 +274,10 @@ const yearData = {
         name: "广投石化",
         value: [200, 300, 200, 100],
       },
-      {
-        name: "开燃公司",
-        value: [200, 300, 200, 100],
-      },
+      // {
+      //   name: "开燃公司",
+      //   value: [200, 300, 200, 100],
+      // },
       {
         name: "桂盛桂轩",
         value: [200, 300, 200, 100],
@@ -332,10 +332,10 @@ const monthData = {
         name: "广投石化",
         value: [20, 30, 20, 10],
       },
-      {
-        name: "开燃公司",
-        value: [100, 30, 20, 60],
-      },
+      // {
+      //   name: "开燃公司",
+      //   value: [100, 30, 20, 60],
+      // },
       {
         name: "桂盛桂轩",
         value: [200, 300, 200, 100],
@@ -779,10 +779,10 @@ const initChart31 = () => {
       name: "广投石化",
       value: 1048,
     },
-    {
-      name: "开燃公司",
-      value: 735,
-    },
+    // {
+    //   name: "开燃公司",
+    //   value: 735,
+    // },
     {
       name: "桂盛桂轩",
       value: 580,
@@ -798,11 +798,11 @@ const initChart31 = () => {
       value: 1050,
       color: "#5470c6",
     },
-    {
-      name: "开燃公司",
-      value: 515,
-      color: "#91cc75",
-    },
+    // {
+    //   name: "开燃公司",
+    //   value: 515,
+    //   color: "#91cc75",
+    // },
     {
       name: "桂盛桂轩",
       value: 450,

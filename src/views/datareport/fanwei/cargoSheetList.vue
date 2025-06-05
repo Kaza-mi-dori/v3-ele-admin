@@ -22,8 +22,6 @@
           <el-dropdown-menu>
             <el-dropdown-item command="1">当天数据</el-dropdown-item>
             <el-dropdown-item command="2">过去一周</el-dropdown-item>
-            <el-dropdown-item command="3">上月</el-dropdown-item>
-            <el-dropdown-item command="4">自定义</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -45,6 +43,15 @@
         />
 
         <el-table-column
+          prop="合同名称"
+          label="合同名称"
+          sortable
+          align="center"
+        >
+          <template #default="{ row }">{{ row.合同名称 || "-" }}</template>
+        </el-table-column>
+
+        <el-table-column
           prop="合同编号"
           label="合同编号"
           sortable
@@ -55,15 +62,6 @@
               {{ row.合同编号 || "-" }}
             </el-link>
           </template>
-        </el-table-column>
-
-        <el-table-column
-          prop="合同名称"
-          label="合同名称"
-          sortable
-          align="center"
-        >
-          <template #default="{ row }">{{ row.合同名称 || "-" }}</template>
         </el-table-column>
 
         <el-table-column
@@ -139,39 +137,6 @@
       </el-dropdown>
     </template>
   </BaseListPage>
-  <!-- 弹窗 -->
-  <el-dialog
-    v-model="customImportDateVisible"
-    align-center
-    title="指定时间范围"
-    width="600px"
-    style="padding-right: 0"
-  >
-    <el-form ref="customForm" label-width="auto" :model="customFormData">
-      <el-form-item label="选择时间" prop="dateRange">
-        <el-date-picker
-          v-model="customFormData.dateRange"
-          type="daterange"
-          range-separator="到"
-          start-placeholder="起始日期"
-          end-placeholder="结束日期"
-          style="width: 100%"
-        />
-      </el-form-item>
-    </el-form>
-    <template v-slot:footer>
-      <span class="dialog-footer">
-        <el-button @click="customImportDateVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          :loading="customDateLoading"
-          @click="handleConfirmCustomDate"
-        >
-          确 定
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -189,11 +154,10 @@ import {
   queryDingTalkContractLedger,
   syncDingTalkContractLedger,
 } from "@/api/businessStandBook/dingding";
-import { Message } from "@element-plus/icons-vue/dist/types";
 
 // 页面配置
 const pageConfig = {
-  title: "钉钉合同台账",
+  title: "泛微合同台账",
   countUnit: "份记录",
   addButtonVisible: true,
   exportVisible: true,
@@ -252,13 +216,6 @@ const {
 });
 
 // 页面特有的业务逻辑
-
-const customImportDateVisible = ref(false);
-const customFormData = reactive({
-  dateRange: [],
-});
-const customDateLoading = ref(false);
-
 const router = useRouter();
 const exportConfigDialogVisible = ref(false);
 const exportLoading = ref(false);
@@ -275,55 +232,21 @@ const handleSync = (startDate: string, endDate: string) => {
   });
 };
 
-const handleConfirmCustomDate = () => {
-  // console.log(customFormData.dateRange[0]);
-  if (!customFormData.dateRange[0] || !customFormData.dateRange[1]) {
-    ElMessage.warning("请完整填写区间");
-    return;
-  }
-  handleSync(
-    getDateString(customFormData.dateRange[0]),
-    getDateString(customFormData.dateRange[1])
-  );
-  customImportDateVisible.value = false;
-};
-
 const handleClickSync = (command: string) => {
   let startDate = new Date();
   let endDate = new Date();
-  // 上个月的最后一天
-  const lastMonth = new Date();
-  lastMonth.setMonth(lastMonth.getMonth() - 1);
-  lastMonth.setDate(lastMonth.getDate());
-  const lastMonthEnd = new Date(
-    lastMonth.getTime() + 23 * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000
-  );
-  const lastMonthStart = new Date(
-    lastMonthEnd.getTime() - 30 * 24 * 60 * 60 * 1000
-  );
-
   switch (command) {
     case "1":
       startDate = new Date("2025-05-30");
       endDate = new Date("2025-05-30");
-      handleSync(getDateString(startDate), getDateString(endDate));
       break;
     case "2":
       startDate = new Date(endDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-      handleSync(getDateString(startDate), getDateString(endDate));
-      break;
-    case "3":
-      startDate = lastMonthStart;
-      endDate = lastMonthEnd;
-      handleSync(getDateString(startDate), getDateString(endDate));
-      break;
-    case "4":
-      // 弹窗输入
-      customImportDateVisible.value = true;
       break;
     default:
       break;
   }
+  handleSync(getDateString(startDate), getDateString(endDate));
 };
 
 // ... 其他特有方法

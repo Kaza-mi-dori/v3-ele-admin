@@ -68,10 +68,10 @@ const companyList = ref([
     value: "广投石化",
     label: "广投石化",
   },
-  {
-    value: "开燃公司",
-    label: "开燃公司",
-  },
+  // {
+  //   value: "开燃公司",
+  //   label: "开燃公司",
+  // },
   {
     value: "恒润公司",
     label: "恒润公司",

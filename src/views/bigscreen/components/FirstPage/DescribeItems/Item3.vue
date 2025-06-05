@@ -197,7 +197,7 @@ $number-color: #2abfff;
         font-size: 0.9rem;
       }
       .animated-amount {
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
       .__unit {
         margin-left: 5px;

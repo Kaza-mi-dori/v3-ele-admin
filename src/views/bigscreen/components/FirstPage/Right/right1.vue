@@ -27,9 +27,9 @@
     <OilContainer1
       :isShowTitle="true"
       :percent="50"
-      :value="100"
+      :value="63.29"
       :name="'原油'"
-      :unit="'吨'"
+      :unit="'万吨'"
       class="cursor-pointer"
       @click="handleClickContainer"
     />

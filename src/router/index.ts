@@ -658,6 +658,17 @@ export const constantRoutes: RouteRecordRaw[] = [
           icon: "el-icon-coin",
         },
       },
+      // 钉钉结算台账
+      {
+        path: "dingdingSettlementLedgerMng",
+        name: "DingdingSettlementLedgerMng",
+        component: () =>
+          import("@/views/datareport/dingding/settlement/cargoSheetList.vue"),
+        meta: {
+          title: "钉钉结算台账",
+          icon: "el-icon-coin",
+        },
+      },
     ],
   },
   // 数据源管理

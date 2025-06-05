@@ -87,9 +87,11 @@ import purchaseRecordDetailForm from "@/views/business/detail/purchaseRecord.vue
 import sellRecordDetailForm from "@/views/business/detail/sellRecord.vue";
 import productBusinessReportDetailForm from "@/views/datareport/monthlyProductReport/detail.vue";
 import storageReportDetailForm from "@/views/datareport/storageReport/detail.vue";
+import dingdingContractDetailForm from "@/views/datareport/dingding/contractDetail.vue";
 import BusinessFormAPI from "@/api/businessForm";
 import BusinessStandbookAPI from "@/api/businessStandBook";
 import { BusinessDetailAPI } from "@/api/datasource/businessDetail";
+import { DingTalkFormApi } from "@/api/businessStandBook/dingding";
 import { BargainFormApi } from "@/api/datasource/bargainForm";
 import { ElMessage } from "element-plus";
 import { stringToArray, arrayToString } from "@/utils";
@@ -135,6 +137,7 @@ const reportTypes = [
   { value: "sellRecordDetail", label: "销售台账记录" },
   { value: "productBusinessReport", label: "贸易经营报表" },
   { value: "storageReportDetailForm", label: "库存报表" },
+  { value: "dingdingContractDetail", label: "钉钉合同记录" },
 ];
 
 const handleEdit = () => {
@@ -458,6 +461,26 @@ const converToFrontendFormData = (type: string | null, data: any) => {
           "入库数量(吨)": data["入库数量"],
           "出库数量(吨)": data["出库数量"],
           "库存数量(吨)": data["库存数量"],
+        },
+      };
+    case "dingdingContractDetail":
+      return {
+        // 转换数据
+        contractName: data["合同名称"],
+        contractNumber: data["合同编号"],
+        contractType: data["合同类型"],
+        myCompanyName: data["我方公司名称"],
+        otherCompanyName: data["对方公司名称"],
+        mainContent: data["主要内容"],
+        dataFrom: data["数据来源"],
+        audited: data["是否审核"],
+        createdAt: data["创建时间"],
+        createdBy: data["创建人"],
+        updatedAt: data["更新时间"],
+        updatedBy: data["更新人"],
+        content: {
+          mainCotent: data["内容"]?.["主要内容"],
+          contractAmount: data["内容"]?.["合同金额"],
         },
       };
     default:
@@ -1277,6 +1300,23 @@ const initForm = () => {
         );
       }
       break;
+    case dingdingContractDetailForm:
+      if (route.query.id) {
+        DingTalkFormApi.getDingTalkContractLedger(
+          Number(route.query.id),
+          Number(route.query.ddId)
+        ).then((data) => {
+          if (formRef.value) {
+            const form = formRef.value as any;
+            form.setFormValue(
+              converToFrontendFormData(
+                route.query.type as Nullable<string>,
+                data
+              )
+            );
+          }
+        });
+      }
     default:
       break;
   }
@@ -1333,6 +1373,8 @@ watch(
       currentComponent.value = productBusinessReportDetailForm;
     } else if (value === "storageReportDetailForm") {
       currentComponent.value = storageReportDetailForm;
+    } else if (value === "dingdingContractDetail") {
+      currentComponent.value = dingdingContractDetailForm;
     }
   },
   { immediate: true }

@@ -26,7 +26,7 @@ const data = ref<any[]>([
   // { title: "广投石化舟山", value: [0, 0, 0, 0, 0, 0] },
   // { title: "永盛仓储", value: [0, 0, 0, 0, 0, 0] },
   { title: "广投石化", value: [100, 50, 10, 20, 1000, 250] },
-  { title: "开燃公司", value: [100, 50, 25, 40, 400, 125] },
+  // { title: "开燃公司", value: [100, 50, 25, 40, 400, 125] },
   { title: "桂盛桂轩", value: [0, 0, 0, 0, 0, 0] },
   { title: "恒润公司", value: [0, 0, 0, 0, 0, 0] },
 ]);
@@ -41,7 +41,7 @@ async function getData() {
     // OurCompanyEnum.YSCC,
     // OurCompanyEnum.YSSHC,
     OurCompanyEnum.GTSHC,
-    OurCompanyEnum.KRY,
+    // OurCompanyEnum.KRY,
     OurCompanyEnum.GSSHC,
     OurCompanyEnum.HRY,
   ];

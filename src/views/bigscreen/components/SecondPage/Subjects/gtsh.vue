@@ -16,7 +16,7 @@
           },
           {
             label: '总库存量',
-            value: '5.73',
+            value: '47.10',
             unit: '万吨',
           },
         ]"
@@ -26,11 +26,11 @@
         :data="[
           {
             name: '采购合同',
-            value: 30,
+            value: 202,
           },
           {
             name: '销售合同',
-            value: 808,
+            value: 4487,
           },
         ]"
       />
@@ -38,8 +38,8 @@
       <Left3
         :data="{
           history: [0, 0, 1764002, 2324936, 285900],
-          planAmount: 0,
-          sellAmount: 285900,
+          planAmount: 4200000,
+          sellAmount: 1850000,
         }"
       />
     </div>
@@ -62,10 +62,18 @@
             },
             {
               planned: 300000.0,
-              actual: 0,
+              actual: 287494.07,
             },
             {
               planned: 320000.0,
+              actual: 378560.92,
+            },
+            {
+              planned: 0,
+              actual: 392971.37,
+            },
+            {
+              planned: 0,
               actual: 0,
             },
           ]"
@@ -129,6 +137,15 @@
           {
             profit: -2284.19,
           },
+          {
+            profit: -2184.19,
+          },
+          {
+            profit: -2484.19,
+          },
+          {
+            profit: -2084.19,
+          },
         ]"
       />
     </div>
@@ -154,20 +171,20 @@ const subData = reactive({});
 
 const totalData = ref([
   {
-    year: "78937.61",
-    month: "78937.61",
+    year: "1546490.95",
+    month: "389148.57",
   },
   {
-    year: "118744.26",
-    month: "118744.26",
+    year: "1556358.8",
+    month: "392971.37",
   },
   {
-    year: "287651.14",
-    month: "287651.14",
+    year: "1556400.0",
+    month: "299813.27",
   },
   {
-    year: "-2284.19",
-    month: "-2284.19",
+    year: " -3,614.98",
+    month: " -1,429.71",
   },
 ]);
 </script>

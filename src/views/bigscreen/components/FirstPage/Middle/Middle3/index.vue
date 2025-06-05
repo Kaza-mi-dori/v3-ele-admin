@@ -95,8 +95,8 @@ const initData = async () => {
     if (matchingItem) {
       return {
         title: titleItem.title,
-        revenue: matchingItem["当期营收金额"] / 10000,
-        profit: matchingItem["当期利润金额"],
+        revenue: (matchingItem["累计营收金额"] / 10000).toFixed(2),
+        profit: matchingItem["累计利润金额"],
       };
     }
 

@@ -1197,7 +1197,7 @@ const initChart6 = () => {
         roseType: "radius",
         data: [
           { value: 533, name: "广投石化" },
-          { value: 335, name: "开燃公司" },
+          // { value: 335, name: "开燃公司" },
         ],
       },
     ],

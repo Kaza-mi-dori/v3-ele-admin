@@ -125,7 +125,7 @@ import { ref } from "vue";
 
 const totalData = ref([
   {
-    year: "-",
+    year: "292109.09",
     month: "-",
   },
   {

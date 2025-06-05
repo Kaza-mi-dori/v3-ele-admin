@@ -152,16 +152,39 @@
             >
               审核
             </el-link>
-            <el-link
+            <el-dropdown>
+              <span class="el-dropdown-link">
+                更多
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item>
+                    <el-link
+                      :disabled="scope.row['状态'] !== '有效'"
+                      type="primary"
+                      @click="handleResetAudit(scope.row)"
+                    >
+                      设为无效
+                    </el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-link type="danger" @click="handleDelete(scope.row)">
+                      删除
+                    </el-link>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <!-- <el-link
               v-if="scope.row['状态'] === '有效'"
               type="primary"
               @click="handleResetAudit(scope.row)"
             >
               设为无效
-            </el-link>
-            <el-link type="danger" @click="handleDelete(scope.row)">
-              删除
-            </el-link>
+            </el-link> -->
           </div>
         </template>
       </el-table-column>
@@ -355,6 +378,17 @@ const handleDelete = (row: any) => {
       initTableData();
     }
   );
+};
+
+const handleCopyRecord = async (row: any) => {
+  // 获取详情
+  const res = await BusinessFormAPI.getMonthlyProductReportForm(row.id);
+  // 去掉id后复制新建
+  const { id, ...rest } = res;
+  console.log("rest", rest);
+  // await BusinessFormAPI.addOrUpdateMonthlyProductReportForm(rest);
+  // ElMessage.success("复制新建成功");
+  // initTableData();
 };
 
 const checkIsAuditData = (row: any) => {

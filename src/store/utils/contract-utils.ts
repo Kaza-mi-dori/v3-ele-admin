@@ -8,7 +8,7 @@ const orgList = [
   "广投石化舟山",
   "永盛仓储",
   "桂盛桂轩",
-  "开燃公司",
+  // "开燃公司",
   "恒润公司",
 ];
 
@@ -27,7 +27,8 @@ const flatOrgTree = {
     // 是否有独立统计
     isIndependent: false,
     parent: null,
-    children: ["广投石化", "桂盛桂轩", "开燃公司", "恒润公司"],
+    // children: ["广投石化", "桂盛桂轩", "开燃公司", "恒润公司"],
+    children: ["广投石化", "桂盛桂轩", "恒润公司"],
   },
   广投石化: {
     name: "广投石化",
@@ -56,11 +57,11 @@ const flatOrgTree = {
     parent: "石化板块",
     isIndependent: true,
   },
-  开燃公司: {
-    name: "开燃公司",
-    parent: "石化板块",
-    isIndependent: true,
-  },
+  // 开燃公司: {
+  //   name: "开燃公司",
+  //   parent: "石化板块",
+  //   isIndependent: true,
+  // },
   恒润公司: {
     name: "恒润公司",
     parent: "石化板块",

@@ -210,27 +210,27 @@
     >
       <div class="oil-station-statistic-item">
         <span class="oil-depot-jiameng">库存总量</span>
-        <span>{{ oilStockStatistic.total }}吨</span>
+        <span>{{ formatize(oilStockStatistic.total) }}吨</span>
       </div>
       <div class="oil-station-statistic-item">
         <span class="oil-depot-zulin">东莞盛源库</span>
-        <span>{{ oilStockStatistic.shengyuan }}吨</span>
+        <span>{{ formatize(oilStockStatistic.shengyuan) }}吨</span>
       </div>
       <div class="oil-station-statistic-item">
         <span class="oil-depot-zulin">钦州永盛库</span>
-        <span>{{ oilStockStatistic.yongsheng }}吨</span>
+        <span>{{ formatize(oilStockStatistic.yongsheng) }}吨</span>
       </div>
       <div class="oil-station-statistic-item">
         <span class="oil-depot-zulin">钦州广明库</span>
-        <span>{{ oilStockStatistic.guangming }}吨</span>
+        <span>{{ formatize(oilStockStatistic.guangming) }}吨</span>
       </div>
       <div class="oil-station-statistic-item">
         <span class="oil-depot-zulin">来宾古瓦库</span>
-        <span>{{ oilStockStatistic.guwa }}吨</span>
+        <span>{{ formatize(oilStockStatistic.guwa) }}吨</span>
       </div>
       <div class="oil-station-statistic-item">
         <span class="oil-depot-zulin">恒润厂区库</span>
-        <span>{{ oilStockStatistic.hengrun }}吨</span>
+        <span>{{ formatize(oilStockStatistic.hengrun) }}吨</span>
       </div>
     </div>
   </tlbs-map>
@@ -516,6 +516,12 @@ const getSubCategory = (item: any) => {
   return null;
 };
 
+const formatize = (value: number) => {
+  console.log("value", value);
+  if (!value || isNaN(value)) return "-";
+  return (+value).toFixed(0);
+};
+
 // 获取油库库存
 const getOilDepotStock = (item: any) => {
   if (item.styleId === "oilDepot") {
@@ -652,6 +658,7 @@ watch(
             break;
         }
       }
+      console.log("totalOilStockHook.result.value", oilStockStatistic.value);
       // 计算油库库存
       allGeometries.value.forEach((item) => {
         if (item.styleId === "oilDepot") {

@@ -257,44 +257,44 @@ const exampleRemoteData = {
         ],
       },
     },
-    {
-      id: 6,
-      orgName: "开燃公司",
-      totalOutStorageVolume: 80,
-      totalInStorageVolume: 80,
-      totalStorageVolume: 80,
-      storageNumber: 80,
-      totalStorageRevenue: 80,
-      totalStorageProfit: 80,
-      subProductDatas: {
-        原油: [
-          {
-            id: 1,
-            orgName: "开燃公司",
-            productName: "原油产品A",
-            totalOutStorageVolume: 80,
-            totalInStorageVolume: 80,
-            totalStorageVolume: 80,
-            storageNumber: 80,
-            totalStorageRevenue: 80,
-            totalStorageProfit: 80,
-          },
-        ],
-        汽柴油: [
-          {
-            id: 1,
-            orgName: "开燃公司",
-            productName: "#92汽油",
-            totalOutStorageVolume: 80,
-            totalInStorageVolume: 80,
-            totalStorageVolume: 80,
-            storageNumber: 80,
-            totalStorageRevenue: 80,
-            totalStorageProfit: 80,
-          },
-        ],
-      },
-    },
+    // {
+    //   id: 6,
+    //   orgName: "开燃公司",
+    //   totalOutStorageVolume: 80,
+    //   totalInStorageVolume: 80,
+    //   totalStorageVolume: 80,
+    //   storageNumber: 80,
+    //   totalStorageRevenue: 80,
+    //   totalStorageProfit: 80,
+    //   subProductDatas: {
+    //     原油: [
+    //       {
+    //         id: 1,
+    //         orgName: "开燃公司",
+    //         productName: "原油产品A",
+    //         totalOutStorageVolume: 80,
+    //         totalInStorageVolume: 80,
+    //         totalStorageVolume: 80,
+    //         storageNumber: 80,
+    //         totalStorageRevenue: 80,
+    //         totalStorageProfit: 80,
+    //       },
+    //     ],
+    //     汽柴油: [
+    //       {
+    //         id: 1,
+    //         orgName: "开燃公司",
+    //         productName: "#92汽油",
+    //         totalOutStorageVolume: 80,
+    //         totalInStorageVolume: 80,
+    //         totalStorageVolume: 80,
+    //         storageNumber: 80,
+    //         totalStorageRevenue: 80,
+    //         totalStorageProfit: 80,
+    //       },
+    //     ],
+    //   },
+    // },
     {
       id: 7,
       orgName: "桂盛桂轩",
@@ -386,10 +386,10 @@ const graphData = reactive<any>({
       name: "广投石化",
       value: 55,
     },
-    {
-      name: "开燃公司",
-      value: 77,
-    },
+    // {
+    //   name: "开燃公司",
+    //   value: 77,
+    // },
     {
       name: "桂盛桂轩",
       value: 88,
@@ -404,10 +404,10 @@ const graphData = reactive<any>({
       name: "广投石化",
       value: 25,
     },
-    {
-      name: "开燃公司",
-      value: 35,
-    },
+    // {
+    //   name: "开燃公司",
+    //   value: 35,
+    // },
     {
       name: "桂盛桂轩",
       value: 45,
@@ -422,10 +422,10 @@ const graphData = reactive<any>({
       name: "广投石化",
       value: 550,
     },
-    {
-      name: "开燃公司",
-      value: 660,
-    },
+    // {
+    //   name: "开燃公司",
+    //   value: 660,
+    // },
     {
       name: "桂盛桂轩",
       value: 770,
@@ -441,10 +441,10 @@ const graphData = reactive<any>({
         name: "广投石化",
         value: 15,
       },
-      {
-        name: "开燃公司",
-        value: 14,
-      },
+      // {
+      //   name: "开燃公司",
+      //   value: 14,
+      // },
       {
         name: "桂盛桂轩",
         value: 20,
@@ -459,10 +459,10 @@ const graphData = reactive<any>({
         name: "广投石化",
         value: 15,
       },
-      {
-        name: "开燃公司",
-        value: 14,
-      },
+      // {
+      //   name: "开燃公司",
+      //   value: 14,
+      // },
       {
         name: "桂盛桂轩",
         value: 20,
@@ -479,10 +479,10 @@ const graphData = reactive<any>({
         name: "广投石化",
         value: 240,
       },
-      {
-        name: "开燃公司",
-        value: 230,
-      },
+      // {
+      //   name: "开燃公司",
+      //   value: 230,
+      // },
       {
         name: "桂盛桂轩",
         value: 220,
@@ -497,10 +497,10 @@ const graphData = reactive<any>({
         name: "广投石化",
         value: 140,
       },
-      {
-        name: "开燃公司",
-        value: 122,
-      },
+      // {
+      //   name: "开燃公司",
+      //   value: 122,
+      // },
       {
         name: "桂盛桂轩",
         value: 130,
@@ -517,10 +517,10 @@ const graphData = reactive<any>({
         name: "广投石化",
         value: 550,
       },
-      {
-        name: "开燃公司",
-        value: 660,
-      },
+      // {
+      //   name: "开燃公司",
+      //   value: 660,
+      // },
       {
         name: "桂盛桂轩",
         value: 770,
@@ -535,10 +535,10 @@ const graphData = reactive<any>({
         name: "广投石化",
         value: 150,
       },
-      {
-        name: "开燃公司",
-        value: 140,
-      },
+      // {
+      //   name: "开燃公司",
+      //   value: 140,
+      // },
       {
         name: "桂盛桂轩",
         value: 130,
@@ -893,7 +893,8 @@ const initGraph4 = () => {
     xAxis: {
       type: "category",
       boundaryGap: true,
-      data: ["广投石化", "开燃公司", "桂盛桂轩", "恒润"],
+      // data: ["广投石化", "开燃公司", "桂盛桂轩", "恒润"],
+      data: ["广投石化", "桂盛桂轩", "恒润"],
       axisLine: {
         lineStyle: {
           color: sassvariables["bigscreen-primary-color-8"],
@@ -975,7 +976,8 @@ const initGraph5 = () => {
     xAxis: {
       type: "category",
       boundaryGap: true,
-      data: ["广投石化", "开燃公司", "桂盛桂轩", "恒润"],
+      // data: ["广投石化", "开燃公司", "桂盛桂轩", "恒润"],
+      data: ["广投石化", "桂盛桂轩", "恒润"],
       axisLine: {
         lineStyle: {
           color: sassvariables["bigscreen-primary-color-8"],
@@ -1051,7 +1053,8 @@ const initGraph6 = () => {
     xAxis: {
       type: "category",
       boundaryGap: true,
-      data: ["广投石化", "开燃公司", "桂盛桂轩", "恒润"],
+      // data: ["广投石化", "开燃公司", "桂盛桂轩", "恒润"],
+      data: ["广投石化", "桂盛桂轩", "恒润"],
       axisLine: {
         lineStyle: {
           color: sassvariables["bigscreen-primary-color-8"],

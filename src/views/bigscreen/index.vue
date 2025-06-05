@@ -166,10 +166,10 @@ const entryList = computed(() => {
       name: "Gtsh",
       label: "广投石化",
     },
-    {
-      name: "Kry",
-      label: "开燃公司",
-    },
+    // {
+    //   name: "Kry",
+    //   label: "开燃公司",
+    // },
     {
       name: "Gsshc",
       label: "桂盛桂轩",

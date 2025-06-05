@@ -134,3 +134,20 @@
     }
   }
 }
+
+.c-loading {
+  @apply cursor-wait;
+  &::after {
+    @apply block w-4 h-4 border-4 border-gray-500 border-t-transparent rounded-full;
+    content: "";
+    animation: spin 1s linear infinite;
+  }
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
