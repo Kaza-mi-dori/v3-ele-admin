@@ -44,9 +44,10 @@ const initChart = () => {
   const accuData: number[] = [];
   const monthData: number[] = [];
   data.reduce((acc, curr) => {
-    accuData.push(acc + curr);
+    const sum = +(acc + curr).toFixed(2); // 每次累加后,用Number.toFixed(2)保留/修正为2位小数（注意：这会返回字符串,需要用+转回数字）
+    accuData.push(sum);
     monthData.push(curr);
-    return acc + curr;
+    return sum; // 返回修正后的累加值
   }, 0);
   const option = {
     tooltip: {
