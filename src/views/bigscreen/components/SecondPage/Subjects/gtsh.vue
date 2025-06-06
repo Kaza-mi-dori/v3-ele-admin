@@ -171,20 +171,20 @@ const subData = reactive({});
 
 const totalData = ref([
   {
-    year: "1546490.95",
-    month: "389148.57",
+    year: "1526318.76",
+    month: "385708.09",
   },
   {
     year: "1556358.8",
     month: "392971.37",
   },
   {
-    year: "1556400.0",
-    month: "299813.27",
+    year: "1556358.8",
+    month: "392971.37",
   },
   {
-    year: " -3,614.98",
-    month: " -1,429.71",
+    year: "9867.86",
+    month: "3822.8",
   },
 ]);
 </script>
