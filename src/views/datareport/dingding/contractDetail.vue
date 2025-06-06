@@ -75,6 +75,63 @@
                 </span>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="采购/销售合同" prop="purchaseType">
+                <el-select
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.purchaseType"
+                  class="w-full"
+                >
+                  <el-option
+                    v-for="item in purchaseTypeOptions"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+                <span v-else>
+                  {{ yearlyReportDetailForm.purchaseType }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同类型" prop="contractType">
+                <el-select
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.contractType"
+                  class="w-full"
+                >
+                  <el-option
+                    v-for="item in contractTypeOptions"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+                <span v-else>
+                  {{ yearlyReportDetailForm.contractType }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="业务类型" prop="businessType">
+                <el-select
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.businessType"
+                  class="w-full"
+                >
+                  <el-option
+                    v-for="item in businessTypeOptions"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+                <span v-else>
+                  {{ yearlyReportDetailForm.businessType }}
+                </span>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-form>
       </div>
@@ -206,6 +263,11 @@ const props = defineProps({
 const formRef = ref<Nullable<FormInstance>>(null);
 const { id, editing } = toRefs(props);
 
+const purchaseTypeOptions = ref<string[]>(["采购合同", "销售合同"]);
+
+const contractTypeOptions = ref<string[]>(["业务合同", "服务合同"]);
+
+const businessTypeOptions = ref<string[]>(["成品油", "原油", "船加油"]);
 const allSelected = ref(false);
 
 interface DetailRecord {
@@ -217,6 +279,12 @@ interface DetailRecord {
   myCompanyName: string;
   /** 对方公司名称 */
   otherCompanyName: string;
+  /** 购销类型 */
+  purchaseType: string;
+  /** 业务类型 */
+  businessType: string;
+  /** 合同类型 */
+  contractType: string;
   content: {
     /** 主要内容 */
     mainCotent: string;
@@ -243,6 +311,9 @@ const yearlyReportDetailForm = ref<DetailRecord>({
   contractNumber: "",
   myCompanyName: "",
   otherCompanyName: "",
+  purchaseType: "",
+  businessType: "",
+  contractType: "",
   content: {
     mainCotent: "",
     contractAmount: "",

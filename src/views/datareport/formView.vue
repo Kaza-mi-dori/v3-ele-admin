@@ -88,10 +88,12 @@ import sellRecordDetailForm from "@/views/business/detail/sellRecord.vue";
 import productBusinessReportDetailForm from "@/views/datareport/monthlyProductReport/detail.vue";
 import storageReportDetailForm from "@/views/datareport/storageReport/detail.vue";
 import dingdingContractDetailForm from "@/views/datareport/dingding/contractDetail.vue";
+import dingdingSettlementDetailForm from "@/views/datareport/dingding/settlement/settlementDetail.vue";
 import BusinessFormAPI from "@/api/businessForm";
 import BusinessStandbookAPI from "@/api/businessStandBook";
 import { BusinessDetailAPI } from "@/api/datasource/businessDetail";
 import { DingTalkFormApi } from "@/api/businessStandBook/dingding";
+import { DingTalkSettlementFormApi } from "@/api/businessStandBook/dingding/setttlement";
 import { BargainFormApi } from "@/api/datasource/bargainForm";
 import { ElMessage } from "element-plus";
 import { stringToArray, arrayToString } from "@/utils";
@@ -138,6 +140,7 @@ const reportTypes = [
   { value: "productBusinessReport", label: "贸易经营报表" },
   { value: "storageReportDetailForm", label: "库存报表" },
   { value: "dingdingContractDetail", label: "钉钉合同记录" },
+  { value: "dingdingSettlementDetail", label: "钉钉结算记录" },
 ];
 
 const handleEdit = () => {
@@ -471,6 +474,8 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         contractType: data["合同类型"],
         myCompanyName: data["我方公司名称"],
         otherCompanyName: data["对方公司名称"],
+        purchaseType: data["购销类型"],
+        businessType: data["业务类型"],
         mainContent: data["主要内容"],
         dataFrom: data["数据来源"],
         audited: data["是否审核"],
@@ -480,7 +485,19 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         updatedBy: data["更新人"],
         content: {
           mainCotent: data["内容"]?.["主要内容"],
-          contractAmount: data["内容"]?.["合同金额"],
+          contractAmount: data["内容"]?.["合同总额"],
+        },
+      };
+    case "dingdingSettlementDetail":
+      return {
+        // 转换数据
+        settlementName: data["结算名称"],
+        description: data["正文内容"],
+        settlementAmount: data["结算总额"],
+        dingContractNumber: data["钉钉合同编号"],
+        settlementType: data["结算类型"],
+        content: {
+          mainCotent: data["内容"]?.["主要内容"],
         },
       };
     default:
@@ -742,6 +759,38 @@ const convertToBackendData = (type: string | null, data: any) => {
         数据列表: transferredData,
       };
       return result;
+    case "dingdingContractDetail":
+      console.log("submitData", data);
+      result["合同名称"] = data.contractName;
+      result["合同编号"] = data.contractNumber;
+      result["合同类型"] = data.contractType;
+      result["我方公司名称"] = data.myCompanyName;
+      result["对方公司名称"] = data.otherCompanyName;
+      result["购销类型"] = data.purchaseType;
+      result["业务类型"] = data.businessType;
+      result["主要内容"] = data.mainContent;
+      result["数据来源"] = data.dataFrom;
+      result["是否审核"] = data.audited;
+      result["创建时间"] = data.createdAt;
+      result["创建人"] = data.createdBy;
+      result["更新时间"] = data.updatedAt;
+      result["更新人"] = data.updatedBy;
+      result["内容"] = {
+        主要内容: data.content.mainCotent,
+        合同总额: data.content.contractAmount,
+      };
+      return result;
+    case "dingdingSettlementDetail":
+      result["结算名称"] = data.settlementName;
+      result["正文内容"] = data.description;
+      result["结算总额"] = data.settlementAmount;
+      result["钉钉合同编号"] = data.dingContractNumber;
+      result["结算类型"] = data.settlementType;
+      result["内容"] = {
+        主要内容: data.content.mainCotent,
+        结算金额: data.content.settlementAmount,
+      };
+      return result;
     default:
       return data;
   }
@@ -944,7 +993,7 @@ const submitForm = async () => {
             ElMessage.success("提交成功");
           }
         })
-        .catch((err) => {
+        .catch((err: any) => {
           isEditing.value = false;
           ElMessage.error("提交失败，" + err);
         })
@@ -1059,6 +1108,61 @@ const submitForm = async () => {
           }
         })
         .catch((err) => {
+          isEditing.value = false;
+          ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
+        });
+      break;
+    case "dingdingContractDetail":
+      const opDingdingContractDetail = route.query.id
+        ? DingTalkFormApi.editDingTalkContractLedger
+        : DingTalkFormApi.addDingTalkContractLedger;
+      // console.log(real)
+      opDingdingContractDetail(realDataToSubmit)
+        .then(() => {
+          isEditing.value = false;
+          if (!route.query.id) {
+            // 跳转到列表页
+            ElMessage.success("提交成功, 正在跳转到列表页");
+            setTimeout(() => {
+              router.push({
+                name: "DingdingContractDetailMng",
+              });
+            }, 500);
+          } else {
+            ElMessage.success("提交成功");
+          }
+        })
+        .catch((err: any) => {
+          isEditing.value = false;
+          ElMessage.error("提交失败，" + err);
+        })
+        .finally(() => {
+          submitting.value = false;
+        });
+      break;
+    case "dingdingSettlementDetail":
+      const opDingdingSettlementDetail = route.query.id
+        ? DingTalkSettlementFormApi.editDingTalkSettlementLedger
+        : DingTalkSettlementFormApi.addDingTalkSettlementLedger;
+      opDingdingSettlementDetail(realDataToSubmit)
+        .then(() => {
+          isEditing.value = false;
+          if (!route.query.id) {
+            // 跳转到列表页
+            ElMessage.success("提交成功, 正在跳转到列表页");
+            setTimeout(() => {
+              router.push({
+                name: "DingdingSettlementDetailMng",
+              });
+            }, 500);
+          } else {
+            ElMessage.success("提交成功");
+          }
+        })
+        .catch((err: any) => {
           isEditing.value = false;
           ElMessage.error("提交失败，" + err);
         })
@@ -1317,6 +1421,25 @@ const initForm = () => {
           }
         });
       }
+      break;
+    case dingdingSettlementDetailForm:
+      if (route.query.id) {
+        DingTalkSettlementFormApi.getDingTalkSettlementLedger(
+          Number(route.query.id),
+          Number(route.query.ddId)
+        ).then((data) => {
+          if (formRef.value) {
+            const form = formRef.value as any;
+            form.setFormValue(
+              converToFrontendFormData(
+                route.query.type as Nullable<string>,
+                data
+              )
+            );
+          }
+        });
+      }
+      break;
     default:
       break;
   }
@@ -1375,6 +1498,8 @@ watch(
       currentComponent.value = storageReportDetailForm;
     } else if (value === "dingdingContractDetail") {
       currentComponent.value = dingdingContractDetailForm;
+    } else if (value === "dingdingSettlementDetail") {
+      currentComponent.value = dingdingSettlementDetailForm;
     }
   },
   { immediate: true }

@@ -44,12 +44,13 @@
         height="480"
         @current-change="handleClickRow"
       >
-        <el-table-column label="签订时间" prop="签署日期" />
-        <el-table-column label="合同类型" prop="合同类型" />
+        <!-- <el-table-column label="签订时间" prop="签署日期" /> -->
+        <el-table-column label="审批通过日期" prop="审批通过时间" />
         <el-table-column label="合同编号" prop="合同编号" />
         <el-table-column label="合同名称" prop="合同名称" />
+        <el-table-column label="合同类型" prop="合同类型" />
         <el-table-column label="合同金额(含税)(万元)" prop="含税金额" />
-        <el-table-column label="相对方" prop="相对人名称" />
+        <el-table-column label="相对方" prop="相对方名称" />
         <el-table-column label="我方" prop="我方名称" />
       </el-table>
       <el-pagination
@@ -75,6 +76,7 @@ import { useRouter } from "vue-router";
 import { ArrowRight } from "@element-plus/icons-vue";
 import { ComponentSize } from "element-plus";
 import BusinessStandbookAPI from "@/api/businessStandBook";
+import { DingTalkFormApi } from "@/api/businessStandBook/dingding";
 
 const router = useRouter();
 
@@ -110,7 +112,7 @@ const initChart1 = () => {
   }
   chart.value.clear();
 
-  const { chartData } = calculateContractTypeData(); // 获取合同类型数据
+  const { chartData, totalAmount, totalCount } = calculateContractTypeData(); // 获取合同类型数据
 
   // 饼状图
   const option = {
@@ -149,7 +151,7 @@ const initChart1 = () => {
           // 颜色暗些
           color: "#eee",
           fontSize: 16,
-          formatter: "{b} : {c}万元 ({d}%)",
+          formatter: "{b} : {c}份 ({d}%)",
         },
         emphasis: {
           itemStyle: {
@@ -316,15 +318,23 @@ const pagination: Ref<any> = ref({
 });
 
 async function initTableData() {
-  BusinessStandbookAPI.getContractLedgerRecordList({
+  DingTalkFormApi.queryDingTalkContractLedger({
     ...queryForm.value,
     // 页码: pagination.value.currentPage,
     // 页容量: pagination.value.pageSize,
     页码: 1,
-    页容量: 1000,
+    页容量: 100,
   })
     .then((res: any) => {
-      tableData.value = res["当前记录"];
+      tableData.value = res["当前记录"].map((item: any) => {
+        return {
+          ...item,
+          审批通过时间: (item.审批通过时间 || "-").substring(0, 10),
+          相对方名称: item["相对方名称"] || item["对方公司名称"],
+          我方名称: item["我方名称"] || item["我方公司名称"],
+          合同类型: item["合同类型"] || "未分类",
+        };
+      });
       pagination.value.total = +res["记录总数"];
       initChart1(); // 在数据加载后更新图表
       initChart2();
@@ -337,17 +347,22 @@ async function initTableData() {
 const calculateContractTypeData = () => {
   const typeMap: { [key: string]: number } = {};
   let totalAmount = 0;
+  let totalCount = 0;
 
   // 计算每种合同类型的总金额
   tableData.value.forEach((item) => {
-    const type = item["合同类型"] || "其他";
-    const amount = parseFloat(item["含税金额"]);
+    const type = item["合同类型"] || "未归类";
+    const amount = parseFloat(item["含税金额"] || "0");
+    const count = 1;
 
     if (!typeMap[type]) {
       typeMap[type] = 0;
     }
-    typeMap[type] += amount;
+    // typeMap[type] += amount;
+    // totalAmount += amount;
+    typeMap[type] += count;
     totalAmount += amount;
+    totalCount += count;
   });
 
   // 转换为ECharts需要的数据格式
@@ -356,11 +371,11 @@ const calculateContractTypeData = () => {
     return {
       name: type,
       value: typeMap[type],
-      percentage: ((typeMap[type] / totalAmount) * 100).toFixed(2) + "%",
+      percentage: ((typeMap[type] / totalCount) * 100).toFixed(2) + "%",
     };
   });
-
-  return { chartData, totalAmount };
+  console.log("chartData", chartData, totalAmount);
+  return { chartData, totalAmount, totalCount };
 };
 
 const calculateProfitData = () => {
@@ -370,7 +385,7 @@ const calculateProfitData = () => {
 
   // 计算每个我方的合同金额总和和合同数量
   tableData.value.forEach((item) => {
-    const partyName = item["我方名称"];
+    const partyName = item["我方名称"] || item["我方公司名称"];
     const amount = parseFloat(item["含税金额"]);
     const contractType = item["合同类型"];
 
@@ -429,7 +444,8 @@ const handleClickRow = (row: any) => {
   const route = router.resolve({
     name: "ReportForm",
     query: {
-      type: "contractDetail",
+      // type: "contractDetail",
+      type: "dingdingContractDetail",
       id: row.id,
     },
   });

@@ -74,9 +74,10 @@
       v-model:page-size="pagination.pageSize"
       class="mt-2 flex justify-end mb-4"
       background
-      layout="total, prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper, sizes"
       :total="pagination.total"
       @current-change="(page) => $emit('page-change', page)"
+      @size-change="$emit('size-change', $event)"
     />
 
     <!-- 其他自定义插槽 -->
@@ -93,6 +94,7 @@ const emit = defineEmits([
   "add",
   "export",
   "page-change",
+  "size-change",
   "selection-change",
   "confirm-filter",
   "reset-filter",

@@ -21,7 +21,7 @@ export const getDingTalkContractLedger = (id: number, ddId: number) => {
  */
 export const addDingTalkContractLedger = (data: any) => {
   return request2({
-    url: "/Api/Business/DingTalkContractRecord/Add",
+    url: "/Api/Business/DingTalkContractRecord",
     method: "POST",
     data,
   });
@@ -34,8 +34,8 @@ export const addDingTalkContractLedger = (data: any) => {
  */
 export const editDingTalkContractLedger = (data: any) => {
   return request2({
-    url: "/Api/Business/DingTalkContractRecord/Edit",
-    method: "POST",
+    url: "/Api/Business/DingTalkContractRecord",
+    method: "PATCH",
     data,
   });
 };

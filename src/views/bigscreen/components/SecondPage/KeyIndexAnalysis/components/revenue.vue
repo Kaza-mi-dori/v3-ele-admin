@@ -1352,7 +1352,7 @@ const initData = async () => {
     queryParams.withSubProductData as boolean,
     queryParams.withSubProductTypeData as boolean
   );
-  console.log(testData);
+  // console.log(testData);
   // TODO 将数据放入组件
   if (testData?.[0]) {
     data = {

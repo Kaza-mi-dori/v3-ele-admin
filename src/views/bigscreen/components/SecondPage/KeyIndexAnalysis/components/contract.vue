@@ -635,19 +635,49 @@ const initLegendClick = () => {
     }
   });
   chart2.value.on("click", "series.pie", (params: any) => {
-    console.log(params);
+    const { name } = params;
+    if (Object.values(OurCompanyEnumMap).includes(name)) {
+      router.push({
+        name: "ContractList",
+        query: { companyName: name },
+      });
+    }
   });
   chart3.value.on("click", "series.pie", (params: any) => {
-    console.log(params);
+    const { name } = params;
+    if (Object.values(OurCompanyEnumMap).includes(name)) {
+      router.push({
+        name: "ContractList",
+        query: { companyName: name },
+      });
+    }
   });
   chart4.value.on("click", "series.pie", (params: any) => {
-    console.log(params);
+    const { name } = params;
+    if (Object.values(OurCompanyEnumMap).includes(name)) {
+      router.push({
+        name: "ContractList",
+        query: { companyName: name },
+      });
+    }
   });
   chart5.value.on("click", "series.pie", (params: any) => {
-    console.log(params);
+    const { name } = params;
+    if (Object.values(OurCompanyEnumMap).includes(name)) {
+      router.push({
+        name: "ContractList",
+        query: { companyName: name },
+      });
+    }
   });
   chart6.value.on("click", "series.pie", (params: any) => {
-    console.log(params);
+    const { name } = params;
+    if (Object.values(OurCompanyEnumMap).includes(name)) {
+      router.push({
+        name: "ContractList",
+        query: { companyName: name },
+      });
+    }
   });
 };
 

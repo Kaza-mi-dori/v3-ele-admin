@@ -26,52 +26,50 @@
           :model="yearlyReportDetailForm"
         >
           <el-row class="w-full">
-            <el-col :span="8">
-              <el-form-item label="结算名称" prop="contractName">
+            <el-col :span="24">
+              <el-form-item label="结算名称" prop="SettlementName">
                 <el-input
                   v-if="editing"
-                  v-model="yearlyReportDetailForm.contractName"
+                  v-model="yearlyReportDetailForm.settlementName"
                 />
-                <span v-else>{{ yearlyReportDetailForm.contractName }}</span>
+                <span v-else>{{ yearlyReportDetailForm.settlementName }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="结算编号" prop="contractNumber">
-                <el-input
+              <el-form-item label="结算类型" prop="settlementType">
+                <el-select
                   v-if="editing"
-                  v-model="yearlyReportDetailForm.contractNumber"
-                />
-                <span v-else>{{ yearlyReportDetailForm.contractNumber }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="我方公司名称" prop="myCompanyName">
-                <el-input
-                  v-if="editing"
-                  v-model="yearlyReportDetailForm.myCompanyName"
-                />
-                <span v-else>{{ yearlyReportDetailForm.myCompanyName }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="对方公司名称" prop="otherCompanyName">
-                <el-input
-                  v-if="editing"
-                  v-model="yearlyReportDetailForm.otherCompanyName"
-                />
+                  v-model="yearlyReportDetailForm.settlementType"
+                  class="w-full"
+                >
+                  <el-option label="结算" value="结算" />
+                  <el-option label="预付款" value="预付款" />
+                  <el-option label="质保金" value="质保金" />
+                </el-select>
                 <span v-else>
-                  {{ yearlyReportDetailForm.otherCompanyName }}
+                  {{ yearlyReportDetailForm.settlementType }}
                 </span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="结算金额" prop="content.contractAmount">
+              <el-form-item label="结算总额" prop="settlementAmount">
                 <el-input
                   v-if="editing"
-                  v-model="yearlyReportDetailForm.content.contractAmount"
+                  v-model="yearlyReportDetailForm.settlementAmount"
                 />
                 <span v-else>
-                  {{ yearlyReportDetailForm.content.contractAmount }}
+                  {{ yearlyReportDetailForm.settlementAmount }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="钉钉合同编号" prop="dingContractNumber">
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.dingContractNumber"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.dingContractNumber }}
                 </span>
               </el-form-item>
             </el-col>
@@ -97,7 +95,7 @@
             <el-col :span="24">
               <el-form-item prop="mainCotent">
                 <template #label>
-                  <span class="mr-4">主要内容</span>
+                  <span class="mr-4">正文内容</span>
                   <el-button
                     icon="FullScreen"
                     circle
@@ -105,10 +103,10 @@
                   />
                 </template>
                 <el-input
-                  v-model="yearlyReportDetailForm.content.mainCotent"
+                  v-model="yearlyReportDetailForm.description"
                   :readonly="!editing"
                   type="textarea"
-                  :autosize="{ minRows: 4, maxRows: 20 }"
+                  :autosize="{ minRows: 10, maxRows: 20 }"
                 />
               </el-form-item>
             </el-col>
@@ -172,9 +170,9 @@
     >
       <div>
         <el-input
-          v-model="yearlyReportDetailForm.content.mainCotent"
-          :readonly="!editing"
+          v-model="yearlyReportDetailForm.description"
           type="textarea"
+          readonly
           style="cursor: not-allowed"
           :autosize="{ minRows: 10, maxRows: 40 }"
         />
@@ -185,7 +183,7 @@
 
 <script setup lang="ts">
 import datePicker from "@/components/ElBasicPlus/datePicker.vue";
-import contractSelector from "@/components/Business/Selector/contract.vue";
+import SettlementSelector from "@/components/Business/Selector/Settlement.vue";
 import { ref, onMounted } from "vue";
 import { useManualRefHistory } from "@vueuse/core";
 import { type FormInstance } from "element-plus";
@@ -210,18 +208,21 @@ const allSelected = ref(false);
 
 interface DetailRecord {
   /** 结算名称 */
-  contractName: string;
-  /** 结算编号 */
-  contractNumber: string;
-  /** 我方公司名称 */
-  myCompanyName: string;
-  /** 对方公司名称 */
-  otherCompanyName: string;
+  settlementName: string;
+  /** 结算类型 */
+  settlementType: string;
+  /** 结算总额 */
+  settlementAmount: number;
+  /** 钉钉合同编号 */
+  dingContractNumber: string;
+  /** 正文说明 */
+  description: string;
+
   content: {
     /** 主要内容 */
     mainCotent: string;
     /** 结算金额 */
-    contractAmount: string;
+    settlementAmount: string;
     /** 其他内容 */
     [key: string]: any;
   };
@@ -239,13 +240,14 @@ interface DetailRecord {
 }
 
 const yearlyReportDetailForm = ref<DetailRecord>({
-  contractName: "",
-  contractNumber: "",
-  myCompanyName: "",
-  otherCompanyName: "",
+  settlementName: "",
+  settlementType: "",
+  settlementAmount: 0,
+  dingContractNumber: "",
+  description: "",
   content: {
     mainCotent: "",
-    contractAmount: "",
+    settlementAmount: "",
   },
   createdAt: "",
   createdBy: "",
@@ -293,7 +295,7 @@ const handleAddSubRecord = () => {
     taxRate: 0,
     taxAmount: 0,
     purchaseDate: "",
-    contractNumber: "",
+    SettlementNumber: "",
     invoiceNumber: "",
     invoiceCopies: 0,
     voucherNumber: "",

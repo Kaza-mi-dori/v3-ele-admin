@@ -79,6 +79,13 @@ export function useListPage(options: any) {
     loadData();
   };
 
+  const handleSizeChange = (size: number) => {
+    console.log("size");
+    pagination.pageSize = size;
+    pagination.currentPage = 1;
+    loadData();
+  };
+
   // 重置筛选
   const handleResetFilter = () => {
     queryForm.value = { ...defaultQuery, 页码: 1, 页容量: pagination.pageSize };
@@ -140,6 +147,7 @@ export function useListPage(options: any) {
     queryForm,
     loadData,
     toggleDeleteButton,
+    handleSizeChange,
     handleFilter,
     handleResetFilter,
     handlePageChange,

@@ -1,177 +1,210 @@
 <template>
-  <BaseListPage
-    :config="pageConfig"
-    :loading="loading"
-    :tableData="tableData"
-    :pagination="pagination"
-    @confirm-filter="handleFilter"
-    @reset-filter="handleResetFilter"
-    @page-change="handlePageChange"
-    @add="handleAddRecord"
-    @export="onExportExcel"
-  >
-    <template v-slot:leftOperations>
-      <!-- <el-button @click="handleSync">手动同步(测试)</el-button> -->
-      <!-- 下拉菜单，当天，过去一周 -->
-      <el-dropdown @command="handleClickSync">
-        <el-button>
-          手动同步数据
-          <el-icon class="el-icon--right"><arrow-down /></el-icon>
-        </el-button>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="1">当天数据</el-dropdown-item>
-            <el-dropdown-item command="2">过去一周</el-dropdown-item>
-            <el-dropdown-item command="3">上月</el-dropdown-item>
-            <el-dropdown-item command="4">自定义</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-    </template>
-    <template v-slot:table>
-      <el-table
-        v-loading="loading"
-        :data="tableData"
-        stripe
-        border
-        @selection-change="handleSelectionChange"
-      >
-        <!-- 表格列定义 -->
-        <el-table-column
-          v-if="showSelection"
-          type="selection"
-          width="55"
-          align="center"
-        />
-
-        <el-table-column
-          prop="合同编号"
-          label="合同编号"
-          sortable
-          align="center"
-        >
-          <template #default="{ row }">
-            <el-link type="primary" @click="handleViewDetail(row)">
-              {{ row.合同编号 || "-" }}
-            </el-link>
+  <div>
+    <BaseListPage
+      :config="pageConfig"
+      :loading="loading"
+      :tableData="tableData"
+      :pagination="pagination"
+      @confirm-filter="handleFilter"
+      @reset-filter="handleResetFilter"
+      @page-change="handlePageChange"
+      @size-change="handleSizeChange"
+      @add="handleAddRecord"
+      @export="onExportExcel"
+    >
+      <template v-slot:leftOperations>
+        <!-- <el-button @click="handleSync">手动同步(测试)</el-button> -->
+        <!-- 下拉菜单，当天，过去一周 -->
+        <el-dropdown @command="handleClickSync">
+          <el-button>
+            手动同步数据
+            <el-icon class="el-icon--right"><arrow-down /></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="1">当天数据</el-dropdown-item>
+              <el-dropdown-item command="2">过去一周</el-dropdown-item>
+              <el-dropdown-item command="3">上月</el-dropdown-item>
+              <el-dropdown-item command="4">自定义</el-dropdown-item>
+            </el-dropdown-menu>
           </template>
-        </el-table-column>
-
-        <el-table-column
-          prop="合同名称"
-          label="合同名称"
-          sortable
-          align="center"
+        </el-dropdown>
+      </template>
+      <template v-slot:table>
+        <el-table
+          v-loading="loading"
+          :data="tableData"
+          stripe
+          border
+          @selection-change="handleSelectionChange"
         >
-          <template #default="{ row }">{{ row.合同名称 || "-" }}</template>
-        </el-table-column>
+          <!-- 表格列定义 -->
+          <el-table-column
+            v-if="showSelection"
+            type="selection"
+            width="55"
+            align="center"
+          />
 
-        <el-table-column
-          prop="对方公司名称"
-          label="对方公司名称"
-          sortable
-          align="center"
-        />
+          <el-table-column
+            prop="审批通过时间"
+            label="审批通过日期"
+            sortable
+            align="center"
+          >
+            <template #default="{ row }">
+              {{ (row.审批通过时间 || "-").substring(0, 10) }}
+            </template>
+          </el-table-column>
 
-        <!-- 更多列... -->
+          <el-table-column
+            prop="合同编号"
+            label="合同编号"
+            sortable
+            align="center"
+          >
+            <template #default="{ row }">
+              <el-link type="primary" @click="handleViewDetail(row)">
+                {{ row.合同编号 || "-" }}
+              </el-link>
+            </template>
+          </el-table-column>
 
-        <!-- 操作列 -->
-        <el-table-column label="操作" align="center" fixed="right" width="200">
-          <template #default="{ row }">
-            <div class="flex w-full justify-evenly">
-              <!-- <el-link
+          <el-table-column
+            prop="合同名称"
+            label="合同名称"
+            sortable
+            align="center"
+          >
+            <template #default="{ row }">{{ row.合同名称 || "-" }}</template>
+          </el-table-column>
+
+          <el-table-column
+            prop="合同类型"
+            label="合同类型"
+            sortable
+            align="center"
+          />
+
+          <el-table-column
+            prop="业务类型"
+            label="业务类型"
+            sortable
+            align="center"
+          />
+
+          <el-table-column
+            prop="对方公司名称"
+            label="对方公司名称"
+            sortable
+            align="center"
+          />
+
+          <!-- 更多列... -->
+
+          <!-- 操作列 -->
+          <el-table-column
+            label="操作"
+            align="center"
+            fixed="right"
+            width="200"
+          >
+            <template #default="{ row }">
+              <div class="flex w-full justify-evenly">
+                <!-- <el-link
                 v-if="checkIsAuditData(row)"
                 type="primary"
                 @click="handleAudit(row)"
               >
                 审核
               </el-link> -->
-              <el-link type="primary" @click="handleViewDetail(row)">
-                查看
-              </el-link>
-              <el-link
-                v-if="row['状态'] === '有效'"
-                type="primary"
-                @click="handleResetAudit(row)"
-              >
-                设为无效
-              </el-link>
-              <el-link type="danger" @click="handleDelete(row)">删除</el-link>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-    </template>
-    <!-- 自定义弹窗 -->
-    <template #dialogs>
-      <exportConfigDialog
-        v-model:visible="exportConfigDialogVisible"
-        :loading="exportLoading"
-        :form="exportForm"
-        @confirm="handleConfirmExportConfig"
-        @cancel="handleCloseExportConfigDialog"
-      />
-    </template>
-
-    <!-- 自定义右侧操作 -->
-    <template #moreOperations>
-      <el-button
-        v-if="showSelection"
-        icon="delete"
-        type="danger"
-        :disabled="selectedRows.length === 0"
-        @click="handleBatchDelete"
-      >
-        确认删除
-      </el-button>
-      <el-dropdown trigger="click" class="ml-4">
-        <el-button>
-          更多功能
-          <el-icon><ArrowDown /></el-icon>
-        </el-button>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="toggleDeleteButton">
-              <span class="text-red-5">批量删除</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-    </template>
-  </BaseListPage>
-  <!-- 弹窗 -->
-  <el-dialog
-    v-model="customImportDateVisible"
-    align-center
-    title="指定时间范围"
-    width="600px"
-    style="padding-right: 0"
-  >
-    <el-form ref="customForm" label-width="auto" :model="customFormData">
-      <el-form-item label="选择时间" prop="dateRange">
-        <el-date-picker
-          v-model="customFormData.dateRange"
-          type="daterange"
-          range-separator="到"
-          start-placeholder="起始日期"
-          end-placeholder="结束日期"
-          style="width: 100%"
+                <el-link type="primary" @click="handleViewDetail(row)">
+                  查看
+                </el-link>
+                <el-link
+                  v-if="row['状态'] === '有效'"
+                  type="primary"
+                  @click="handleResetAudit(row)"
+                >
+                  设为无效
+                </el-link>
+                <el-link type="danger" @click="handleDelete(row)">删除</el-link>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
+      <!-- 自定义弹窗 -->
+      <template #dialogs>
+        <exportConfigDialog
+          v-model:visible="exportConfigDialogVisible"
+          :loading="exportLoading"
+          :form="exportForm"
+          @confirm="handleConfirmExportConfig"
+          @cancel="handleCloseExportConfigDialog"
         />
-      </el-form-item>
-    </el-form>
-    <template v-slot:footer>
-      <span class="dialog-footer">
-        <el-button @click="customImportDateVisible = false">取 消</el-button>
+      </template>
+
+      <!-- 自定义右侧操作 -->
+      <template #moreOperations>
         <el-button
-          type="primary"
-          :loading="customDateLoading"
-          @click="handleConfirmCustomDate"
+          v-if="showSelection"
+          icon="delete"
+          type="danger"
+          :disabled="selectedRows.length === 0"
+          @click="handleBatchDelete"
         >
-          确 定
+          确认删除
         </el-button>
-      </span>
-    </template>
-  </el-dialog>
+        <el-dropdown trigger="click" class="ml-4">
+          <el-button>
+            更多功能
+            <el-icon><ArrowDown /></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="toggleDeleteButton">
+                <span class="text-red-5">批量删除</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </template>
+    </BaseListPage>
+    <!-- 弹窗 -->
+    <el-dialog
+      v-model="customImportDateVisible"
+      align-center
+      title="指定时间范围"
+      width="600px"
+      style="padding-right: 0"
+    >
+      <el-form ref="customForm" label-width="auto" :model="customFormData">
+        <el-form-item label="选择时间" prop="dateRange">
+          <el-date-picker
+            v-model="customFormData.dateRange"
+            type="daterange"
+            range-separator="到"
+            start-placeholder="起始日期"
+            end-placeholder="结束日期"
+            style="width: 100%"
+          />
+        </el-form-item>
+      </el-form>
+      <template v-slot:footer>
+        <span class="dialog-footer">
+          <el-button @click="customImportDateVisible = false">取 消</el-button>
+          <el-button
+            type="primary"
+            :loading="customDateLoading"
+            @click="handleConfirmCustomDate"
+          >
+            确 定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -189,7 +222,6 @@ import {
   queryDingTalkContractLedger,
   syncDingTalkContractLedger,
 } from "@/api/businessStandBook/dingding";
-import { Message } from "@element-plus/icons-vue/dist/types";
 
 // 页面配置
 const pageConfig = {
@@ -199,17 +231,25 @@ const pageConfig = {
   exportVisible: true,
   filterItems: [
     {
-      label: "报表时间",
+      label: "审批时间",
       prop: "时间跨度",
       value: [null, new Date()],
       inputType: "daterange",
       order: 1,
     },
     {
-      label: "报表类型",
-      prop: "聚合标签",
+      label: "购销类型",
+      prop: "购销类型",
       value: null,
-      options: ["企业年报", "企业月报"],
+      options: ["全部", "销售合同", "采购合同"],
+      inputType: "select",
+      order: 3,
+    },
+    {
+      label: "合同类型",
+      prop: "合同类型",
+      value: null,
+      options: ["全部", "贸易类", "服务类"],
       inputType: "select",
       order: 3,
     },
@@ -238,6 +278,7 @@ const {
   handleFilter,
   handleResetFilter,
   handlePageChange,
+  handleSizeChange,
   handleDelete,
   handleBatchDelete,
   toggleDeleteButton,
