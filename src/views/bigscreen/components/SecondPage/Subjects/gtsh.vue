@@ -135,16 +135,16 @@
       <Right3
         :data="[
           {
-            profit: -2284.19,
+            profit: 167.74,
           },
           {
-            profit: -2184.19,
+            profit: 3216.55,
           },
           {
-            profit: -2484.19,
+            profit: 2660.77,
           },
           {
-            profit: -2084.19,
+            profit: 3822.8,
           },
         ]"
       />
