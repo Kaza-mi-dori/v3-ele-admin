@@ -58,11 +58,11 @@
           :data="[
             {
               planned: 280000.0,
-              actual: 287651.14,
+              actual: 287494.07,
             },
             {
               planned: 300000.0,
-              actual: 287494.07,
+              actual: 497332.44,
             },
             {
               planned: 320000.0,
