@@ -75,6 +75,18 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           // 重写路径，将 /tmap-api 开头的请求路径去掉 /tmap-api
           rewrite: (path) => path.replace(/^\/tmap-api/, ""),
         },
+        // 测试监控拉取
+        "/monitor-api": {
+          // target: "https://open.ys7.com",
+          target: "https://rtmp01open.ys7.com:9188",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/monitor-api/, ""),
+        },
+        "/video-api": {
+          target: "https://open.ys7.com",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/video-api/, ""),
+        },
       },
     },
     plugins: [
