@@ -12,6 +12,8 @@
 
 // 由于最长使用的索引是数据时间，所以需要将数据时间作为key
 
+import Decimal from "decimal.js";
+
 interface ProductData {
   指标类型: string;
   公司: string;
@@ -176,6 +178,18 @@ const organizationTypes = {
   成品油: ["汽油", "柴油"],
   原油: ["原油产品"],
 };
+
+/**
+ * 使用 Decimal 类型安全地相加两个值
+ * @param {number|string} originalValue 原始值
+ * @param {number|string} incrementValue 增量值
+ * @returns {number} 相加后的结果
+ */
+function safeDecimalAdd(originalValue, incrementValue) {
+  return new Decimal(originalValue || 0)
+    .plus(new Decimal(incrementValue || 0))
+    .toNumber();
+}
 
 function initReverseMap() {
   // 反向映射：公司到组织的映射
@@ -503,9 +517,12 @@ function buildYearOrgCache(keyIndexType: string, year: string, data: any[]) {
       .filter((month) => month.startsWith(year))
       .forEach((month) => {
         const monthData = monthDatas[month];
-        orgAggData.计划值 += monthData.计划值;
-        orgAggData.实际值 += monthData.实际值;
-        orgAggData.年累计值 += monthData.年累计值;
+        orgAggData.计划值 = safeDecimalAdd(orgAggData.计划值, monthData.计划值);
+        orgAggData.实际值 = safeDecimalAdd(orgAggData.实际值, monthData.实际值);
+        orgAggData.年累计值 = safeDecimalAdd(
+          orgAggData.年累计值,
+          monthData.年累计值
+        );
       });
 
     yearCache.byOrg[keyIndexType][org][year] = orgAggData;
@@ -561,9 +578,18 @@ function buildMonthOrgCache(keyIndexType: string, month: string, data: any[]) {
       }
 
       // 累加数值
-      companyDataMap[company].实际值 += item.当期实际值;
-      companyDataMap[company].年累计值 += item.年累计值;
-      companyDataMap[company].计划值 += item.当期计划值;
+      companyDataMap[company].实际值 = safeDecimalAdd(
+        companyDataMap[company].实际值,
+        item.当期实际值
+      );
+      companyDataMap[company].年累计值 = safeDecimalAdd(
+        companyDataMap[company].年累计值,
+        item.年累计值
+      );
+      companyDataMap[company].计划值 = safeDecimalAdd(
+        companyDataMap[company].计划值,
+        item.当期计划值
+      );
     });
 
     // 构建组织级数据
@@ -584,13 +610,16 @@ function buildMonthOrgCache(keyIndexType: string, month: string, data: any[]) {
 
     // 将组织级数据添加到缓存中
     Object.values(companyDataMap).forEach((companyData) => {
-      orgAggData.计划值 += companyData.计划值;
-      orgAggData.实际值 += companyData.实际值;
-      orgAggData.年累计值 += companyData.年累计值;
-      orgAggData.环比率 += companyData.环比率;
-      orgAggData.环比值 += companyData.环比值;
-      orgAggData.同比率 += companyData.同比率;
-      orgAggData.同比值 += companyData.同比值;
+      orgAggData.计划值 = safeDecimalAdd(orgAggData.计划值, companyData.计划值);
+      orgAggData.实际值 = safeDecimalAdd(orgAggData.实际值, companyData.实际值);
+      orgAggData.年累计值 = safeDecimalAdd(
+        orgAggData.年累计值,
+        companyData.年累计值
+      );
+      orgAggData.环比率 = safeDecimalAdd(orgAggData.环比率, companyData.环比率);
+      orgAggData.环比值 = safeDecimalAdd(orgAggData.环比值, companyData.环比值);
+      orgAggData.同比率 = safeDecimalAdd(orgAggData.同比率, companyData.同比率);
+      orgAggData.同比值 = safeDecimalAdd(orgAggData.同比值, companyData.同比值);
     });
 
     monthCache.byOrg[keyIndexType][org][month] = orgAggData;
@@ -653,9 +682,18 @@ function buildYearProductTypeCache(
       .filter((month) => month.startsWith(year))
       .forEach((month) => {
         const monthData = monthDatas[month];
-        productTypeAggData.计划值 += monthData.计划值;
-        productTypeAggData.实际值 += monthData.实际值;
-        productTypeAggData.年累计值 += monthData.年累计值;
+        productTypeAggData.计划值 = safeDecimalAdd(
+          productTypeAggData.计划值,
+          monthData.计划值
+        );
+        productTypeAggData.实际值 = safeDecimalAdd(
+          productTypeAggData.实际值,
+          monthData.实际值
+        );
+        productTypeAggData.年累计值 = safeDecimalAdd(
+          productTypeAggData.年累计值,
+          monthData.年累计值
+        );
       });
 
     yearCache.byProductType[keyIndexType][productType][year] =
@@ -718,9 +756,18 @@ function buildMonthProductTypeCache(
       }
 
       // 累加数值
-      productDataMap[product].实际值 += item.当期实际值;
-      productDataMap[product].年累计值 += item.年累计值;
-      productDataMap[product].计划值 += item.当期计划值;
+      productDataMap[product].实际值 = safeDecimalAdd(
+        productDataMap[product].实际值,
+        item.当期实际值
+      );
+      productDataMap[product].年累计值 = safeDecimalAdd(
+        productDataMap[product].年累计值,
+        item.年累计值
+      );
+      productDataMap[product].计划值 = safeDecimalAdd(
+        productDataMap[product].计划值,
+        item.当期计划值
+      );
     });
 
     // 构建产品类型级数据
@@ -741,9 +788,18 @@ function buildMonthProductTypeCache(
 
     // 将产品类型级数据添加到缓存中
     Object.values(productDataMap).forEach((productData) => {
-      productTypeAggData.计划值 += productData.计划值;
-      productTypeAggData.实际值 += productData.实际值;
-      productTypeAggData.年累计值 += productData.年累计值;
+      productTypeAggData.计划值 = safeDecimalAdd(
+        productTypeAggData.计划值,
+        productData.计划值
+      );
+      productTypeAggData.实际值 = safeDecimalAdd(
+        productTypeAggData.实际值,
+        productData.实际值
+      );
+      productTypeAggData.年累计值 = safeDecimalAdd(
+        productTypeAggData.年累计值,
+        productData.年累计值
+      );
     });
 
     monthCache.byProductType[keyIndexType][productType][month] =
@@ -801,9 +857,18 @@ function buildYearCompanyCache(
       .filter((month) => month.startsWith(year))
       .forEach((month) => {
         const monthData = monthDatas[month];
-        companyAggData.计划值 += monthData.计划值;
-        companyAggData.实际值 += monthData.实际值;
-        companyAggData.年累计值 += monthData.年累计值;
+        companyAggData.计划值 = safeDecimalAdd(
+          companyAggData.计划值,
+          monthData.计划值
+        );
+        companyAggData.实际值 = safeDecimalAdd(
+          companyAggData.实际值,
+          monthData.实际值
+        );
+        companyAggData.年累计值 = safeDecimalAdd(
+          companyAggData.年累计值,
+          monthData.年累计值
+        );
       });
 
     yearCache.byCompany[keyIndexType][company][year] = companyAggData;
@@ -855,9 +920,18 @@ function buildMonthCompanyCache(
 
     // 累加数值
     companyDataRows.forEach((item) => {
-      companyAggData.实际值 += item.当期实际值;
-      companyAggData.年累计值 += item.年累计值;
-      companyAggData.计划值 += item.当期计划值;
+      companyAggData.实际值 = safeDecimalAdd(
+        companyAggData.实际值,
+        item.当期实际值
+      );
+      companyAggData.年累计值 = safeDecimalAdd(
+        companyAggData.年累计值,
+        item.年累计值
+      );
+      companyAggData.计划值 = safeDecimalAdd(
+        companyAggData.计划值,
+        item.当期计划值
+      );
     });
 
     monthCache.byCompany[keyIndexType][company][month] = companyAggData;
@@ -910,9 +984,18 @@ function buildMonthProductCache(
 
     // 累加数值
     productDataRows.forEach((item) => {
-      productAggData.实际值 += item.当期实际值;
-      productAggData.年累计值 += item.年累计值;
-      productAggData.计划值 += item.当期计划值;
+      productAggData.实际值 = safeDecimalAdd(
+        productAggData.实际值,
+        item.当期实际值
+      );
+      productAggData.年累计值 = safeDecimalAdd(
+        productAggData.年累计值,
+        item.年累计值
+      );
+      productAggData.计划值 = safeDecimalAdd(
+        productAggData.计划值,
+        item.当期计划值
+      );
     });
 
     monthCache.byProduct[keyIndexType][product][month] = productAggData;
@@ -970,9 +1053,18 @@ function buildYearProductCache(
       .filter((month) => month.startsWith(year))
       .forEach((month) => {
         const monthData = monthDatas[month];
-        productAggData.计划值 += monthData.计划值;
-        productAggData.实际值 += monthData.实际值;
-        productAggData.年累计值 += monthData.年累计值;
+        productAggData.计划值 = safeDecimalAdd(
+          productAggData.计划值,
+          monthData.计划值
+        );
+        productAggData.实际值 = safeDecimalAdd(
+          productAggData.实际值,
+          monthData.实际值
+        );
+        productAggData.年累计值 = safeDecimalAdd(
+          productAggData.年累计值,
+          monthData.年累计值
+        );
       });
 
     yearCache.byProduct[keyIndexType][product][year] = productAggData;
@@ -1040,9 +1132,9 @@ function buildMonthOrgAndProductTypeCache(
 
       // 累加数值
       productTypeDataRows.forEach((item) => {
-        aggData.实际值 += item.当期实际值;
-        aggData.年累计值 += item.年累计值;
-        aggData.计划值 += item.当期计划值;
+        aggData.实际值 = safeDecimalAdd(aggData.实际值, item.当期实际值);
+        aggData.年累计值 = safeDecimalAdd(aggData.年累计值, item.年累计值);
+        aggData.计划值 = safeDecimalAdd(aggData.计划值, item.当期计划值);
       });
 
       monthCache.byOrgAndProductType[keyIndexType][org][productType][month] =
@@ -1112,9 +1204,9 @@ function buildYearOrgAndProductTypeCache(
       // 累加数值
       const monthDataRows = orgAndProductTypeDataMap[org][productType];
       monthDataRows.forEach((item) => {
-        aggData.实际值 += item.当期实际值;
-        aggData.年累计值 += item.年累计值;
-        aggData.计划值 += item.当期计划值;
+        aggData.实际值 = safeDecimalAdd(aggData.实际值, item.当期实际值);
+        aggData.年累计值 = safeDecimalAdd(aggData.年累计值, item.年累计值);
+        aggData.计划值 = safeDecimalAdd(aggData.计划值, item.当期计划值);
       });
 
       yearCache.byOrgAndProductType[keyIndexType][org][productType][year] =
