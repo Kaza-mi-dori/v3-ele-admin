@@ -11,6 +11,9 @@ import { ref, onMounted, shallowRef } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
 import { Decimal } from "decimal.js";
 
+const companyName = inject("companyName");
+const router = useRouter();
+
 const props = defineProps<{
   data?: any;
 }>();
@@ -51,6 +54,14 @@ const initChart = () => {
     document.getElementById("chart2-middle-3") as HTMLDivElement
   );
   chart.value.clear();
+  chart.value.on("click", "series.bar", (params: any) => {
+    router.push({
+      name: "Revenue",
+      query: {
+        companyName: companyName as unknown as string,
+      },
+    });
+  });
   const data = getRandomData();
 
   const option = {
