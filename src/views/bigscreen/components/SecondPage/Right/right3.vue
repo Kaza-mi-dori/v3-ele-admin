@@ -9,6 +9,7 @@ import Model1 from "../Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
+import { Decimal } from "decimal.js";
 
 const props = defineProps<{
   data?: any;
@@ -43,12 +44,17 @@ const initChart = () => {
   const data = getRandomData(months);
   const accuData: number[] = [];
   const monthData: number[] = [];
+  // 使用 Decimal 进行高精度累加
   data.reduce((acc, curr) => {
-    const sum = +(acc + curr).toFixed(2); // 每次累加后,用Number.toFixed(2)保留/修正为2位小数（注意：这会返回字符串,需要用+转回数字）
-    accuData.push(sum);
-    monthData.push(curr);
-    return sum; // 返回修正后的累加值
-  }, 0);
+    const current = new Decimal(curr); // 将当前值转换为 Decimal 类型
+    const sum = acc.plus(current); // 使用 Decimal 的加法
+
+    // 将结果转换为数字并存入数组
+    accuData.push(sum.toNumber());
+    monthData.push(current.toNumber());
+    // 返回 Decimal 类型的累加值
+    return sum;
+  }, new Decimal(0)); // 初始值为 Decimal 类型的 0
   const option = {
     tooltip: {
       trigger: "axis",
