@@ -19,6 +19,7 @@ import { DataIndicesAPI } from "@/api/dataIndices";
 import { useRouter } from "vue-router";
 import sassvariables from "@/styles/variables.module.scss";
 import { useDataIndex } from "@/hooks/useDataIndex";
+import { Decimal } from "decimal.js";
 
 const mode = 1; // 获取数据方式：0-报表管理；1-指标管理
 
@@ -99,7 +100,7 @@ const initData = async () => {
       allData.push({
         year,
         type: "revenue",
-        value: parseFloat(item.数据) / 10000,
+        value: new Decimal(item.数据).div(10000).toNumber(),
       });
     });
 
@@ -108,7 +109,7 @@ const initData = async () => {
       allData.push({
         year,
         type: "profit",
-        value: parseFloat(item.数据) / 10000,
+        value: new Decimal(item.数据).div(10000).toNumber(),
       });
     });
 
