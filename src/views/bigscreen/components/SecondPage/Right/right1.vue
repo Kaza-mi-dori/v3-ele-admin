@@ -35,7 +35,13 @@ import sassvariables from "@/styles/variables.module.scss";
 import { ref, computed } from "vue";
 
 const props = defineProps<{
-  data?: { name: string; value: number; ratio: number }[];
+  data?: {
+    order?: number;
+    unit?: string;
+    name: string;
+    value: number;
+    ratio?: number;
+  }[];
 }>();
 
 const tradePartners = ref([]);
@@ -89,7 +95,7 @@ const initChart = (data: any) => {
     yAxis: {
       // type: "category",
       type: "value",
-      name: "单位：万元",
+      name: "单位：亿元",
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,

@@ -86,12 +86,12 @@
               actual: 378560.92,
             },
             {
-              planned: 0,
+              planned: 341666.6667,
               actual: 392971.37,
             },
             {
-              planned: 0,
-              actual: 0,
+              planned: 341666.6667,
+              actual: 299687.92,
             },
           ]"
         />
@@ -101,47 +101,40 @@
     <div class="b-right">
       <Right1
         :data="[
-          { order: 1, name: '香港荣盛', value: 11.28, unit: '亿元' },
+          {
+            order: 1,
+            name: 'KINGBACK TRADING LIMITED',
+            value: 11.42,
+            unit: '亿元',
+          },
           {
             order: 2,
-            name: 'GALAXY UNIVERSAL LIMITED',
-            value: 9.02,
+            name: 'DYNAMIC TRADING CO. LIMITED',
+            value: 6.78,
             unit: '亿元',
           },
           {
             order: 3,
-            name: 'DYNAMIC TRADING CO., LIMITED',
-            value: 7.13,
+            name: '香港荣盛',
+            value: 4.12,
             unit: '亿元',
           },
           {
             order: 4,
-            name: 'GATHER STRENGTH INTERNATIONAL TRADING PTE. LTD.',
-            value: 4.25,
+            name: '大连广宏能源有限公司',
+            value: 2.19,
             unit: '亿元',
           },
           {
             order: 5,
             name: '浙江浙石化销售有限公司',
-            value: 4.01,
+            value: 0.72,
             unit: '亿元',
           },
           {
             order: 6,
-            name: '荣和君泰（大连）国际贸易有限公司',
-            value: 1.73,
-            unit: '亿元',
-          },
-          {
-            order: 7,
-            name: '荣和君泰（大连）国际贸易有限公司',
-            value: 0.56,
-            unit: '亿元',
-          },
-          {
-            order: 8,
-            name: '荣和君泰（大连）国际贸易有限公司',
-            value: 0.52,
+            name: '恒力能源',
+            value: 0.62,
             unit: '亿元',
           },
         ]"
@@ -162,6 +155,9 @@
           },
           {
             profit: 3822.8,
+          },
+          {
+            profit: 1758.34,
           },
         ]"
       />
