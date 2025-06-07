@@ -9,10 +9,14 @@ import { dir } from "console";
 import Model1 from "../Model1/index.vue";
 import { ContractTypeEnum, ContractTypeEnumMap } from "@/enums/BusinessEnum";
 import * as echarts from "echarts";
-import { text } from "stream/consumers";
+import { businessSubjects } from "@/views/bigscreen/components/constants";
 import { onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 const chart = shallowRef<echarts.ECharts | null>(null);
+
+const router = useRouter();
+const route = useRoute();
 
 const props = defineProps<{
   /** 数据 */
@@ -24,6 +28,18 @@ const initChart2Left2 = () => {
   chart.value = echarts.init(
     document.getElementById("chart2-left-2") as HTMLDivElement
   );
+  chart.value.on("click", "series.pie", (params: any) => {
+    const companyName = route.path.split("/").pop();
+    const subject = businessSubjects.find(
+      (item: any) => item.name === companyName
+    );
+    if (subject) {
+      router.push({
+        name: "ContractList",
+        query: { companyName: subject.label },
+      });
+    }
+  });
   const option = {
     tooltip: {
       trigger: "item",

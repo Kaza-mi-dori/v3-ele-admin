@@ -10,7 +10,12 @@
           </div>
           <div class="annual-total">
             <div class="scale">年度累计</div>
-            <div class="year-num">{{ formatNumber(item.year) }}</div>
+            <div
+              class="year-num"
+              @click="handleClickYearNumber(titleArr[index].title)"
+            >
+              {{ formatNumber(item.year) }}
+            </div>
             <div>{{ item.yearUnit || "万元" }}</div>
           </div>
           <div class="monthly-total">
@@ -28,8 +33,10 @@
 import buyIcon from "../../../img/buy.png";
 import sellIcon from "../../../img/sell.png";
 import incomeIcon from "../../../img/income.png";
+import { useRouter } from "vue-router";
 
-import { ref, defineProps } from "vue";
+const router = useRouter();
+const companyName = inject("companyName");
 
 // 接收父组件传入的数据
 const props = defineProps({
@@ -39,6 +46,26 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+const handleClickYearNumber = (title: string) => {
+  let keyIndexRouteName;
+  switch (title) {
+    case "累计营收":
+      keyIndexRouteName = "Revenue";
+      break;
+    case "累计利润":
+      keyIndexRouteName = "Profit";
+      break;
+    default:
+      break;
+  }
+  if (keyIndexRouteName) {
+    router.push({
+      name: keyIndexRouteName,
+      query: { companyName: companyName as unknown as string },
+    });
+  }
+};
 
 const titleArr = ref([
   {
@@ -112,6 +139,11 @@ const formatNumber = (num: number | string): string => {
   }
   .year-num {
     color: #12f5fb;
+    // 可点击
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
   }
   .month-num {
     color: #d6e337;

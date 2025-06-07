@@ -206,7 +206,8 @@ import Right2 from "@/views/bigscreen/components/SecondPage/Right/right2.vue";
 import Right3 from "@/views/bigscreen/components/SecondPage/Right/right3.vue";
 import { BusinessEnum, BusinessEnumMap } from "@/enums/BusinessEnum";
 
-import { ref } from "vue";
+// 单向传递公司名称给子组件
+const companyName = provide("companyName", "广投石化");
 
 // TODO 统一获取数据后单向传递
 const subData = reactive({});

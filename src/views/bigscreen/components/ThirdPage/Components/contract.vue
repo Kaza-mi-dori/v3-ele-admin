@@ -32,8 +32,14 @@
       </div>
     </div>
     <div class="content-middle">
-      <div id="chart-contract-1" style="flex: 1; height: 300px; margin: auto" />
-      <div id="chart-contract-2" style="flex: 1; height: 300px; margin: auto" />
+      <div
+        id="chart-contract-1"
+        style="flex: 0.8; height: 300px; margin: auto"
+      />
+      <div
+        id="chart-contract-2"
+        style="flex: 1.2; height: 300px; margin: auto"
+      />
     </div>
     <div class="content-form">
       <el-table
@@ -311,9 +317,9 @@ const queryForm: Ref<any> = ref({
 });
 
 const pagination: Ref<any> = ref({
-  total: 100,
+  total: 0,
   pageSizes: [10, 20, 50, 100],
-  pageSize: 10, // //每页大小
+  pageSize: 20, // //每页大小
   currentPage: 1, // 当前页
 });
 
@@ -323,7 +329,7 @@ async function initTableData() {
     // 页码: pagination.value.currentPage,
     // 页容量: pagination.value.pageSize,
     页码: 1,
-    页容量: 100,
+    页容量: 999,
   })
     .then((res: any) => {
       tableData.value = res["当前记录"].map((item: any) => {
@@ -374,7 +380,7 @@ const calculateContractTypeData = () => {
       percentage: ((typeMap[type] / totalCount) * 100).toFixed(2) + "%",
     };
   });
-  console.log("chartData", chartData, totalAmount);
+  // console.log("chartData", chartData, totalAmount);
   return { chartData, totalAmount, totalCount };
 };
 

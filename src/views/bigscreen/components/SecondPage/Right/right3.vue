@@ -15,6 +15,9 @@ const props = defineProps<{
   data?: any;
 }>();
 
+const companyName = inject("companyName");
+const router = useRouter();
+
 const months = [
   "1月",
   "2月",
@@ -41,6 +44,16 @@ const initChart = () => {
     document.getElementById("chart2-right-3") as HTMLDivElement
   );
   chart.value.clear();
+  chart.value.on("click", (params: any) => {
+    if (params.seriesType === "bar") {
+      router.push({
+        name: "Profit",
+        query: {
+          companyName: companyName as unknown as string,
+        },
+      });
+    }
+  });
   const data = getRandomData(months);
   const accuData: number[] = [];
   const monthData: number[] = [];
@@ -59,6 +72,7 @@ const initChart = () => {
     tooltip: {
       trigger: "axis",
     },
+    color: ["#DB8943", "crimson"],
     legend: {
       orient: "horizontal", // 水平排列
       top: 20,
