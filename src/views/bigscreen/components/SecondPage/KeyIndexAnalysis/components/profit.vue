@@ -639,6 +639,7 @@ const initChart1 = (type: string = "bar") => {
       {
         ...option.series[0],
         type: "line",
+        data: data.chart1.dataPlan,
         markLine: {
           lineStyle: {
             type: "dashed",
@@ -650,7 +651,7 @@ const initChart1 = (type: string = "bar") => {
         ...option.series[1],
         type: "line",
         // data: [110, 220],
-        data: data.chart1.data,
+        data: data.chart1.dataReal,
       },
     ],
   };
@@ -1363,7 +1364,7 @@ const initData = async () => {
       metricItem: [
         {
           title: "累计",
-          value: testData[0].年累计值,
+          value: testData[0].实际值,
           unit: "万元",
         },
         {
