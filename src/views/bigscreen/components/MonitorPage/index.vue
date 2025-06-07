@@ -62,7 +62,7 @@
           @dragover="(e) => e.preventDefault()"
         >
           <div
-            v-if="monitors[monitor - 1]?.name"
+            v-if="monitors[monitor - 1] && monitors[monitor - 1].name"
             class="absolute top-1 left-2 color-black font-700"
           >
             {{ monitors[monitor - 1].name }}
@@ -194,14 +194,21 @@
 import { ref, onMounted } from "vue";
 import { MonitorAPI } from "@/api/monitor";
 import { ElTree } from "element-plus";
+import {
+  getDeviceList,
+  getCameraList,
+  getMonitorUrl,
+} from "@/api/thirdSystem/ysy";
 import MonitorCard from "./MonitorCard.vue";
 
 interface Monitor {
   [key: string]: any;
 }
 
-const monitors: Ref<Monitor[]> = ref([]);
-const nodelist = ref([
+// 实际加载的监控
+const monitors = ref<Monitor[]>([]);
+// 监控树结构
+const nodelist = ref<any[]>([
   {
     id: 1,
     label: "监控(2/2)",
@@ -398,6 +405,58 @@ const resize = () => {
 };
 
 /**
+ * 初始化通道列表
+ */
+const initVideoChannelList = async (mode: "outer" | "inner") => {
+  switch (mode) {
+    case "inner":
+      const { data: deviceList } = await getDeviceList();
+      const { data: cameraList } = await getCameraList();
+      if (deviceList && deviceList.length > 0) {
+        nodelist.value = deviceList.map((device: any) => {
+          return {
+            id: device.deviceSerial,
+            label: device.deviceName,
+            children: cameraList
+              .filter((item: any) => {
+                return item.deviceSerial === device.deviceSerial;
+              })
+              .map((item: any) => {
+                return {
+                  id: item.channelNo,
+                  label: item.channelName,
+                };
+              }),
+          };
+        });
+      }
+      break;
+    case "outer":
+      const res: any = await MonitorAPI.getMonitorList();
+      // monitors.value = res["当前记录"];
+      const treeMap: any = {};
+      res.forEach((item: any) => {
+        if (!treeMap[item["组织名称"]]) {
+          treeMap[item["组织名称"]] = {
+            id: item["组织名称"],
+            label: item["组织名称"],
+            children: [],
+          };
+        } else {
+          treeMap[item["组织名称"]].children.push({
+            id: item["通道编码"],
+            label: item["名称"],
+          });
+        }
+      });
+      nodelist.value = Object.values(treeMap);
+      console.log(nodelist.value);
+      break;
+  }
+  return;
+};
+
+/**
  * 卸载时清除resize事件
  */
 onUnmounted(() => {
@@ -405,8 +464,8 @@ onUnmounted(() => {
 });
 
 onMounted(async () => {
-  const res: any = await MonitorAPI.getMonitorList();
-  monitors.value = res["当前记录"];
+  await initVideoChannelList("inner");
+
   window.addEventListener("resize", resize);
   // console.log(monitors.value);
 });
@@ -429,13 +488,13 @@ onMounted(async () => {
       }
     }
     .menu-box-list {
-      @apply p-2;
+      @apply p-2 h-[calc(100%-60px-24px)] overflow-auto;
     }
     .__collapse {
       @apply absolute top-50% right-0;
     }
     .__return-entry {
-      @apply absolute bottom-0 right-50% transform-translate-x-50%;
+      @apply absolute bottom-0 right-50% transform-translate-x-50% h-4 cursor-pointer lh-4;
     }
     transition: all ease 0.3s;
   }

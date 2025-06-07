@@ -2,7 +2,7 @@
   <div class="metric-item">
     <div class="metric-item__title" :style="titleStyle">{{ title }}</div>
     <div class="metric-item__value" :style="valueStyle">
-      {{ value }}
+      {{ Number(value).toFixed(2) }}
       <span v-if="unit" class="metric-item__unit">{{ unit }}</span>
     </div>
     <img v-if="arrowLine" :src="ArrowLine" class="metric-item__arrow-line" />

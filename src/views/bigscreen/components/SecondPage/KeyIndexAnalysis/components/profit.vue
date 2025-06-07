@@ -539,7 +539,7 @@ const initChart1 = (type: string = "bar") => {
       show: true,
       // icon: "circle",
       top: "3%",
-      data: ["计划经利润入", "实际经利润入"],
+      data: ["计划利润", "实际利润"],
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
       },
@@ -597,7 +597,7 @@ const initChart1 = (type: string = "bar") => {
     series: [
       {
         type: "bar",
-        name: "计划经利润入",
+        name: "计划利润",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -617,7 +617,7 @@ const initChart1 = (type: string = "bar") => {
       },
       {
         type: "bar",
-        name: "实际经利润入",
+        name: "实际利润",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -1448,7 +1448,7 @@ const initData = async () => {
         return {
           name: item.维度值,
           value: [
-            item.实际值,
+            Number(item.实际值.toFixed(2)),
             item.同比增幅,
             item.环比值,
             item.计划值
