@@ -211,7 +211,7 @@ const yearData = {
     { name: "恒润", value: 1000, count: 100 },
   ],
   riskContractDetail: [
-    { name: "广投石化", value: 40, count: 4 },
+    { name: "广投石化", value: 0, count: 0 },
     // { name: "开燃公司", value: 10, count: 1 },
   ],
 };
@@ -749,9 +749,17 @@ const initData = async () => {
     // 更新总指标
     stats.value[0].value = purchaseData.value.toFixed(0);
     stats.value[1].value = saleData.value.toFixed(0);
-    // stats.value[2].value = storageData.value.toFixed(2);
+    stats.value[2].value =
+      (purchaseData?.count || 0) +
+      (saleData?.count || 0) +
+      (storageData?.count || 0) +
+      (transportData?.count || 0) +
+      (riskData?.count || 0);
     // stats.value[3].value = transportData.value.toFixed(2);
-    // stats.value[4].value = riskData.value.toFixed(2);
+    // stats.value[5].value = riskData.value.toFixed(2);
+    stats.value[3].value = 0;
+    stats.value[4].value = 0;
+    stats.value[5].value = 0;
     // const hengrunData
   }
   if (contractType) {
