@@ -152,7 +152,7 @@ const getGsLocation = async () => {
 
 const initVideoChannel = () => {
   // 取4个
-  const videoRefs = [videoRef1, videoRef2, videoRef3, videoRef4];
+  const videoRefs = [videoRef1];
   videoRefs.forEach((ref, index) => {
     if (ref.value) {
       const player = mpegts.createPlayer(
@@ -216,9 +216,12 @@ onMounted(async () => {
         "https://rtmp01open.ys7.com:9188",
         "/monitor-api"
       );
+      // setTimeout(() => {
+      //   ElMessage.info(monitorList.value[i].url);
+      // }, 0);
     }
     nextTick(() => {
-      // initVideoChannel();
+      initVideoChannel();
     });
   }
 });

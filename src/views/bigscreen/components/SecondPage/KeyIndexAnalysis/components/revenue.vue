@@ -1469,9 +1469,9 @@ const initData = async () => {
         return {
           name: item.维度值,
           value: [
-            item.实际值,
-            item.同比增幅,
-            item.环比值,
+            Number(item.实际值.toFixed(2)),
+            Number(item.同比增幅.toFixed(2)),
+            Number(item.环比值.toFixed(2)),
             item.计划值
               ? ((item.实际值 / item.计划值) * 100).toFixed(2) + "%"
               : "",

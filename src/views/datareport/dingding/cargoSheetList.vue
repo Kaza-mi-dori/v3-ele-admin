@@ -94,6 +94,17 @@
           />
 
           <el-table-column
+            prop="合同总额"
+            label="合同金额"
+            sortable
+            align="center"
+          >
+            <template #default="{ row }">
+              {{ row.内容?.合同总额 || "-" }}
+            </template>
+          </el-table-column>
+
+          <el-table-column
             prop="对方公司名称"
             label="对方公司名称"
             sortable

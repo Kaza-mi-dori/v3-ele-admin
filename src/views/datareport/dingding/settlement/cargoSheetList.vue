@@ -71,14 +71,23 @@
             </template>
           </el-table-column>
 
-          <!-- <el-table-column
-          prop="结算名称"
-          label="结算名称"
-          sortable
-          align="center"
-        >
-          <template #default="{ row }">{{ row.结算名称 || "-" }}</template>
-        </el-table-column> -->
+          <el-table-column
+            prop="结算总额"
+            label="结算金额"
+            sortable
+            align="center"
+          >
+            <template #default="{ row }">{{ row.结算总额 || "-" }}</template>
+          </el-table-column>
+
+          <el-table-column
+            prop="结算类型"
+            label="结算类型"
+            sortable
+            align="center"
+          >
+            <template #default="{ row }">{{ row.结算类型 || "-" }}</template>
+          </el-table-column>
 
           <el-table-column prop="正文内容" label="正文内容" align="center">
             <template #default="{ row }">
