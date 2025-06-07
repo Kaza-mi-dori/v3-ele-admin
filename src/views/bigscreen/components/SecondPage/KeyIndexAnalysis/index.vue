@@ -41,6 +41,7 @@ const getProductTypeName = (name: string) => {
 };
 
 onMounted(() => {
+  // 取第一个路由参数("module=")
   const name = route.fullPath.split("/").pop()?.split("?")[0];
   const companyName = getCompanyName(name!);
   const productType = getProductTypeName(name!);
@@ -52,10 +53,10 @@ onMounted(() => {
       title.value = `${companyName}${productType ? `${productType}` : ""}利润`;
       break;
     case "purchase":
-      title.value = `${companyName}${productType ? `${productType}` : ""}采购`;
+      title.value = `${companyName}${productType ? `${productType}` : ""}采购量`;
       break;
     case "sale":
-      title.value = `${companyName}${productType ? `${productType}` : ""}销售`;
+      title.value = `${companyName}${productType ? `${productType}` : ""}销售量`;
       break;
     case "contract":
       title.value = `${companyName}${productType ? `${productType}` : ""}合同`;

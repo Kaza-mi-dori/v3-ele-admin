@@ -38,25 +38,25 @@
       <Left3
         :data="{
           [BusinessEnumMap[BusinessEnum.CPY]]: {
-            history: [0, 0, 1764002, 2324936, 285900],
-            planAmount: 4200000,
-            sellAmount: 1850000,
+            history: [0, 0, 1764002, 2324936, 481796.63],
+            planAmount: 1500000,
+            sellAmount: 481796.63,
           },
           [BusinessEnumMap[BusinessEnum.YY]]: {
-            history: [0, 0, 1764002, 2324936, 285900],
-            planAmount: 4200000,
-            sellAmount: 1850000,
+            history: [0, 0, 1764002, 2324936, 1289045],
+            planAmount: 2700000,
+            sellAmount: 1289045,
           },
           [BusinessEnumMap[BusinessEnum.RLY]]: {
-            history: [0, 0, 1764002, 2324936, 285900],
-            planAmount: 4200000,
-            sellAmount: 1850000,
+            history: [0, 0, 1764002, 2324936, 1850000],
+            planAmount: 400000,
+            sellAmount: 85204.32,
           },
-          [BusinessEnumMap[BusinessEnum.HGCP]]: {
-            history: [0, 0, 1764002, 2324936, 285900],
-            planAmount: 4200000,
-            sellAmount: 1850000,
-          },
+          // [BusinessEnumMap[BusinessEnum.HGCP]]: {
+          //   history: [0, 0, 1764002, 2324936, 285900],
+          //   planAmount: 400000,
+          //   sellAmount: 85204.32,
+          // },
         }"
       />
     </div>
@@ -140,7 +140,35 @@
         ]"
       />
       <div class="b-space" />
-      <Right2 />
+      <Right2
+        :data="[
+          {
+            transactionVolume: 10,
+            tradingVolume: 200,
+            date: '06-07',
+          },
+          {
+            transactionVolume: 10,
+            tradingVolume: 200,
+            date: '06-06',
+          },
+          {
+            transactionVolume: 10,
+            tradingVolume: 200,
+            date: '06-05',
+          },
+          {
+            transactionVolume: 10,
+            tradingVolume: 200,
+            date: '06-04',
+          },
+          {
+            transactionVolume: 10,
+            tradingVolume: 200,
+            date: '06-03',
+          },
+        ]"
+      />
       <div class="b-space" />
       <Right3
         :data="[

@@ -14,10 +14,10 @@
         :label="BusinessEnum.RLY"
         :name="BusinessEnumMap[BusinessEnum.RLY]"
       />
-      <el-tab-pane
+      <!-- <el-tab-pane
         :label="BusinessEnum.HGCP"
         :name="BusinessEnumMap[BusinessEnum.HGCP]"
-      />
+      /> -->
     </Tab>
     <!-- 指标区 -->
     <div class="flex mt-4">

@@ -29,7 +29,7 @@ import Deny from "@/views/bigscreen/components/Common/Deny/index.vue";
 const router = useRouter();
 const hasPermission = ref(true);
 // 页面动态显示内容，由参数决定
-const title: Ref<string> = ref("驾驶舱通用页面");
+const title: Ref<string> = ref("经营驾驶舱");
 const moduleName: Ref<string> = ref("合同台账");
 const filters: Ref<any> = ref({
   /** 日期起始值 */
@@ -212,10 +212,12 @@ onBeforeMount(() => {
   // 捕获/thirdPage/(.*)?
   const path = route.path;
   if (path.includes("/thirdPage/")) {
-    const params = path.split("/")[3];
-    switch (params) {
+    const lastUnit = path.split("/").pop();
+    // const params = path.split("/")[3];
+    switch (lastUnit) {
       case "contract":
-        title.value = "合同台账";
+      case "contractList":
+        title.value = "合同台账分析";
         break;
       case "revenue":
         const companyId = query.companyId;
@@ -227,7 +229,7 @@ onBeforeMount(() => {
         }
         break;
       default:
-        title.value = "驾驶舱通用页面";
+        title.value = "经营驾驶舱";
     }
   }
 });
