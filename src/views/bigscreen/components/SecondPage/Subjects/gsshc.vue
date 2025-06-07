@@ -69,28 +69,28 @@
       <Right1
         :data="[
           {
-            company: '安元实业',
-            amount: 189872.0,
+            name: '安元实业',
+            value: 189872.0,
             ratio: Number((189872 / 577800).toFixed(3)),
           },
           {
-            company: '深圳宝峰',
-            amount: 39952.0,
+            name: '深圳宝峰',
+            value: 39952.0,
             ratio: Number((39952 / 577800).toFixed(3)),
           },
           {
-            company: '胜帮（杭州）能源',
-            amount: 39871.25,
+            name: '胜帮（杭州）能源',
+            value: 39871.25,
             ratio: Number((39871.25 / 577800).toFixed(3)),
           },
           {
-            company: '新疆西部物产贸易',
-            amount: 30217.3,
+            name: '新疆西部物产贸易',
+            value: 30217.3,
             ratio: Number((30217.3 / 577800).toFixed(3)),
           },
           {
-            company: '大榭能源化工（淮北）',
-            amount: 28161.6,
+            name: '大榭能源化工（淮北）',
+            value: 28161.6,
             ratio: Number((28161.6 / 577800).toFixed(3)),
           },
         ]"
