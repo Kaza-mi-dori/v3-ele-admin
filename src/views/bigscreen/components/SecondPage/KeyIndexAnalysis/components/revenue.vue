@@ -565,7 +565,7 @@ const initChart1 = (type: string = "bar") => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: 'sassvariables["bigscreen-primary-color-7"]',
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       axisTick: {
@@ -849,7 +849,7 @@ const initChart31 = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: 'sassvariables["bigscreen-primary-color-7"]',
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       axisTick: {
@@ -1038,7 +1038,7 @@ const initChart41 = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: 'sassvariables["bigscreen-primary-color-7"]',
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       axisTick: {
