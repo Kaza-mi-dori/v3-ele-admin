@@ -9,6 +9,7 @@ import Model1 from "../Model1/index.vue";
 import * as echarts from "echarts";
 import { ref, onMounted, shallowRef } from "vue";
 import sassvariables from "@/styles/variables.module.scss";
+import { Decimal } from "decimal.js";
 
 const props = defineProps<{
   data?: any;
@@ -116,7 +117,9 @@ const initChart = () => {
       {
         name: "计划经营收入",
         type: "bar",
-        data: data.map((item) => item.planned / 10000),
+        data: data.map((item) =>
+          new Decimal(item.planned).div(10000).toNumber()
+        ),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: sassvariables["bigscreen-primary-color-9"] },
@@ -128,7 +131,9 @@ const initChart = () => {
       {
         name: "实际经营收入",
         type: "bar",
-        data: data.map((item) => item.actual / 10000),
+        data: data.map((item) =>
+          new Decimal(item.actual).div(10000).toNumber()
+        ),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: sassvariables["bigscreen-primary-color-3"] },
