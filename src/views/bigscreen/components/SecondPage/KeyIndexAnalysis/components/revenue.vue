@@ -534,8 +534,8 @@ const initChart1 = (type: string = "bar") => {
     monthData = [`${currentYear}-${currentMonth.toString().padStart(2, "0")}`];
   }
 
-  // 柱状图
-  const option = {
+  // 基础配置
+  const baseOption = {
     legend: {
       show: true,
       // icon: "circle",
@@ -595,6 +595,11 @@ const initChart1 = (type: string = "bar") => {
         },
       },
     },
+  };
+
+  // 柱状图配置
+  const optionBar = {
+    ...baseOption,
     series: [
       {
         type: "bar",
@@ -635,11 +640,12 @@ const initChart1 = (type: string = "bar") => {
   };
   // 折线图
   const optionLine = {
-    ...option,
+    ...baseOption,
     series: [
       {
-        ...option.series[0],
         type: "line",
+        name: "计划经营收入",
+        data: data.chart1.dataPlan,
         markLine: {
           lineStyle: {
             type: "dashed",
@@ -648,14 +654,19 @@ const initChart1 = (type: string = "bar") => {
         },
       },
       {
-        ...option.series[1],
         type: "line",
-        // data: [110, 220],
-        data: data.chart1.data,
+        name: "实际经营收入",
+        data: data.chart1.dataReal,
+        markLine: {
+          lineStyle: {
+            type: "dashed",
+            color: sassvariables["bigscreen-primary-color-7"],
+          },
+        },
       },
     ],
   };
-  chart1.value.setOption(type === "bar" ? option : optionLine);
+  chart1.value.setOption(type === "bar" ? optionBar : optionLine);
 };
 const initChart2 = () => {
   if (!chart2.value) {
