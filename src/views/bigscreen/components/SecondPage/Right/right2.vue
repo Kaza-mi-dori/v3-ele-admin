@@ -106,9 +106,6 @@ const initChart = () => {
     yAxis: [
       {
         type: "value",
-        min: 0,
-        max: 100,
-        interval: 20,
         name: "单位：万元",
         nameTextStyle: {
           color: sassvariables["bigscreen-primary-color-7"],
@@ -135,9 +132,6 @@ const initChart = () => {
       },
       {
         type: "value",
-        min: 0,
-        max: 10,
-        interval: 2,
         name: "单位：万吨",
         nameTextStyle: {
           color: sassvariables["bigscreen-primary-color-7"],
