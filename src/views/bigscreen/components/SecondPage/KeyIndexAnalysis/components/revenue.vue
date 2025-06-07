@@ -1364,7 +1364,7 @@ const initData = async () => {
       metricItem: [
         {
           title: "累计",
-          value: Number(testData[0].年累计值.toFixed(2)),
+          value: Number(testData[0].实际值.toFixed(2)),
           unit: "万元",
         },
         {

@@ -35,20 +35,21 @@ import sassvariables from "@/styles/variables.module.scss";
 import { ref, computed } from "vue";
 
 const props = defineProps<{
-  data?: { company: string; amount: number; ratio: number }[];
+  data?: {
+    order?: number;
+    unit?: string;
+    name: string;
+    value: number;
+    ratio?: number;
+  }[];
 }>();
 
-const tradePartners = ref([
-  { company: "公司A", amount: 96, ratio: 10.23 },
-  { company: "公司B", amount: 82, ratio: 8.23 },
-  { company: "公司C", amount: 76, ratio: 7.23 },
-  { company: "公司D", amount: 56, ratio: 5.23 },
-  { company: "公司E", amount: 30, ratio: 3.23 },
-]);
+const tradePartners = ref([]);
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 
 const initChart = (data: any) => {
+  console.log(data, "dat2232a");
   if (!chart.value) {
     chart.value = echarts.init(
       document.getElementById("chart-right-2") as HTMLDivElement
@@ -121,7 +122,7 @@ const initChart = (data: any) => {
       {
         name: "交易金额",
         type: "bar",
-        data: data.map((item) => item.value),
+        data: data.map((item: any) => item.value),
         label: {
           show: true,
           position: "top",
