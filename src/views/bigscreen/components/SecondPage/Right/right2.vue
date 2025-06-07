@@ -145,7 +145,7 @@ const initChart = () => {
           },
         },
         splitLine: {
-          show: true, // 显示分割线
+          show: false, // 不显示分割线
           lineStyle: {
             type: "dashed", // 虚线
             color: sassvariables["bigscreen-primary-color-8"],
