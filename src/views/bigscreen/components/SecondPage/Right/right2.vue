@@ -28,7 +28,12 @@ const props = defineProps<{
 }>();
 
 // 每个类别对应的数据系列
-const dates = getDateOfOneMonth(new Date().toISOString()).slice(22);
+// const dates = getDateOfOneMonth(new Date().toISOString()).slice(22);
+const dates = computed(() => {
+  return props.data
+    ? props.data.map((item: any) => item.date)
+    : getDateOfOneMonth(new Date().toISOString()).slice(22);
+});
 
 // 随机生成收入数据
 const getRandomData = () => {
@@ -37,7 +42,7 @@ const getRandomData = () => {
         tradingVolume: item.tradingVolume, // 销售量
         transactionVolume: item.transactionVolume, // 销售金额
       }))
-    : dates.map(() => ({
+    : dates.value.map(() => ({
         tradingVolume: 0, // 销售量
         transactionVolume: 0, // 销售金额
       }));
@@ -48,8 +53,9 @@ const initChart = () => {
     document.getElementById("chart2-right-2") as HTMLDivElement
   );
   chart.value.clear();
-  const data = getRandomData();
-
+  // const data = getRandomData();
+  const data = props.data || getRandomData();
+  data.sort((a: any, b: any) => (a.date < b.date ? -1 : 1));
   const option = {
     tooltip: {
       trigger: "axis",
@@ -82,7 +88,7 @@ const initChart = () => {
     xAxis: [
       {
         type: "category",
-        data: dates,
+        data: dates.value,
         axisLine: {
           lineStyle: {
             color: sassvariables["bigscreen-primary-color-8"],
@@ -162,7 +168,7 @@ const initChart = () => {
         name: "销售金额",
         type: "bar",
         yAxisIndex: 0, // 指定使用左边的Y轴
-        data: data.map((item) => item.transactionVolume),
+        data: data.map((item: any) => item.transactionVolume),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: sassvariables["bigscreen-primary-color-11"] },
@@ -175,7 +181,7 @@ const initChart = () => {
         name: "销售量",
         type: "bar",
         yAxisIndex: 1, // 指定使用右边的Y轴
-        data: data.map((item) => item.tradingVolume),
+        data: data.map((item: any) => item.tradingVolume),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: sassvariables["bigscreen-primary-color-5"] },

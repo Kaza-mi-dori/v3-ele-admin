@@ -117,6 +117,7 @@ export const OurCompanyEnumMap = {
   [OurCompanyEnum.GSSHC]: "桂盛桂轩",
   [OurCompanyEnum.HRY]: "恒润公司",
   [OurCompanyEnum.SHBK]: "石化板块",
+  广投石化本部: "广投石化本部",
 };
 
 // 全称map
