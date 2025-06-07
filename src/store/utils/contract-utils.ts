@@ -4,7 +4,7 @@
 
 const orgList = [
   "广投石化本部",
-  "广投石化广东分公司",
+  // "广投石化广东分公司",
   "广投石化舟山",
   "永盛仓储",
   "桂盛桂轩",
@@ -90,23 +90,67 @@ const mockTableData: ContractMonthDetail[] = [];
 
 // 设置随机mock数据
 const setRandomMockTableData = () => {
-  const monthList = ["2025-01", "2025-02", "2025-03"];
+  const monthList = ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05"];
   for (const month of monthList) {
     for (const org of orgList) {
-      for (const type of contractTypeList) {
-        mockTableData.push({
-          type,
-          name: org,
-          dataTime: month,
-          value: Math.random() * 10000,
-          count: Math.floor(Math.random() * 100),
-          risk: Math.floor(Math.random() * 10),
-          full: Math.floor(Math.random() * 10),
-          amount: Math.floor(Math.random() * 100),
-        });
+      if (
+        org !== "广投石化本部" &&
+        org !== "广投石化广东分公司" &&
+        org !== "永盛仓储" &&
+        org !== "广投石化舟山"
+      ) {
+        for (const type of contractTypeList) {
+          mockTableData.push({
+            type,
+            name: org,
+            dataTime: month,
+            // value: Math.random() * 10000,
+            // count: Math.floor(Math.random() * 100),
+            // risk: Math.floor(Math.random() * 10),
+            // full: Math.floor(Math.random() * 10),
+            // amount: Math.floor(Math.random() * 100),
+            value: 0,
+            count: 0,
+            risk: 0,
+            full: 0,
+            amount: 0,
+          });
+        }
       }
     }
   }
+  // 0607 注入广投石化本部真实数据
+  mockTableData.push({
+    type: "采购合同",
+    name: "广投石化本部",
+    dataTime: "2025-05",
+    // value: Math.random() * 10000,
+    // count: Math.floor(Math.random() * 100),
+    // risk: Math.floor(Math.random() * 10),
+    // full: Math.floor(Math.random() * 10),
+    // amount: Math.floor(Math.random() * 100),
+    value: 1816786.91,
+    count: 202,
+    risk: 0,
+    full: 0,
+    amount: 0,
+  });
+
+  mockTableData.push({
+    type: "销售合同",
+    name: "广投石化本部",
+    dataTime: "2025-05",
+    // value: Math.random() * 10000,
+    // count: Math.floor(Math.random() * 100),
+    // risk: Math.floor(Math.random() * 10),
+    // full: Math.floor(Math.random() * 10),
+    // amount: Math.floor(Math.random() * 100),
+    value: 1856046.72,
+    count: 4487,
+    risk: 0,
+    full: 0,
+    amount: 0,
+  });
 };
 
 interface ContractYearCache {
