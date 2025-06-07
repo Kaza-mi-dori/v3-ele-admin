@@ -145,6 +145,18 @@ const initChart = () => {
         data: data.map((item) =>
           new Decimal(item.actual).div(10000).toNumber()
         ),
+        label: {
+          show: true,
+          position: "top",
+          color: "#fff",
+          fontSize: 14,
+          formatter: (params: any) => {
+            // 只有当值存在且不为0时才显示
+            return params.value && params.value !== 0
+              ? params.value.toFixed(2)
+              : "";
+          },
+        },
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: sassvariables["bigscreen-primary-color-3"] },
