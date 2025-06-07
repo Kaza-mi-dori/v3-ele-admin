@@ -597,6 +597,17 @@ const initChart1 = (type: string = "bar") => {
     },
   };
 
+  // 通用的label配置
+  const commonLabel = {
+    show: true,
+    position: "top",
+    color: "#fff",
+    fontSize: 15,
+    formatter: (params: any) => {
+      return `${params.value || 0}`;
+    },
+  };
+
   // 柱状图配置
   const optionBar = {
     ...baseOption,
@@ -635,6 +646,11 @@ const initChart1 = (type: string = "bar") => {
             color: sassvariables["bigscreen-primary-color-7"],
           },
         },
+        label: {
+          ...commonLabel,
+          position: "top", // 柱状图的label可以放在柱子上方
+          offset: [0, -10], // 第一个元素是水平偏移，第二个是垂直偏移（负值表示向上）
+        },
       },
     ],
   };
@@ -652,6 +668,11 @@ const initChart1 = (type: string = "bar") => {
             color: sassvariables["bigscreen-primary-color-7"],
           },
         },
+        symbol: "circle", // 折线图可以添加symbol显示点
+        symbolSize: 8,
+        itemStyle: {
+          borderWidth: 2,
+        },
       },
       {
         type: "line",
@@ -662,6 +683,16 @@ const initChart1 = (type: string = "bar") => {
             type: "dashed",
             color: sassvariables["bigscreen-primary-color-7"],
           },
+        },
+        label: {
+          ...commonLabel,
+          position: "top", // 折线图的label可以放在点的上方
+          offset: [0, -10],
+        },
+        symbol: "circle",
+        symbolSize: 8,
+        itemStyle: {
+          borderWidth: 2,
         },
       },
     ],
