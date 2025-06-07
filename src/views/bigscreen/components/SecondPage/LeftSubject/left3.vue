@@ -67,7 +67,7 @@ import Model1 from "../Model1/index.vue";
 import Tab from "@/views/bigscreen/components/FirstPage/Tab/index.vue";
 import * as echarts from "echarts";
 import { BusinessEnum, BusinessEnumMap } from "@/enums/BusinessEnum";
-import { ref, onMounted, shallowRef } from "vue";
+import { ref, onMounted, shallowRef, computed, watch } from "vue";
 import { useTransition } from "@vueuse/core";
 import planIcon from "@/views/bigscreen/img/business.png";
 import sellIcon from "@/views/bigscreen/img/left_icon1.png";
@@ -76,7 +76,14 @@ import sassvariables from "@/styles/variables.module.scss";
 
 const props = defineProps<{
   /** 数据 */
-  data?: any;
+  data?: Record<
+    string,
+    {
+      history: number[];
+      planAmount: number;
+      sellAmount: number;
+    }
+  >;
 }>();
 
 // 每个类别对应的数据系列(过去5年的年份)
@@ -86,15 +93,23 @@ const categoryMap = new Array(5)
 
 const activeName = ref<number | string | undefined>(BusinessEnum.CPY);
 
-// 随机生成分类数量数据
-const getRandomCategoryData = (categories: any[]) => {
-  return props.data?.history || categories.map(() => 0); // 随机生成0-100之间的值
-};
+// 获取当前业务类型的数据
+const currentData = computed(() => {
+  const businessKey = BusinessEnumMap[activeName.value as BusinessEnum];
+  const defaultValue = {
+    history: categoryMap.map(() => 0),
+    planAmount: 0,
+    sellAmount: 0,
+  };
+
+  // 如果父组件传了空数据（如{}或undefined）则用零值
+  return props.data?.[businessKey] ?? defaultValue;
+});
 
 const chart = shallowRef<echarts.ECharts | null>(null);
 
-const planAmount = ref(props.data?.planAmount || 0);
-const sellAmount = ref(props.data?.sellAmount || 0);
+const planAmount = computed(() => currentData.value.planAmount);
+const sellAmount = computed(() => currentData.value.sellAmount);
 const finishRate = computed(() => {
   return +((sellAmount.value / planAmount.value) * 100).toFixed(2);
 });
@@ -125,7 +140,7 @@ const initChartMiddle4 = () => {
     );
   }
   chart.value.clear();
-  const data = getRandomCategoryData(categoryMap);
+  const data = currentData.value.history;
 
   const gradientColors = [
     {
@@ -222,6 +237,11 @@ const initChartMiddle4 = () => {
   };
   chart.value.setOption(option);
 };
+
+// 监听activeName变化
+watch(activeName, () => {
+  initChartMiddle4();
+});
 
 onMounted(() => {
   initChartMiddle4();

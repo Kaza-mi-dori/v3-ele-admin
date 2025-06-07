@@ -37,9 +37,26 @@
       <div class="b-space" />
       <Left3
         :data="{
-          history: [0, 0, 1764002, 2324936, 285900],
-          planAmount: 4200000,
-          sellAmount: 1850000,
+          [BusinessEnumMap[BusinessEnum.CPY]]: {
+            history: [0, 0, 1764002, 2324936, 285900],
+            planAmount: 4200000,
+            sellAmount: 1850000,
+          },
+          [BusinessEnumMap[BusinessEnum.YY]]: {
+            history: [0, 0, 1764002, 2324936, 285900],
+            planAmount: 4200000,
+            sellAmount: 1850000,
+          },
+          [BusinessEnumMap[BusinessEnum.RLY]]: {
+            history: [0, 0, 1764002, 2324936, 285900],
+            planAmount: 4200000,
+            sellAmount: 1850000,
+          },
+          [BusinessEnumMap[BusinessEnum.HGCP]]: {
+            history: [0, 0, 1764002, 2324936, 285900],
+            planAmount: 4200000,
+            sellAmount: 1850000,
+          },
         }"
       />
     </div>
@@ -163,6 +180,7 @@ import Middle3 from "@/views/bigscreen/components/SecondPage/Middle/middle3.vue"
 import Right1 from "@/views/bigscreen/components/SecondPage/Right/right1.vue";
 import Right2 from "@/views/bigscreen/components/SecondPage/Right/right2.vue";
 import Right3 from "@/views/bigscreen/components/SecondPage/Right/right3.vue";
+import { BusinessEnum, BusinessEnumMap } from "@/enums/BusinessEnum";
 
 import { ref } from "vue";
 
