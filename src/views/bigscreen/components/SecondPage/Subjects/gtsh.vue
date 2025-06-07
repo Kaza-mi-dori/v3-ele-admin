@@ -143,29 +143,29 @@
       <Right2
         :data="[
           {
-            transactionVolume: 10,
-            tradingVolume: 200,
-            date: '06-07',
+            transactionVolume: 62.44,
+            tradingVolume: 287494.07,
+            date: '1月',
           },
           {
-            transactionVolume: 10,
-            tradingVolume: 200,
-            date: '06-06',
+            transactionVolume: 179.91,
+            tradingVolume: 784826.51,
+            date: '2月',
           },
           {
-            transactionVolume: 10,
-            tradingVolume: 200,
-            date: '06-05',
+            transactionVolume: 273.66,
+            tradingVolume: 1163387.43,
+            date: '3月',
           },
           {
-            transactionVolume: 10,
-            tradingVolume: 200,
-            date: '06-04',
+            transactionVolume: 368.64,
+            tradingVolume: 1556358.8,
+            date: '4月',
           },
           {
-            transactionVolume: 10,
-            tradingVolume: 200,
-            date: '06-03',
+            transactionVolume: 739.88,
+            tradingVolume: 1856046.72,
+            date: '5月',
           },
         ]"
       />
