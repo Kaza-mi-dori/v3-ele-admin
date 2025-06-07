@@ -107,8 +107,8 @@
                   <tr v-for="item in table1Data" :key="item.name">
                     <td>{{ item.name }}</td>
                     <td>{{ item.value[0] }}</td>
-                    <td>{{ item.value[1] }}</td>
-                    <td>{{ item.value[2] }}</td>
+                    <td>{{ "-" }}</td>
+                    <td>{{ "-" }}</td>
                     <td>{{ item.value[3] }}</td>
                   </tr>
                 </tbody>
@@ -134,8 +134,8 @@
                   <tr v-for="item in table2Data" :key="item.name">
                     <td>{{ item.name }}</td>
                     <td>{{ item.value[0] }}</td>
-                    <td>{{ item.value[1] }}</td>
-                    <td>{{ item.value[2] }}</td>
+                    <td>{{ "-" }}</td>
+                    <td>{{ "-" }}</td>
                     <td>{{ item.value[3] }}</td>
                   </tr>
                 </tbody>
@@ -783,7 +783,10 @@ const initChart3 = () => {
         roseType: "radius",
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          // formatter: "{b}\n{c}",
+          formatter: ({ name, value }: any) => {
+            return `${name}\n${(value || 0).toFixed(2)}`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -828,12 +831,12 @@ const initChart31 = () => {
       show: true,
       // formatter: "{b}: {c}%",
       // 使用target和actual的值
-      // formatter: (params: any) => {
-      //   return `${params.name}<br />
-      //   计划值：${target[params.dataIndex].value}万元<br />
-      //   实际值：${actual[params.dataIndex].value}万元<br />
-      //   完成率：${normalizedActual[params.dataIndex].value.toFixed(2)}%`;
-      // },
+      formatter: (params: any) => {
+        return `${params[0].name}<br />
+        计划值：${target[params[0].dataIndex].value || "-"}万元<br />
+        实际值：${actual[params[0].dataIndex].value || "-"}万元<br />
+        完成率：${normalizedActual[params[0].dataIndex].value.toFixed(2)}%`;
+      },
       trigger: "axis",
       axisPointer: {
         show: true,
@@ -898,7 +901,7 @@ const initChart31 = () => {
         label: {
           show: true,
           formatter: ({ dataIndex }: any) => {
-            return actual[dataIndex].value;
+            return actual[dataIndex].value.toFixed(2);
           },
           fontSize: 14,
           fontWeight: "bold",
@@ -972,7 +975,10 @@ const initChart4 = () => {
         roseType: "radius",
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          // formatter: "{b}\n{c}",
+          formatter: ({ name, value }: any) => {
+            return `${name}\n${(value || 0).toFixed(2)}`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -1081,7 +1087,7 @@ const initChart41 = () => {
         label: {
           show: true,
           formatter: ({ dataIndex }: any) => {
-            return actual[dataIndex].value;
+            return actual[dataIndex].value?.toFixed(2);
           },
           fontSize: 14,
           fontWeight: "bold",
