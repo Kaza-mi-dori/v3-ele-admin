@@ -244,7 +244,7 @@ const initChartMiddle4 = () => {
       smooth: true,
     });
     dataSeries.push({
-      name: item + ` ${new Date().getFullYear() - 1}`,
+      name: `${new Date().getFullYear() - 1} ` + item,
       type: "line",
       data: dataMap2.value[item] ? dataFilterOne(dataMap2.value[item]) : [],
       lineStyle: {
@@ -270,7 +270,7 @@ const initChartMiddle4 = () => {
       data: [
         ...series,
         ...series.map(
-          (item: string) => item + ` ${new Date().getFullYear() - 1}`
+          (item: string) => `${new Date().getFullYear() - 1} ` + item
         ),
       ],
       icon: "rect",
