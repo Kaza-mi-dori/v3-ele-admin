@@ -293,7 +293,7 @@ const initChartRight3 = async () => {
           },
           // 格式化标签
           formatter: ({ value }: { value: number }) => {
-            const num = value.toFixed(1);
+            const num = value;
             return `${num}\n(计划值)`;
           },
         },
@@ -325,7 +325,7 @@ const initChartRight3 = async () => {
           },
           // 格式化标签
           formatter: ({ value }: { value: number }) => {
-            const num = value.toFixed(1);
+            const num = value;
             return `${num}\n(实际值)`;
           },
         },
