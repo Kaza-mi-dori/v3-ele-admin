@@ -257,6 +257,37 @@ const initChartMiddle4 = () => {
     color: ["#FFC000", "#FFD966", "#70AD47", "#A9D18E", "#FF0000", "#F4B183"],
     tooltip: {
       trigger: "axis",
+      formatter: (params: any) => {
+        const sortedParams = [...params].sort((a, b) => {
+          const isCurrentYearA = !a.seriesName.includes(
+            (new Date().getFullYear() - 1).toString()
+          );
+          const isCurrentYearB = !b.seriesName.includes(
+            (new Date().getFullYear() - 1).toString()
+          );
+          return isCurrentYearB - isCurrentYearA;
+        });
+
+        let result = `<div style="font-weight:bold;margin-bottom:5px;">${sortedParams[0].axisValue}</div>`;
+
+        sortedParams.forEach((param) => {
+          const color = param.color;
+          const marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${color};"></span>`;
+          const value = param.value
+            ? `<span style="font-weight:bold;float:right;">${param.value}</span>`
+            : "";
+          result += `
+              <div style="margin: 3px 0;">
+                  <div style="display:flex; justify-content:space-between;">
+                      <div style="padding-right: 20px;">${marker}${param.seriesName}</div>
+                      ${value}
+                  </div>
+              </div>
+          `;
+        });
+
+        return result;
+      },
     },
     grid: {
       left: "5%",
