@@ -26,7 +26,6 @@ export const useTagsViewStore = defineStore("tagsView", () => {
    */
   function addCachedView(view: TagView) {
     const viewName = view.name;
-    // 如果缓存视图名称已经存在于缓存视图列表中，则不再添加
     if (cachedViews.value.includes(viewName)) {
       return;
     }

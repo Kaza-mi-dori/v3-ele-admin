@@ -181,7 +181,12 @@ const initChart2 = () => {
   }
   chart2.value.clear();
 
-  const profitDataArray = calculateProfitData(); // 获取我方合同金额数据
+  const profitDataArray = calculateProfitData()
+    .filter((item) => item["企业名称"])
+    .sort((a, b) => b.合同数量 - a.合同数量)
+    .slice(0, 10); // 获取我方合同金额数据
+  // 筛选前10
+  // const top10ProfitDataArray = profitDataArray
 
   // 柱状图
   const option = {
@@ -296,6 +301,9 @@ const initChart2 = () => {
           textStyle: {
             fontSize: "1rem",
           },
+          formatter: (param: any) => {
+            return `${param.value}份`;
+          },
         },
       },
     ],
@@ -391,7 +399,8 @@ const calculateProfitData = () => {
 
   // 计算每个我方的合同金额总和和合同数量
   tableData.value.forEach((item) => {
-    const partyName = item["我方名称"] || item["我方公司名称"];
+    // const partyName = item["我方名称"] || item["我方公司名称"];
+    const partyName = item["相对方名称"] || item["对方公司名称"];
     const amount = parseFloat(item["含税金额"]);
     const contractType = item["合同类型"];
 

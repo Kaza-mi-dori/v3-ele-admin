@@ -91,6 +91,12 @@ export const currentYear = () => {
   return new Date().getFullYear();
 };
 
+// 获取当年月份
+export const currentMonth = () => {
+  const value = new Date().getMonth();
+  return value > 9 ? `${value}` : `0${value}`;
+};
+
 // 获取当前年份的第一天（例如：2024-01-01）
 export const startOfYear = () => {
   const date = new Date(currentYear(), 0, 1); // 获取当前年份的第一天

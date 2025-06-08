@@ -556,6 +556,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     meta: {
       title: "台账管理",
       icon: "document",
+      keepAlive: true,
     },
     children: [
       {
@@ -656,6 +657,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: "钉钉合同台账",
           icon: "el-icon-coin",
+          keepAlive: true,
         },
       },
       // 钉钉结算台账
@@ -667,6 +669,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: "钉钉结算台账",
           icon: "el-icon-coin",
+          keepAlive: true,
         },
       },
     ],

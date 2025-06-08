@@ -6,6 +6,7 @@
           v-model="datatime"
           :type="timeTabValue === 'year' ? 'year' : 'month'"
           placeholder="请选择月份"
+          @change="handleSearch"
         />
         <el-button type="primary" @click="handleSearch">搜索</el-button>
       </div>
@@ -999,13 +1000,14 @@ const initChart41 = () => {
       document.getElementById("profit-analysis-chart-41")
     );
   }
-  const colors = ["#ff8c00", "#aa8c00cc"];
+  const colors = ["#ff8c00", "#aa8c00cc", "crimson", "red", "purple", "blue"];
   chart41.value.clear();
   const target = data.chart41.dataTarget;
   const actual = data.chart41.dataActual;
   const normalizedActual = actual.map((item, index) => ({
     ...item,
-    value: (item.value / target[index].value) * 100,
+    value:
+      target[index].value === 0 ? 0 : (item.value / target[index].value) * 100,
     color: colors[index],
   }));
   const option = {
@@ -1480,6 +1482,7 @@ const initData = async () => {
           value: [
             item.实际值,
             item.同比增幅,
+            // item.年累计值 ? item.年累计值.toFixed(2) : "",
             item.环比值,
             item.计划值
               ? ((item.实际值 / item.计划值) * 100).toFixed(2) + "%"

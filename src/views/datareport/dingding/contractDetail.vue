@@ -263,11 +263,23 @@ const props = defineProps({
 const formRef = ref<Nullable<FormInstance>>(null);
 const { id, editing } = toRefs(props);
 
-const purchaseTypeOptions = ref<string[]>(["采购合同", "销售合同"]);
+const purchaseTypeOptions = ref<string[]>([
+  "采购合同",
+  "销售合同",
+  "融资借款",
+  "租赁合同",
+]);
 
 const contractTypeOptions = ref<string[]>(["业务合同", "服务合同"]);
 
-const businessTypeOptions = ref<string[]>(["成品油", "原油", "船加油"]);
+const businessTypeOptions = ref<string[]>([
+  "成品油",
+  "原油",
+  "船加油",
+  "燃料油",
+  "船运",
+  "仓储",
+]);
 const allSelected = ref(false);
 
 interface DetailRecord {

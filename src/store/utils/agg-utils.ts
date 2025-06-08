@@ -95,6 +95,7 @@ const orgToEnterpriseMap: Record<string, string[]> = {
     "永盛石化",
     "恒润公司",
     "桂盛桂轩",
+    "内部抵消",
   ],
   广投石化: [
     "广投石化本部",
@@ -102,11 +103,15 @@ const orgToEnterpriseMap: Record<string, string[]> = {
     "广投石化舟山",
     "永盛仓储",
     "永盛石化",
+    "内部抵消",
   ],
   桂盛桂轩: ["桂盛桂轩"],
   // 开燃公司: ["开燃公司"],
   恒润公司: ["恒润公司"],
   广投石化本部: ["广投石化本部"],
+  广投石化舟山: ["广投石化舟山"],
+  永盛仓储: ["永盛仓储"],
+  永盛石化: ["永盛石化"],
 };
 
 // 产品类型到产品的映射(tag)
@@ -123,6 +128,7 @@ const productTypeToProductMap: Record<string, string[]> = {
   // 用来装没有细分的类别
   仓储业务: ["仓储业务"],
   其他业务: ["其他业务"],
+  内部抵消: ["内部抵消"],
 };
 
 // 组织到产品类型的映射
@@ -137,6 +143,7 @@ const orgToProductTypeMap: Record<string, string[]> = {
     "燃料油",
     "仓储业务",
     "其他业务",
+    "内部抵消",
   ],
   广投石化: [
     "成品油",
@@ -148,6 +155,7 @@ const orgToProductTypeMap: Record<string, string[]> = {
     "燃料油",
     "仓储业务",
     "其他业务",
+    "内部抵消",
   ],
   广投石化本部: [
     "成品油",

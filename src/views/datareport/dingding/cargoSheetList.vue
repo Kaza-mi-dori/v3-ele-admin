@@ -80,6 +80,13 @@
           </el-table-column>
 
           <el-table-column
+            prop="购销类型"
+            label="采购/销售类型"
+            sortable
+            align="center"
+          />
+
+          <el-table-column
             prop="合同类型"
             label="合同类型"
             sortable

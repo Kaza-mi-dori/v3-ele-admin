@@ -6,6 +6,7 @@
           v-model="datatime"
           :type="timeTabValue === 'year' ? 'year' : 'month'"
           placeholder="请选择月份"
+          @change="handleSearch"
         />
         <el-button type="primary" @click="handleSearch">搜索</el-button>
       </div>
@@ -1038,13 +1039,14 @@ const initChart41 = () => {
       document.getElementById("profit-analysis-chart-41")
     );
   }
-  const colors = ["#ff8c00", "#aa8c00cc"];
+  const colors = ["#ff8c00", "#aa8c00cc", "crimson", "red", "purple", "blue"];
   chart41.value.clear();
   const target = data.chart41.dataTarget;
   const actual = data.chart41.dataActual;
   const normalizedActual = actual.map((item, index) => ({
     ...item,
-    value: (item.value / target[index].value) * 100,
+    value:
+      target[index].value === 0 ? 0 : (item.value / target[index].value) * 100,
     color: colors[index],
   }));
   const option = {
@@ -1103,7 +1105,7 @@ const initChart41 = () => {
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
-        padding: [0, 0, 0, 20],
+        padding: [0, 0, 0, 40],
       },
       splitLine: {
         show: true,
@@ -1157,17 +1159,6 @@ const initChart41 = () => {
         },
         barWidth: "45%",
       },
-      // {
-      //   type: "bar",
-      //   stack: "a",
-      //   silent: true,
-      //   z: 2,
-      //   data: target,
-      //   itemStyle: {
-      //     color: "lightgray",
-      //   },
-      //   barWidth: "45%",
-      // },
     ],
   };
   chart41.value.setOption(option);
@@ -1400,6 +1391,7 @@ const initData = async () => {
     queryParams.withSubProductData as boolean,
     queryParams.withSubProductTypeData as boolean
   );
+  console.log("testData", testData);
   // console.log(testData);
   // TODO 将数据放入组件
   if (testData?.[0]) {

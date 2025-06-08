@@ -72,14 +72,14 @@ const clickBarCb = (params: any) => {
   window.open(route.href, "_blank");
 };
 
-let resData = ref([]);
+let resData = ref<any[]>([]);
 
 const initData = async () => {
   if (mode === 0) {
     queryForm.value = {
       页码: 1,
       页容量: 6,
-      企业名称: "广投石化",
+      企业名称: "石化板块",
       状态集合: ["有效"],
       类型集合: ["年"],
     };
@@ -92,7 +92,7 @@ const initData = async () => {
     const revenueDataList = result.value[keywordMap["年度营收"]] || [];
     const profitDataList = result.value[keywordMap["年度利润"]] || [];
 
-    const allData: never[] = [];
+    const allData: any[] = [];
 
     // 将数据分别保存到对应的变量中
     revenueDataList.forEach((item: any) => {
