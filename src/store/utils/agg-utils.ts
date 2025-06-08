@@ -112,7 +112,7 @@ const orgToEnterpriseMap: Record<string, string[]> = {
 // 产品类型到产品的映射(tag)
 const productTypeToProductMap: Record<string, string[]> = {
   成品油: ["#92汽油", "#95汽油", "#98汽油", "#0柴油", "成品油产品"],
-  原油类: ["原油产品"],
+  原油: ["原油产品"],
   燃料油: ["燃料油"],
   化工类: ["化工产品"],
   天然气类: ["天然气产品"],
@@ -129,7 +129,7 @@ const productTypeToProductMap: Record<string, string[]> = {
 const orgToProductTypeMap: Record<string, string[]> = {
   石化板块: [
     "成品油",
-    "原油类",
+    "原油",
     "化工类",
     "天然气类",
     "煤炭类",
@@ -140,7 +140,7 @@ const orgToProductTypeMap: Record<string, string[]> = {
   ],
   广投石化: [
     "成品油",
-    "原油类",
+    "原油",
     "化工类",
     "天然气类",
     "煤炭类",
@@ -151,7 +151,7 @@ const orgToProductTypeMap: Record<string, string[]> = {
   ],
   广投石化本部: [
     "成品油",
-    "原油类",
+    "原油",
     "化工类",
     "天然气类",
     "煤炭类",
@@ -161,7 +161,7 @@ const orgToProductTypeMap: Record<string, string[]> = {
   ],
   桂盛桂轩: [
     "成品油",
-    "原油类",
+    "原油",
     "化工类",
     "天然气类",
     "煤炭类",
@@ -169,8 +169,8 @@ const orgToProductTypeMap: Record<string, string[]> = {
     "燃料油",
     "其他业务",
   ],
-  // 开燃公司: ["成品油", "原油类", "化工类", "天然气类", "煤炭类", "其他类"],
-  恒润公司: ["成品油", "原油类", "化工类", "天然气类", "煤炭类", "其他类"],
+  // 开燃公司: ["成品油", "原油", "化工类", "天然气类", "煤炭类", "其他类"],
+  恒润公司: ["成品油", "原油", "化工类", "天然气类", "煤炭类", "其他类"],
 };
 
 // 反向映射：公司到组织的映射

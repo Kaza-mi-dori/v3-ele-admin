@@ -1354,7 +1354,7 @@ const buildQueryParams = () => {
   //   toYear: 2025,
   //   fromMonth: 1,
   //   toMonth: 12,
-  //   category: "原油类",
+  //   category: "原油",
   //   product: undefined,
   //   withSubTimeData: true,
   //   withSubOrgData: true,
