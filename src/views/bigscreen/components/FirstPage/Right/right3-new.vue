@@ -275,7 +275,7 @@ const initChartRight3 = async () => {
     series: [
       {
         type: "bar",
-        barWidth: "25%",
+        barWidth: "15%",
         barGap: "10%", // 柱体间距
         data:
           activeName.value === REVENUE
@@ -310,7 +310,7 @@ const initChartRight3 = async () => {
       },
       {
         type: "bar",
-        barWidth: "25%",
+        barWidth: "15%",
         barGap: "10%", // 柱体间距
         data: currentData, // 柱状图的值: 根据选中的页签显示对应的数据
         // name: activeName.value === REVENUE ? "营收" : "利润",
