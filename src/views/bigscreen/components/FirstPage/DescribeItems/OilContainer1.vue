@@ -4,7 +4,7 @@
       <div class="name">{{ props.name }}</div>
     </div>
     <div class="right">
-      <div class="label">{{ props.value }}</div>
+      <div class="label">{{ props.value }}万吨</div>
       <div class="remain-bar-container">
         <div class="remain-bar-label">{{ props.percent }}%</div>
         <div class="remain-bar" :style="{ height: `${props.percent}%` }" />
