@@ -326,7 +326,7 @@ const initChartRight3 = async () => {
           // 格式化标签
           formatter: ({ value }: { value: number }) => {
             const num = value.toFixed(1);
-            return `${num}`;
+            return `${num}\n(实际值)`;
           },
         },
         itemStyle: {
