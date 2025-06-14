@@ -123,7 +123,7 @@
               <table class="sub-org-table m-auto">
                 <thead>
                   <tr>
-                    <th>企业</th>
+                    <th>产品</th>
                     <th>月实际（累计）</th>
                     <th>同比</th>
                     <th>环比</th>
