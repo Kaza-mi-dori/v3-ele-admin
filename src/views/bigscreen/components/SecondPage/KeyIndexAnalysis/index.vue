@@ -75,6 +75,9 @@ onMounted(() => {
     case "portfolio":
       title.value = `${companyDisplayName}企业资金`;
       break;
+    case "fixedCost":
+      title.value = `${companyName}${productType ? `${productType}` : ""}固定成本`;
+      break;
   }
 });
 </script>

@@ -492,8 +492,7 @@ const initChart4 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
-        roseType: "radius",
+        radius: ["20%", "60%"],
         label: {
           show: true,
           formatter: (params: any) => {
@@ -536,8 +535,7 @@ const initChart5 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
-        roseType: "radius",
+        radius: ["20%", "60%"],
         label: {
           show: true,
           formatter: (params: any) => {

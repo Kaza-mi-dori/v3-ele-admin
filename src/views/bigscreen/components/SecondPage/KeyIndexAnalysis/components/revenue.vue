@@ -822,8 +822,7 @@ const initChart3 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
-        // roseType: "radius",
+        radius: ["20%", "60%"],
         label: {
           show: true,
           // formatter: "{b}\n{c}",
@@ -1014,8 +1013,7 @@ const initChart4 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
-        // roseType: "radius",
+        radius: ["20%", "60%"],
         label: {
           show: true,
           // formatter: "{b}\n{c}",
@@ -1233,8 +1231,7 @@ const initChart6 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
-        // roseType: "radius",
+        radius: ["20%", "60%"],
         data: [
           { value: 533, name: "广投石化" },
           // { value: 335, name: "开燃公司" },

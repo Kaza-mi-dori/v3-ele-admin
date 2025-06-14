@@ -97,7 +97,7 @@
                 <thead>
                   <tr>
                     <th>企业</th>
-                    <th>月实际（累计）</th>
+                    <th>月实际（累计）(万元)</th>
                     <th>同比</th>
                     <th>环比</th>
                     <th>完成率</th>
@@ -124,7 +124,7 @@
                 <thead>
                   <tr>
                     <th>产品</th>
-                    <th>月实际（累计）</th>
+                    <th>月实际（累计）(万元)</th>
                     <th>同比</th>
                     <th>环比</th>
                     <th>完成率</th>
@@ -783,13 +783,12 @@ const initChart3 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
-        // roseType: "radius",
+        radius: ["20%", "60%"],
         label: {
           show: true,
           // formatter: "{b}\n{c}",
           formatter: ({ name, value }: any) => {
-            return `${name}\n${(value || 0).toFixed(2)}`;
+            return `${name}\n${(value || 0).toFixed(2)}万元`;
           },
           color: "#fff",
           fontSize: 15,
@@ -978,13 +977,12 @@ const initChart4 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
-        // roseType: "radius",
+        radius: ["20%", "60%"],
         label: {
           show: true,
           // formatter: "{b}\n{c}",
           formatter: ({ name, value }: any) => {
-            return `${name}\n${(value || 0).toFixed(2)}`;
+            return `${name}\n${(value || 0).toFixed(2)}万元`;
           },
           color: "#fff",
           fontSize: 15,
@@ -1095,7 +1093,7 @@ const initChart41 = () => {
         label: {
           show: true,
           formatter: ({ dataIndex }: any) => {
-            return actual[dataIndex].value.toFixed(2);
+            return `${actual[dataIndex].value.toFixed(2)}万元`;
           },
           fontSize: 14,
           fontWeight: "bold",
@@ -1208,8 +1206,7 @@ const initChart6 = () => {
     series: [
       {
         type: "pie",
-        radius: ["10%", "60%"],
-        // roseType: "radius",
+        radius: ["20%", "60%"],
         data: [
           { value: 533, name: "广投石化" },
           // { value: 335, name: "开燃公司" },

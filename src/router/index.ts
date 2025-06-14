@@ -344,6 +344,14 @@ export const constantRoutes: RouteRecordRaw[] = [
                 "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/contract.vue"
               ),
           },
+          {
+            path: "fixedCost",
+            name: "FixedCost",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/fixedCost.vue"
+              ),
+          },
         ],
       },
       {

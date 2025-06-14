@@ -13,13 +13,13 @@
       <span class="text-date-desc">数据截止日期：{{ dataTimeText }}</span>
     </div>
     <div class="bg-view-body pl-4 pr-4">
-      <Model1 class="model1 w-full" title="销售量逐月分析">
+      <Model1 class="model1 w-full" title="逐月分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex items-center h-full w-full gap-2">
               <div class="flex items-center justify-around w-1/3">
                 <!-- <div
-                  id="revenue-analysis-chart-liquid-fill"
+                  id="fixedcost-analysis-chart-liquid-fill"
                   style="height: 250px; width: 60%"
                 /> -->
                 <!-- 换成ProcessRing -->
@@ -40,7 +40,7 @@
               </div>
               <div class="relative w-[calc(100%-33%)]">
                 <div
-                  id="revenue-analysis-chart-1"
+                  id="fixedcost-analysis-chart-1"
                   style="height: 250px; width: 100%"
                 />
                 <!-- 柱状图/折线图切换开关 -->
@@ -60,18 +60,18 @@
           </div>
         </div>
       </Model1>
-      <Model1 class="model1" title="销售量构成分析">
+      <Model1 class="model1" title="固定成本构成分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex gap-2 justify-center">
               <div
                 v-if="hasSubOrg"
-                id="revenue-analysis-chart-3"
+                id="fixedcost-analysis-chart-3"
                 style="height: 250px; width: 100%"
               />
               <div
                 v-if="hasSubOrg"
-                id="revenue-analysis-chart-31"
+                id="fixedcost-analysis-chart-31"
                 style="height: 250px; width: 100%"
               />
               <div
@@ -90,7 +90,7 @@
       </Model1>
       <!-- <div class="b-space" /> -->
       <div class="flex gap-2">
-        <Model1 v-if="hasSubOrg" class="model1" title="下属企业销售量分析">
+        <Model1 v-if="hasSubOrg" class="model1" title="下属企业固定成本分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -107,8 +107,8 @@
                   <tr v-for="item in table1Data" :key="item.name">
                     <td>{{ item.name }}</td>
                     <td>{{ item.value[0] }}</td>
-                    <td>{{ item.value[1] }}</td>
-                    <td>{{ item.value[2] }}</td>
+                    <td>{{ "-" }}</td>
+                    <td>{{ "-" }}</td>
                     <td>{{ item.value[3] }}</td>
                   </tr>
                 </tbody>
@@ -117,7 +117,7 @@
           </div>
         </Model1>
         <!-- todo 按照是不是有数据来决定是否显示 -->
-        <Model1 v-if="hasProduct" class="model1" title="产品销售量分析">
+        <Model1 v-if="hasProduct" class="model1" title="产品固定成本分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -134,8 +134,8 @@
                   <tr v-for="item in table2Data" :key="item.name">
                     <td>{{ item.name }}</td>
                     <td>{{ item.value[0] }}</td>
-                    <td>{{ item.value[1] }}</td>
-                    <td>{{ item.value[2] }}</td>
+                    <td>{{ "-" }}</td>
+                    <td>{{ "-" }}</td>
                     <td>{{ item.value[3] }}</td>
                   </tr>
                 </tbody>
@@ -221,9 +221,9 @@ interface TimeSpanDataQuery {
 }
 
 // 示例
-// 查询2024年石化板块营收数据，包含下属企业信息和产品信息
+// 查询2024年石化板块固定成本数据，包含下属企业信息和产品信息
 const exampleQuery: TimeSpanDataQuery = {
-  keyIndexType: "revenue",
+  keyIndexType: "fixedCost",
   timeSpan: "year",
   dataTime: "2024-01-01",
   org: "石化板块",
@@ -291,7 +291,7 @@ const metricItemData = ref([
   {
     title: "累计",
     value: 0,
-    unit: "万吨",
+    unit: "万元",
   },
   {
     title: "环比增幅",
@@ -301,7 +301,7 @@ const metricItemData = ref([
   {
     title: "同比增长",
     value: 0,
-    unit: "万吨",
+    unit: "万元",
   },
   {
     title: "同比增幅",
@@ -357,7 +357,7 @@ const yearData = {
     {
       title: "累计",
       value: 0,
-      unit: "万吨",
+      unit: "万元",
     },
     {
       title: "环比增幅",
@@ -367,7 +367,7 @@ const yearData = {
     {
       title: "同比增长",
       value: 0,
-      unit: "万吨",
+      unit: "万元",
     },
     {
       title: "同比增幅",
@@ -446,7 +446,7 @@ const handleMetricItemClick = (item: any) => {
 const initLiquidFill = () => {
   if (!liquidFill.value) {
     liquidFill.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-liquid-fill")
+      document.getElementById("fixedcost-analysis-chart-liquid-fill")
     );
   }
   liquidFill.value.clear();
@@ -506,7 +506,7 @@ const initLiquidFill = () => {
 const initChart1 = (type: string = "bar") => {
   if (!chart1.value) {
     chart1.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-1")
+      document.getElementById("fixedcost-analysis-chart-1")
     );
   }
   chart1.value.clear();
@@ -534,13 +534,13 @@ const initChart1 = (type: string = "bar") => {
     monthData = [`${currentYear}-${currentMonth.toString().padStart(2, "0")}`];
   }
 
-  // 柱状图
-  const option = {
+  // 基础配置
+  const baseOption = {
     legend: {
       show: true,
       // icon: "circle",
       top: "3%",
-      data: ["计划销售量", "实际销售量"],
+      data: ["计划固定成本", "实际固定成本"],
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
       },
@@ -565,7 +565,7 @@ const initChart1 = (type: string = "bar") => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: 'sassvariables["bigscreen-primary-color-7"]',
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       axisTick: {
@@ -574,7 +574,7 @@ const initChart1 = (type: string = "bar") => {
     },
     yAxis: {
       type: "value",
-      name: "单位：万吨",
+      name: "单位：万元",
       axisLine: {
         show: true,
         lineStyle: {
@@ -595,10 +595,26 @@ const initChart1 = (type: string = "bar") => {
         },
       },
     },
+  };
+
+  // 通用的label配置
+  const commonLabel = {
+    show: true,
+    position: "top",
+    color: "#fff",
+    fontSize: 15,
+    formatter: (params: any) => {
+      return `${params.value || 0}`;
+    },
+  };
+
+  // 柱状图配置
+  const optionBar = {
+    ...baseOption,
     series: [
       {
         type: "bar",
-        name: "计划销售量",
+        name: "计划固定成本",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -618,7 +634,7 @@ const initChart1 = (type: string = "bar") => {
       },
       {
         type: "bar",
-        name: "实际销售量",
+        name: "实际固定成本",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -630,37 +646,63 @@ const initChart1 = (type: string = "bar") => {
             color: sassvariables["bigscreen-primary-color-7"],
           },
         },
+        label: {
+          ...commonLabel,
+          position: "top", // 柱状图的label可以放在柱子上方
+          offset: [0, -10], // 第一个元素是水平偏移，第二个是垂直偏移（负值表示向上）
+        },
       },
     ],
   };
   // 折线图
   const optionLine = {
-    ...option,
+    ...baseOption,
     series: [
       {
-        ...option.series[0],
         type: "line",
+        name: "计划固定成本",
+        data: data.chart1.dataPlan,
         markLine: {
           lineStyle: {
             type: "dashed",
             color: sassvariables["bigscreen-primary-color-7"],
           },
         },
+        symbol: "circle", // 折线图可以添加symbol显示点
+        symbolSize: 8,
+        itemStyle: {
+          borderWidth: 2,
+        },
       },
       {
-        ...option.series[1],
         type: "line",
-        // data: [110, 220],
-        data: data.chart1.data,
+        name: "实际固定成本",
+        data: data.chart1.dataReal,
+        markLine: {
+          lineStyle: {
+            type: "dashed",
+            color: sassvariables["bigscreen-primary-color-7"],
+          },
+        },
+        label: {
+          ...commonLabel,
+          position: "top", // 折线图的label可以放在点的上方
+          offset: [0, -10],
+        },
+        symbol: "circle",
+        symbolSize: 8,
+        itemStyle: {
+          borderWidth: 2,
+        },
       },
     ],
   };
-  chart1.value.setOption(type === "bar" ? option : optionLine);
+  chart1.value.setOption(type === "bar" ? optionBar : optionLine);
 };
 const initChart2 = () => {
   if (!chart2.value) {
     chart2.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-2")
+      document.getElementById("fixedcost-analysis-chart-2")
     );
   }
   chart2.value.clear();
@@ -749,7 +791,7 @@ const initChart2 = () => {
   };
   chart2.value.setOption(option);
 };
-// 下属企业营收分析
+// 下属企业固定成本分析
 const initChart3 = () => {
   // 如果hasSubOrg为false，则不初始化
   if (!hasSubOrg.value) {
@@ -757,7 +799,7 @@ const initChart3 = () => {
   }
   if (!chart3.value) {
     chart3.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-3")
+      document.getElementById("fixedcost-analysis-chart-3")
     );
   }
   chart3.value.clear();
@@ -782,7 +824,10 @@ const initChart3 = () => {
         radius: ["20%", "60%"],
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          // formatter: "{b}\n{c}",
+          formatter: ({ name, value }: any) => {
+            return `${name}\n${(value || 0).toFixed(2)}万元`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -793,11 +838,11 @@ const initChart3 = () => {
   chart3.value.setOption(option);
 };
 
-// 下属企业营收与计划营收对比
+// 下属企业固定成本与计划固定成本对比
 const initChart31 = () => {
   if (!chart31.value) {
     chart31.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-31")
+      document.getElementById("fixedcost-analysis-chart-31")
     );
   }
   chart31.value.clear();
@@ -827,12 +872,12 @@ const initChart31 = () => {
       show: true,
       // formatter: "{b}: {c}%",
       // 使用target和actual的值
-      // formatter: (params: any) => {
-      //   return `${params.name}<br />
-      //   计划值：${target[params.dataIndex].value}万吨<br />
-      //   实际值：${actual[params.dataIndex].value}万吨<br />
-      //   完成率：${normalizedActual[params.dataIndex].value.toFixed(2)}%`;
-      // },
+      formatter: (params: any) => {
+        return `${params[0].name}<br />
+        计划值：${target[params[0].dataIndex].value || "-"}万元<br />
+        实际值：${actual[params[0].dataIndex].value || "-"}万元<br />
+        完成率：${normalizedActual[params[0].dataIndex].value.toFixed(2)}%`;
+      },
       trigger: "axis",
       axisPointer: {
         show: true,
@@ -845,7 +890,7 @@ const initChart31 = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: 'sassvariables["bigscreen-primary-color-7"]',
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       axisTick: {
@@ -854,7 +899,7 @@ const initChart31 = () => {
     },
     yAxis: {
       type: "value",
-      name: "完成值（万吨）",
+      name: "完成值（万元）",
       // min: 0,
       // max: 100,
       axisLine: {
@@ -877,8 +922,8 @@ const initChart31 = () => {
         },
       },
     },
-    // 计划营收值永远是100%，实际营收值是归一化后的值
-    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    // 计划固定成本值永远是100%，实际固定成本值是归一化后的值
+    // 计划固定成本值在最底层，颜色较淡，实际固定成本值在上面，颜色较深
     series: [
       {
         // type: "bar",
@@ -897,7 +942,7 @@ const initChart31 = () => {
         label: {
           show: true,
           formatter: ({ dataIndex }: any) => {
-            return `${actual[dataIndex].value}万元`;
+            return actual[dataIndex].value.toFixed(2);
           },
           fontSize: 14,
           fontWeight: "bold",
@@ -935,7 +980,7 @@ const handleGraphTypeChange = () => {
   initChart1(graphType.value);
 };
 
-// 产品营收分析
+// 产品固定成本分析
 const initChart4 = () => {
   // 如果hasProduct为false，则不初始化
   if (!hasProduct.value) {
@@ -970,7 +1015,10 @@ const initChart4 = () => {
         radius: ["20%", "60%"],
         label: {
           show: true,
-          formatter: "{b}\n{c}",
+          // formatter: "{b}\n{c}",
+          formatter: ({ name, value }: any) => {
+            return `${name}\n${(value || 0).toFixed(2)}万元`;
+          },
           color: "#fff",
           fontSize: 15,
         },
@@ -981,7 +1029,7 @@ const initChart4 = () => {
   chart4.value.setOption(option);
 };
 
-// 产品营收与计划营收对比
+// 产品固定成本与计划固定成本对比
 const initChart41 = () => {
   if (!chart41.value) {
     chart41.value = echarts.init(
@@ -1014,8 +1062,8 @@ const initChart41 = () => {
       // 使用target和actual的值
       formatter: (params: any) => {
         return `${params[0].name}<br />
-        计划值：${target[params[0].dataIndex].value}万吨<br />
-        实际值：${actual[params[0].dataIndex].value}万吨<br />
+        计划值：${target[params[0].dataIndex].value}万元<br />
+        实际值：${actual[params[0].dataIndex].value}万元<br />
         完成率：${normalizedActual[params[0].dataIndex].value.toFixed(2)}%`;
       },
       trigger: "axis",
@@ -1030,7 +1078,7 @@ const initChart41 = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: 'sassvariables["bigscreen-primary-color-7"]',
+          color: sassvariables["bigscreen-primary-color-7"],
         },
       },
       axisTick: {
@@ -1063,8 +1111,8 @@ const initChart41 = () => {
         },
       },
     },
-    // 计划营收值永远是100%，实际营收值是归一化后的值
-    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    // 计划固定成本值永远是100%，实际固定成本值是归一化后的值
+    // 计划固定成本值在最底层，颜色较淡，实际固定成本值在上面，颜色较深
     series: [
       {
         type: "bar",
@@ -1079,7 +1127,7 @@ const initChart41 = () => {
         label: {
           show: true,
           formatter: ({ dataIndex }: any) => {
-            return actual[dataIndex].value;
+            return `${actual[dataIndex].value?.toFixed(2)}万元`;
           },
           fontSize: 14,
           fontWeight: "bold",
@@ -1279,7 +1327,7 @@ const initAnimation = () => {
 const buildQueryParams = () => {
   // 测试数据：组织
   const queryParams = {
-    keyIndexType: "销售量",
+    keyIndexType: "固定成本",
     timeDimension: timeTabValue.value === "year" ? "年" : "月",
     companyName: route.query.companyName || "石化板块",
     fromYear: 2025,
@@ -1296,7 +1344,7 @@ const buildQueryParams = () => {
 
   // // 测试数据：产品类型
   // const queryParams = {
-  //   keyIndexType: "营收",
+  //   keyIndexType: "固定成本",
   //   timeDimension: timeTabValue.value === "year" ? "年" : "月",
   //   companyName: undefined,
   //   fromYear: 2025,
@@ -1335,7 +1383,7 @@ const initData = async () => {
   // TODO 校验查询参数合法性
   const queryParams = buildQueryParams();
   const testData: AggregatedData[] = await businessStore.queryKeyIndexData(
-    queryParams.keyIndexType as "营收" | "利润",
+    queryParams.keyIndexType as "营收" | "利润" | "固定成本",
     queryParams.timeDimension as "年" | "月",
     queryParams.companyName as string | undefined,
     queryParams.fromYear as number,
@@ -1354,18 +1402,15 @@ const initData = async () => {
   if (testData?.[0]) {
     data = {
       liquidFill: {
-        fulfilledPercent:
-          testData[0].计划值 === 0
-            ? "-"
-            : Number(
-                ((testData[0].实际值 / testData[0].计划值) * 100).toFixed(2)
-              ),
+        fulfilledPercent: Number(
+          ((testData[0].实际值 / testData[0].计划值) * 100).toFixed(2)
+        ),
       },
       metricItem: [
         {
           title: "累计",
           value: Number(testData[0].实际值.toFixed(2)),
-          unit: "万吨",
+          unit: "万元",
         },
         {
           title: "环比增幅",
@@ -1375,7 +1420,7 @@ const initData = async () => {
         {
           title: "同比增长",
           value: Number((testData[0].年累计值同比 || 0).toFixed(2)),
-          unit: "万吨",
+          unit: "万元",
         },
         {
           title: "同比增幅",
@@ -1500,7 +1545,7 @@ const initData = async () => {
 
 // 绑定各个图例的点击事件
 const initLegendClick = () => {
-  // 绑定逐月营收的点击事件
+  // 绑定逐月固定成本的点击事件
   chart1.value.on("click", "series.bar", (params: any) => {
     const { name } = params;
     if (timeTabValue.value === "month") return;
@@ -1521,7 +1566,7 @@ const initLegendClick = () => {
     const { name } = params;
     if (!Object.values(OurCompanyEnumMap).includes(name)) return;
     const nextRoute = router.resolve({
-      name: "Sell",
+      name: "FixedCost",
       query: {
         companyName: name,
       },
@@ -1537,7 +1582,7 @@ const initLegendClick = () => {
   chart4.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
     const nextRoute = router.resolve({
-      name: "Sell",
+      name: "FixedCost",
       query: {
         companyName: route.query.companyName,
         productType: name,
