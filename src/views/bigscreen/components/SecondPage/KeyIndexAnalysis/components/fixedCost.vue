@@ -221,7 +221,7 @@ interface TimeSpanDataQuery {
 }
 
 // 示例
-// 查询2024年石化板块营收数据，包含下属企业信息和产品信息
+// 查询2024年石化板块固定成本数据，包含下属企业信息和产品信息
 const exampleQuery: TimeSpanDataQuery = {
   keyIndexType: "revenue",
   timeSpan: "year",
@@ -540,7 +540,7 @@ const initChart1 = (type: string = "bar") => {
       show: true,
       // icon: "circle",
       top: "3%",
-      data: ["计划经营收入", "实际经营收入"],
+      data: ["计划固定成本", "实际固定成本"],
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
       },
@@ -614,7 +614,7 @@ const initChart1 = (type: string = "bar") => {
     series: [
       {
         type: "bar",
-        name: "计划经营收入",
+        name: "计划固定成本",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -634,7 +634,7 @@ const initChart1 = (type: string = "bar") => {
       },
       {
         type: "bar",
-        name: "实际经营收入",
+        name: "实际固定成本",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -660,7 +660,7 @@ const initChart1 = (type: string = "bar") => {
     series: [
       {
         type: "line",
-        name: "计划经营收入",
+        name: "计划固定成本",
         data: data.chart1.dataPlan,
         markLine: {
           lineStyle: {
@@ -676,7 +676,7 @@ const initChart1 = (type: string = "bar") => {
       },
       {
         type: "line",
-        name: "实际经营收入",
+        name: "实际固定成本",
         data: data.chart1.dataReal,
         markLine: {
           lineStyle: {
@@ -791,7 +791,7 @@ const initChart2 = () => {
   };
   chart2.value.setOption(option);
 };
-// 下属企业营收分析
+// 下属企业固定成本分析
 const initChart3 = () => {
   // 如果hasSubOrg为false，则不初始化
   if (!hasSubOrg.value) {
@@ -838,7 +838,7 @@ const initChart3 = () => {
   chart3.value.setOption(option);
 };
 
-// 下属企业营收与计划营收对比
+// 下属企业固定成本与计划固定成本对比
 const initChart31 = () => {
   if (!chart31.value) {
     chart31.value = echarts.init(
@@ -922,8 +922,8 @@ const initChart31 = () => {
         },
       },
     },
-    // 计划营收值永远是100%，实际营收值是归一化后的值
-    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    // 计划固定成本值永远是100%，实际固定成本值是归一化后的值
+    // 计划固定成本值在最底层，颜色较淡，实际固定成本值在上面，颜色较深
     series: [
       {
         // type: "bar",
@@ -980,7 +980,7 @@ const handleGraphTypeChange = () => {
   initChart1(graphType.value);
 };
 
-// 产品营收分析
+// 产品固定成本分析
 const initChart4 = () => {
   // 如果hasProduct为false，则不初始化
   if (!hasProduct.value) {
@@ -1029,7 +1029,7 @@ const initChart4 = () => {
   chart4.value.setOption(option);
 };
 
-// 产品营收与计划营收对比
+// 产品固定成本与计划固定成本对比
 const initChart41 = () => {
   if (!chart41.value) {
     chart41.value = echarts.init(
@@ -1111,8 +1111,8 @@ const initChart41 = () => {
         },
       },
     },
-    // 计划营收值永远是100%，实际营收值是归一化后的值
-    // 计划营收值在最底层，颜色较淡，实际营收值在上面，颜色较深
+    // 计划固定成本值永远是100%，实际固定成本值是归一化后的值
+    // 计划固定成本值在最底层，颜色较淡，实际固定成本值在上面，颜色较深
     series: [
       {
         type: "bar",
@@ -1327,7 +1327,7 @@ const initAnimation = () => {
 const buildQueryParams = () => {
   // 测试数据：组织
   const queryParams = {
-    keyIndexType: "营收",
+    keyIndexType: "固定成本",
     timeDimension: timeTabValue.value === "year" ? "年" : "月",
     companyName: route.query.companyName || "石化板块",
     fromYear: 2025,
@@ -1344,7 +1344,7 @@ const buildQueryParams = () => {
 
   // // 测试数据：产品类型
   // const queryParams = {
-  //   keyIndexType: "营收",
+  //   keyIndexType: "固定成本",
   //   timeDimension: timeTabValue.value === "year" ? "年" : "月",
   //   companyName: undefined,
   //   fromYear: 2025,
@@ -1383,7 +1383,7 @@ const initData = async () => {
   // TODO 校验查询参数合法性
   const queryParams = buildQueryParams();
   const testData: AggregatedData[] = await businessStore.queryKeyIndexData(
-    queryParams.keyIndexType as "营收" | "利润",
+    queryParams.keyIndexType as "营收" | "利润" | "固定成本",
     queryParams.timeDimension as "年" | "月",
     queryParams.companyName as string | undefined,
     queryParams.fromYear as number,
@@ -1545,7 +1545,7 @@ const initData = async () => {
 
 // 绑定各个图例的点击事件
 const initLegendClick = () => {
-  // 绑定逐月营收的点击事件
+  // 绑定逐月固定成本的点击事件
   chart1.value.on("click", "series.bar", (params: any) => {
     const { name } = params;
     if (timeTabValue.value === "month") return;
