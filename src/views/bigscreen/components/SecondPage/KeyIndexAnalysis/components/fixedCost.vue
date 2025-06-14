@@ -19,7 +19,7 @@
             <div class="flex items-center h-full w-full gap-2">
               <div class="flex items-center justify-around w-1/3">
                 <!-- <div
-                  id="revenue-analysis-chart-liquid-fill"
+                  id="fixedcost-analysis-chart-liquid-fill"
                   style="height: 250px; width: 60%"
                 /> -->
                 <!-- 换成ProcessRing -->
@@ -40,7 +40,7 @@
               </div>
               <div class="relative w-[calc(100%-33%)]">
                 <div
-                  id="revenue-analysis-chart-1"
+                  id="fixedcost-analysis-chart-1"
                   style="height: 250px; width: 100%"
                 />
                 <!-- 柱状图/折线图切换开关 -->
@@ -66,12 +66,12 @@
             <div class="flex gap-2 justify-center">
               <div
                 v-if="hasSubOrg"
-                id="revenue-analysis-chart-3"
+                id="fixedcost-analysis-chart-3"
                 style="height: 250px; width: 100%"
               />
               <div
                 v-if="hasSubOrg"
-                id="revenue-analysis-chart-31"
+                id="fixedcost-analysis-chart-31"
                 style="height: 250px; width: 100%"
               />
               <div
@@ -223,7 +223,7 @@ interface TimeSpanDataQuery {
 // 示例
 // 查询2024年石化板块固定成本数据，包含下属企业信息和产品信息
 const exampleQuery: TimeSpanDataQuery = {
-  keyIndexType: "revenue",
+  keyIndexType: "fixedCost",
   timeSpan: "year",
   dataTime: "2024-01-01",
   org: "石化板块",
@@ -446,7 +446,7 @@ const handleMetricItemClick = (item: any) => {
 const initLiquidFill = () => {
   if (!liquidFill.value) {
     liquidFill.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-liquid-fill")
+      document.getElementById("fixedcost-analysis-chart-liquid-fill")
     );
   }
   liquidFill.value.clear();
@@ -506,7 +506,7 @@ const initLiquidFill = () => {
 const initChart1 = (type: string = "bar") => {
   if (!chart1.value) {
     chart1.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-1")
+      document.getElementById("fixedcost-analysis-chart-1")
     );
   }
   chart1.value.clear();
@@ -702,7 +702,7 @@ const initChart1 = (type: string = "bar") => {
 const initChart2 = () => {
   if (!chart2.value) {
     chart2.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-2")
+      document.getElementById("fixedcost-analysis-chart-2")
     );
   }
   chart2.value.clear();
@@ -799,7 +799,7 @@ const initChart3 = () => {
   }
   if (!chart3.value) {
     chart3.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-3")
+      document.getElementById("fixedcost-analysis-chart-3")
     );
   }
   chart3.value.clear();
@@ -842,7 +842,7 @@ const initChart3 = () => {
 const initChart31 = () => {
   if (!chart31.value) {
     chart31.value = echarts.init(
-      document.getElementById("revenue-analysis-chart-31")
+      document.getElementById("fixedcost-analysis-chart-31")
     );
   }
   chart31.value.clear();
@@ -1566,7 +1566,7 @@ const initLegendClick = () => {
     const { name } = params;
     if (!Object.values(OurCompanyEnumMap).includes(name)) return;
     const nextRoute = router.resolve({
-      name: "Revenue",
+      name: "FixedCost",
       query: {
         companyName: name,
       },
@@ -1582,7 +1582,7 @@ const initLegendClick = () => {
   chart4.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
     const nextRoute = router.resolve({
-      name: "Revenue",
+      name: "FixedCost",
       query: {
         companyName: route.query.companyName,
         productType: name,
