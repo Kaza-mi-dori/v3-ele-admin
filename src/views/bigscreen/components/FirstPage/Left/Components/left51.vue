@@ -500,6 +500,22 @@ function initChart() {
     if (!route) return;
     window.open(route.href, "_blank");
   });
+  // 需要先筛选出大于0的和小于0的
+  const dataGreaterThan0 = data.value.filter((item) => item.value[1] >= 0);
+  const dataLessThan0 = data.value.filter((item) => item.value[1] < 0);
+  console.log(
+    dataGreaterThan0,
+    dataLessThan0,
+    data.value.map((item) => {
+      return {
+        value: item.value[1],
+        name: item.title,
+        itemStyle: {
+          color: item.color, // 使用自定义颜色
+        },
+      };
+    })
+  );
   const option2 = {
     tooltip: {
       trigger: "axis",
@@ -525,94 +541,146 @@ function initChart() {
       left: "3%",
       containLabel: true,
     },
-    series: [
-      {
-        name: "利润1",
-        type: "pie",
-        startAngle: 180,
-        endAngle: 360,
-        radius: ["20%", "60%"],
-        data: data.value
-          .filter((item) => item.value[1] >= 0)
-          .map((item) => {
-            return {
-              value: item.value[1],
-              name: item.title,
-              itemStyle: {
-                color: item.color, // 使用自定义颜色
+
+    series:
+      dataGreaterThan0.length > 0 && dataLessThan0.length > 0
+        ? [
+            {
+              name: "利润1",
+              type: "pie",
+              startAngle: 180,
+              endAngle: 360,
+              radius: ["20%", "60%"],
+              data:
+                dataGreaterThan0.length > 0
+                  ? dataGreaterThan0.map((item) => {
+                      return {
+                        value: item.value[1],
+                        name: item.title,
+                        itemStyle: {
+                          color: item.color, // 使用自定义颜色
+                        },
+                      };
+                    })
+                  : [
+                      {
+                        value: 0,
+                        // name: "无数据",
+                      },
+                    ],
+              // yAxisIndex: 1,
+              label: {
+                show: true,
+                // position: "inside",
+                edgeDistance: 10,
+                lineHeight: 20,
+                textStyle: {
+                  color: "#fff",
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                  align: "center",
+                  verticalAlign: "middle",
+                },
+                formatter: "{b}\n{c}亿元",
+                rich: {
+                  a: {
+                    color: "#fff",
+                    fontSize: 12,
+                    lineHeight: 20,
+                    marginRight: 20,
+                  },
+                },
               },
-            };
-          }),
-        // yAxisIndex: 1,
-        label: {
-          show: true,
-          // position: "inside",
-          edgeDistance: 10,
-          lineHeight: 20,
-          textStyle: {
-            color: "#fff",
-            fontSize: "0.8rem",
-            fontWeight: "bold",
-            align: "center",
-            verticalAlign: "middle",
-          },
-          formatter: "{b}\n{c}亿元",
-          rich: {
-            a: {
-              color: "#fff",
-              fontSize: 12,
-              lineHeight: 20,
-              marginRight: 20,
+              labelLine: {
+                show: true,
+                length: 5,
+              },
             },
-          },
-        },
-        labelLine: {
-          show: true,
-          length: 5,
-        },
-      },
-      {
-        name: "利润2",
-        type: "pie",
-        startAngle: 0,
-        endAngle: 180,
-        radius: ["20%", "60%"],
-        data: data.value
-          .filter((item) => item.value[1] < 0)
-          .map((item) => {
-            return {
-              value: -item.value[1],
-              name: item.title,
-              color: item.color,
-            };
-          }),
-        // yAxisIndex: 1,
-        label: {
-          show: true,
-          // position: "inside",
-          textStyle: {
-            color: "#fff",
-            fontSize: "0.8rem",
-            fontWeight: "bold",
-            align: "center",
-            verticalAlign: "middle",
-          },
-          formatter: "{b}\n-{c}亿元",
-          rich: {
-            a: {
-              color: "#fff",
-              fontSize: 12,
-              lineHeight: 20,
-              marginRight: 20,
+            {
+              name: "利润2",
+              type: "pie",
+              startAngle: 0,
+              endAngle: 180,
+              radius: ["20%", "60%"],
+              data: data.value
+                .filter((item) => item.value[1] < 0)
+                .map((item) => {
+                  return {
+                    value: -item.value[1],
+                    name: item.title,
+                    color: item.color,
+                  };
+                }),
+              // yAxisIndex: 1,
+              label: {
+                show: true,
+                // position: "inside",
+                textStyle: {
+                  color: "#fff",
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                  align: "center",
+                  verticalAlign: "middle",
+                },
+                formatter: "{b}\n-{c}亿元",
+                rich: {
+                  a: {
+                    color: "#fff",
+                    fontSize: 12,
+                    lineHeight: 20,
+                    marginRight: 20,
+                  },
+                },
+              },
+              labelLine: {
+                show: true,
+                length: 5,
+              },
             },
-          },
-        },
-        labelLine: {
-          show: true,
-          length: 5,
-        },
-      },
-    ],
+          ]
+        : [
+            {
+              name: "利润1",
+              type: "pie",
+              radius: ["20%", "60%"],
+              data: data.value.map((item) => {
+                return {
+                  value: Math.abs(item.value[1]),
+                  name: item.title,
+                  itemStyle: {
+                    color: item.color, // 使用自定义颜色
+                  },
+                };
+              }),
+              // yAxisIndex: 1,
+              label: {
+                show: true,
+                // position: "inside",
+                edgeDistance: 10,
+                lineHeight: 20,
+                textStyle: {
+                  color: "#fff",
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                  align: "center",
+                  verticalAlign: "middle",
+                },
+                formatter: "{b}\n{c}亿元",
+                rich: {
+                  a: {
+                    color: "#fff",
+                    fontSize: 12,
+                    lineHeight: 20,
+                    marginRight: 20,
+                  },
+                },
+              },
+              labelLine: {
+                show: true,
+                length: 5,
+              },
+            },
+          ],
   };
   chartRef2.value.setOption(option2);
 }

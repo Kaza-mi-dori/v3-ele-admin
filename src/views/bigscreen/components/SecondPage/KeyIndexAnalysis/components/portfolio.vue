@@ -13,7 +13,7 @@
       <span class="text-date-desc">数据截止日期：{{ dataTimeText }}</span>
     </div>
     <div class="bg-view-body pl-4 pr-4">
-      <Model1 class="model1 w-full" title="销售金额逐月分析">
+      <Model1 class="model1 w-full" title="企业资金逐月分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex items-center h-full w-full gap-2">
@@ -60,7 +60,7 @@
           </div>
         </div>
       </Model1>
-      <Model1 class="model1" title="销售金额构成分析">
+      <Model1 class="model1" title="企业资金构成分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex gap-2 justify-center">
@@ -90,7 +90,7 @@
       </Model1>
       <!-- <div class="b-space" /> -->
       <div class="flex gap-2">
-        <Model1 v-if="hasSubOrg" class="model1" title="下属企业销售金额分析">
+        <Model1 v-if="hasSubOrg" class="model1" title="下属企业资金分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -117,7 +117,7 @@
           </div>
         </Model1>
         <!-- todo 按照是不是有数据来决定是否显示 -->
-        <Model1 v-if="hasProduct" class="model1" title="产品销售金额分析">
+        <Model1 v-if="hasProduct" class="model1" title="资产科目归类分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -291,7 +291,7 @@ const metricItemData = ref([
   {
     title: "累计",
     value: 0,
-    unit: "万元",
+    unit: "亿元",
   },
   {
     title: "环比增幅",
@@ -301,7 +301,7 @@ const metricItemData = ref([
   {
     title: "同比增长",
     value: 0,
-    unit: "万元",
+    unit: "亿元",
   },
   {
     title: "同比增幅",
@@ -357,7 +357,7 @@ const yearData = {
     {
       title: "累计",
       value: 0,
-      unit: "万元",
+      unit: "亿元",
     },
     {
       title: "环比增幅",
@@ -367,7 +367,7 @@ const yearData = {
     {
       title: "同比增长",
       value: 0,
-      unit: "万元",
+      unit: "亿元",
     },
     {
       title: "同比增幅",
@@ -540,7 +540,7 @@ const initChart1 = (type: string = "bar") => {
       show: true,
       // icon: "circle",
       top: "3%",
-      data: ["计划销售金额", "实际销售金额"],
+      data: ["计划企业资金", "实际企业资金"],
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
       },
@@ -574,7 +574,7 @@ const initChart1 = (type: string = "bar") => {
     },
     yAxis: {
       type: "value",
-      name: "单位：万元",
+      name: "单位：亿元",
       axisLine: {
         show: true,
         lineStyle: {
@@ -598,7 +598,7 @@ const initChart1 = (type: string = "bar") => {
     series: [
       {
         type: "bar",
-        name: "计划销售金额",
+        name: "计划企业资金",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -618,7 +618,7 @@ const initChart1 = (type: string = "bar") => {
       },
       {
         type: "bar",
-        name: "实际销售金额",
+        name: "实际企业资金",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -830,8 +830,8 @@ const initChart31 = () => {
       // 使用target和actual的值
       // formatter: (params: any) => {
       //   return `${params.name}<br />
-      //   计划值：${target[params.dataIndex].value}万元<br />
-      //   实际值：${actual[params.dataIndex].value}万元<br />
+      //   计划值：${target[params.dataIndex].value}亿元<br />
+      //   实际值：${actual[params.dataIndex].value}亿元<br />
       //   完成率：${normalizedActual[params.dataIndex].value.toFixed(2)}%`;
       // },
       trigger: "axis",
@@ -855,7 +855,7 @@ const initChart31 = () => {
     },
     yAxis: {
       type: "value",
-      name: "完成值（万元）",
+      name: "完成值（亿元）",
       // min: 0,
       // max: 100,
       axisLine: {
@@ -1016,8 +1016,8 @@ const initChart41 = () => {
       // 使用target和actual的值
       formatter: (params: any) => {
         return `${params[0].name}<br />
-        计划值：${target[params[0].dataIndex].value}万元<br />
-        实际值：${actual[params[0].dataIndex].value}万元<br />
+        计划值：${target[params[0].dataIndex].value}亿元<br />
+        实际值：${actual[params[0].dataIndex].value}亿元<br />
         完成率：${normalizedActual[params[0].dataIndex].value.toFixed(2)}%`;
       },
       trigger: "axis",
@@ -1282,7 +1282,7 @@ const initAnimation = () => {
 const buildQueryParams = () => {
   // 测试数据：组织
   const queryParams = {
-    keyIndexType: "销售金额",
+    keyIndexType: "企业资金",
     timeDimension: timeTabValue.value === "year" ? "年" : "月",
     companyName: route.query.companyName || "石化板块",
     fromYear: 2025,
@@ -1352,23 +1352,24 @@ const initData = async () => {
     queryParams.withSubProductData as boolean,
     queryParams.withSubProductTypeData as boolean
   );
-  // console.log(testData);
+  console.log(testData);
   // TODO 将数据放入组件
   if (testData?.[0]) {
     data = {
       liquidFill: {
-        fulfilledPercent:
-          testData[0].计划值 === 0
-            ? "-"
-            : Number(
-                ((testData[0].实际值 / testData[0].计划值) * 100).toFixed(2)
-              ),
+        // fulfilledPercent:
+        //   testData[0].计划值 === 0
+        //     ? "-"
+        //     : Number(
+        //         ((testData[0].实际值 / testData[0].计划值) * 100).toFixed(2)
+        //       ),
+        fulfilledPercent: "-",
       },
       metricItem: [
         {
           title: "累计",
           value: Number(testData[0].实际值.toFixed(2)),
-          unit: "万元",
+          unit: "亿元",
         },
         {
           title: "环比增幅",
@@ -1378,7 +1379,7 @@ const initData = async () => {
         {
           title: "同比增长",
           value: Number((testData[0].年累计值同比 || 0).toFixed(2)),
-          unit: "万元",
+          unit: "亿元",
         },
         {
           title: "同比增幅",
@@ -1524,7 +1525,7 @@ const initLegendClick = () => {
     const { name } = params;
     if (!Object.values(OurCompanyEnumMap).includes(name)) return;
     const nextRoute = router.resolve({
-      name: "SellAmount",
+      name: "Portfolio",
       query: {
         companyName: name,
       },
@@ -1540,7 +1541,7 @@ const initLegendClick = () => {
   chart4.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
     const nextRoute = router.resolve({
-      name: "SellAmount",
+      name: "Portfolio",
       query: {
         companyName: route.query.companyName,
         productType: name,
