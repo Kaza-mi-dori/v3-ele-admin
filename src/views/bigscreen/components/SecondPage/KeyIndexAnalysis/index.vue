@@ -67,6 +67,9 @@ onMounted(() => {
     case "contract":
       title.value = `${companyName}${productType ? `${productType}` : ""}合同`;
       break;
+    case "fixedCost":
+      title.value = `${companyName}${productType ? `${productType}` : ""}固定成本`;
+      break;
   }
 });
 </script>
