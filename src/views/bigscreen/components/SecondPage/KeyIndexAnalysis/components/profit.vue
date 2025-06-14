@@ -149,6 +149,9 @@
 </template>
 
 <script setup lang="ts">
+// 问题在于统计出来的「利润」是减出来的，不是加出来的，很难找到【组成部分】
+// TODO 试着加入查找同级别【营业毛利】的逻辑
+
 import Model1 from "../../Model1/index.vue";
 import TextTab from "@/views/bigscreen/components/SecondPage/Common/TextTab/index.vue";
 import * as echarts from "echarts";

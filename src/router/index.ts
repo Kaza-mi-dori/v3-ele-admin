@@ -308,6 +308,24 @@ export const constantRoutes: RouteRecordRaw[] = [
                 "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/sell.vue"
               ),
           },
+          // 采购金额
+          {
+            path: "purchaseAmount",
+            name: "PurchaseAmount",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/purchaseAmount.vue"
+              ),
+          },
+          // 销售金额
+          {
+            path: "sellAmount",
+            name: "SellAmount",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/sellAmount.vue"
+              ),
+          },
           {
             path: "contract",
             name: "ContractAnalysis",
@@ -910,6 +928,15 @@ export const constantRoutes: RouteRecordRaw[] = [
         component: () => import("@/components/FormCRUDTemplate/ListPage.vue"),
         meta: {
           title: "列表页模板",
+          icon: "el-icon-coin",
+        },
+      },
+      {
+        path: "agg-utils-test",
+        name: "AggUtils",
+        component: () => import("@/views/otherConfig/agg-utils.vue"),
+        meta: {
+          title: "聚合数据展示",
           icon: "el-icon-coin",
         },
       },

@@ -1524,7 +1524,7 @@ const initLegendClick = () => {
     const { name } = params;
     if (!Object.values(OurCompanyEnumMap).includes(name)) return;
     const nextRoute = router.resolve({
-      name: "Revenue",
+      name: "Sell",
       query: {
         companyName: name,
       },
@@ -1540,7 +1540,7 @@ const initLegendClick = () => {
   chart4.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
     const nextRoute = router.resolve({
-      name: "Revenue",
+      name: "Sell",
       query: {
         companyName: route.query.companyName,
         productType: name,

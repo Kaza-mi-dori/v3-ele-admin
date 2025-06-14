@@ -279,7 +279,7 @@ const initChartRight3 = async () => {
         barGap: "10%", // 柱体间距
         data:
           activeName.value === REVENUE
-            ? [512.8, null, null]
+            ? [520.0, 465.0, null]
             : [1.06, null, null], // 柱状图的值: 根据选中的页签显示对应的数据
         // name: activeName.value === REVENUE ? "目标" : "实际",
         name: "计划值",

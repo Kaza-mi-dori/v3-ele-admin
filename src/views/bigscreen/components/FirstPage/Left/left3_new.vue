@@ -6,7 +6,11 @@
         :key="index"
         style="flex: 1"
       >
-        <DescribeItem4 v-bind="item" />
+        <DescribeItem4
+          v-bind="item"
+          @clickYear="handleClickYear"
+          @clickMonth="handleClickMonth"
+        />
       </div>
     </div>
   </div>
@@ -32,16 +36,20 @@ const queryForm: Ref<Partial<BusinessReportQuery> & PageQueryDev> = ref({
   页容量: 20,
 });
 
+const router = useRouter();
+
 const keywordMap = {
   累计采购: "1941591bce2",
   累计销售: "19415920653",
   毛利率: "19463e8525d",
+  固定成本: "1976a3b04d2",
 };
 
 const keywordMapMonth = {
   月度采购: "19471d10915",
   月度销售: "19471d14331",
   月度毛利率: "19471dd5398",
+  月度固定成本: "1976a3dd9f5",
 };
 
 let totalData = ref([
@@ -65,15 +73,25 @@ let totalData = ref([
     monthUnit: "万元",
     yearUnit: "万元",
   },
+  // {
+  //   title: "毛利率",
+  //   keyword: keywordMap["毛利率"],
+  //   keywordMonth: keywordMapMonth["月度毛利率"],
+  //   bgImg: block3,
+  //   yearTotal: 0,
+  //   monthTotal: 0,
+  //   monthUnit: "%",
+  //   yearUnit: "%",
+  // },
   {
-    title: "毛利率",
-    keyword: keywordMap["毛利率"],
-    keywordMonth: keywordMapMonth["月度毛利率"],
+    title: "固定成本",
+    keyword: keywordMap["固定成本"],
+    keywordMonth: keywordMapMonth["月度固定成本"],
     bgImg: block3,
     yearTotal: 0,
     monthTotal: 0,
-    monthUnit: "%",
-    yearUnit: "%",
+    monthUnit: "万元",
+    yearUnit: "万元",
   },
 ]);
 
@@ -130,6 +148,12 @@ const initData = async () => {
       yearUnit: "亿元",
     },
     累计毛利率: { yearTotal: 0, monthTotal: 0, monthUnit: "%", yearUnit: "%" },
+    累计固定成本: {
+      yearTotal: 0,
+      monthTotal: 0,
+      monthUnit: "亿元",
+      yearUnit: "亿元",
+    },
   };
 
   resData.forEach((item: any) => {
@@ -141,6 +165,9 @@ const initData = async () => {
 
     totals["累计毛利率"].yearTotal = Number(item.累计毛利率) || 0;
     totals["累计毛利率"].monthTotal = Number(item.本月毛利率) || 0;
+
+    totals["累计固定成本"].yearTotal = Number(item.累计固定成本) || 0;
+    totals["累计固定成本"].monthTotal = Number(item.当期固定成本) || 0;
   });
   totalData.value = [
     {
@@ -163,15 +190,25 @@ const initData = async () => {
       monthUnit: "万元",
       yearUnit: "万元",
     },
+    // {
+    //   title: "毛利率",
+    //   keyword: keywordMap["毛利率"],
+    //   keywordMonth: keywordMapMonth["月度毛利率"],
+    //   bgImg: block3,
+    //   yearTotal: Number(totals["累计毛利率"].yearTotal.toFixed(2)),
+    //   monthTotal: Number(totals["累计毛利率"].monthTotal.toFixed(2)),
+    //   monthUnit: "%",
+    //   yearUnit: "%",
+    // },
     {
-      title: "毛利率",
-      keyword: keywordMap["毛利率"],
-      keywordMonth: keywordMapMonth["月度毛利率"],
+      title: "固定成本",
+      keyword: keywordMap["固定成本"],
+      keywordMonth: keywordMapMonth["月度固定成本"],
       bgImg: block3,
-      yearTotal: Number(totals["累计毛利率"].yearTotal.toFixed(2)),
-      monthTotal: Number(totals["累计毛利率"].monthTotal.toFixed(2)),
-      monthUnit: "%",
-      yearUnit: "%",
+      yearTotal: Number(totals["累计固定成本"].yearTotal.toFixed(2)),
+      monthTotal: Number(totals["累计固定成本"].monthTotal.toFixed(2)),
+      monthUnit: "万元",
+      yearUnit: "万元",
     },
   ];
   fetchData().then(() => {
@@ -194,6 +231,33 @@ const initData = async () => {
       }
     }
   });
+};
+
+const handleClickYear = (title: string) => {
+  switch (title) {
+    case "累计采购":
+      router.push({
+        name: "PurchaseAmount",
+        query: {
+          module: "purchaseAmount",
+          companyName: "石化板块",
+        },
+      });
+      break;
+    case "累计销售":
+      router.push({
+        name: "SellAmount",
+        query: {
+          module: "sellAmount",
+          companyName: "石化板块",
+        },
+      });
+      break;
+  }
+};
+
+const handleClickMonth = (title: string) => {
+  console.log("handleClickMonth", title);
 };
 
 onMounted(() => {

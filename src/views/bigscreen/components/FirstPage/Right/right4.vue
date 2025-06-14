@@ -221,7 +221,7 @@ onMounted(async () => {
       // }, 0);
     }
     nextTick(() => {
-      initVideoChannel();
+      // initVideoChannel();
     });
   }
 });

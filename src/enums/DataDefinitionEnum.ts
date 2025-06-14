@@ -10,3 +10,8 @@ export const DataDefinitionNameToMarkMap: Record<string, any> = {
   WTI日价: "193a8f18b5f",
   "俄罗斯到岸价(山东)": "193b9f35581",
 };
+
+export const IndicatorMap: Record<string, any> = {
+  固定成本: "1976a3b04d2",
+  月度固定成本: "1976a3dd9f5",
+};

@@ -10,6 +10,13 @@
 // 3. initCache时只增量计算未计算过的月份数据（筛选）
 // 4. 重新写一个接受月份参数的接口，只计算指定月份的数据
 
+// TODO 在后端已实现的基础上放出报表的手动生成接口
+// TODO 为了单独实现指标的【自定义】管理，要模仿一体化用指标 - 程序的方式来管理指标的数据与计算逻辑
+// 不自定义的话就要把指标的计算逻辑写定在代码或约定中，例如必须知道【石化板块年累计值】的计算逻辑是【桂轩实际值】+【恒润实际值】+【开燃实际值】
+// 关键指标页可以抽象成Fn(指标, 时间)，指定好自动计算逻辑后就可以随意增加关键指标页
+// 要么把{定义项}做到单个属性级别，单个属性本身就可以作为聚合对象
+// 或者像一开始做到{表单}级别，只能聚合表单
+
 // 由于最长使用的索引是数据时间，所以需要将数据时间作为key
 
 import Decimal from "decimal.js";
@@ -78,6 +85,18 @@ interface AggData {
   subProductTypeData?: AggData[]; // 嵌套子项数据
 }
 
+function findLastMonth(month: string) {
+  const lastMonth = new Date(month);
+  lastMonth.setMonth(lastMonth.getMonth() - 1);
+  return lastMonth.toISOString().split("T")[0].substring(0, 7);
+}
+
+function findLastYearMonth(year: string) {
+  const lastYear = new Date(year);
+  lastYear.setFullYear(lastYear.getFullYear() - 1);
+  return lastYear.toISOString().split("T")[0].substring(0, 7);
+}
+
 // 组织的包含关系
 const orgToOrgMap: Record<string, string[]> = {
   // 石化板块: ["广投石化", "桂盛桂轩", "开燃公司", "恒润公司"],
@@ -96,6 +115,7 @@ const orgToEnterpriseMap: Record<string, string[]> = {
     "恒润公司",
     "桂盛桂轩",
     "内部抵消",
+    "固定成本",
   ],
   广投石化: [
     "广投石化本部",
@@ -104,6 +124,7 @@ const orgToEnterpriseMap: Record<string, string[]> = {
     "永盛仓储",
     "永盛石化",
     "内部抵消",
+    "固定成本",
   ],
   桂盛桂轩: ["桂盛桂轩"],
   // 开燃公司: ["开燃公司"],
@@ -112,13 +133,17 @@ const orgToEnterpriseMap: Record<string, string[]> = {
   广投石化舟山: ["广投石化舟山"],
   永盛仓储: ["永盛仓储"],
   永盛石化: ["永盛石化"],
+  固定成本: ["固定成本"],
 };
 
 // 产品类型到产品的映射(tag)
 const productTypeToProductMap: Record<string, string[]> = {
   成品油: ["#92汽油", "#95汽油", "#98汽油", "#0柴油", "成品油产品"],
+  成品油产品: ["成品油产品"],
   原油: ["原油产品"],
-  燃料油: ["燃料油"],
+  原油产品: ["原油产品"],
+  燃料油: ["燃料油", "船加油"],
+  船加油: ["船加油"],
   化工类: ["化工产品"],
   天然气类: ["天然气产品"],
   煤炭类: ["煤炭"],
@@ -129,6 +154,9 @@ const productTypeToProductMap: Record<string, string[]> = {
   仓储业务: ["仓储业务"],
   其他业务: ["其他业务"],
   内部抵消: ["内部抵消"],
+  固定成本: ["固定成本"],
+  桂盛桂轩业务: ["桂盛桂轩业务1", "桂盛桂轩业务2"],
+  恒润公司业务: ["恒润公司业务1", "恒润公司业务2"],
 };
 
 // 组织到产品类型的映射
@@ -144,6 +172,9 @@ const orgToProductTypeMap: Record<string, string[]> = {
     "仓储业务",
     "其他业务",
     "内部抵消",
+    "固定成本",
+    "桂盛桂轩业务",
+    "恒润公司业务",
   ],
   广投石化: [
     "成品油",
@@ -156,6 +187,7 @@ const orgToProductTypeMap: Record<string, string[]> = {
     "仓储业务",
     "其他业务",
     "内部抵消",
+    "固定成本",
   ],
   广投石化本部: [
     "成品油",
@@ -166,19 +198,26 @@ const orgToProductTypeMap: Record<string, string[]> = {
     "其他类",
     "燃料油",
     "其他业务",
+    "固定成本",
   ],
-  桂盛桂轩: [
-    "成品油",
-    "原油",
-    "化工类",
-    "天然气类",
-    "煤炭类",
-    "其他类",
-    "燃料油",
-    "其他业务",
-  ],
+  // 桂盛桂轩: [
+  //   "成品油",
+  //   "原油",
+  //   "化工类",
+  //   "天然气类",
+  //   "煤炭类",
+  //   "其他类",
+  //   "燃料油",
+  //   "其他业务",
+  // ],
+  桂盛桂轩: ["桂盛桂轩业务"],
   // 开燃公司: ["成品油", "原油", "化工类", "天然气类", "煤炭类", "其他类"],
-  恒润公司: ["成品油", "原油", "化工类", "天然气类", "煤炭类", "其他类"],
+  // 恒润公司: ["成品油", "原油", "化工类", "天然气类", "煤炭类", "其他类"],
+  恒润公司: ["恒润公司业务"],
+  永盛仓储: ["仓储业务"],
+  永盛石化: ["成品油"],
+  内部抵消: ["内部抵消"],
+  广投石化舟山: ["船加油"],
 };
 
 // 反向映射：公司到组织的映射
@@ -304,7 +343,7 @@ interface MonthCache {
 }
 
 // 初始化缓存
-const yearCache: YearCache = {
+let yearCache: YearCache = {
   byOrg: {},
   byProductType: {},
   byCompany: {},
@@ -312,7 +351,7 @@ const yearCache: YearCache = {
   byOrgAndProductType: {},
 };
 
-const monthCache: MonthCache = {
+let monthCache: MonthCache = {
   byOrg: {},
   byProductType: {},
   byCompany: {},
@@ -553,10 +592,15 @@ function buildYearOrgCache(keyIndexType: string, year: string, data: any[]) {
         const monthData = monthDatas[month];
         orgAggData.计划值 = safeDecimalAdd(orgAggData.计划值, monthData.计划值);
         orgAggData.实际值 = safeDecimalAdd(orgAggData.实际值, monthData.实际值);
+        // orgAggData.年累计值 = safeDecimalAdd(
+        //   orgAggData.年累计值,
+        //   monthData.年累计值
+        // );
         orgAggData.年累计值 = safeDecimalAdd(
           orgAggData.年累计值,
-          monthData.年累计值
+          monthData.实际值
         );
+        // TODO 找去年【同期年报】数据计算同比增长、同比值
       });
 
     yearCache.byOrg[keyIndexType][org][year] = orgAggData;
@@ -1262,6 +1306,7 @@ function calculateDimensionMToM(
 ) {
   const currentMonthData = cache[currentMonth];
   const lastMonthData = cache[lastMonth];
+
   if (currentMonthData && lastMonthData) {
     currentMonthData.环比率 =
       lastMonthData.实际值 === 0
@@ -1280,6 +1325,8 @@ function calculateDimensionYToY(
 ) {
   const currentYearData = cache[current];
   const lastYearData = cache[last];
+
+  // console.log("计算月度同比", current, last, currentYearData, lastYearData);
   if (currentYearData && lastYearData) {
     currentYearData.同比率 =
       lastYearData.实际值 === 0
@@ -1467,6 +1514,12 @@ function getMonthList() {
   return Array.from(monthSet);
 }
 
+// 用已有数据初始化缓存
+function initCacheByData(yearData: YearCache, monthData: MonthCache) {
+  yearCache = yearData;
+  monthCache = monthData;
+}
+
 // 初始化缓存
 function initCache(rawData: any) {
   try {
@@ -1531,6 +1584,7 @@ function queryOrgData(
 ) {
   const cache = timeDimension === "year" ? yearCache : monthCache;
   // 检查缓存是否存在
+  // console.log(cache.byOrg);
   if (!cache.byOrg[keyIndexType] || !cache.byOrg[keyIndexType][orgName]) {
     return [];
   }
@@ -1848,6 +1902,13 @@ function queryAggData(queryParam: {
       startDate,
       endDate
     );
+    console.log("查询企业数据", {
+      keyIndexType,
+      org,
+      timeDimension,
+      startDate,
+      endDate,
+    });
     if (withSubTimeData) {
       // 查询子时段数据
       if (timeDimension === "year") {
@@ -2074,6 +2135,7 @@ function queryAggData(queryParam: {
 
 export {
   initCache,
+  initCacheByData,
   clearCache,
   queryOrgData,
   queryProductTypeData,

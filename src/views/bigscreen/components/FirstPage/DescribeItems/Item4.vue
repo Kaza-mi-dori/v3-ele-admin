@@ -8,12 +8,16 @@
       </div>
       <div class="annual-total">
         <div class="scale">年</div>
-        <div class="year-num">{{ formatNumber(props.yearTotal) }}</div>
+        <div class="year-num" @click="handleClickYear">
+          {{ formatNumber(props.yearTotal) }}
+        </div>
         <div>{{ props.yearUnit || "万元" }}</div>
       </div>
       <div class="monthly-total">
         <div class="scale">月</div>
-        <div class="month-num">{{ formatNumber(props.monthTotal) }}</div>
+        <div class="month-num" @click="handleClickMonth">
+          {{ formatNumber(props.monthTotal) }}
+        </div>
         <div>{{ props.monthUnit || "万元" }}</div>
       </div>
     </div>
@@ -36,12 +40,22 @@ const props = defineProps<{
   monthUnit: string;
 }>();
 
+const emit = defineEmits(["clickYear", "clickMonth"]);
+
 const formatNumber = (num: number | string): string => {
   if (Number(num) > 10000) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   } else {
     return num.toString(); // 直接返回原始数字，不格式化
   }
+};
+
+const handleClickYear = () => {
+  emit("clickYear", props.title);
+};
+
+const handleClickMonth = () => {
+  emit("clickMonth", props.title);
 };
 </script>
 
@@ -55,7 +69,7 @@ $bg-color-1: #ffffff;
 
   .item3-bg {
     /* 使图像覆盖整个父容器，并保持比例 */
-    @apply w-full h-full absolute top-0 left-0 object-cover;
+    @apply w-full h-full absolute top-0 left-0 object-cover z-[-1];
   }
   .content-item {
     @apply flex-1 z-1;
@@ -127,6 +141,10 @@ $bg-color-1: #ffffff;
   }
   .year-num {
     color: #12f5fb;
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
   .month-num {
     color: #d6e337;

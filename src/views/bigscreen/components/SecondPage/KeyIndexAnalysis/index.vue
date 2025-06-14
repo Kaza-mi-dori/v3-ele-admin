@@ -58,6 +58,12 @@ onMounted(() => {
     case "sale":
       title.value = `${companyName}${productType ? `${productType}` : ""}销售量`;
       break;
+    case "purchaseAmount":
+      title.value = `${companyName}${productType ? `${productType}` : ""}采购金额`;
+      break;
+    case "sellAmount":
+      title.value = `${companyName}${productType ? `${productType}` : ""}销售金额`;
+      break;
     case "contract":
       title.value = `${companyName}${productType ? `${productType}` : ""}合同`;
       break;
