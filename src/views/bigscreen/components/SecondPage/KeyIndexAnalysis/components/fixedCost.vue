@@ -60,7 +60,7 @@
           </div>
         </div>
       </Model1>
-      <Model1 class="model1" title="营收构成分析">
+      <Model1 class="model1" title="固定成本构成分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex gap-2 justify-center">
@@ -90,7 +90,7 @@
       </Model1>
       <!-- <div class="b-space" /> -->
       <div class="flex gap-2">
-        <Model1 v-if="hasSubOrg" class="model1" title="下属企业营收分析">
+        <Model1 v-if="hasSubOrg" class="model1" title="下属企业固定成本分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
@@ -117,7 +117,7 @@
           </div>
         </Model1>
         <!-- todo 按照是不是有数据来决定是否显示 -->
-        <Model1 v-if="hasProduct" class="model1" title="产品营收分析">
+        <Model1 v-if="hasProduct" class="model1" title="产品固定成本分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
