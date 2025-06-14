@@ -6,7 +6,6 @@
           v-model="datatime"
           :type="timeTabValue === 'year' ? 'year' : 'month'"
           placeholder="请选择月份"
-          @change="handleSearch"
         />
         <el-button type="primary" @click="handleSearch">搜索</el-button>
       </div>
@@ -14,7 +13,7 @@
       <span class="text-date-desc">数据截止日期：{{ dataTimeText }}</span>
     </div>
     <div class="bg-view-body pl-4 pr-4">
-      <Model1 class="model1 w-full" title="营收逐月分析">
+      <Model1 class="model1 w-full" title="企业资金逐月分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex items-center h-full w-full gap-2">
@@ -61,7 +60,7 @@
           </div>
         </div>
       </Model1>
-      <Model1 class="model1" title="营收构成分析">
+      <Model1 class="model1" title="企业资金构成分析">
         <div class="model-body">
           <div class="model-body__content">
             <div class="flex gap-2 justify-center">
@@ -91,26 +90,26 @@
       </Model1>
       <!-- <div class="b-space" /> -->
       <div class="flex gap-2">
-        <Model1 v-if="hasSubOrg" class="model1" title="下属企业营收分析">
+        <Model1 v-if="hasSubOrg" class="model1" title="下属企业资金分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
                 <thead>
                   <tr>
                     <th>企业</th>
-                    <th>月实际（累计）(万元)</th>
-                    <th>同比(%)</th>
-                    <th>环比(%)</th>
+                    <th>月实际（累计）</th>
+                    <th>同比</th>
+                    <th>环比</th>
                     <th>完成率</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="item in table1Data" :key="item.name">
                     <td>{{ item.name }}</td>
-                    <td>{{ item.value[0] || "-" }}</td>
-                    <td>{{ item.value[1] || "-" }}</td>
-                    <td>{{ item.value[2] || "-" }}</td>
-                    <td>{{ item.value[3] || "-" }}</td>
+                    <td>{{ item.value[0] }}</td>
+                    <td>{{ item.value[1] }}</td>
+                    <td>{{ item.value[2] }}</td>
+                    <td>{{ item.value[3] }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -118,26 +117,26 @@
           </div>
         </Model1>
         <!-- todo 按照是不是有数据来决定是否显示 -->
-        <Model1 v-if="hasProduct" class="model1" title="产品营收分析">
+        <Model1 v-if="hasProduct" class="model1" title="资产科目归类分析">
           <div class="model-body">
             <div class="model-body__content mx-4 my-2 flex gap-2">
               <table class="sub-org-table m-auto">
                 <thead>
                   <tr>
-                    <th>产品</th>
-                    <th>月实际（累计）(万元)</th>
-                    <th>同比(%)</th>
-                    <th>环比(%)</th>
+                    <th>企业</th>
+                    <th>月实际（累计）</th>
+                    <th>同比</th>
+                    <th>环比</th>
                     <th>完成率</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="item in table2Data" :key="item.name">
                     <td>{{ item.name }}</td>
-                    <td>{{ item.value[0] || "-" }}</td>
-                    <td>{{ item.value[1] || "-" }}</td>
-                    <td>{{ item.value[2] || "-" }}</td>
-                    <td>{{ item.value[3] || "-" }}</td>
+                    <td>{{ item.value[0] }}</td>
+                    <td>{{ item.value[1] }}</td>
+                    <td>{{ item.value[2] }}</td>
+                    <td>{{ item.value[3] }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -292,7 +291,7 @@ const metricItemData = ref([
   {
     title: "累计",
     value: 0,
-    unit: "万元",
+    unit: "亿元",
   },
   {
     title: "环比增幅",
@@ -302,7 +301,7 @@ const metricItemData = ref([
   {
     title: "同比增长",
     value: 0,
-    unit: "万元",
+    unit: "亿元",
   },
   {
     title: "同比增幅",
@@ -358,7 +357,7 @@ const yearData = {
     {
       title: "累计",
       value: 0,
-      unit: "万元",
+      unit: "亿元",
     },
     {
       title: "环比增幅",
@@ -368,7 +367,7 @@ const yearData = {
     {
       title: "同比增长",
       value: 0,
-      unit: "万元",
+      unit: "亿元",
     },
     {
       title: "同比增幅",
@@ -535,13 +534,13 @@ const initChart1 = (type: string = "bar") => {
     monthData = [`${currentYear}-${currentMonth.toString().padStart(2, "0")}`];
   }
 
-  // 基础配置
-  const baseOption = {
+  // 柱状图
+  const option = {
     legend: {
       show: true,
       // icon: "circle",
       top: "3%",
-      data: ["计划经营收入", "实际经营收入"],
+      data: ["计划企业资金", "实际企业资金"],
       textStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
       },
@@ -566,7 +565,7 @@ const initChart1 = (type: string = "bar") => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: sassvariables["bigscreen-primary-color-7"],
+          color: 'sassvariables["bigscreen-primary-color-7"]',
         },
       },
       axisTick: {
@@ -575,7 +574,7 @@ const initChart1 = (type: string = "bar") => {
     },
     yAxis: {
       type: "value",
-      name: "单位：万元",
+      name: "单位：亿元",
       axisLine: {
         show: true,
         lineStyle: {
@@ -596,26 +595,10 @@ const initChart1 = (type: string = "bar") => {
         },
       },
     },
-  };
-
-  // 通用的label配置
-  const commonLabel = {
-    show: true,
-    position: "top",
-    color: "#fff",
-    fontSize: 15,
-    formatter: (params: any) => {
-      return `${params.value || 0}`;
-    },
-  };
-
-  // 柱状图配置
-  const optionBar = {
-    ...baseOption,
     series: [
       {
         type: "bar",
-        name: "计划经营收入",
+        name: "计划企业资金",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -635,7 +618,7 @@ const initChart1 = (type: string = "bar") => {
       },
       {
         type: "bar",
-        name: "实际经营收入",
+        name: "实际企业资金",
         // barWidth: "25%",
         barWidth: 30,
         barGap: "35%",
@@ -647,58 +630,32 @@ const initChart1 = (type: string = "bar") => {
             color: sassvariables["bigscreen-primary-color-7"],
           },
         },
-        label: {
-          ...commonLabel,
-          position: "top", // 柱状图的label可以放在柱子上方
-          offset: [0, -10], // 第一个元素是水平偏移，第二个是垂直偏移（负值表示向上）
-        },
       },
     ],
   };
   // 折线图
   const optionLine = {
-    ...baseOption,
+    ...option,
     series: [
       {
+        ...option.series[0],
         type: "line",
-        name: "计划经营收入",
-        data: data.chart1.dataPlan,
         markLine: {
           lineStyle: {
             type: "dashed",
             color: sassvariables["bigscreen-primary-color-7"],
           },
-        },
-        symbol: "circle", // 折线图可以添加symbol显示点
-        symbolSize: 8,
-        itemStyle: {
-          borderWidth: 2,
         },
       },
       {
+        ...option.series[1],
         type: "line",
-        name: "实际经营收入",
-        data: data.chart1.dataReal,
-        markLine: {
-          lineStyle: {
-            type: "dashed",
-            color: sassvariables["bigscreen-primary-color-7"],
-          },
-        },
-        label: {
-          ...commonLabel,
-          position: "top", // 折线图的label可以放在点的上方
-          offset: [0, -10],
-        },
-        symbol: "circle",
-        symbolSize: 8,
-        itemStyle: {
-          borderWidth: 2,
-        },
+        // data: [110, 220],
+        data: data.chart1.data,
       },
     ],
   };
-  chart1.value.setOption(type === "bar" ? optionBar : optionLine);
+  chart1.value.setOption(type === "bar" ? option : optionLine);
 };
 const initChart2 = () => {
   if (!chart2.value) {
@@ -826,10 +783,7 @@ const initChart3 = () => {
         // roseType: "radius",
         label: {
           show: true,
-          // formatter: "{b}\n{c}",
-          formatter: ({ name, value }: any) => {
-            return `${name}\n${(value || 0).toFixed(2)}万元`;
-          },
+          formatter: "{b}\n{c}",
           color: "#fff",
           fontSize: 15,
         },
@@ -874,12 +828,12 @@ const initChart31 = () => {
       show: true,
       // formatter: "{b}: {c}%",
       // 使用target和actual的值
-      formatter: (params: any) => {
-        return `${params[0].name}<br />
-        计划值：${target[params[0].dataIndex].value || "-"}万元<br />
-        实际值：${actual[params[0].dataIndex].value || "-"}万元<br />
-        完成率：${normalizedActual[params[0].dataIndex].value.toFixed(2)}%`;
-      },
+      // formatter: (params: any) => {
+      //   return `${params.name}<br />
+      //   计划值：${target[params.dataIndex].value}亿元<br />
+      //   实际值：${actual[params.dataIndex].value}亿元<br />
+      //   完成率：${normalizedActual[params.dataIndex].value.toFixed(2)}%`;
+      // },
       trigger: "axis",
       axisPointer: {
         show: true,
@@ -892,7 +846,7 @@ const initChart31 = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: sassvariables["bigscreen-primary-color-7"],
+          color: 'sassvariables["bigscreen-primary-color-7"]',
         },
       },
       axisTick: {
@@ -901,7 +855,7 @@ const initChart31 = () => {
     },
     yAxis: {
       type: "value",
-      name: "完成值（万元）",
+      name: "完成值（亿元）",
       // min: 0,
       // max: 100,
       axisLine: {
@@ -944,7 +898,7 @@ const initChart31 = () => {
         label: {
           show: true,
           formatter: ({ dataIndex }: any) => {
-            return actual[dataIndex].value.toFixed(2);
+            return actual[dataIndex].value;
           },
           fontSize: 14,
           fontWeight: "bold",
@@ -1018,10 +972,7 @@ const initChart4 = () => {
         // roseType: "radius",
         label: {
           show: true,
-          // formatter: "{b}\n{c}",
-          formatter: ({ name, value }: any) => {
-            return `${name}\n${(value || 0).toFixed(2)}万元`;
-          },
+          formatter: "{b}\n{c}",
           color: "#fff",
           fontSize: 15,
         },
@@ -1039,14 +990,13 @@ const initChart41 = () => {
       document.getElementById("profit-analysis-chart-41")
     );
   }
-  const colors = ["#ff8c00", "#aa8c00cc", "crimson", "red", "purple", "blue"];
+  const colors = ["#ff8c00", "#aa8c00cc"];
   chart41.value.clear();
   const target = data.chart41.dataTarget;
   const actual = data.chart41.dataActual;
   const normalizedActual = actual.map((item, index) => ({
     ...item,
-    value:
-      target[index].value === 0 ? 0 : (item.value / target[index].value) * 100,
+    value: (item.value / target[index].value) * 100,
     color: colors[index],
   }));
   const option = {
@@ -1066,8 +1016,8 @@ const initChart41 = () => {
       // 使用target和actual的值
       formatter: (params: any) => {
         return `${params[0].name}<br />
-        计划值：${target[params[0].dataIndex].value}万元<br />
-        实际值：${actual[params[0].dataIndex].value}万元<br />
+        计划值：${target[params[0].dataIndex].value}亿元<br />
+        实际值：${actual[params[0].dataIndex].value}亿元<br />
         完成率：${normalizedActual[params[0].dataIndex].value.toFixed(2)}%`;
       },
       trigger: "axis",
@@ -1082,7 +1032,7 @@ const initChart41 = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: sassvariables["bigscreen-primary-color-7"],
+          color: 'sassvariables["bigscreen-primary-color-7"]',
         },
       },
       axisTick: {
@@ -1105,7 +1055,7 @@ const initChart41 = () => {
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
-        padding: [0, 0, 0, 40],
+        padding: [0, 0, 0, 20],
       },
       splitLine: {
         show: true,
@@ -1131,7 +1081,7 @@ const initChart41 = () => {
         label: {
           show: true,
           formatter: ({ dataIndex }: any) => {
-            return `${actual[dataIndex].value?.toFixed(2)}万元`;
+            return actual[dataIndex].value;
           },
           fontSize: 14,
           fontWeight: "bold",
@@ -1159,6 +1109,17 @@ const initChart41 = () => {
         },
         barWidth: "45%",
       },
+      // {
+      //   type: "bar",
+      //   stack: "a",
+      //   silent: true,
+      //   z: 2,
+      //   data: target,
+      //   itemStyle: {
+      //     color: "lightgray",
+      //   },
+      //   barWidth: "45%",
+      // },
     ],
   };
   chart41.value.setOption(option);
@@ -1321,7 +1282,7 @@ const initAnimation = () => {
 const buildQueryParams = () => {
   // 测试数据：组织
   const queryParams = {
-    keyIndexType: "营收",
+    keyIndexType: "企业资金",
     timeDimension: timeTabValue.value === "year" ? "年" : "月",
     companyName: route.query.companyName || "石化板块",
     fromYear: 2025,
@@ -1391,32 +1352,34 @@ const initData = async () => {
     queryParams.withSubProductData as boolean,
     queryParams.withSubProductTypeData as boolean
   );
-  console.log("testData", testData);
-  // console.log(testData);
+  console.log(testData);
   // TODO 将数据放入组件
   if (testData?.[0]) {
     data = {
       liquidFill: {
-        fulfilledPercent: Number(
-          ((testData[0].实际值 / testData[0].计划值) * 100).toFixed(2)
-        ),
+        // fulfilledPercent:
+        //   testData[0].计划值 === 0
+        //     ? "-"
+        //     : Number(
+        //         ((testData[0].实际值 / testData[0].计划值) * 100).toFixed(2)
+        //       ),
+        fulfilledPercent: "-",
       },
       metricItem: [
         {
           title: "累计",
           value: Number(testData[0].实际值.toFixed(2)),
-          unit: "万元",
+          unit: "亿元",
         },
         {
           title: "环比增幅",
-          // value: Number((testData[0].年累计值环比增幅 || 0).toFixed(2)),
-          value: Number(((testData[0].环比率 || 0) * 100).toFixed(2)),
+          value: Number((testData[0].年累计值环比增幅 || 0).toFixed(2)),
           unit: "%",
         },
         {
           title: "同比增长",
           value: Number((testData[0].年累计值同比 || 0).toFixed(2)),
-          unit: "万元",
+          unit: "亿元",
         },
         {
           title: "同比增幅",
@@ -1491,8 +1454,8 @@ const initData = async () => {
           name: item.维度值,
           value: [
             item.实际值,
-            (item.同比率 * 100).toFixed(2),
-            (item.环比率 * 100).toFixed(2),
+            item.同比增幅,
+            item.环比值,
             item.计划值
               ? ((item.实际值 / item.计划值) * 100).toFixed(2) + "%"
               : "",
@@ -1511,8 +1474,8 @@ const initData = async () => {
           name: item.维度值,
           value: [
             item.实际值,
-            (item.同比率 * 100).toFixed(2),
-            (item.环比率 * 100).toFixed(2),
+            item.同比增幅,
+            item.环比值,
             item.计划值
               ? ((item.实际值 / item.计划值) * 100).toFixed(2) + "%"
               : "",
@@ -1562,7 +1525,7 @@ const initLegendClick = () => {
     const { name } = params;
     if (!Object.values(OurCompanyEnumMap).includes(name)) return;
     const nextRoute = router.resolve({
-      name: "Revenue",
+      name: "Portfolio",
       query: {
         companyName: name,
       },
@@ -1578,7 +1541,7 @@ const initLegendClick = () => {
   chart4.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
     const nextRoute = router.resolve({
-      name: "Revenue",
+      name: "Portfolio",
       query: {
         companyName: route.query.companyName,
         productType: name,

@@ -20,6 +20,7 @@ import BusinessTypeScreen1 from "./BusinessTypeScreen1.vue";
 import {
   BusinessFormatEnum,
   BusinessFormatEnumMap,
+  ProductTypeToDisplayNameEnumMap,
 } from "@/enums/BusinessEnum";
 import { businessFormats } from "../../constants";
 
@@ -45,27 +46,34 @@ onMounted(() => {
   const name = route.fullPath.split("/").pop()?.split("?")[0];
   const companyName = getCompanyName(name!);
   const productType = getProductTypeName(name!);
+  const productTypeDisplayName =
+    ProductTypeToDisplayNameEnumMap[productType] || productType;
+  const companyDisplayName =
+    productType.indexOf("公司") > -1 ? "" : companyName;
   switch (name) {
     case "revenue":
-      title.value = `${companyName}${productType ? `${productType}` : ""}营收`;
+      title.value = `${companyDisplayName}${productTypeDisplayName ? `${productTypeDisplayName}` : ""}营收`;
       break;
     case "profit":
-      title.value = `${companyName}${productType ? `${productType}` : ""}利润`;
+      title.value = `${companyDisplayName}${productTypeDisplayName ? `${productTypeDisplayName}` : ""}利润`;
       break;
     case "purchase":
-      title.value = `${companyName}${productType ? `${productType}` : ""}采购量`;
+      title.value = `${companyDisplayName}${productTypeDisplayName ? `${productTypeDisplayName}` : ""}采购量`;
       break;
     case "sale":
-      title.value = `${companyName}${productType ? `${productType}` : ""}销售量`;
+      title.value = `${companyDisplayName}${productTypeDisplayName ? `${productTypeDisplayName}` : ""}销售量`;
       break;
     case "purchaseAmount":
-      title.value = `${companyName}${productType ? `${productType}` : ""}采购金额`;
+      title.value = `${companyDisplayName}${productTypeDisplayName ? `${productTypeDisplayName}` : ""}采购金额`;
       break;
     case "sellAmount":
-      title.value = `${companyName}${productType ? `${productType}` : ""}销售金额`;
+      title.value = `${companyDisplayName}${productTypeDisplayName ? `${productTypeDisplayName}` : ""}销售金额`;
       break;
     case "contract":
-      title.value = `${companyName}${productType ? `${productType}` : ""}合同`;
+      title.value = `${companyDisplayName}${productTypeDisplayName ? `${productTypeDisplayName}` : ""}合同`;
+      break;
+    case "portfolio":
+      title.value = `${companyDisplayName}企业资金`;
       break;
   }
 });

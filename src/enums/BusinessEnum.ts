@@ -196,3 +196,13 @@ export const OrderStatusEnumMap = {
   [OrderStatusEnum.PICKED]: "已提货",
   [OrderStatusEnum.NOT_PICKED]: "未提货",
 };
+
+// 临时
+export const ProductTypeToDisplayNameEnumMap = {
+  恒润公司业务: "恒润公司贸易",
+  桂轩桂盛业务: "桂轩桂盛贸易",
+  恒润公司业务1: "#92汽油",
+  恒润公司业务2: "#95汽油",
+  桂盛桂轩业务1: "#92汽油",
+  桂盛桂轩业务2: "#95汽油",
+};

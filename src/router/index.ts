@@ -326,6 +326,16 @@ export const constantRoutes: RouteRecordRaw[] = [
                 "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/sellAmount.vue"
               ),
           },
+          // 企业资金
+          {
+            path: "portfolio",
+            name: "Portfolio",
+            component: () =>
+              import(
+                "@/views/bigscreen/components/SecondPage/KeyIndexAnalysis/components/portfolio.vue"
+              ),
+          },
+          // 合同
           {
             path: "contract",
             name: "ContractAnalysis",
