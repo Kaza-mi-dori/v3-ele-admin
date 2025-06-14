@@ -97,7 +97,7 @@
                 <thead>
                   <tr>
                     <th>企业</th>
-                    <th>月实际（累计）</th>
+                    <th>月实际（累计）(万元)</th>
                     <th>同比</th>
                     <th>环比</th>
                     <th>完成率</th>
@@ -124,7 +124,7 @@
                 <thead>
                   <tr>
                     <th>企业</th>
-                    <th>月实际（累计）</th>
+                    <th>月实际（累计）(万元)</th>
                     <th>同比</th>
                     <th>环比</th>
                     <th>完成率</th>
@@ -897,7 +897,7 @@ const initChart31 = () => {
         label: {
           show: true,
           formatter: ({ dataIndex }: any) => {
-            return actual[dataIndex].value;
+            return `${actual[dataIndex].value}万元`;
           },
           fontSize: 14,
           fontWeight: "bold",
