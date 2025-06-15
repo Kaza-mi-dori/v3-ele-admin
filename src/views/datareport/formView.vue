@@ -486,6 +486,7 @@ const converToFrontendFormData = (type: string | null, data: any) => {
         content: {
           mainCotent: data["内容"]?.["主要内容"],
           contractAmount: data["内容"]?.["合同总额"],
+          contractCount: data["内容"]?.["合同数量"],
         },
       };
     case "dingdingSettlementDetail":
@@ -778,6 +779,7 @@ const convertToBackendData = (type: string | null, data: any) => {
       result["内容"] = {
         主要内容: data.content.mainCotent,
         合同总额: data.content.contractAmount,
+        合同数量: data.content.contractCount,
       };
       return result;
     case "dingdingSettlementDetail":

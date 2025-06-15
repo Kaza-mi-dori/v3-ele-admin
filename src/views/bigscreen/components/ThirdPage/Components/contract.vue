@@ -18,16 +18,56 @@
             size="large"
             style="width: 250px"
             class="input-field"
-            placeholder="请选择合同状态"
+            placeholder="请选择购销类型"
             clearable
           >
-            <el-option label="已完成" value="completed" />
-            <el-option label="履行中" value="ongoing" />
+            <el-option label="采购合同" value="采购合同" />
+            <el-option label="销售合同" value="销售合同" />
+            <el-option label="融资借款" value="融资借款" />
+            <el-option label="租赁合同" value="租赁合同" />
           </el-select>
-          <el-button type="primary" size="large" class="search-button">
+          <el-select
+            v-model="contractType"
+            size="large"
+            style="width: 250px"
+            class="input-field"
+            placeholder="请选择合同类型"
+            clearable
+          >
+            <el-option label="业务合同" value="业务合同" />
+            <el-option label="非业务合同" value="非业务合同" />
+          </el-select>
+          <el-select
+            v-model="businessType"
+            size="large"
+            style="width: 250px"
+            class="input-field"
+            placeholder="请选择业务类型"
+            clearable
+          >
+            <el-option
+              v-for="item in businessTypeOptions"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+          <el-button
+            type="primary"
+            size="large"
+            class="search-button"
+            @click="handleSearch"
+          >
             搜索
           </el-button>
-          <el-button plain size="large" class="reset-button">重置</el-button>
+          <el-button
+            plain
+            size="large"
+            class="reset-button"
+            @click="resetFilters"
+          >
+            重置
+          </el-button>
         </div>
       </div>
     </div>
@@ -55,7 +95,10 @@
         <el-table-column label="合同编号" prop="合同编号" />
         <el-table-column label="合同名称" prop="合同名称" />
         <el-table-column label="合同类型" prop="合同类型" />
+        <el-table-column label="业务类型" prop="业务类型" />
+        <el-table-column label="购销类型" prop="购销类型" />
         <el-table-column label="合同金额(含税)(万元)" prop="含税金额" />
+        <el-table-column label="合同数量" prop="合同数量" />
         <el-table-column label="相对方" prop="相对方名称" />
         <el-table-column label="我方" prop="我方名称" />
       </el-table>
@@ -96,12 +139,23 @@ const filters: Ref<any> = ref({
   日期早于: "",
 });
 
+const businessTypeOptions = ref<string[]>([
+  "成品油",
+  "原油",
+  "船加油",
+  "燃料油",
+  "船运",
+  "仓储",
+]);
+
 const inputValue = ref("");
 const status = ref();
-
+const contractType = ref();
+const businessType = ref();
 const tableData: Ref<[]> = ref([]);
+const tableDataToDisplay: Ref<[]> = ref([]);
 const tableDataDisplay = computed(() => {
-  return tableData.value.slice(
+  return tableDataToDisplay.value.slice(
     (pagination.value.currentPage - 1) * pagination.value.pageSize,
     pagination.value.currentPage * pagination.value.pageSize
   );
@@ -311,6 +365,46 @@ const initChart2 = () => {
   chart2.value.setOption(option);
 };
 
+const resetFilters = () => {
+  status.value = "";
+  inputValue.value = "";
+  contractType.value = "";
+  businessType.value = "";
+  tableDataToDisplay.value = tableData.value;
+};
+
+const handleSearch = () => {
+  // console.log(status.value);
+  tableDataToDisplay.value = tableData.value
+    .filter((item: any) => {
+      if (inputValue.value) {
+        return item.合同名称.includes(inputValue.value);
+      }
+      return true;
+    })
+    .filter((item: any) => {
+      if (status.value) {
+        return item.购销类型 === status.value;
+      }
+      return true;
+    })
+    .filter((item: any) => {
+      if (contractType.value) {
+        return item.合同类型 === contractType.value;
+      }
+      return true;
+    })
+    .filter((item: any) => {
+      if (businessType.value) {
+        return item.业务类型 === businessType.value;
+      }
+      return true;
+    });
+  pagination.value.currentPage = 1;
+  pagination.value.pageSize = 20;
+  pagination.value.total = tableDataToDisplay.value.length;
+};
+
 const goBack = () => {
   router.go(-1);
 };
@@ -349,6 +443,7 @@ async function initTableData() {
           合同类型: item["合同类型"] || "未分类",
         };
       });
+      tableDataToDisplay.value = tableData.value;
       pagination.value.total = +res["记录总数"];
       initChart1(); // 在数据加载后更新图表
       initChart2();

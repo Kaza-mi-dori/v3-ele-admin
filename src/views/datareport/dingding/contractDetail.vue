@@ -76,6 +76,17 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
+              <el-form-item label="合同数量" prop="content.contractCount">
+                <el-input
+                  v-if="editing"
+                  v-model="yearlyReportDetailForm.content.contractCount"
+                />
+                <span v-else>
+                  {{ yearlyReportDetailForm.content.contractCount }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="采购/销售合同" prop="purchaseType">
                 <el-select
                   v-if="editing"
@@ -302,6 +313,8 @@ interface DetailRecord {
     mainCotent: string;
     /** 合同金额 */
     contractAmount: string;
+    /** 合同数量 */
+    contractCount: string;
     /** 其他内容 */
     [key: string]: any;
   };
@@ -329,6 +342,7 @@ const yearlyReportDetailForm = ref<DetailRecord>({
   content: {
     mainCotent: "",
     contractAmount: "",
+    contractCount: "",
   },
   createdAt: "",
   createdBy: "",

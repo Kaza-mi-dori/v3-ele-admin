@@ -293,7 +293,14 @@ const handleClickYear = (title: string) => {
         name: "Portfolio",
         query: {
           companyName: "石化板块",
-          productType: "企业资金",
+        },
+      });
+      break;
+    case "固定成本":
+      router.push({
+        name: "FixedCost",
+        query: {
+          companyName: "石化板块",
         },
       });
       break;

@@ -112,6 +112,17 @@
           </el-table-column>
 
           <el-table-column
+            prop="合同数量"
+            label="合同数量"
+            sortable
+            align="center"
+          >
+            <template #default="{ row }">
+              {{ row.内容?.合同数量 || "-" }}
+            </template>
+          </el-table-column>
+
+          <el-table-column
             prop="对方公司名称"
             label="对方公司名称"
             sortable
