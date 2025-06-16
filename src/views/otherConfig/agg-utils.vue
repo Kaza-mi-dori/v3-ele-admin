@@ -60,6 +60,7 @@
                 size="small"
                 @blur="handleKeyEditComplete(data)"
                 @keyup.enter="handleKeyEditComplete(data)"
+                @keyup.esc="handleKeyEditComplete(data)"
               />
               <span v-else @dblclick="handleEdit(data)">{{ data.key }}</span>
 
@@ -76,11 +77,22 @@
                 <el-option label="布尔值" value="boolean" />
               </el-select>
 
-              <template v-if="data.type === 'string' || data.type === 'number'">
+              <template v-if="data.type === 'string'">
                 <el-input
                   v-model="data.value"
                   size="small"
                   style="width: 150px"
+                />
+              </template>
+              <template v-else-if="data.type === 'number'">
+                <el-input
+                  v-model="data.value"
+                  type="number"
+                  size="small"
+                  style="width: 150px"
+                  @blur="onChangeNumber(data)"
+                  @keyup.enter="onChangeNumber(data)"
+                  @keyup.esc="onChangeNumber(data)"
                 />
               </template>
               <template v-else-if="data.type === 'boolean'">
@@ -138,6 +150,10 @@ const loading = ref<boolean>(false);
 // 生成唯一ID
 const generateId = () => {
   return Math.random().toString(36).substring(2, 9);
+};
+
+const onChangeNumber = (data: any) => {
+  data.value = Number(data.value);
 };
 
 // 添加根节点
@@ -363,8 +379,19 @@ const toggleDataType = () => {
 
 const reInitializeData = () => {
   try {
-    businessStore.initLocalBusinessDatabase(true);
-    ElMessage.success("初始化成功");
+    ElMessageBox.confirm("确定要重新初始化数据吗？", "提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    })
+      .then(() => {
+        businessStore.initLocalBusinessDatabase(true);
+        ElMessage.success("初始化成功");
+      })
+      .catch(() => {
+        ElMessage.info("初始化取消");
+      });
+    // businessStore.initLocalBusinessDatabase(true);
   } catch (e) {
     console.log(e);
     ElMessage.error("初始化失败");
