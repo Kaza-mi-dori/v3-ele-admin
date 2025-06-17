@@ -169,6 +169,7 @@ import {
   queryCompanyData,
   queryOrgAndProductTypeData,
   queryProductData,
+  productTypeToProductMap,
   type AggregatedData,
 } from "@/store/utils/agg-utils";
 import { OurCompanyEnumMap } from "@/enums/BusinessEnum";
@@ -1326,7 +1327,7 @@ const buildQueryParams = () => {
     fromMonth: 1,
     toMonth: 12,
     category: route.query.productType || undefined,
-    product: undefined,
+    product: route.query.product || undefined,
     withSubTimeData: true,
     withSubOrgData: true,
     withSubProductData: false,
@@ -1574,11 +1575,31 @@ const initLegendClick = () => {
   });
   chart4.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
+    let nextKey, nextValue;
+    if (productTypeToProductMap[name]) {
+      nextKey = productTypeToProductMap[name]
+        ? productTypeToProductMap[name].length > 1 ||
+          productTypeToProductMap[name][0] !== name
+          ? "productType"
+          : "product"
+        : "product";
+      nextValue = productTypeToProductMap[name]
+        ? productTypeToProductMap[name].length > 1 ||
+          productTypeToProductMap[name][0] !== name
+          ? name
+          : productTypeToProductMap[name]
+        : name;
+    } else {
+      nextKey = "product";
+      nextValue = name;
+    }
     const nextRoute = router.resolve({
       name: "Revenue",
       query: {
         companyName: route.query.companyName,
-        productType: name,
+        // productType: name,
+        // [nextKey]: name,
+        [nextKey]: nextValue,
       },
     });
     window.open(nextRoute.href, "_blank");

@@ -168,6 +168,7 @@ import {
   queryCompanyData,
   queryOrgAndProductTypeData,
   queryProductData,
+  productTypeToProductMap,
   type AggregatedData,
 } from "@/store/utils/agg-utils";
 import { OurCompanyEnumMap } from "@/enums/BusinessEnum";
@@ -1536,11 +1537,31 @@ const initLegendClick = () => {
   });
   chart4.value.on("click", "series.pie", (params: any) => {
     const { name } = params;
+    // 判断是否是产品类型，如果是则传productType，否则传product
+    let nextKey, nextValue;
+    if (productTypeToProductMap[name]) {
+      nextKey = productTypeToProductMap[name]
+        ? productTypeToProductMap[name].length > 1 ||
+          productTypeToProductMap[name][0] !== name
+          ? "productType"
+          : "product"
+        : "product";
+      nextValue = productTypeToProductMap[name]
+        ? productTypeToProductMap[name].length > 1 ||
+          productTypeToProductMap[name][0] !== name
+          ? name
+          : productTypeToProductMap[name]
+        : name;
+    } else {
+      nextKey = "product";
+      nextValue = name;
+    }
     const nextRoute = router.resolve({
       name: "Purchase",
       query: {
         companyName: route.query.companyName,
-        productType: name,
+        // productType: name,
+        [nextKey]: name,
       },
     });
     window.open(nextRoute.href, "_blank");

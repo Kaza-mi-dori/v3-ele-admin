@@ -101,6 +101,7 @@ function findLastYearMonth(year: string) {
 const orgToOrgMap: Record<string, string[]> = {
   // 石化板块: ["广投石化", "桂盛桂轩", "开燃公司", "恒润公司"],
   石化板块: ["广投石化", "桂盛桂轩", "恒润公司"],
+  广投石化: ["广投石化本部", "广投石化舟山", "永盛仓储", "永盛石化"],
 };
 
 // 组织到企业的映射
@@ -137,12 +138,13 @@ const orgToEnterpriseMap: Record<string, string[]> = {
 };
 
 // 产品类型到产品的映射(tag)
-const productTypeToProductMap: Record<string, string[]> = {
+// TODO 多级产品类型
+export const productTypeToProductMap: Record<string, string[]> = {
   成品油: ["#92汽油", "#95汽油", "#98汽油", "#0柴油", "成品油产品"],
   成品油产品: ["成品油产品"],
   原油: ["原油产品"],
   原油产品: ["原油产品"],
-  燃料油: ["燃料油", "船加油"],
+  燃料油类: ["燃料油", "船加油"],
   船加油: ["船加油"],
   化工类: ["化工产品"],
   天然气类: ["天然气产品"],
@@ -1755,6 +1757,87 @@ function queryCompanyData(
   return result;
 }
 
+function queryOrgAndProductData(
+  keyIndexType: string,
+  orgName: string,
+  productName: string,
+  timeDimension: string,
+  startDate: string,
+  endDate: string
+) {
+  const cache = timeDimension === "year" ? yearCache : monthCache;
+
+  // 获取组织数据
+  const orgData = queryOrgData(
+    keyIndexType,
+    orgName,
+    timeDimension,
+    startDate,
+    endDate
+  );
+  if (orgData.length === 0) {
+    return [];
+  }
+
+  // 获取产品数据
+  const productData = queryProductData(
+    keyIndexType,
+    productName,
+    timeDimension,
+    startDate,
+    endDate
+  );
+  if (productData.length === 0) {
+    return [];
+  }
+
+  // 组合数据
+  const result: AggregatedData[] = [];
+  const timeMap = new Map<
+    string,
+    { org: AggregatedData; product: AggregatedData | undefined }
+  >();
+
+  // 按时间组织数据
+  orgData.forEach((item) => {
+    timeMap.set(item.数据时间, { org: item, product: undefined });
+  });
+
+  productData.forEach((item) => {
+    const existing = timeMap.get(item.数据时间);
+    if (existing) {
+      existing.product = item;
+    }
+  });
+
+  // 生成组合数据
+  timeMap.forEach(({ org, product }, time) => {
+    if (org && product) {
+      const combinedData: AggregatedData = {
+        指标类型: keyIndexType,
+        维度类型: "组织和产品",
+        维度值: `${orgName}-${productName}`,
+        时间维度: timeDimension === "year" ? "年" : "月",
+        数据时间: time,
+        计划值: product.计划值,
+        实际值: product.实际值,
+        年累计值: product.年累计值,
+        环比率: product.环比率,
+        环比值: product.环比值,
+        同比率: product.同比率,
+        同比值: product.同比值,
+        年累计值环比: product.年累计值环比,
+        年累计值环比增幅: product.年累计值环比增幅,
+        年累计值同比: product.年累计值同比,
+        年累计值同比增幅: product.年累计值同比增幅,
+      };
+      result.push(combinedData);
+    }
+  });
+
+  return result;
+}
+
 /**
  * 查询产品维度缓存
  * @param keyIndexType 指标类型
@@ -1796,6 +1879,10 @@ function queryProductData(
 
 /**
  * 查询组织和产品类型联合维度缓存
+ */
+
+/**
+ * 查询组织和产品类型联合维度缓存
  * @param keyIndexType 指标类型
  * @param orgName 组织名称
  * @param productType 产品类型
@@ -1814,7 +1901,6 @@ function queryOrgAndProductTypeData(
 ) {
   const cache = timeDimension === "year" ? yearCache : monthCache;
   // 检查缓存是否存在
-  // console.log(cache.byOrgAndProductType[keyIndexType]);
   if (
     !cache.byOrgAndProductType[keyIndexType] ||
     !cache.byOrgAndProductType[keyIndexType][orgName] ||
@@ -1834,7 +1920,6 @@ function queryOrgAndProductTypeData(
     .forEach((time) => {
       result.push(timeData[time]);
     });
-  // 返回缓存数据
   return result;
 }
 
@@ -1894,7 +1979,52 @@ function queryAggData(queryParam: {
     withSubProductTypeData,
   } = queryParam;
   // 根据提供的参数决定使用哪个查询函数
-  if (org && productType) {
+  if (org && product) {
+    const result = queryOrgAndProductData(
+      keyIndexType,
+      org,
+      product,
+      timeDimension,
+      startDate,
+      endDate
+    );
+
+    if (withSubTimeData) {
+      // 查询子时段数据
+      if (timeDimension === "year") {
+        // 查询月份数据
+        result.forEach((item) => {
+          if (item.数据时间) {
+            item.subTimeData = queryOrgAndProductData(
+              keyIndexType,
+              org,
+              product,
+              "month",
+              `${item.数据时间}-01`,
+              `${item.数据时间}-12`
+            );
+          }
+        });
+      } else if (timeDimension === "month") {
+        // TODO 查询下属日数据
+      }
+    }
+
+    if (withSubProductData) {
+      // 查询产品数据
+      result.forEach((item) => {
+        item.subProductData = queryProductData(
+          keyIndexType,
+          product,
+          timeDimension,
+          startDate,
+          endDate
+        );
+      });
+    }
+
+    return result;
+  } else if (org && productType) {
     const result = queryOrgAndProductTypeData(
       keyIndexType,
       org,

@@ -65,7 +65,7 @@ $bg-color-1: #ffffff;
   @apply justify-center items-center w-full h-full relative box-border;
   color: white;
   font-size: 20px;
-  padding: 15px 10px;
+  padding: 15px 0.5rem;
 
   .item3-bg {
     /* 使图像覆盖整个父容器，并保持比例 */
@@ -118,8 +118,10 @@ $bg-color-1: #ffffff;
   .title-icon {
     width: 17px;
     height: 17px;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    // margin-left: 0.5rem;
+    // margin-right: 0.5rem;
+    margin-left: 0.35rem;
+    margin-right: 0.35rem;
     display: block;
     // 边界闪光效果动画
     animation: shine 2s infinite;

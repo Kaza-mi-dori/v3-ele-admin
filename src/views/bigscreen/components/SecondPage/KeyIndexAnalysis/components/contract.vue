@@ -628,7 +628,12 @@ const initLegendClick = () => {
     if (Object.values(OurCompanyEnumMap).includes(name)) {
       router.push({
         name: "ContractList",
-        query: { companyName: name },
+        query: {
+          companyName: name,
+          filters: JSON.stringify({
+            购销类型: "采购合同",
+          }),
+        },
       });
     }
   });
@@ -637,7 +642,12 @@ const initLegendClick = () => {
     if (Object.values(OurCompanyEnumMap).includes(name)) {
       router.push({
         name: "ContractList",
-        query: { companyName: name },
+        query: {
+          companyName: name,
+          filters: JSON.stringify({
+            购销类型: "销售合同",
+          }),
+        },
       });
     }
   });
@@ -646,7 +656,12 @@ const initLegendClick = () => {
     if (Object.values(OurCompanyEnumMap).includes(name)) {
       router.push({
         name: "ContractList",
-        query: { companyName: name },
+        query: {
+          companyName: name,
+          filters: JSON.stringify({
+            购销类型: "仓储合同",
+          }),
+        },
       });
     }
   });

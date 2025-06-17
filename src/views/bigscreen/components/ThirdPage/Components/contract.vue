@@ -14,7 +14,7 @@
             clearable
           />
           <el-select
-            v-model="status"
+            v-model="filters.购销类型"
             size="large"
             style="width: 250px"
             class="input-field"
@@ -27,7 +27,7 @@
             <el-option label="租赁合同" value="租赁合同" />
           </el-select>
           <el-select
-            v-model="contractType"
+            v-model="filters.合同类型"
             size="large"
             style="width: 250px"
             class="input-field"
@@ -38,7 +38,7 @@
             <el-option label="非业务合同" value="非业务合同" />
           </el-select>
           <el-select
-            v-model="businessType"
+            v-model="filters.业务类型"
             size="large"
             style="width: 250px"
             class="input-field"
@@ -137,6 +137,16 @@ const filters: Ref<any> = ref({
   日期晚于: "",
   /** 日期结束值 */
   日期早于: "",
+  /** 合同类型 */
+  合同类型: "",
+  /** 业务类型 */
+  业务类型: "",
+  /** 购销类型 */
+  购销类型: "",
+  // /** 我方名称 */
+  // 我方名称: "",
+  // /** 相对方名称 */
+  // 相对方名称: "",
 });
 
 const businessTypeOptions = ref<string[]>([
@@ -366,15 +376,25 @@ const initChart2 = () => {
 };
 
 const resetFilters = () => {
-  status.value = "";
-  inputValue.value = "";
-  contractType.value = "";
-  businessType.value = "";
+  // status.value = "";
+  // inputValue.value = "";
+  // contractType.value = "";
+  // businessType.value = "";
+  filters.value = {
+    购销类型: "",
+    合同类型: "",
+    业务类型: "",
+  };
   tableDataToDisplay.value = tableData.value;
+  pagination.value.currentPage = 1;
+  pagination.value.pageSize = 20;
+  pagination.value.total = tableDataToDisplay.value.length;
+  initChart1();
+  initChart2();
 };
 
 const handleSearch = () => {
-  // console.log(status.value);
+  console.log(tableData.value.slice(0, 10), filters.value);
   tableDataToDisplay.value = tableData.value
     .filter((item: any) => {
       if (inputValue.value) {
@@ -383,20 +403,20 @@ const handleSearch = () => {
       return true;
     })
     .filter((item: any) => {
-      if (status.value) {
-        return item.购销类型 === status.value;
+      if (filters.value.购销类型) {
+        return item.购销类型 === filters.value.购销类型;
       }
       return true;
     })
     .filter((item: any) => {
-      if (contractType.value) {
-        return item.合同类型 === contractType.value;
+      if (filters.value.合同类型) {
+        return item.合同类型 === filters.value.合同类型;
       }
       return true;
     })
     .filter((item: any) => {
-      if (businessType.value) {
-        return item.业务类型 === businessType.value;
+      if (filters.value.业务类型) {
+        return item.业务类型 === filters.value.业务类型;
       }
       return true;
     });
@@ -426,31 +446,55 @@ const pagination: Ref<any> = ref({
 });
 
 async function initTableData() {
-  DingTalkFormApi.queryDingTalkContractLedger({
-    ...queryForm.value,
-    // 页码: pagination.value.currentPage,
-    // 页容量: pagination.value.pageSize,
-    页码: 1,
-    页容量: 999,
-  })
-    .then((res: any) => {
-      tableData.value = res["当前记录"].map((item: any) => {
-        return {
-          ...item,
-          审批通过时间: (item.审批通过时间 || "-").substring(0, 10),
-          相对方名称: item["相对方名称"] || item["对方公司名称"],
-          我方名称: item["我方名称"] || item["我方公司名称"],
-          合同类型: item["合同类型"] || "未分类",
-        };
-      });
-      tableDataToDisplay.value = tableData.value;
-      pagination.value.total = +res["记录总数"];
-      initChart1(); // 在数据加载后更新图表
-      initChart2();
-    })
-    .catch((err: any) => {
-      console.error(err);
+  try {
+    const res: any = await DingTalkFormApi.queryDingTalkContractLedger({
+      ...queryForm.value,
+      // 页码: pagination.value.currentPage,
+      // 页容量: pagination.value.pageSize,
+      页码: 1,
+      页容量: 999,
     });
+    tableData.value = res["当前记录"].map((item: any) => {
+      return {
+        ...item,
+        审批通过时间: (item.审批通过时间 || "-").substring(0, 10),
+        相对方名称: item["相对方名称"] || item["对方公司名称"],
+        我方名称: item["我方名称"] || item["我方公司名称"],
+        合同类型: item["合同类型"] || "未分类",
+      };
+    });
+    tableDataToDisplay.value = tableData.value;
+    pagination.value.total = +res["记录总数"];
+    initChart1(); // 在数据加载后更新图表
+    initChart2();
+  } catch (err: any) {
+    console.error(err);
+  }
+  // DingTalkFormApi.queryDingTalkContractLedger({
+  //   ...queryForm.value,
+  //   // 页码: pagination.value.currentPage,
+  //   // 页容量: pagination.value.pageSize,
+  //   页码: 1,
+  //   页容量: 999,
+  // })
+  //   .then((res: any) => {
+  //     tableData.value = res["当前记录"].map((item: any) => {
+  //       return {
+  //         ...item,
+  //         审批通过时间: (item.审批通过时间 || "-").substring(0, 10),
+  //         相对方名称: item["相对方名称"] || item["对方公司名称"],
+  //         我方名称: item["我方名称"] || item["我方公司名称"],
+  //         合同类型: item["合同类型"] || "未分类",
+  //       };
+  //     });
+  //     tableDataToDisplay.value = tableData.value;
+  //     pagination.value.total = +res["记录总数"];
+  //     initChart1(); // 在数据加载后更新图表
+  //     initChart2();
+  //   })
+  //   .catch((err: any) => {
+  //     console.error(err);
+  //   });
 }
 
 const calculateContractTypeData = () => {
@@ -518,6 +562,7 @@ const calculateProfitData = () => {
 };
 
 onMounted(async () => {
+  await initTableData();
   const route = router.currentRoute.value;
   if (route.query.filters) {
     const params = JSON.parse(route.query.filters as string);
@@ -525,11 +570,20 @@ onMounted(async () => {
       ...filters.value,
       ...params,
     };
-    if (params.status) {
-      status.value = params.status;
-    }
+    // if (params.status) {
+    //   status.value = params.status;
+    // }
+    // if (params.合同类型) {
+    //   contractType.value = params.合同类型;
+    // }
+    // if (params.业务类型) {
+    //   businessType.value = params.业务类型;
+    // }
+    // if (params.购销类型) {
+    //   status.value = params.购销类型;
+    // }
+    handleSearch();
   }
-  await initTableData();
   // setTimeout(() => {
   //   initChart1();
   //   initChart2();
