@@ -75,8 +75,7 @@ const totalData = ref([
     @apply flex-1;
   }
   .b-middle {
-    flex: 1.4;
-    @apply flex flex-col justify-between relative;
+    @apply flex flex-[1.4] flex-col justify-between relative;
     .middle-item {
       @apply flex flex-1 items-center justify-center;
     }
