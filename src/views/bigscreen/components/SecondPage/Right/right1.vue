@@ -99,6 +99,7 @@ const initChart = (data: any) => {
       nameTextStyle: {
         color: sassvariables["bigscreen-primary-color-7"],
         fontSize: 15,
+        padding: [0, 0, 0, 70], // 增加左边距，让文字向右移动
       },
       axisLine: {
         show: true, // 显示坐标轴线

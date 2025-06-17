@@ -101,8 +101,7 @@ const initTMapApi = () => {
     @apply flex-1;
   }
   .b-middle {
-    flex: 1.4;
-    @apply flex flex-col justify-between relative;
+    @apply flex flex-[1.4] flex-col justify-between relative;
     .middle-item {
       // flex: 1;
       @apply flex items-center justify-center;
